@@ -62,7 +62,6 @@ class Student(models.Model):
     level = models.ForeignKey(Level)
     rok_zaciatku = models.IntegerField()
     skolne = models.OneToOneField(Skolne)
-    role
 
 class Lektor(models.Model):
     popis = models.CharField(max_length=100)
@@ -108,13 +107,13 @@ class Prihlasenie(models.Model): #  studenta na event
 
 class BuddyVztah(models.Model):
     student = models.ForeignKey(Student)
-    mentor = models.ForeignKey(Buddy)
+    mentor = models.ForeignKey('Buddy')
     zaciatok = models.DateField()
     koniec = models.DateField()
 
 class GuideVztah(models.Model):
     student = models.ForeignKey(Student)
-    mentor = models.ForeignKey(Guide)
+    mentor = models.ForeignKey('Guide')
     zaciatok = models.DateField()
     koniec = models.DateField()
 
