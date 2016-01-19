@@ -102,11 +102,201 @@
       <primary-key columns="session_key"/>
       <index name="django_session_de54fa62" unique="true" columns="expire_date"/>
     </table>
+    <table name="nextis_buddy" schema="" catalog="" type="TABLE">
+      <column name="rola_ptr_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="clovek_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="rola_ptr_id"/>
+      <foreign-key name="#FAKE_nextis_buddy_1" columns="clovek_id" ref-table="nextis_clovek" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_buddy_2" columns="rola_ptr_id" ref-table="nextis_rola" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_buddy_1225d8a3" unique="true" columns="clovek_id"/>
+    </table>
+    <table name="nextis_buddyvztah" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="zaciatok" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="koniec" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="mentor_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="student_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_buddyvztah_1" columns="student_id" ref-table="nextis_student" ref-schema="" ref-catalog="" ref-columns="rola_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_buddyvztah_2" columns="mentor_id" ref-table="nextis_buddy" ref-schema="" ref-catalog="" ref-columns="rola_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_buddyvztah_30a811f6" unique="true" columns="student_id"/>
+      <index name="nextis_buddyvztah_b1224262" unique="true" columns="mentor_id"/>
+    </table>
     <table name="nextis_clovek" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="meno" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="priezvisko" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="email" sqlType="VARCHAR(254)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="telefon_cislo" sqlType="VARCHAR(25)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="nextis_event" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="nazov" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="pocet_kreditov" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="zaciatok" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="koniec" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="miesto" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="typ" sqlType="VARCHAR(3)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="popis" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="nextis_event_lektori" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="event_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="lektor_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_event_lektori_1" columns="lektor_id" ref-table="nextis_lektor" ref-schema="" ref-catalog="" ref-columns="rola_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_event_lektori_2" columns="event_id" ref-table="nextis_event" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_event_lektori_4a6e41eb" unique="true" columns="lektor_id"/>
+      <index name="nextis_event_lektori_4437cfac" unique="true" columns="event_id"/>
+      <index name="nextis_event_lektori_event_id_a35d5146_uniq" unique="true" columns="event_id,lektor_id"/>
+    </table>
+    <table name="nextis_event_levely" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="event_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="level_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_event_levely_1" columns="level_id" ref-table="nextis_level" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_event_levely_2" columns="event_id" ref-table="nextis_event" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_event_levely_80e0bd5f" unique="true" columns="level_id"/>
+      <index name="nextis_event_levely_4437cfac" unique="true" columns="event_id"/>
+      <index name="nextis_event_levely_event_id_3f1d0d94_uniq" unique="true" columns="event_id,level_id"/>
+    </table>
+    <table name="nextis_fakulta" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="nazov" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="skratka" sqlType="VARCHAR(10)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="skola_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_fakulta_1" columns="skola_id" ref-table="nextis_skola" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_fakulta_27e3a32c" unique="true" columns="skola_id"/>
+    </table>
+    <table name="nextis_guide" schema="" catalog="" type="TABLE">
+      <column name="rola_ptr_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="clovek_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="rola_ptr_id"/>
+      <foreign-key name="#FAKE_nextis_guide_1" columns="clovek_id" ref-table="nextis_clovek" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_guide_2" columns="rola_ptr_id" ref-table="nextis_rola" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_guide_1225d8a3" unique="true" columns="clovek_id"/>
+    </table>
+    <table name="nextis_guidevztah" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="zaciatok" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="koniec" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="mentor_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="student_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_guidevztah_1" columns="student_id" ref-table="nextis_student" ref-schema="" ref-catalog="" ref-columns="rola_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_guidevztah_2" columns="mentor_id" ref-table="nextis_guide" ref-schema="" ref-catalog="" ref-columns="rola_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_guidevztah_30a811f6" unique="true" columns="student_id"/>
+      <index name="nextis_guidevztah_b1224262" unique="true" columns="mentor_id"/>
+    </table>
+    <table name="nextis_lektor" schema="" catalog="" type="TABLE">
+      <column name="rola_ptr_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="clovek_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="popis" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="rola_ptr_id"/>
+      <foreign-key name="#FAKE_nextis_lektor_1" columns="clovek_id" ref-table="nextis_clovek" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_lektor_2" columns="rola_ptr_id" ref-table="nextis_rola" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_lektor_1225d8a3" unique="true" columns="clovek_id"/>
+    </table>
+    <table name="nextis_level" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="zaciatok_rok" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="stav" sqlType="VARCHAR(6)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="nextis_novinka" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="nazov" sqlType="VARCHAR(200)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="text" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="vytvorene" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="upravene" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="autor_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_novinka_1" columns="autor_id" ref-table="nextis_clovek" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_novinka_52be3978" unique="true" columns="autor_id"/>
+    </table>
+    <table name="nextis_partner" schema="" catalog="" type="TABLE">
+      <column name="rola_ptr_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="popis" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="clovek_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="rola_ptr_id"/>
+      <foreign-key name="#FAKE_nextis_partner_1" columns="clovek_id" ref-table="nextis_clovek" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_partner_2" columns="rola_ptr_id" ref-table="nextis_rola" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_partner_1225d8a3" unique="true" columns="clovek_id"/>
+    </table>
+    <table name="nextis_platba" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="cas" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="suma" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="poznamka" sqlType="VARCHAR(200)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="ucet" sqlType="VARCHAR(50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="datum" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="nextis_prihlasenie" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="doodle" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="prisiel" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="feedback" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="poznamka" sqlType="VARCHAR(500)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="event_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="student_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_prihlasenie_1" columns="student_id" ref-table="nextis_student" ref-schema="" ref-catalog="" ref-columns="rola_ptr_id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_prihlasenie_2" columns="event_id" ref-table="nextis_event" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_prihlasenie_30a811f6" unique="true" columns="student_id"/>
+      <index name="nextis_prihlasenie_4437cfac" unique="true" columns="event_id"/>
+    </table>
+    <table name="nextis_rola" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="nextis_skola" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="nazov" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="mesto" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="skratka" sqlType="VARCHAR(10)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="nextis_skolne" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="balance" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="variabilny_symbol" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="platby_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="vydavky_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_nextis_skolne_1" columns="vydavky_id" ref-table="nextis_vydavok" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_skolne_2" columns="platby_id" ref-table="nextis_platba" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_skolne_5f3b5a03" unique="true" columns="vydavky_id"/>
+      <index name="nextis_skolne_d4f678b9" unique="true" columns="platby_id"/>
+    </table>
+    <table name="nextis_student" schema="" catalog="" type="TABLE">
+      <column name="rola_ptr_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="datum_nar" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="rok_zaciatku" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="fakulta_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="level_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="skolne_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="clovek_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="rola_ptr_id"/>
+      <foreign-key name="#FAKE_nextis_student_1" columns="clovek_id" ref-table="nextis_clovek" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_student_2" columns="skolne_id" ref-table="nextis_skolne" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_student_3" columns="level_id" ref-table="nextis_level" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_student_4" columns="fakulta_id" ref-table="nextis_fakulta" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_nextis_student_5" columns="rola_ptr_id" ref-table="nextis_rola" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="nextis_student_1225d8a3" unique="true" columns="clovek_id"/>
+      <index name="nextis_student_80e0bd5f" unique="true" columns="level_id"/>
+      <index name="nextis_student_22cb6a9d" unique="true" columns="fakulta_id"/>
+    </table>
+    <table name="nextis_vydavok" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="ucel" sqlType="VARCHAR(50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="suma" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="splatnost" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="uhradene" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
       <primary-key columns="id"/>
     </table>
     <table name="sqlite_sequence" schema="" catalog="" type="TABLE">
