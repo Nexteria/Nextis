@@ -1,0 +1,34 @@
+{%  extends "base.html" %}
+
+{% block title %}Nexteria - kredity{%  endblock %}
+
+{% block content %}
+    <h1>Detail kreditov:</h1>
+    <p> {{ student }} , {{ student.datum_nar }}, {{ student.fakulta }}, id :{{ student.id }}, level : {{ student.level }},
+        {{student.clovek.email}}, {{ student.clovek.telefon_cislo }} </p>
+
+    <h2>Pocet kreditov: {{ student.get_kredity }}</h2>
+
+    <p>eventy, ktorych sa zucastnil:</p>
+
+    <div class="containter-fluid">
+    {% for e in eventy %}
+        <div class="row">
+            <div class="col-md-2"><a href="../../aktivity/{{ e.id }}">{{ e.nazov }}</a></div>
+            <div class="col-md-1">Kredity: {{ e.pocet_kreditov }}</div>
+            <div class="col-md-3">Od: {{ e.zaciatok }} <br> do: {{ e.koniec }}</div>
+            <div class="col-md-3">Levely: {{ e.get_levely }}</div>
+            <div class="col-md-1">{{ e.typ }}</div>
+            <div class="col-md-1">{{ e.get_pocet_ucastnikov }} ludi</div>
+        </div>
+
+
+    {% endfor %}
+
+    </div>
+
+
+
+{% endblock %}
+
+

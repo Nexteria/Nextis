@@ -1,0 +1,21 @@
+{%  extends "base.html" %}
+
+{% block title %}Nexteria - skolne{%  endblock %}
+
+{% block content %}
+<h1>Detail skolneho:</h1>
+<p> {{ student }} , {{ student.datum_nar }}, {{ student.fakulta }}, id :{{ student.id }}, level : {{ student.level }},
+    {{student.clovek.email}}, {{ student.clovek.telefon_cislo }} </p>
+
+<h2>{{ student.skolne }} </h2>
+
+<h3>vydavky</h3>
+{% for v in vydavky %}
+    <p> {{ v.suma }}, {{ v.ucel }}</p>
+{% endfor %}
+<h3>Platby</h3>
+{% for p in platby %}
+    <p> {{ p.suma }}, {{ p.cas }}, {{ p.poznamka }}</p>
+{% endfor %}
+
+{% endblock %}

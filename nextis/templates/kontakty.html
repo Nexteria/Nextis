@@ -1,0 +1,30 @@
+{%  extends "base.html" %}
+
+{% block title %}Nexteria - kontakty{%  endblock %}
+
+{% block content %}
+    <h3>Specialne kontakty:</h3>
+    <table class="table table-hover table-condensed">
+        <tr><td>Martin Mojzes</td><td>Volajte mu sem 0909999999</td></tr>
+        <tr><td>Martin Mojzes2</td><td>Volajte mu sem 0909999999</td></tr>
+        <tr><td>Martin Mojzes3</td><td>Volajte mu sem 0909999999</td></tr>
+        <tr><td>Martin Mojzes4</td><td>Volajte mu sem 0909999999</td></tr>
+        <tr><td>Martin Mojzes5</td><td>Volajte mu sem 0909999999</td></tr>
+    </table>
+    <h3>Studentske kontakty podla levelov:</h3>
+
+    {% for l in levely %}
+        <h4>{{ l }}</h4>
+        <table class="table table-hover table-condensed">
+            <tr><th>Meno</th><th>Telefon</th><th>E-mail</th><th>Fakulta</th></tr>
+            {% for s in l.get_students %}
+                <tr><td>{{ s.clovek.get_name }}</td><td>{{  s.clovek.telefon_cislo }}</td><td>{{ s.clovek.email }}</td>
+                    <td>{{ s.fakulta }}</td></tr>
+
+            {%  endfor %}
+
+        </table>
+    {% endfor %}
+
+
+{% endblock %}
