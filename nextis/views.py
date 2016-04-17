@@ -38,10 +38,13 @@ from django.shortcuts import render
 #TODO atraktivnejsie novinky
 
 
-from django.shortcuts import render
-from nextis.models import Novinka, Student, Platba, Vydavok, Event, Level
-from django.db.models import Q
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from nextis.models import *
+from . import forms
+from django.core.urlresolvers import reverse
 
+
+from django.views.decorators.csrf import csrf_exempt
 
 def novinky (request):
     posledne = Novinka.objects.order_by('vytvorene')[:3]
@@ -67,7 +70,7 @@ def kredity(request):
 
 def kredity_detail(request,id):
     student = Student.objects.get(id=id)
-    eventy = Event.objects.filter(ucastnici=student).order_by('-zaciatok')
+    eventy = Event.objects.filter(feedbacky__student=student).order_by('-zaciatok')
     return render(request, 'kredity_detail.html', context={('student', student), ('eventy',eventy)})
 
 
@@ -76,12 +79,83 @@ def kontakty(request):
     return render(request, 'kontakty.html', context={('levely',levely)})
 
 def aktivity(request):
-    evs = Event.objects.all().order_by('-zaciatok')
-    return render(request, 'aktivity.html', context={('eventy', evs)})
+    preevs = Event.objects.filter(koniec__lt=datetime.now()).order_by('-zaciatok')
+    postevs = Event.objects.filter(koniec__gt=datetime.now()).order_by('-zaciatok')
+    return render(request, 'aktivity.html', context={'pre_eventy': preevs, 'post_eventy':postevs})
 
 def aktivita_detail(request, id):
     event = Event.objects.get(id=id)
-    return render(request, 'aktivita_detail.html', context={('event',event)})
+    message = ''
+    try:
+        if request.GET['message']:
+            message = request.GET['message']
+    except:
+        pass
+    return render(request, 'aktivita_detail.html', context={'event':event, 'message':message, 'id':id})
 
+def aktivita_prihlasovanie(request, id):
+    event = Event.objects.get(id=id)
+
+
+    if request.method == 'GET':
+        form = forms.EventPrihlasenieForm()
+        return render(request, 'aktivita_prihlasovanie.html', context={'event':event,'form':form})
+
+    if request.method == 'POST':
+        form = forms.EventPrihlasenieForm(request.POST)
+        if form.is_valid():
+
+            try:
+                cl = Clovek.objects.get(email=form.cleaned_data['email'])
+                stud = cl.student
+                event.ucastnici.add(stud)
+                event.save()
+                return HttpResponseRedirect(reverse('aktivita_detail', args=[id])+'?message=Prihlasenie%20Uspesne')
+            except:
+                form.add_error(None, 'Nespravny email')
+        return render(request, 'aktivita_prihlasovanie.html', context={'event':event,'form':form})
+
+def aktivita_odhlasovanie(request, id):
+    event = Event.objects.get(id=id)
+
+    if request.method == 'GET':
+        form = forms.EventPrihlasenieForm()
+        return render(request, 'aktivita_odhlasovanie.html', context={'event':event,'form':form})
+
+    if request.method == 'POST':
+        form = forms.EventPrihlasenieForm(request.POST)
+        if form.is_valid():
+
+            try:
+                cl = Clovek.objects.get(email=form.cleaned_data['email'])
+                stud = cl.student
+                event.ucastnici.remove(stud)
+                event.save()
+                return HttpResponseRedirect(reverse('aktivita_detail', args=[id])+'?message=Odhlasenie%20Uspesne')
+            except:
+                form.add_error(None, 'Nespravny email')
+        return render(request, 'aktivita_odhlasovanie.html', context={'event':event,'form':form})
+
+from processing_notifications import parse_email
+
+@csrf_exempt
+def parse_platba(req):
+    parsed = ParsedEmail.objects.create(nazov=req.POST['subject'], text=req.POST['body-plain'], priradene = False)
+    trans = parse_email(req.POST['body-plain'])
+    if trans['transaction_type'] == 'kredit':
+        try:
+            vlastnik = Skolne.objects.get(variabilny_symbol=trans['vs'])
+            platba = Platba.objects.create(cas=datetime.now(), suma=trans['amount']/100.0, poznamka=trans['message'], ucet=trans['description'], vlastnik = vlastnik)
+
+            vlastnik.refresh_balance()
+
+            parsed.priradene = True
+
+        except Skolne.DoesNotExist:
+            parsed.priradene = False
+    parsed.save()
+
+    print(trans)
+    return HttpResponse('ok')
 
 

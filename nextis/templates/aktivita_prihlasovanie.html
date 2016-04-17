@@ -1,0 +1,46 @@
+
+{%  extends "base.html" %}
+
+{% load bootstrap3 %}
+
+
+{% block title %}Nexteria - aktivita prihlasovanie{%  endblock %}
+
+{% block content %}
+
+    <div class="containter-fluid">
+    
+    <div class="row">
+        <div class="col-md-2"><a href="../../aktivity/{{ event.id }}">{{ event.nazov }}</a></div>
+        <div class="col-md-1">Kredity: {{ event.pocet_kreditov }}</div>
+        <div class="col-md-3">Od: {{ event.zaciatok }} <br> do: {{ event.koniec }}</div>
+        <div class="col-md-3">Levely: {{ event.get_levely }}</div>
+        <div class="col-md-1">{{ event.typ }}</div>
+        <div class="col-md-1">{{ event.get_pocet_ucastnikov }} ludi</div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">Lektori: {{ event.get_lektori }}</div>
+        <div class="col-md-2">Miesto: {{ event.miesto }}</div>
+        <div class="col-md-7">Popis: {{ event.popis }}</div>
+    </div>
+
+    <div class="row">
+        <div class="mapa">{{ event.google_mapa|safe }}</div>
+    </div>
+
+    <div class="row">
+        <h2>Prihlás sa na event:</h2>
+
+        <form method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "star" %} Prihlásiť
+                </button>
+            {% endbuttons %}
+        </form>
+    </div>
+
+{% endblock %}

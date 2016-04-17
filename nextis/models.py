@@ -60,8 +60,8 @@ class Vydavok(models.Model):
     get_meno.short_description = "Meno"
 
 class Skolne(models.Model):
-    balance = models.FloatField()
-    variabilny_symbol = models.IntegerField()
+    balance = models.FloatField(default=0)
+    variabilny_symbol = models.IntegerField(unique=True)
     #platby = models.ForeignKey(Platba, null=True, blank=True)  # platba a vydavok maju len jedneho cloveka
     #vydavky = models.ForeignKey(Vydavok, null=True, blank=True) # tento vztah je naopak platby a vydavky patria do skolneho..
 
@@ -94,7 +94,7 @@ class Clovek(models.Model):
 
     meno = models.CharField(max_length=100)
     priezvisko = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
 
     telefon_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     telefon_cislo = models.CharField(validators=[telefon_regex], blank=True, max_length=25)  # validators should be a list
@@ -166,7 +166,7 @@ class Student(Rola):
         return self.level.stav
 
     def get_kredity(self):
-        evs = Event.objects.filter(ucastnici=self)
+        evs = Event.objects.filter(feedbacky__student=self)
         kredity = 0
         for e in evs:
             kredity += e.pocet_kreditov
@@ -223,6 +223,7 @@ class Event(models.Model):  # nejaky event, teda DBK/IK, ako presne bude projekt
     #ucastnici = models.ManyToManyField(Student, through='Prihlasenie')
     ucastnici = models.ManyToManyField(Student, blank=True)
     feedbacky = models.ManyToManyField('Feedback', blank=True)
+    google_mapa = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
         return '['+self.typ+'] '+ self.nazov + ' (' + str(self.lektori)+')'
@@ -232,7 +233,10 @@ class Event(models.Model):  # nejaky event, teda DBK/IK, ako presne bude projekt
 
     def get_lektori(self):
         lek = self.lektori.all()
-        s = str(lek[0].clovek)
+        try:
+            s = str(lek[0].clovek)
+        except:
+            s = 'bez lektorov'
         for i in range(1,len(lek)):
             s += ','+ str(lek[i].clovek)
         return s
@@ -337,5 +341,12 @@ class Novinka(models.Model):
 
     class Meta:
         verbose_name_plural = "     Novinky"
+
+class ParsedEmail(models.Model):
+    nazov = models.CharField(max_length=200)
+    text = models.TextField()
+    datum = models.DateTimeField(auto_now_add=True)
+    priradene = models.BooleanField()
+
 
 

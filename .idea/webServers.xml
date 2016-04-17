@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="7c8d5f77-b6b0-4781-a555-8fdff84e7d90" name="DO ZOR" url="http://nexteria.zajo.tk">
+        <fileTransfer host="188.166.87.130" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/nexteria" accessType="SFTP" passphrase="dfc1dfc5dfc6dfcbdfc9dfcf" username="root" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

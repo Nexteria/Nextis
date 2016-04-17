@@ -22,13 +22,30 @@
     </div>
 
     <div class="row">
+        <div class="mapa">{{ event.google_mapa|safe }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-lg-2">
+            <a href="{% url 'aktivita_prihlasovanie' id %}">Prihlasovanie na Event</a>
+        </div>
+        <div class="col-sm-3 col-lg-2">
+            <a href="{% url 'aktivita_odhlasovanie' id %}">Odhlásiť sa z eventu</a>
+        </div>
+    </div>
+
+    {% if message %}
+        <div class="row bg-success" style="padding:0.5em;">
+            {{ message }}
+        </div>
+    {% endif %}
+    <div class="row">
 
 
     <div class="col-md-6">
         <div><h3>Ucastnici:</h3></div>
         <ol>
             {% for u in event.ucastnici.all %}
-                <li>{{ u.clovek }}</li>
+                <li>{{ u.clovek }} (Level {{ u.level }})</li>
             {% endfor %}
         </ol>
     </div>
@@ -37,7 +54,7 @@
         <div><h3>Feedback vyplnili:</h3></div>
         <ol>
             {% for u in event.feedbacky.all %}
-                <li>{{ u.student.clovek }}</li>
+                <li>{{ u.student.clovek }} (Level {{ u.student.level }})</li>
             {% endfor %}
         </ol>
     </div>
