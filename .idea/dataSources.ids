@@ -347,6 +347,42 @@
       <foreign-key name="#FAKE_nextis_vydavok_1" columns="vlastnik_id" ref-table="nextis_skolne" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="nextis_vydavok_6291af54" unique="true" columns="vlastnik_id"/>
     </table>
+    <table name="skolne_parsedemail" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="nazov" sqlType="VARCHAR(200)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="text" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="datum" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="priradene" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="skolne_platba" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="cas" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="suma" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="poznamka" sqlType="VARCHAR(200)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="ucet" sqlType="VARCHAR(50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="vlastnik_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_skolne_platba_1" columns="vlastnik_id" ref-table="skolne_skolne" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="skolne_platba_6291af54" unique="true" columns="vlastnik_id"/>
+    </table>
+    <table name="skolne_skolne" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="balance" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="variabilny_symbol" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="skolne_vydavok" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="ucel" sqlType="VARCHAR(50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="suma" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="splatnost" sqlType="DATE" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="uhradene" sqlType="REAL" precision="0" scale="-1" nullable="false" jdbcType="6"/>
+      <column name="vlastnik_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_skolne_vydavok_1" columns="vlastnik_id" ref-table="skolne_skolne" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="skolne_vydavok_6291af54" unique="true" columns="vlastnik_id"/>
+    </table>
     <table name="social_auth_association" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="server_url" sqlType="VARCHAR(255)" precision="0" scale="-1" nullable="false" jdbcType="12"/>

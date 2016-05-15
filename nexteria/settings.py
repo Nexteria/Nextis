@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'tinymce',
     'ckeditor',
     'ckeditor_uploader',
-    'nexteria.nextis',
     'bootstrap3',
     'adminplus',
+    'nexteria.nextis',
+    'nexteria.skolne',
+    'nexteria.events',
 ]
 
 MIDDLEWARE_CLASSES = [

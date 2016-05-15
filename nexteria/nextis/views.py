@@ -42,8 +42,10 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from nexteria.skolne.models import Skolne,ParsedEmail, Platba, Vydavok
 
 from . import forms
+from .models import *
 
 
 def novinky (request):

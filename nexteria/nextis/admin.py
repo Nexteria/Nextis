@@ -1,5 +1,4 @@
-from dal import autocomplete
-from django import forms
+
 from django.contrib import admin
 from django.shortcuts import HttpResponse
 
@@ -8,6 +7,7 @@ from django.shortcuts import HttpResponse
 # TODO super user zajozor, rootroot
 
 from django.contrib.auth.models import User,Group
+from .models import *
 
 admin.site.register(User)
 admin.site.register(Group)
@@ -78,7 +78,7 @@ class BuddyVztahAdmin(admin.ModelAdmin):
 admin.site.register(BuddyVztah,BuddyVztahAdmin)
 
 
-admin.site.register(Skolne)
+
 
 class LevelAdmin(admin.ModelAdmin):
     pass
@@ -86,52 +86,6 @@ class LevelAdmin(admin.ModelAdmin):
 admin.site.register(Level, LevelAdmin)
 
 
-class UcastniciInline(admin.TabularInline):
-    model = Event.ucastnici.through
-    extra = 0
-
-admin.site.register(Miesto)
-admin.site.register(Stretnutie)
-
-class EventForm(forms.ModelForm):
-    class Meta:
-        model = Event
-        fields = ('__all__')
-        widgets = {
-            'lektori': autocomplete.ModelSelect2Multiple(url='lektor-autocomplete'),
-            'ucastnici': autocomplete.ModelSelect2Multiple(url='student-autocomplete'),
-        }
-
-class EventAdmin(admin.ModelAdmin):
-    list_display = ['nazov','get_lektori','pocet_kreditov','get_stretnutia','get_levely','typ']
-    list_filter = ['stretnutia__zaciatok','typ','levely']
-    form = EventForm
-
-    inlines = [UcastniciInline]
-
-
-'''
-
-class ProjectsInLine(admin.TabularInline):
-    model = models.Project
-    extra = 0
-
-
-@admin.register(models.Profile)
-class ProfileAdmin(admin.ModelAdmin):
-
-    list_display = ("username", "interaction", "_projects")
-
-    search_fields = ["user__username"]
-
-    inlines = [
-        ProjectsInLine
-    ]
-
-    def _projects(self, obj):
-        return obj.projects.all().count()
-'''
-admin.site.register(Event, EventAdmin)
 
 
 class NovinkaAdmin(admin.ModelAdmin):
@@ -145,55 +99,4 @@ admin.site.register(Novinka, NovinkaAdmin)
 admin.site.register(Skola)
 admin.site.register(Fakulta)
 
-class PlatbaAdmin(admin.ModelAdmin):
-    list_display = ['get_meno','suma','cas','vlastnik']
-    list_filter = ['cas']
 
-admin.site.register(Platba,PlatbaAdmin)
-
-class VydavokAdmin(admin.ModelAdmin):
-    list_display = ['get_meno','suma','ucel','splatnost','uhradene','vlastnik']
-    list_filter = ['splatnost']
-admin.site.register(Vydavok, VydavokAdmin)
-
-
-class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ['student','cas','get_dlzka']
-    list_filter = ['cas']
-
-admin.site.register(Feedback,FeedbackAdmin)
-
-class ParsedEmailAdmin(admin.ModelAdmin):
-    list_display = ['nazov','datum', 'priradene']
-    list_filter = ['datum']
-
-admin.site.register(ParsedEmail, ParsedEmailAdmin)
-
-
-class SkolneForm(forms.Form):
-    ucel = forms.CharField()
-    level = forms.ModelChoiceField(queryset=Level.objects.all(), empty_label=None)
-    suma = forms.FloatField()
-    splatnost = forms.DateField()
-
-from django.shortcuts import render, HttpResponseRedirect
-from django.core.urlresolvers import reverse
-def level_skolne_view(req, *args, **kwargs):
-    if req.method == "POST":
-        form = SkolneForm(req.POST)
-        if form.is_valid():
-            level = form.cleaned_data['level']
-
-            stud = Student.objects.filter(level=level)
-            for s in stud:
-
-                skolne = s.skolne
-                vydavok = Vydavok.objects.create(ucel = form.cleaned_data['ucel'], suma= form.cleaned_data['suma'], splatnost = form.cleaned_data['splatnost'], uhradene = 0, vlastnik=skolne)
-                vydavok.save()
-
-            return HttpResponseRedirect(reverse('admin:index'))
-
-
-    form = SkolneForm()
-    return render(req, 'admin_skolne.html', context={'form':form})
-admin.site.register_view('level_skolne', 'Pridat levelu skolne', view=level_skolne_view)

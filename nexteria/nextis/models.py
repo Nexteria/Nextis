@@ -2,11 +2,8 @@ from django.db import models
 from django.core.validators import  RegexValidator
 from datetime import datetime
 from ckeditor.fields import RichTextField
-from tinymce.models import HTMLField
-from django.utils import timezone
-#from annoying.fields import AutoOneToOneField
+from nexteria.events.models import Event
 
-###                 skoly
 class Skola(models.Model):
     nazov = models.CharField(max_length=100)
     mesto = models.CharField(max_length=100)
@@ -22,74 +19,6 @@ class Fakulta(models.Model):
 
     def __str__(self):
         return self.skola.skratka + ' ' +self.skratka
-
-###                 skolne
-class Platba(models.Model):
-    cas = models.DateTimeField()
-    suma = models.FloatField()
-    poznamka = models.CharField(max_length=200)
-    ucet = models.CharField(max_length=50)
-    vlastnik = models.ForeignKey('Skolne')
-
-    def __str__(self):
-        meno = Student.objects.get(skolne = self.vlastnik)
-        return str(self.suma) + 'e, ' + str(meno.clovek)
-
-    class Meta:
-        verbose_name_plural = " Platby"
-
-    def get_meno(self):
-        return str(Student.objects.get(skolne = self.vlastnik).clovek)
-
-    get_meno.short_description = "Meno"
-
-class Vydavok(models.Model):
-    ucel = models.CharField(max_length=50)#mozno v buducnosti class ? teda ze typy vydavkov budu..
-    suma = models.FloatField()
-    splatnost = models.DateField()
-    uhradene = models.FloatField()
-    vlastnik = models.ForeignKey('Skolne')
-
-    class Meta:
-        verbose_name_plural = " Vydavky"
-
-    def __str__(self):
-        meno = Student.objects.get(skolne = self.vlastnik)
-        return str(self.suma) + 'e, ' + self.ucel + ' - ' + str(meno.clovek)
-
-    def get_meno(self):
-        return str(Student.objects.get(skolne = self.vlastnik).clovek)
-
-    get_meno.short_description = "Meno"
-
-class Skolne(models.Model):
-    balance = models.FloatField(default=0)
-    variabilny_symbol = models.IntegerField(unique=True)
-    #platby = models.ForeignKey(Platba, null=True, blank=True)  # platba a vydavok maju len jedneho cloveka
-    #vydavky = models.ForeignKey(Vydavok, null=True, blank=True) # tento vztah je naopak platby a vydavky patria do skolneho..
-
-    def refresh_balance(self):
-        vydavky = Platba.objects.filter(vlastnik=self)
-        platby = Vydavok.objects.filter(vlastnik=self)
-        balance = 0
-        for v in vydavky:
-            balance -= v.suma
-        for p in platby:
-            balance += p.suma
-        self.balance = balance
-
-
-    def __str__(self):
-        self.refresh_balance()
-        try:
-            meno = Student.objects.get(skolne = self)
-            return 'Stav: ' + str(self.balance) + ' (VS ' + str(self.variabilny_symbol) + ', ' + str(meno.clovek)+ ' )'
-        except:
-            return 'Student zatial nie je, ' + 'Stav: ' + str(self.balance) + ' (VS ' + str(self.variabilny_symbol)+ ')'
-
-    class Meta:
-        verbose_name_plural = " Skolne"
-
 
 
 #  este je mozno otazka ci nepouzivat django user model.. ale podla mna user != clovek v tomto ponimani..
@@ -145,7 +74,7 @@ class Student(Rola):
     rok_zaciatku = models.IntegerField()
     level = models.ForeignKey(Level)
 
-    skolne = models.OneToOneField(Skolne)
+    skolne = models.OneToOneField('skolne.Skolne')
 
 
     def __str__(self):
@@ -205,121 +134,6 @@ class Lektor(Rola):
 #class Autor(Rola):
 
 
-class Miesto(models.Model):
-    nazov = models.CharField(max_length=200)
-    google_mapa = models.CharField(max_length=500, blank=True)
-    #TODO fotka mozno
-
-    def __str__(self):
-        return self.nazov
-
-class Stretnutie(models.Model):
-    zaciatok = models.DateTimeField()
-    koniec = models.DateTimeField()
-    miesto = models.ForeignKey(Miesto, blank=True)
-
-    def __str__(self):
-        return 'Od: ' + str(self.zaciatok) + ' do: ' + str(self.koniec) + ' , ' + str(self.miesto)
-
-EVENT_TYPES = (('ik', 'IK'), ('dbk', 'DBK'),('for', 'Formalna udalost'), ('ine', 'Ine'))
-# alebo preco to actual value nemoze byt hocico ine ? napr. samotne ik a dbk
-
-#viacdielne sakra ako ?
-class Event(models.Model):  # nejaky event, teda DBK/IK, ako presne bude projekt ??
-    nazov = models.CharField(max_length=100)
-    lektori = models.ManyToManyField(Lektor, blank=True)
-    pocet_kreditov = models.IntegerField()
-    stretnutia = models.ManyToManyField(Stretnutie, blank=True)
-    levely = models.ManyToManyField(Level)
-    typ = models.CharField(max_length=3,choices=EVENT_TYPES)
-    popis = models.TextField(blank=True)
-    #ucastnici = models.ManyToManyField(Student, through='Prihlasenie')
-    ucastnici = models.ManyToManyField(Student, blank=True)
-    feedbacky = models.ManyToManyField('Feedback', blank=True)
-
-    kapacita = models.IntegerField(blank=True)
-
-    def __str__(self):
-        return '['+self.typ+'] '+ self.nazov + ' (' + str(self.lektori)+')'
-
-    class Meta:
-        verbose_name_plural = "    Eventy"
-
-    def get_lektori(self):
-        lek = self.lektori.all()
-        try:
-            s = str(lek[0].clovek)
-        except:
-            s = 'bez lektorov'
-        for i in range(1,len(lek)):
-            s += ','+ str(lek[i].clovek)
-        return s
-
-
-    def get_levely(self):
-        lev = self.levely.all()
-        s = str(lev[0])
-        for i in range(1,len(lev)):
-            s += ','+ str(lev[i])
-        return s
-
-    def get_short_levely(self):
-        pass
-
-
-    def get_pocet_ucastnikov(self):
-        return len(self.ucastnici.all())
-
-    def get_stretnutia(self):
-        return '<br />'.join(map(str,self.stretnutia.all()))
-
-    def get_objstretnutia(self):
-        return self.stretnutia.all()
-
-    def get_starttime(self):
-        print('f')
-        if self.stretnutia.count() > 0:
-            print(self.stretnutia.order_by('-zaciatok').first())
-            return self.stretnutia.order_by('-zaciatok').first().zaciatok
-        return datetime.now()
-
-    def get_endtime(self):
-        print('e')
-        if self.stretnutia.count() > 0:
-            print(self.stretnutia.order_by('-koniec').last())
-            return self.stretnutia.order_by('-koniec').last().koniec
-        return datetime.now()
-
-    def has_ended(self):
-        print ('h')
-        print( self.get_endtime() < datetime.now())
-        return self.get_endtime() < datetime.now()
-
-    get_stretnutia.allow_tags = True
-
-
-class Feedback(models.Model):
-    student = models.ForeignKey(Student)
-    feedback = models.TextField()
-    cas = models.DateTimeField(auto_now=True, null=True)
-
-    def get_dlzka(self):
-        return len(self.feedback)
-
-    class Meta:
-        verbose_name_plural = "   Feedbacky"
-
-    def __str__(self):
-        return str(self.student)
-#                 Vztahy
-#class Prihlasenie(models.Model):  # studenta na event
-#    student = models.ForeignKey(Student)
-#    event = models.ForeignKey(Event)
-#    doodle = models.BooleanField()
-#    prisiel = models.BooleanField()
-#    feedback = models.BooleanField()
-#    poznamka = models.CharField(max_length=500)
-#    pass
 
 
 class BuddyVztah(models.Model):
@@ -383,14 +197,6 @@ class Novinka(models.Model):
     class Meta:
         verbose_name_plural = "     Novinky"
 
-class ParsedEmail(models.Model):
-    nazov = models.CharField(max_length=200)
-    text = models.TextField()
-    datum = models.DateTimeField(auto_now_add=True)
-    priradene = models.BooleanField()
-
-    def __str__(self):
-        return self.nazov + ' - ' + str(self.datum)
 
 
 
