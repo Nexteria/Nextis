@@ -10,7 +10,13 @@
         <div class="row">
             <div class="col-md-2"><a href="../../aktivity/{{ e.id }}">{{ e.nazov }}</a></div>
             <div class="col-md-1">Kredity: {{ e.pocet_kreditov }}</div>
-            <div class="col-md-3">Od: {{ e.zaciatok }} <br> do: {{ e.koniec }}</div>
+            <div class="col-md-3">
+                <div class="row">Stretnutia:</div>
+                {% for s in e.get_objstretnutia %}
+                    Od: {{ s.zaciatok }} <br> do: {{ s.koniec }} <br> v {{ s.miesto }}
+                {% endfor %}
+
+            </div>
             <div class="col-md-3">Levely: {{ e.get_levely }}</div>
             <div class="col-md-1">{{ e.typ }}</div>
             <div class="col-md-1">{{ e.get_pocet_ucastnikov }} ludi</div>
@@ -25,7 +31,13 @@
         <div class="row">
             <div class="col-md-2"><a href="../../aktivity/{{ e.id }}">{{ e.nazov }}</a></div>
             <div class="col-md-1">Kredity: {{ e.pocet_kreditov }}</div>
-            <div class="col-md-3">Od: {{ e.zaciatok }} <br> do: {{ e.koniec }}</div>
+            <div class="col-md-3">
+                <div class="row">Stretnutia:</div>
+                {% for s in e.get_objstretnutia %}
+                    Od: {{ s.zaciatok }} <br> do: {{ s.koniec }} <br> v {{ s.miesto }} <br>
+                {% endfor %}
+
+            </div>
             <div class="col-md-3">Levely: {{ e.get_levely }}</div>
             <div class="col-md-1">{{ e.typ }}</div>
             <div class="col-md-1">{{ e.get_pocet_ucastnikov }} ludi</div>

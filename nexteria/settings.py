@@ -31,13 +31,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
+    #'django.contrib.admin',
     'django.contrib.admin.apps.SimpleAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'nextis',
+    'social.apps.django_app.default',
+    'tinymce',
+    'ckeditor',
+    'ckeditor_uploader',
+    'nexteria.nextis',
     'bootstrap3',
     'adminplus',
 ]
@@ -49,17 +56,25 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = (
+   'social.backends.facebook.FacebookOAuth2',
+   'social.backends.google.GoogleOAuth2',
+   'social.backends.twitter.TwitterOAuth',
+   'django.contrib.auth.backends.ModelBackend',
+)
 ROOT_URLCONF = 'nexteria.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'nextis/templates',
+            #'nextis/templates',
+            'templates/',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -68,6 +83,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
             ],
         },
     },
@@ -125,7 +142,34 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1045245818788-as32lpbs25ppmc2obu9rq4rmtum1fcol.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'MUhb01amB7FBcYeT3l0dIt5P'
+
+
+LOGIN_REDIRECT_URL = '/'
+
 #ADMIN_REORDER = (
 #    ('nextis', ('Novinka','Event','Clovek','Student','Lektor')),
 #    ('nextis', ('BuddyVztah','GuideVztah','Skolne','Platba','Vydavok','Fakulta','Skola','Level')),
 #)
+'''
+TINYMCE_PROFILE = {
+    'theme': 'modern',
+    'plugins': 'noneditable advlist autolink link lists charmap hr searchreplace wordcount visualblocks visualchars code insertdatetime save table contextmenu directionality paste textcolor',
+    'toolbar': 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor | upload_button',
+    'noneditable_leave_contenteditable': 'true',
+    'setup': 'addCustomButtons',
+    'content_css': os.path.join(STATIC_URL, "mycss/tinymce.css"),
+    'relative_urls': False,
+    'remove_script_host': True,
+    'document_base_url': APP_HOST_URL,
+    'removed_menuitems': 'newdocument'
+}'''
+
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+MEDIA_ROOT= "media/"
+MEDIA_RUL='media/'
+
+CKEDITOR_IMAGE_BACKEND='pillow'

@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 # Create your views here.
 
 # kontaktovnik
@@ -7,6 +5,9 @@ from django.shortcuts import render
 # prehlad kreditov
 
 # prehlad platby skolneho
+
+#zajozor
+#rootroot
 
 #TODO !! integracia platieb z emailov
 
@@ -38,13 +39,12 @@ from django.shortcuts import render
 #TODO atraktivnejsie novinky
 
 
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from nextis.models import *
-from . import forms
 from django.core.urlresolvers import reverse
-
-
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+
+from . import forms
+
 
 def novinky (request):
     posledne = Novinka.objects.order_by('vytvorene')[:3]
@@ -53,7 +53,7 @@ def novinky (request):
 def skolne(request):
     studenti = Student.objects.filter(level='1') | Student.objects.filter(level = '2') #.order_by('level')
     studenti = studenti.order_by('rok_zaciatku')
-    return render(request, 'skolne.html', context = {('studenti', studenti)})
+    return render(request, 'skolne.html', context={('studenti', studenti)})
 
 def skolne_detail(request,id):
     student = Student.objects.get(id=id)
@@ -78,10 +78,30 @@ def kontakty(request):
     levely = Level.objects.all()
     return render(request, 'kontakty.html', context={('levely',levely)})
 
+
+def cmp_evs_start(ev1, ev2):
+    return ev1.get_starttime() > ev2.get_starttime()
+
+def cmp_evs_end(ev1):
+    return ev1.get_endtime()
+
+def get_only_id(event):
+    return event.id
+
 def aktivity(request):
-    preevs = Event.objects.filter(koniec__lt=datetime.now()).order_by('-zaciatok')
-    postevs = Event.objects.filter(koniec__gt=datetime.now()).order_by('-zaciatok')
-    return render(request, 'aktivity.html', context={'pre_eventy': preevs, 'post_eventy':postevs})
+    preevs = [event.id for event in Event.objects.all() if event.has_ended]
+    sorted_preevs = Event.objects.filter(id__in=preevs).order_by('stretnutia__zaciatok').values('id').distinct()
+    #ppreevs = preev_ids.order_by('-stretnutia__zaciatok').values('id').distinct()
+    preevs_f = Event.objects.filter(id__in=sorted_preevs)
+    #filter(stretnutia__koniec__gt=datetime.now())
+
+    postevs = [event.id for event in Event.objects.all() if not event.has_ended]
+    #ppostevs = Eventpreev_ids.order_by('-stretnutia__zaciatok').values('id').distinct()
+    #postevs = Event.objects.filter(id__in=ppreevs)
+    postevs_f = Event.objects.filter(id__in=postevs)#.order_by('-stretnutia__zaciatok').distinct()
+    #print(preevs)
+    #print(postevs)
+    return render(request, 'aktivity.html', context={'pre_eventy': preevs_f,'post_eventy':postevs_f})
 
 def aktivita_detail(request, id):
     event = Event.objects.get(id=id)
@@ -136,11 +156,11 @@ def aktivita_odhlasovanie(request, id):
                 form.add_error(None, 'Nespravny email')
         return render(request, 'aktivita_odhlasovanie.html', context={'event':event,'form':form})
 
-from processing_notifications import parse_email
+from nexteria.skolne.utility.processing_notifications import parse_email
 
 @csrf_exempt
 def parse_platba(req):
-    parsed = ParsedEmail.objects.create(nazov=req.POST['subject'], text=req.POST['body-plain'], priradene = False)
+    parsed = ParsedEmail.objects.create(nazov=req.POST['subject'], text=req.POST['body-plain'], priradene=False)
     trans = parse_email(req.POST['body-plain'])
     if trans['transaction_type'] == 'kredit':
         try:
@@ -159,3 +179,30 @@ def parse_platba(req):
     return HttpResponse('ok')
 
 
+from dal import autocomplete
+
+class StudentAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_superuser:
+            return Student.objects.none()
+
+        qs = Student.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class LektorAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_superuser:
+            return Lektor.objects.none()
+
+        qs = Lektor.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs

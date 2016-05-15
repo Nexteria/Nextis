@@ -6,8 +6,10 @@
 Unit tests for parsing Tatra Banka bank statements emails.
 '''
 
-import processing_notifications
 import unittest
+
+from nexteria.skolne.utility import processing_notifications
+
 
 class Test_processing_notifications(unittest.TestCase):
 

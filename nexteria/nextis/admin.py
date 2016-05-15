@@ -1,9 +1,16 @@
-from django.contrib import admin
+from dal import autocomplete
 from django import forms
-from nextis.models import *
+from django.contrib import admin
+from django.shortcuts import HttpResponse
+
 # Register your models here.
 
-# TODO super user zajozor, testtest
+# TODO super user zajozor, rootroot
+
+from django.contrib.auth.models import User,Group
+
+admin.site.register(User)
+admin.site.register(Group)
 
 
 class ClovekAdmin(admin.ModelAdmin):
@@ -14,10 +21,45 @@ admin.site.register(Clovek, ClovekAdmin)
 
 #admin.site.register(Rola)
 
+def export_student_list(modeladmin, request, queryset):
+    import csv
+    from django.utils.encoding import smart_str
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=nexteria_zoznam_studentov.csv'
+    writer = csv.writer(response, csv.excel)
+    response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
+    writer.writerow([
+        smart_str(u"Meno"),
+        smart_str(u"Priezvisko"),
+        smart_str(u"Email"),
+        smart_str(u"Telefon"),
+        smart_str(u"Datum nar."),
+        smart_str(u"Fakulta"),
+        smart_str(u"Rok zaciatku"),
+        smart_str(u"Level"),
+        smart_str(u"Skolne"),
+    ])
+
+    for obj in queryset:
+        writer.writerow([
+            smart_str(obj.clovek.meno),
+            smart_str(obj.clovek.priezvisko),
+            smart_str(obj.clovek.email),
+            smart_str(obj.clovek.telefon_cislo),
+            smart_str(obj.datum_nar),
+            smart_str(obj.fakulta),
+            smart_str(obj.rok_zaciatku),
+            smart_str(obj.level),
+            smart_str(obj.skolne),
+        ])
+    return response
+export_student_list.short_description = 'Exportuj vybratych studentov do zoznamu'
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ['clovek','get_email','get_telefon','skolne','level','fakulta']
     list_filter = ['level','fakulta']
+
+    actions = [export_student_list, ]
 
 admin.site.register(Student, StudentAdmin)
 
@@ -44,10 +86,51 @@ class LevelAdmin(admin.ModelAdmin):
 admin.site.register(Level, LevelAdmin)
 
 
-class EventAdmin(admin.ModelAdmin):
-    list_display = ['nazov','get_lektori','pocet_kreditov','zaciatok','koniec','get_levely','miesto','typ']
-    list_filter = ['zaciatok','typ','levely']
+class UcastniciInline(admin.TabularInline):
+    model = Event.ucastnici.through
+    extra = 0
 
+admin.site.register(Miesto)
+admin.site.register(Stretnutie)
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ('__all__')
+        widgets = {
+            'lektori': autocomplete.ModelSelect2Multiple(url='lektor-autocomplete'),
+            'ucastnici': autocomplete.ModelSelect2Multiple(url='student-autocomplete'),
+        }
+
+class EventAdmin(admin.ModelAdmin):
+    list_display = ['nazov','get_lektori','pocet_kreditov','get_stretnutia','get_levely','typ']
+    list_filter = ['stretnutia__zaciatok','typ','levely']
+    form = EventForm
+
+    inlines = [UcastniciInline]
+
+
+'''
+
+class ProjectsInLine(admin.TabularInline):
+    model = models.Project
+    extra = 0
+
+
+@admin.register(models.Profile)
+class ProfileAdmin(admin.ModelAdmin):
+
+    list_display = ("username", "interaction", "_projects")
+
+    search_fields = ["user__username"]
+
+    inlines = [
+        ProjectsInLine
+    ]
+
+    def _projects(self, obj):
+        return obj.projects.all().count()
+'''
 admin.site.register(Event, EventAdmin)
 
 

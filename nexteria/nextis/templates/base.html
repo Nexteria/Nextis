@@ -14,13 +14,32 @@
         {% block sidebar %}
         <ul>
             <li><a href="/">Novinky</a></li>
-            <li><a href="/skolne/">Skolne</a></li>
+            <li><a href="/nexteria/skolne">Skolne</a></li>
             <li><a href="/kredity/">Kredity</a></li>
             <li><a href="/kontakty/">Kontaktovnik</a></li>
             <li><a href="/aktivity/">Aktivity</a></li>
 
         </ul>
         {% endblock %}
+
+        {% if user and not user.is_anonymous %}
+         <li>
+           <a>Hello {{ user.get_full_name|default:user.username }}!</a>
+         </li>
+         <li>
+           <a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>
+         </li>
+       {% else %}
+         <li>
+           <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
+         </li>
+         <li>
+           <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
+         </li>
+         <li>
+           <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a>
+         </li>
+       {% endif %}
     </div>
 
     <div id="content" class="col-md-9">

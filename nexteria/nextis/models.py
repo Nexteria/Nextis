@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import  RegexValidator
 from datetime import datetime
+from ckeditor.fields import RichTextField
+from tinymce.models import HTMLField
+from django.utils import timezone
 #from annoying.fields import AutoOneToOneField
 
 ###                 skoly
@@ -202,28 +205,39 @@ class Lektor(Rola):
 #class Autor(Rola):
 
 
+class Miesto(models.Model):
+    nazov = models.CharField(max_length=200)
+    google_mapa = models.CharField(max_length=500, blank=True)
+    #TODO fotka mozno
 
+    def __str__(self):
+        return self.nazov
 
+class Stretnutie(models.Model):
+    zaciatok = models.DateTimeField()
+    koniec = models.DateTimeField()
+    miesto = models.ForeignKey(Miesto, blank=True)
 
-EVENT_TYPES = (('ik', 'IK'), ('dbk', 'DBK'), ('ine', 'Ine'))
+    def __str__(self):
+        return 'Od: ' + str(self.zaciatok) + ' do: ' + str(self.koniec) + ' , ' + str(self.miesto)
+
+EVENT_TYPES = (('ik', 'IK'), ('dbk', 'DBK'),('for', 'Formalna udalost'), ('ine', 'Ine'))
 # alebo preco to actual value nemoze byt hocico ine ? napr. samotne ik a dbk
 
-
+#viacdielne sakra ako ?
 class Event(models.Model):  # nejaky event, teda DBK/IK, ako presne bude projekt ??
     nazov = models.CharField(max_length=100)
     lektori = models.ManyToManyField(Lektor, blank=True)
     pocet_kreditov = models.IntegerField()
-    zaciatok = models.DateTimeField()
-    koniec = models.DateTimeField()
-    #  levely = ArrayField(models.CharField(max_length=2, choices=LEVELY))
+    stretnutia = models.ManyToManyField(Stretnutie, blank=True)
     levely = models.ManyToManyField(Level)
-    miesto = models.CharField(max_length=100)
     typ = models.CharField(max_length=3,choices=EVENT_TYPES)
-    popis = models.TextField()
+    popis = models.TextField(blank=True)
     #ucastnici = models.ManyToManyField(Student, through='Prihlasenie')
     ucastnici = models.ManyToManyField(Student, blank=True)
     feedbacky = models.ManyToManyField('Feedback', blank=True)
-    google_mapa = models.CharField(max_length=500, blank=True)
+
+    kapacita = models.IntegerField(blank=True)
 
     def __str__(self):
         return '['+self.typ+'] '+ self.nazov + ' (' + str(self.lektori)+')'
@@ -255,6 +269,33 @@ class Event(models.Model):  # nejaky event, teda DBK/IK, ako presne bude projekt
 
     def get_pocet_ucastnikov(self):
         return len(self.ucastnici.all())
+
+    def get_stretnutia(self):
+        return '<br />'.join(map(str,self.stretnutia.all()))
+
+    def get_objstretnutia(self):
+        return self.stretnutia.all()
+
+    def get_starttime(self):
+        print('f')
+        if self.stretnutia.count() > 0:
+            print(self.stretnutia.order_by('-zaciatok').first())
+            return self.stretnutia.order_by('-zaciatok').first().zaciatok
+        return datetime.now()
+
+    def get_endtime(self):
+        print('e')
+        if self.stretnutia.count() > 0:
+            print(self.stretnutia.order_by('-koniec').last())
+            return self.stretnutia.order_by('-koniec').last().koniec
+        return datetime.now()
+
+    def has_ended(self):
+        print ('h')
+        print( self.get_endtime() < datetime.now())
+        return self.get_endtime() < datetime.now()
+
+    get_stretnutia.allow_tags = True
 
 
 class Feedback(models.Model):
@@ -331,7 +372,7 @@ class GuideVztah(models.Model):
 #  iba basic blog
 class Novinka(models.Model):
     nazov = models.CharField(max_length=200)
-    text = models.TextField()
+    text = RichTextField()
     autor = models.ForeignKey(Clovek)
     vytvorene = models.DateTimeField(auto_now_add=True)
     upravene = models.DateTimeField(auto_now=True)
@@ -347,6 +388,9 @@ class ParsedEmail(models.Model):
     text = models.TextField()
     datum = models.DateTimeField(auto_now_add=True)
     priradene = models.BooleanField()
+
+    def __str__(self):
+        return self.nazov + ' - ' + str(self.datum)
 
 
 

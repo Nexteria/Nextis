@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from adminplus.sites import AdminSitePlus
+import django.contrib.auth.views as aviews
 
 admin.site = AdminSitePlus()
 admin.autodiscover()
@@ -23,6 +24,11 @@ admin.autodiscover()
 
 
 urlpatterns = [
+    url(r'^login/$', aviews.login, {'template_name':'registration/login.html'}, name='login'),
+    url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^admin/', admin.site.urls),
-    url(r'', include('nextis.urls')),
+    url(r'', include('nexteria.nextis.urls')),
+    url('', include('django.contrib.auth.urls', namespace='auth')),
+    url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]

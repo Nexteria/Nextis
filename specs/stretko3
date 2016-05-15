@@ -1,0 +1,59 @@
+priradovanie po registracii
+"predvytvaranie", nch sa necaka idealne
+
+filtrovanie noviniek pripadne
+
+dashboard, rychly prehlad
+-kde si bol naposledy,
+-co je najblizsie
+-aj prihlaseny aj neprihlaseny, nejako odlisene
+
+-aktualny stav kredity(body) ??zamysliet sa nazov :D
+-vs zaklad/ percento, ocakavana hodnota, priemer levelu?
+(do buducnosti, coho sa zucastnit :D )
+
+-quick prehlad skolneho (kolko percent levelu zaplatilo napr. . )
+-hot novinky
+----
+
+v ramci semestra sa skolne moc nemeni
+
+
+Nahodit realne VS, realne skolne, realnych studentov
+
+spravanie pri naplneni eventu
+!nahradnik
+v pripade odhlasenia posunutie
+casovy limit, dokedy sa moze clovek odhlasovat
+poslednych 48 hodin nejake approvnutie?
+vyplnenie dovodu odhlasenia, tj psychologicky trik, kratky popis dosledkov.. ze je to smutne
+
+zoznam ludi, co sa zvyknu odhlasovat,
+"karantena", ti co neprisli bez toho aby nieco povedali a ine..
+
+defaultne stiahnuta fotka
+pripadna moznost zmenit ju..
+(nemam viziu sedy default avatar)
+
+generovanie prezencky na event
+pre lektora, pre priestory, a na podpisovanie
+Vyklikanie, ze kto tam bol rychlo..
+Vyklikavat by mal vediet len "host"
+hosti sa menia, skupina, alebo ako ?
+
+historia z viac detailami django admin
+
+Stavy:
+aktivny
+odstupeny/archivny
+preruseny
+
+(zadlzenie inak)
+
+"karta studenta"
+poznamky k studentovi napr.
+aj archivovany, napr. dovody odchodu/ ine dovody
+
+
+skupiny teraz nie su nutne
+ale ratat s nimi do buducna
