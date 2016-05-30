@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ilkkw)e@u#gmony(4&_#_3#*ys4p(tmg^91+2ioeo=cgk0f&%)'
+SECRET_KEY = 'THIS_SHOULD_BE_OVERRIDDEN_IN_LOCAL_SETTINGS'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,8 +144,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1045245818788-as32lpbs25ppmc2obu9rq4rmtum1fcol.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'MUhb01amB7FBcYeT3l0dIt5P'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
 
 
 LOGIN_REDIRECT_URL = '/'
@@ -175,3 +175,8 @@ MEDIA_ROOT= "media/"
 MEDIA_RUL='media/'
 
 CKEDITOR_IMAGE_BACKEND='pillow'
+
+try:
+	from nexteria.local_settings import *
+except:
+	pass

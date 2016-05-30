@@ -50,6 +50,8 @@ coverage.xml
 # Django stuff:
 *.log
 
+nexteria/**/__pycache__
+
 # Sphinx documentation
 docs/_build/
 
@@ -57,3 +59,5 @@ docs/_build/
 target/
 
 .idea
+nexteria/local_settings.py
+db.sqlite3

@@ -1,0 +1,7 @@
+Django
+django-autocomplete-light
+python-social-auth
+django-tinymce
+django-ckeditor
+django-bootstrap3
+django-adminplus
