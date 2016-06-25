@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
 
 # Application definition
 
@@ -149,6 +153,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
 
 
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 
 #ADMIN_REORDER = (
 #    ('nextis', ('Novinka','Event','Clovek','Student','Lektor')),

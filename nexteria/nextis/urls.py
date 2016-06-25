@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$', views.novinky),
+    url(r'^$', views.home),
     url(r'^skolne/$', views.skolne),
     url(r'^skolne/(?P<id>[0-9]+)$', views.skolne_detail),
     url(r'^kredity/$', views.kredity),

@@ -40,6 +40,7 @@
 
 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from nexteria.skolne.models import Skolne,ParsedEmail, Platba, Vydavok
@@ -47,10 +48,9 @@ from nexteria.skolne.models import Skolne,ParsedEmail, Platba, Vydavok
 from . import forms
 from .models import *
 
-
-def novinky (request):
-    posledne = Novinka.objects.order_by('vytvorene')[:3]
-    return render(request, 'novinky.html', context={('posledne',posledne)})
+@login_required
+def home(request):
+    return render(request, 'base.html')
 
 def skolne(request):
     studenti = Student.objects.filter(level='1') | Student.objects.filter(level = '2') #.order_by('level')
