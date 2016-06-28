@@ -94,6 +94,8 @@
       </div>
     </nav>
   </header>
+
+  {% block sidebar %}
   <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -111,15 +113,16 @@
       <ul class="sidebar-menu">
         <li class="header">ŠTÚDIUM</li>
         <li class="header">NETWORK</li>
+        <li><a href="/kontakty"><i class="fa fa-users text-green"></i> <span>Kontaktovník</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
   </aside>
+  {% endblock %}
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    
-    <!-- /.content -->
+    {% block content %}{% endblock %}
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">

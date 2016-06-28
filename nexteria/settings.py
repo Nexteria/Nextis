@@ -181,6 +181,8 @@ MEDIA_RUL='media/'
 
 CKEDITOR_IMAGE_BACKEND='pillow'
 
+AUTH_PROFILE_MODULE = "nexteria.UserProfile"
+
 try:
 	from nexteria.local_settings import *
 except:

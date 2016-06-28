@@ -25,7 +25,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^login/$', aviews.login, {'template_name':'registration/login.html'}, name='login'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login/'}),
+    url(r'^logout/$', aviews.logout, {'next_page': '/login/'}),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^admin/', admin.site.urls),
     url(r'', include('nexteria.nextis.urls')),

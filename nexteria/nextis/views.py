@@ -77,8 +77,8 @@ def kredity_detail(request,id):
 
 
 def kontakty(request):
-    levely = Level.objects.all()
-    return render(request, 'kontakty.html', context={('levely',levely)})
+    studenti = Student.objects.all()
+    return render(request, 'kontakty.html', context={('studenti',studenti)})
 
 
 def cmp_evs_start(ev1, ev2):

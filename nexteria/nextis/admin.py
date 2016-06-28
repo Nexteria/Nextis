@@ -7,9 +7,23 @@ from django.shortcuts import HttpResponse
 # TODO super user zajozor, rootroot
 
 from django.contrib.auth.models import User,Group
+from django.contrib.auth.admin import UserAdmin
+from nexteria.nextis.models import UserProfile
 from .models import *
 
-admin.site.register(User)
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    fk_name = 'user'
+
+class UserAdmin(admin.ModelAdmin):
+    list_select_related = True
+    inlines = [
+        UserProfileInline,
+    ]
+    
+
+admin.site.register(User, UserAdmin)
+
 admin.site.register(Group)
 
 
@@ -56,7 +70,7 @@ def export_student_list(modeladmin, request, queryset):
 export_student_list.short_description = 'Exportuj vybratych studentov do zoznamu'
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['clovek','get_email','get_telefon','skolne','level','fakulta']
+    list_display = ['user','get_email','get_telefon','skolne','level','fakulta']
     list_filter = ['level','fakulta']
 
     actions = [export_student_list, ]

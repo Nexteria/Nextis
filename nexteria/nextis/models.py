@@ -3,6 +3,20 @@ from django.core.validators import  RegexValidator
 from datetime import datetime
 from ckeditor.fields import RichTextField
 from nexteria.events.models import Event
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, related_name='profile', null=False)
+    
+    telefon_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    telefon_cislo = models.CharField(validators=[telefon_regex], blank=True, null=True, max_length=25)  # validators should be a list
+    viditelne_kontakty = models.BooleanField(default=False)
+
+    datum_nar = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username + '`s profil'
+
 
 class Skola(models.Model):
     nazov = models.CharField(max_length=100)
@@ -53,7 +67,7 @@ class Level(models.Model):
     zaciatok_rok = models.IntegerField()
 
     def __str__(self):
-        return self.stav + '(rok ' + str(self.zaciatok_rok) +')'
+        return self.stav + ' (rok ' + str(self.zaciatok_rok) +')'
 
     def get_students(self):
         return Student.objects.filter(level=self)
@@ -67,30 +81,30 @@ class Rola(models.Model):
 
 #"skupiny" v akych moze byt clovek?? takto ci inak ??
 class Student(Rola):
-    clovek = models.OneToOneField(Clovek, null=True)
-    datum_nar = models.DateField()
-    fakulta = models.ForeignKey(Fakulta)
+    user = models.OneToOneField(User)
+    fakulta = models.ForeignKey(Fakulta, null=True, blank=True)
+    skola = models.ForeignKey(Skola, null=True, blank=True)
     #  level = models.CharField(max_length=2, choices=LEVELY)
-    rok_zaciatku = models.IntegerField()
+    rok_zaciatku = models.DateField()
     level = models.ForeignKey(Level)
 
-    skolne = models.OneToOneField('skolne.Skolne')
+    skolne = models.OneToOneField('skolne.Skolne', null=True, blank=True)
 
 
     def __str__(self):
-        return self.clovek.__str__()
+        return self.user.__str__()
 
     class Meta:
         verbose_name_plural = "   Studenti"
 
 
     def get_email(self):
-        return self.clovek.email
+        return self.user.email
 
     get_email.short_description = 'Email'
 
     def get_telefon(self):
-        return self.clovek.telefon_cislo
+        return self.user.profile.telefon_cislo
 
     get_telefon.short_description = 'Telefon'
 

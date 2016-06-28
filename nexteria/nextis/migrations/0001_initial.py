@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('rola_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='nextis.Rola')),
                 ('datum_nar', models.DateField()),
-                ('rok_zaciatku', models.IntegerField()),
+                ('rok_zaciatku', models.DateField()),
                 ('clovek', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to='nextis.Clovek')),
             ],
             options={
