@@ -62,3 +62,12 @@ target/
 nexteria/local_settings.py
 db.sqlite3
 venv
+
+# vs
+bin/
+obj/
+nextis.pyproj
+ptvs_virtualenv_proxy.py
+readme.mht
+web.config
+web.debug.config
