@@ -35,6 +35,7 @@ STATICFILES_DIRS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'tastypie',
     'dal',
     'dal_select2',
     #'django.contrib.admin',
@@ -51,7 +52,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'adminplus',
     'nexteria.nextis',
-    'nexteria.skolne',
+    'nexteria.tuition',
     'nexteria.events',
 ]
 

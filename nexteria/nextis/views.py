@@ -43,7 +43,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from nexteria.skolne.models import Skolne,ParsedEmail, Platba, Vydavok
 
 from . import forms
 from .models import *
@@ -52,6 +51,7 @@ from .models import *
 def home(request):
     return render(request, 'base.html')
 
+'''
 def skolne(request):
     studenti = Student.objects.filter(level='1') | Student.objects.filter(level = '2') #.order_by('level')
     studenti = studenti.order_by('rok_zaciatku')
@@ -159,22 +159,27 @@ def aktivita_odhlasovanie(request, id):
         return render(request, 'aktivita_odhlasovanie.html', context={'event':event,'form':form})
 
 from nexteria.skolne.utility.processing_notifications import parse_email
-
+'''
 @csrf_exempt
-def parse_platba(req):
-    parsed = ParsedEmail.objects.create(nazov=req.POST['subject'], text=req.POST['body-plain'], priradene=False)
+def parse_payment(req):
+    parsed = ParsedEmail.objects.create(name=req.POST['subject'], text=req.POST['body-plain'], paired=False)
     trans = parse_email(req.POST['body-plain'])
     if trans['transaction_type'] == 'kredit':
         try:
-            vlastnik = Skolne.objects.get(variabilny_symbol=trans['vs'])
-            platba = Platba.objects.create(cas=datetime.now(), suma=trans['amount']/100.0, poznamka=trans['message'], ucet=trans['description'], vlastnik = vlastnik)
+            owner = Tuition.objects.get(variable_symbol=trans['vs'])
+            payment = Payment.objects.create(
+                time=datetime.now(),
+                amount=trans['amount']/100.0,
+                note=trans['message'],
+                account=trans['description'],
+                owner = owner)
 
-            vlastnik.refresh_balance()
+            owner.refresh_balance()
 
-            parsed.priradene = True
+            parsed.paired = True
 
-        except Skolne.DoesNotExist:
-            parsed.priradene = False
+        except Tuition.DoesNotExist:
+            parsed.paired = False
     parsed.save()
 
     print(trans)
@@ -196,7 +201,7 @@ class StudentAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
-class LektorAutocomplete(autocomplete.Select2QuerySetView):
+class LectorAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
         if not self.request.user.is_superuser:
@@ -208,3 +213,4 @@ class LektorAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__istartswith=self.q)
 
         return qs
+        

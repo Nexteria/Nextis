@@ -21,20 +21,30 @@ class UserAdmin(admin.ModelAdmin):
         UserProfileInline,
     ]
     
-
 admin.site.register(User, UserAdmin)
 
-admin.site.register(Group)
+class GroupDescriptionInline(admin.StackedInline):
+    model = GroupDescription
+    fk_name = 'group'
 
+class GroupAdmin(admin.ModelAdmin):
+    list_select_related = True
+    inlines = [
+        GroupDescriptionInline,
+    ]
 
+admin.site.register(Group, GroupAdmin)
+
+'''
 class ClovekAdmin(admin.ModelAdmin):
     list_display = ['get_name','email','telefon_cislo']
     search_fields = ['meno','priezvisko','email','telefon_cislo']
 
 admin.site.register(Clovek, ClovekAdmin)
-
+'''
 #admin.site.register(Rola)
 
+# TODO update field names
 def export_student_list(modeladmin, request, queryset):
     import csv
     from django.utils.encoding import smart_str
@@ -69,19 +79,20 @@ def export_student_list(modeladmin, request, queryset):
     return response
 export_student_list.short_description = 'Exportuj vybratych studentov do zoznamu'
 
+    #TODO display level / groups
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['user','get_email','get_telefon','skolne','level','fakulta']
-    list_filter = ['level','fakulta']
+    list_display = ['user','get_email','get_phone','tuition', 'faculty']
+    list_filter = ['faculty']
 
     actions = [export_student_list, ]
 
 admin.site.register(Student, StudentAdmin)
 
-class LektorAdmin(admin.ModelAdmin):
-    list_display = ['clovek','get_email','get_telefon']
+class LectorAdmin(admin.ModelAdmin):
+    list_display = ['user'] #,'get_email','get_telefon']
 
-admin.site.register(Lektor,LektorAdmin)
-
+admin.site.register(Lector, LectorAdmin)
+'''
 class GuideVztahAdmin(admin.ModelAdmin):
     list_display = ['mentor','student','zaciatok','get_koniec']
 
@@ -90,27 +101,27 @@ admin.site.register(GuideVztah, GuideVztahAdmin)
 class BuddyVztahAdmin(admin.ModelAdmin):
     list_display = ['mentor','student','zaciatok','get_koniec']
 admin.site.register(BuddyVztah,BuddyVztahAdmin)
+'''
 
 
-
-
+'''
 class LevelAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(Level, LevelAdmin)
+'''
 
 
 
+class NewsAdmin(admin.ModelAdmin):
 
-class NovinkaAdmin(admin.ModelAdmin):
-
-    list_display = ['nazov','autor','vytvorene','upravene']
-    list_filter = ['vytvorene']
+    list_display = ['title', 'author', 'created', 'edited']
+    list_filter = ['created']
     pass
 
-admin.site.register(Novinka, NovinkaAdmin)
+admin.site.register(News, NewsAdmin)
 
-admin.site.register(Skola)
-admin.site.register(Fakulta)
+admin.site.register(School)
+admin.site.register(Faculty)
 
 

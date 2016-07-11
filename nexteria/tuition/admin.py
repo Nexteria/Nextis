@@ -1,32 +1,32 @@
 from django.contrib import admin
 from django import forms
-from nexteria.nextis.models import Level
 
 from .models import *
 # Register your models here.
-admin.site.register(Skolne)
+
+admin.site.register(Tuition)
 
 
-class PlatbaAdmin(admin.ModelAdmin):
-    list_display = ['get_meno','suma','cas','vlastnik']
-    list_filter = ['cas']
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['get_name','amount','time','owner']
+    list_filter = ['time']
 
-admin.site.register(Platba,PlatbaAdmin)
+admin.site.register(Payment, PaymentAdmin)
 
-class VydavokAdmin(admin.ModelAdmin):
-    list_display = ['get_meno','suma','ucel','splatnost','uhradene','vlastnik']
-    list_filter = ['splatnost']
-admin.site.register(Vydavok, VydavokAdmin)
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display = ['get_name','amount','purpose','due_date','paid','owner']
+    list_filter = ['due_date']
 
+admin.site.register(Expense, ExpenseAdmin)
 
 
 class ParsedEmailAdmin(admin.ModelAdmin):
-    list_display = ['nazov','datum', 'priradene']
-    list_filter = ['datum']
+    list_display = ['name', 'text', 'paired', 'date']
+    list_filter = ['date']
 
 admin.site.register(ParsedEmail, ParsedEmailAdmin)
 
-
+'''
 class SkolneForm(forms.Form):
     ucel = forms.CharField()
     level = forms.ModelChoiceField(queryset=Level.objects.all(), empty_label=None)
@@ -55,3 +55,4 @@ def level_skolne_view(req, *args, **kwargs):
     return render(req, 'admin_skolne.html', context={'form':form})
 
 admin.site.register_view('level_skolne', 'Pridat levelu skolne', view=level_skolne_view)
+'''

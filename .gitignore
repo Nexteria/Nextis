@@ -71,3 +71,8 @@ ptvs_virtualenv_proxy.py
 readme.mht
 web.config
 web.debug.config
+/db.sqlite3.bak
+/db.sqlite3.bak2
+
+#migrations ignored
+nexteria/**/migrations

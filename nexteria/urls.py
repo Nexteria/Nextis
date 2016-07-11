@@ -21,6 +21,11 @@ import django.contrib.auth.views as aviews
 admin.site = AdminSitePlus()
 admin.autodiscover()
 
+from tastypie.api import Api
+from nexteria.events.api.resources import EventResource
+
+v1_api = Api(api_name='v1')
+v1_api.register(EventResource())
 
 
 urlpatterns = [
@@ -32,4 +37,6 @@ urlpatterns = [
     url('', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
+    url(r'^api/', include(v1_api.urls)),
 ]

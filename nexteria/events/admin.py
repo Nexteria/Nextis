@@ -2,36 +2,37 @@ from django.contrib import admin
 from .models import *
 from dal import autocomplete
 from django import forms
-# Register your models here.
+
+
+
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ['student','cas','get_dlzka']
-    list_filter = ['cas']
+    list_display = ['student','time','get_length']
+    list_filter = ['time']
 
-admin.site.register(Feedback,FeedbackAdmin)
-
-
+admin.site.register(Feedback, FeedbackAdmin)
+admin.site.register(Location)
+'''
 class UcastniciInline(admin.TabularInline):
     model = Event.ucastnici.through
     extra = 0
+    '''
 
-admin.site.register(Miesto)
-admin.site.register(Stretnutie)
 
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ('__all__')
         widgets = {
-            'lektori': autocomplete.ModelSelect2Multiple(url='lektor-autocomplete'),
-            'ucastnici': autocomplete.ModelSelect2Multiple(url='student-autocomplete'),
+            'lectors': autocomplete.ModelSelect2Multiple(url='lector-autocomplete'),
+            'registered': autocomplete.ModelSelect2Multiple(url='student-autocomplete'),
         }
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ['nazov','get_lektori','pocet_kreditov','get_stretnutia','get_levely','typ']
-    list_filter = ['stretnutia__zaciatok','typ','levely']
+    list_display = ['name','get_lectors','point_reward', 'type']
+    list_filter = ['start_time','type','groups']
     form = EventForm
 
-    inlines = [UcastniciInline]
+    #inlines = [UcastniciInline]
 
 
 '''
