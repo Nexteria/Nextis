@@ -74,7 +74,7 @@ AUTHENTICATION_BACKENDS = (
    'social.backends.twitter.TwitterOAuth',
    'django.contrib.auth.backends.ModelBackend',
 )
-ROOT_URLCONF = 'nexteria.urls'
+ROOT_URLCONF = 'nextis.urls'
 
 TEMPLATES = [
     {
@@ -97,7 +97,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'nexteria.wsgi.application'
+WSGI_APPLICATION = 'nextis.wsgi.application'
 
 
 # Database

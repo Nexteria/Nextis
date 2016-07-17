@@ -67,6 +67,7 @@ venv
 bin/
 obj/
 nextis.pyproj
+nextis.pyproj.user
 ptvs_virtualenv_proxy.py
 readme.mht
 web.config
