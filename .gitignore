@@ -77,3 +77,5 @@ web.debug.config
 
 #migrations ignored
 nexteria/**/migrations
+
+static/build

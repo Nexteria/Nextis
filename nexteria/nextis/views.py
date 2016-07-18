@@ -42,6 +42,7 @@
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from . import forms
@@ -213,4 +214,8 @@ class LectorAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__istartswith=self.q)
 
         return qs
-        
+
+
+def fake_me(request):
+  return JsonResponse({"username": "johny.nexter","first_name": "Johny", "last_name": "Nexter", "email": "johny@nexteria.sk"})
+

@@ -5,7 +5,7 @@ export default class Footer extends Component {
 
   render() {
     return (
-      <footer className="main-footer">
+      <footer className="main-footer" ref="main-footer">
         <div className="pull-right hidden-xs">
           <b>Version</b> 0.1.0
         </div>

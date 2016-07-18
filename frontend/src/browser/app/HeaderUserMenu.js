@@ -7,21 +7,23 @@ import messages from '../../common/app/headerPanelMessages';
 export default class HeaderUserMenu extends Component {
 
   static propTypes = {
-    user: PropTypes.object.isRequired
+    viewer: PropTypes.object.isRequired
   };
 
   render() {
+    const { viewer } = this.props;
+
     return (
       <li className="dropdown user user-menu">
         <a href="#" className="dropdown-toggle" data-toggle="dropdown">
           <i className="fa fa-user avatar-icon-md"></i>
-          <span className="hidden-xs">{`${user.first_name} ${user.last_name}`}</span>
+          <span className="hidden-xs">{`${viewer.first_name} ${viewer.last_name}`}</span>
         </a>
         <ul className="dropdown-menu">
           <li className="user-header">
-          <i className="fa fa-user avatar-icon-lg"></i>
+            <i className="fa fa-user avatar-icon-lg"></i>
             <p>
-              {`${user.first_name} ${user.last_name}`}
+              {`${viewer.first_name} ${viewer.last_name}`}
             </p>
           </li>
           <li className="user-footer">

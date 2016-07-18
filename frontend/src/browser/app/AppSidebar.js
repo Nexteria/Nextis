@@ -5,10 +5,10 @@ import { FormattedMessage } from 'react-intl';
 
 import messages from '../../common/app/sidebarMessages';
 
-export default class HeaderUserMenu extends Component {
+export default class AppSideBar extends Component {
 
   static propTypes = {
-    user: PropTypes.object.isRequired
+    viewer: PropTypes.object.isRequired
   };
 
   render() {

@@ -2,6 +2,7 @@ import './App.scss';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import favicon from '../../common/app/favicon';
 import start from '../../common/app/start';
 import { connect } from 'react-redux';
@@ -27,19 +28,31 @@ const bootstrap4Metas = [
 class App extends Component {
 
   static propTypes = {
-    children: PropTypes.object.isRequired,
+    children: PropTypes.object,
     currentLocale: PropTypes.string.isRequired,
-    location: locationShape
+    location: locationShape,
+    viewer: PropTypes.object,
   };
 
+  componentDidMount(){
+    var node = ReactDOM.findDOMNode(this.refs['main-footer']);
+    if (node){
+      console.log(node.clientHeight);
+    }
+  }
+
   render() {
-    const { children, currentLocale, location } = this.props;
+    const { children, currentLocale, location, viewer } = this.props;
+
+    if (!viewer) {
+      return <div></div>;
+    }
 
     return (
       <div className="wrapper">
         <Helmet
           htmlAttributes={{ lang: currentLocale }}
-          titleTemplate="%s - Este.js"
+          titleTemplate="%s - Nexteria IS"
           meta={[
             ...bootstrap4Metas,
             {
@@ -53,8 +66,8 @@ class App extends Component {
           ]}
         />
         {/* Pass location to ensure header active links are updated. */}
-        <Header location={location} />
-        <AppSidebar />
+        <Header {...{ viewer }} location={location} />
+        <AppSidebar {...{ viewer }} refs="main-footer" />
         <div className="content-wrapper">
           {children}
         </div>
@@ -68,5 +81,6 @@ class App extends Component {
 App = start(App);
 
 export default connect(state => ({
-  currentLocale: state.intl.currentLocale
+  currentLocale: state.intl.currentLocale,
+  viewer: state.users.viewer,
 }))(App);

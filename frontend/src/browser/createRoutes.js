@@ -5,11 +5,12 @@ import Profile from './users/ProfilePage.react';
 import React from 'react';
 import Settings from './users/SettingsPage.react';
 import { Route } from 'react-router';
+import ContactList from './users/ContactList';
 
-export default function createRoutes(getState) {
-
+export default function createRoutes() {
   return (
     <Route component={App} path="/">
+      <Route component={ContactList} path="contacts" />
       <Route component={Me} path="me">
         <Route component={Profile} path="profile" />
         <Route component={Settings} path="settings" />

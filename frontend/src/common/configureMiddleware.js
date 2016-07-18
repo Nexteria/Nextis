@@ -1,6 +1,7 @@
 import configureStorage from './configureStorage';
 import createLoggerMiddleware from 'redux-logger';
 import promiseMiddleware from 'redux-promise-middleware';
+import fetch from './fetch';
 
 // Deps.
 import shortid from 'shortid';
@@ -23,6 +24,7 @@ export default function configureMiddleware(initialState, platformDeps, platform
   const middleware = [
     injectMiddleware({
       ...platformDeps,
+      fetch,
       getUid: () => shortid.generate(),
       now: () => Date.now(),
       storageEngine,

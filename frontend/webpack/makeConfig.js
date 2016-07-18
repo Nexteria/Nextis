@@ -97,7 +97,7 @@ export default function makeConfig(isDevelopment) {
       path: constants.BUILD_DIR,
       filename: '[name]-[hash].js',
       chunkFilename: '[name]-[chunkhash].js',
-      publicPath: '/build/'
+      publicPath: '../static/build/'
     },
     plugins: (() => {
       const plugins = [

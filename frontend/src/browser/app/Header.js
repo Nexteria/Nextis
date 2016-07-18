@@ -12,14 +12,14 @@ import messages from '../../common/app/headerPanelMessages';
 class Header extends Component {
 
   static propTypes = {
-    user: PropTypes.object
+    viewer: PropTypes.object
   };
 
   render() {
-    const { user } = this.props;
+    const { viewer } = this.props;
 
     return (
-      <header className="main-header">
+      <header className="main-header" ref="main-header">
         <Link to="/" className="logo">
           <span className="logo-mini">
             <img src="/static/img/nexteria-logo-img.png" alt="Nexteria logo" />
@@ -37,7 +37,7 @@ class Header extends Component {
             <ul className="nav navbar-nav">
               <HeaderMessages />
               <HeaderNotifications />
-              <HeaderUserMenu {...{ user }} />
+              <HeaderUserMenu {...{ viewer }} />
             </ul>
           </div>
         </nav>

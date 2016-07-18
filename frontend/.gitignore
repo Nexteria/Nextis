@@ -35,3 +35,4 @@ src/common/config.json
 src/native/initialState.js
 webpack-assets.json
 xcuserdata
+src/commmon/config.js

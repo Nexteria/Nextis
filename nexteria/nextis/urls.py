@@ -22,4 +22,9 @@ urlpatterns = [
     url(r'^student-autocomplete/$', views.StudentAutocomplete.as_view(), name='student-autocomplete'),
     url(r'^lector-autocomplete/$', views.LectorAutocomplete.as_view(), name='lector-autocomplete'),
 
+    # just fake api
+    url(r'^users/me$', views.fake_me),
+
+    # all other routes are handled by react
+    url(r'^.*/$', views.home),
 ]
