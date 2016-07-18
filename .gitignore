@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
 lib64/
 parts/
 sdist/
@@ -79,3 +79,4 @@ web.debug.config
 nexteria/**/migrations
 
 static/build
+frontend/src/common/config.js
