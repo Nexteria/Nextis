@@ -25,7 +25,7 @@ class Header extends Component {
             <img src="/static/img/nexteria-logo-img.png" alt="Nexteria logo" />
           </span>
           <span className="logo-lg">
-            <img src="static/img/nexteria-logo.png" alt="Nexteria logo" />
+            <img src="/static/img/nexteria-logo.png" alt="Nexteria logo" />
           </span>
         </Link>
         <nav className="navbar navbar-static-top">

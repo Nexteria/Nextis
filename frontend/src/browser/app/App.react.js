@@ -67,7 +67,7 @@ class App extends Component {
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header {...{ viewer }} location={location} />
-        <AppSidebar {...{ viewer }} refs="main-footer" />
+        <AppSidebar {...{ viewer }} ref="main-footer" />
         <div className="content-wrapper">
           {children}
         </div>

@@ -14,7 +14,7 @@ export default class HeaderUserMenu extends Component {
     const { viewer } = this.props;
 
     return (
-      <li className="dropdown user user-menu">
+      <li className="dropdown user user-menu open">
         <a href="#" className="dropdown-toggle" data-toggle="dropdown">
           <i className="fa fa-user avatar-icon-md"></i>
           <span className="hidden-xs">{`${viewer.first_name} ${viewer.last_name}`}</span>
