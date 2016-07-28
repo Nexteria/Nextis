@@ -27,8 +27,13 @@ export default class HeaderUserMenu extends Component {
             </p>
           </li>
           <li className="user-footer">
+            <div className="pull-left">
+              <a href="#" className="btn btn-default btn-flat">Profile</a>
+            </div>
             <div className="pull-right">
-              <a href="/logout" className="btn btn-default btn-flat"><FormattedMessage {...messages.logout} /></a>
+              <a href="/logout" className="btn btn-default btn-flat">
+                <FormattedMessage {...messages.logout} />
+              </a>
             </div>
           </li>
         </ul>
