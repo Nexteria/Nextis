@@ -1,6 +1,7 @@
 import gutil from 'gulp-util';
 import makeWebpackConfig from './makeConfig';
 import webpack from 'webpack';
+import fs from 'fs';
 
 export default function build(done) {
   const config = makeWebpackConfig({ isDevelopment: false });
@@ -27,6 +28,8 @@ export default function build(done) {
       chunks: false,
       chunkModules: false
     }));
+
+    fs.writeFileSync('../resources/assets/build/file_hash.json', JSON.stringify(jsonStats.assetsByChunkName));
 
     done();
   });

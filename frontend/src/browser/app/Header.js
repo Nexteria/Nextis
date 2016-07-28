@@ -22,10 +22,10 @@ class Header extends Component {
       <header className="main-header" ref="main-header">
         <Link to="/" className="logo">
           <span className="logo-mini">
-            <img src="/static/img/nexteria-logo-img.png" alt="Nexteria logo" />
+            <img src="/img/nexteria-logo-img.png" alt="Nexteria logo" />
           </span>
           <span className="logo-lg">
-            <img src="/static/img/nexteria-logo.png" alt="Nexteria logo" />
+            <img src="/img/nexteria-logo.png" alt="Nexteria logo" />
           </span>
         </Link>
         <nav className="navbar navbar-static-top">

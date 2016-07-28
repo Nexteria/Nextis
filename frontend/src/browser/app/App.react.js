@@ -34,13 +34,6 @@ class App extends Component {
     viewer: PropTypes.object,
   };
 
-  componentDidMount(){
-    var node = ReactDOM.findDOMNode(this.refs['main-footer']);
-    if (node){
-      console.log(node.clientHeight);
-    }
-  }
-
   render() {
     const { children, currentLocale, location, viewer } = this.props;
 

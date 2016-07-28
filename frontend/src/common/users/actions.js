@@ -4,12 +4,12 @@ export const LOAD_VIEWER_ERROR = 'LOAD_VIEWER_ERROR';
 export const LOAD_VIEWER = 'LOAD_VIEWER';
 
 export function loadViewer() {
-  return ({ fetch }) => ({
-    type: 'LOAD_VIEWER',
+  return () => ({
+    type: 'LOAD_VIEWER_SUCCESS',
     payload: {
-      promise: fetch('/users/me', {
-        credentials: 'same-origin',
-      }).then(response => response.json())
+      username: 'Ddeath',
+      first_name: 'Dusan',
+      last_name: 'Plavak',
     }
   });
 }
