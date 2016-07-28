@@ -2,12 +2,12 @@ import './App.scss';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import favicon from '../../common/app/favicon';
-import start from '../../common/app/start';
 import { connect } from 'react-redux';
 import { locationShape } from 'react-router';
 
+
+import favicon from '../../common/app/favicon';
+import start from '../../common/app/start';
 import AppSidebar from './AppSidebar';
 import Header from './Header';
 import Footer from './Footer';

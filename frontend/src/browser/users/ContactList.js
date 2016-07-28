@@ -1,4 +1,3 @@
-import './MePage.scss';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
@@ -69,12 +68,12 @@ class ContactList extends Component {
                         <th>Telefón</th>
                       </tr>
                       {users ?
-                        users.filter(user => user.type === 'STUDENT').map(student =>
-                          <tr>
-                            <td>{student.first_name} {student.last_name}</td>
+                        users.filter(user => user.personType === 'student').valueSeq().map(student =>
+                          <tr key={student.uid}>
+                            <td>{student.firstName} {student.lastName}</td>
                             <td>{student.level}</td>
                             <td>{student.email}</td>
-                            <td>{student.telefon_cislo}</td>
+                            <td>{student.phone}</td>
                           </tr>
                         )
                         :

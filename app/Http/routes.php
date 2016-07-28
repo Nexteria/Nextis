@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
+Route::any('{slug}', function ($slug) {
     return view('welcome');
-});
+})->where('slug', '([A-z\d-\/_.]+)?');

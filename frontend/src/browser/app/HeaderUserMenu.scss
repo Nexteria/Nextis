@@ -1,0 +1,16 @@
+.user-menu button.dropdown-toggle {
+  background-color: #605ca8;
+  border: 0px;
+  color: white;
+  padding: 1em;
+
+  i {
+    padding-right: 0.5em;
+  }
+}
+
+li.user-menu {
+  :hover {
+    background-color: rgba(0,0,0,0.1);;
+  }
+}

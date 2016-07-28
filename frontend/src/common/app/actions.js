@@ -3,6 +3,8 @@ export const APP_START = 'APP_START';
 export const APP_STORAGE_LOAD = 'APP_STORAGE_LOAD';
 
 export const LOGOUT = 'LOGOUT';
+export const OPEN_USER_MENU = 'OPEN_USER_MENU';
+export const CLOSE_USER_MENU = 'CLOSE_USER_MENU';
 
 const loadStorage = async (dispatch, storageEngine) => {
   const state = await storageEngine.load();
@@ -18,4 +20,16 @@ export function start() {
       type: APP_START
     };
   };
+}
+
+export function openUserMenu() {
+  return () => ({
+    type: OPEN_USER_MENU,
+  });
+}
+
+export function closeUserMenu() {
+  return () => ({
+    type: CLOSE_USER_MENU,
+  });
 }

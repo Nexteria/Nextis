@@ -1,9 +1,9 @@
 import { Record } from 'immutable';
 
 const User = Record({
-  id: null,
-  first_name: '',
-  last_name: '',
+  uid: null,
+  firstName: '',
+  lastName: '',
   email: null,
   phone: '',
   visibleContacts: false,
@@ -16,6 +16,9 @@ const User = Record({
   school: null,
   faculty: null,
   studyProgram: null,
+  personType: 'student',
+  activityPoints: null,
+  tuitionDebt: null,
 });
 
 export default User;

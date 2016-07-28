@@ -8,18 +8,23 @@ import HeaderNotifications from './HeaderNotifications';
 import HeaderMessages from './HeaderMessages';
 import HeaderUserMenu from './HeaderUserMenu';
 import messages from '../../common/app/headerPanelMessages';
+import * as actions from '../../common/app/actions';
 
 class Header extends Component {
 
   static propTypes = {
-    viewer: PropTypes.object
+    viewer: PropTypes.object,
+    openUserMenu: PropTypes.func.isRequired,
+    closeUserMenu: PropTypes.func.isRequired,
+    isUserMenuOpen: PropTypes.bool.isRequired,
   };
 
   render() {
-    const { viewer } = this.props;
+    const { viewer, isUserMenuOpen } = this.props;
+    const { openUserMenu, closeUserMenu } = this.props;
 
     return (
-      <header className="main-header" ref="main-header">
+      <header className="main-header">
         <Link to="/" className="logo">
           <span className="logo-mini">
             <img src="/img/nexteria-logo-img.png" alt="Nexteria logo" />
@@ -37,7 +42,7 @@ class Header extends Component {
             <ul className="nav navbar-nav">
               <HeaderMessages />
               <HeaderNotifications />
-              <HeaderUserMenu {...{ viewer }} />
+              <HeaderUserMenu {...{ viewer, openUserMenu, closeUserMenu, isUserMenuOpen }} />
             </ul>
           </div>
         </nav>
@@ -48,5 +53,6 @@ class Header extends Component {
 }
 
 export default connect(state => ({
-  viewer: state.users.viewer
-}))(Header);
+  viewer: state.users.viewer,
+  isUserMenuOpen: state.app.isUserMenuOpen,
+}), actions)(Header);
