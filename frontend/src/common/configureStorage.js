@@ -6,7 +6,6 @@ import { Iterable } from 'immutable';
 import { fromJSON, toJSON } from './transit';
 
 const stateToSave = [
-  ['fields'],
   ['intl', 'currentLocale'],
 ];
 

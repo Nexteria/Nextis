@@ -32,12 +32,13 @@ class App extends Component {
     currentLocale: PropTypes.string.isRequired,
     location: locationShape,
     viewer: PropTypes.object,
+    users: PropTypes.object,
   };
 
   render() {
-    const { children, currentLocale, location, viewer } = this.props;
+    const { children, currentLocale, location, viewer, users } = this.props;
 
-    if (!viewer) {
+    if (!viewer || !users) {
       return <div></div>;
     }
 
@@ -76,4 +77,5 @@ App = start(App);
 export default connect(state => ({
   currentLocale: state.intl.currentLocale,
   viewer: state.users.viewer,
+  users: state.users.users,
 }))(App);

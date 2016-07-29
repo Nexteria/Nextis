@@ -1,24 +1,25 @@
-import { Record } from 'immutable';
+import { Record, List } from 'immutable';
+import shortid from 'shortid';
 
 const User = Record({
-  uid: null,
+  uid: shortid.generate(),
   firstName: '',
   lastName: '',
-  email: null,
+  email: '',
   phone: '',
   visibleContacts: false,
-  variableSymbol: null,
-  facebookProfile: null,
-  linkedInProfile: null,
+  variableSymbol: '',
+  facebookLink: '',
+  linkedinLink: '',
   personalDescription: '',
-  photo: null,
+  photo: '',
   actualJobInfo: '',
-  school: null,
-  faculty: null,
-  studyProgram: null,
-  personType: 'student',
-  activityPoints: null,
-  tuitionDebt: null,
+  school: '',
+  faculty: '',
+  studyProgram: '',
+  roles: new List(['student']),
+  activityPoints: '',
+  tuitionDebt: '',
 });
 
 export default User;

@@ -2,16 +2,46 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import shortid from 'shortid';
+import { List } from 'immutable';
 
 import './SettingsPage.scss';
 import { fields } from '../../common/lib/redux-fields/index';
 import * as fieldsActions from '../../common/lib/redux-fields/actions';
+import './EditUser.scss';
+import User from '../../common/users/models/User';
 
 const messages = defineMessages({
   student: {
-    defaultMessage: 'Nexteria student',
-    id: 'user.edit.personType.student',
+    defaultMessage: 'Nexteria Student',
+    id: 'user.edit.role.student',
+  },
+  alumni: {
+    defaultMessage: 'Nexteria Alumni',
+    id: 'user.edit.role.alumni',
+  },
+  supporter: {
+    defaultMessage: 'Nexteria Supporter',
+    id: 'user.edit.role.supporter',
+  },
+  buddy: {
+    defaultMessage: 'Nexteria Buddy',
+    id: 'user.edit.role.buddy',
+  },
+  admin: {
+    defaultMessage: 'Nexteria Admin',
+    id: 'user.edit.role.admin',
+  },
+  lector: {
+    defaultMessage: 'Nexteria Lector',
+    id: 'user.edit.role.lector',
+  },
+  guide: {
+    defaultMessage: 'Nexteria Guide',
+    id: 'user.edit.role.guide',
+  },
+  nexteriaTeam: {
+    defaultMessage: 'Nexteria Team member',
+    id: 'user.edit.role.nexteriaTeam',
   },
   firstName: {
     defaultMessage: 'First name',
@@ -45,9 +75,9 @@ const messages = defineMessages({
     defaultMessage: 'Personal description',
     id: 'user.edit.personalDescription',
   },
-  actualJob: {
+  actualJobInfo: {
     defaultMessage: 'Actual job',
-    id: 'user.edit.actualJob',
+    id: 'user.edit.actualJobInfo',
   },
   school: {
     defaultMessage: 'School',
@@ -65,6 +95,10 @@ const messages = defineMessages({
     defaultMessage: 'Variable symbol',
     id: 'user.edit.variableSymbol',
   },
+  personRoles: {
+    defaultMessage: 'Person roles',
+    id: 'user.edit.personRoles',
+  },
 });
 
 export class EditUser extends Component {
@@ -76,17 +110,20 @@ export class EditUser extends Component {
     user: PropTypes.object,
     saveUser: PropTypes.func.isRequired,
     setField: PropTypes.func,
+    rolesList: PropTypes.object.isRequired,
+    updateUserRole: PropTypes.func,
   }
 
   componentWillMount() {
-    const { setField } = this.props;
+    const { setField, user } = this.props;
 
-    setField(['editUser'], null);
+    setField(['editUser'], user ? user : new User());
   }
 
   render() {
-    const { fields, mode, title } = this.props;
-    const { saveUser } = this.props;
+    const { fields, mode, title, rolesList } = this.props;
+    const { saveUser, updateUserRole } = this.props;
+    const { formatMessage } = this.props.intl;
 
     return (
       <div>
@@ -112,9 +149,29 @@ export class EditUser extends Component {
                     {`${fields.firstName.value} ${fields.lastName.value}`}
                   </h3>
 
-                  <p className="text-muted text-center">
-                    <FormattedMessage {...messages[fields.personType.value]} />
-                  </p>
+                  {mode === 'create' ?
+                    <div className="form-group text-left">
+                      <label><FormattedMessage {...messages.personRoles} /></label>
+                        {rolesList.map(type =>
+                          <div className="checkbox" key={type}>
+                            <label>
+                              <input
+                                type="checkbox"
+                                onChange={() => updateUserRole(type, !fields.roles.value.includes(type))}
+                                checked={fields.roles.value.includes(type)}
+                              />
+                              <FormattedMessage {...messages[type]} />
+                            </label>
+                          </div>
+                        )}
+                    </div>
+                    :
+                    <p className={`${mode === 'create' ? '' : 'text-muted'} text-center`}>
+                      {fields.roles.value.map(role => 
+                        <FormattedMessage key={role} {...messages[role]} />
+                      )}
+                    </p>
+                  }
 
                   <ul className="list-group list-group-unbordered">
                     <li className="list-group-item text-center">
@@ -237,16 +294,16 @@ export class EditUser extends Component {
                         </div>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="actualJob" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.actualJob} />
+                        <label htmlFor="actualJobInfo" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.actualJobInfo} />
                         </label>
 
                         <div className="col-sm-10">
                           <input
                             type="text"
                             className="form-control"
-                            {...fields.actualJob}
-                            id="actualJob"
+                            {...fields.actualJobInfo}
+                            id="actualJobInfo"
                           />
                         </div>
                       </div>
@@ -316,44 +373,6 @@ export class EditUser extends Component {
   }
 }
 
-function getFieldsInitialState(props) {
-  if (props.user) {
-    return {
-      uid: props.user.uid,
-      firstName: props.user.firstName,
-      lastName: props.user.lastName,
-      email: props.user.email,
-      phone: props.user.phone,
-      facebookLink: props.user.facebookLink,
-      linkedinLink: props.user.linkedinLink,
-      actualJob: props.user.actualJob,
-      school: props.user.school,
-      faculty: props.user.faculty,
-      studyProgram: props.user.studyProgram,
-      personalDescription: props.user.personalDescription,
-      variableSymbol: props.user.variableSymbol,
-      personType: props.user.personType
-    };
-  }
-
-  return {
-    uid: shortid.generate(),
-    firstName: '',
-    lastName: '',
-    email: null,
-    phone: null,
-    facebookLink: null,
-    linkedinLink: null,
-    actualJob: null,
-    school: null,
-    faculty: null,
-    studyProgram: null,
-    personalDescription: '',
-    variableSymbol: null,
-    personType: 'student',
-  };
-}
-
 EditUser = fields(EditUser, {
   path: 'editUser',
   fields: [
@@ -364,18 +383,19 @@ EditUser = fields(EditUser, {
     'facebookLink',
     'linkedinLink',
     'phone',
-    'actualJob',
+    'photo',
+    'actualJobInfo',
     'school',
     'faculty',
     'studyProgram',
     'personalDescription',
-    'personType',
+    'roles',
     'variableSymbol',
   ],
-  getInitialState: getFieldsInitialState,
 });
 
 EditUser = injectIntl(EditUser);
 
-export default connect(() => ({
+export default connect((state) => ({
+  rolesList: state.users.rolesList,
 }), fieldsActions)(EditUser);

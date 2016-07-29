@@ -14,6 +14,17 @@ export default function fieldsReducer(state = Map(), action) {
       return state.setIn(path, value);
     }
 
+    case actions.FIELDS_UPDATE_USER_ROLE: {
+      const { role, value } = action.payload;
+
+      if (value) {
+        console.log(state);
+        return state.updateIn(['editUser', 'roles'], roles => roles.push(role));
+      }
+
+      return state.deleteIn(['editUser', 'roles', state.get('editUser').get('roles').findIndex(val => val === role)]);
+    }
+
   }
 
   return state;

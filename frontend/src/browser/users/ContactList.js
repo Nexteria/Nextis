@@ -68,7 +68,7 @@ class ContactList extends Component {
                         <th>Telefón</th>
                       </tr>
                       {users ?
-                        users.filter(user => user.personType === 'student').valueSeq().map(student =>
+                        users.filter(user => user.roles.includes('student')).valueSeq().map(student =>
                           <tr key={student.uid}>
                             <td>{student.firstName} {student.lastName}</td>
                             <td>{student.level}</td>

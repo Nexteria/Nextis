@@ -16,7 +16,6 @@ const messages = defineMessages({
 export class CreateUserPage extends Component {
 
   static propTypes = {
-    viewer: PropTypes.object.isRequired,
     saveUser: PropTypes.func.isRequired,
   }
 

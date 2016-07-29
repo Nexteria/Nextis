@@ -3,39 +3,38 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import EditUser from './EditUser';
-import * as actions from '../../common/users/actions';
+import EditEvent from './EditEvent';
+import * as actions from '../../common/events/actions';
 
 const messages = defineMessages({
   title: {
-    defaultMessage: 'Create user',
-    id: 'users.create.title'
+    defaultMessage: 'Create event',
+    id: 'events.create.title'
   },
 });
 
-export class CreateUserPage extends Component {
+export class CreateEventPage extends Component {
 
   static propTypes = {
-    viewer: PropTypes.object.isRequired,
-    saveUser: PropTypes.func.isRequired,
+    saveEvent: PropTypes.func.isRequired,
   }
 
   render() {
-    const { saveUser } = this.props;
+    const { saveEvent } = this.props;
 
     return (
       <div>
-        <EditUser
+        <EditEvent
           mode="create"
           title={<FormattedMessage {...messages.title} />}
-          saveUser={saveUser}
+          saveEvent={saveEvent}
         />
       </div>
     );
   }
 }
 
-CreateUserPage = injectIntl(CreateUserPage);
+CreateEventPage = injectIntl(CreateEventPage);
 
 export default connect(() => ({
-}), actions)(CreateUserPage);
+}), actions)(CreateEventPage);

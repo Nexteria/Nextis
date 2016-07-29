@@ -2,6 +2,7 @@ import app from './app/reducer';
 import config from './config/reducer';
 import intl from './intl/reducer';
 import users from './users/reducer';
+import events from './events/reducer';
 import { LOGOUT } from './app/actions';
 import { combineReducers } from 'redux';
 import { fieldsReducer as fields } from './lib/redux-fields';
@@ -30,6 +31,7 @@ export default function configureReducer(initialState, platformReducers) {
     fields,
     intl,
     users,
+    events,
     routing,
   });
 

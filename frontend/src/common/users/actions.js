@@ -1,3 +1,5 @@
+import User from '../../common/users/models/User';
+
 export const LOAD_VIEWER_START = 'LOAD_VIEWER_START';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const LOAD_VIEWER_ERROR = 'LOAD_VIEWER_ERROR';
@@ -14,7 +16,7 @@ export function loadViewer() {
       username: 'Ddeath',
       firstName: 'Dusan',
       lastName: 'Plavak',
-      personType: 'student'
+      roles: ['student'],
     }
   });
 }
@@ -22,6 +24,22 @@ export function loadViewer() {
 export function saveUser(fields) {
   return () => ({
     type: 'SAVE_USER',
-    payload: fields,
+    payload: new User({
+      uid: fields.uid.value,
+      firstName: fields.firstName.value,
+      lastName: fields.lastName.value,
+      email: fields.email.value,
+      phone: fields.phone.value,
+      variableSymbol: fields.variableSymbol.value,
+      facebookLink: fields.facebookLink.value,
+      linkedinLink: fields.linkedinLink.value,
+      personalDescription: fields.personalDescription.value,
+      photo: fields.photo.value,
+      actualJobInfo: fields.actualJobInfo.value,
+      school: fields.school.value,
+      faculty: fields.faculty.value,
+      studyProgram: fields.studyProgram.value,
+      roles: fields.roles.value,
+    }),
   });
 }
