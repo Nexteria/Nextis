@@ -39,6 +39,18 @@ const messages = defineMessages({
     defaultMessage: 'Admin section',
     id: 'app.sidebar.links.adminSection',
   },
+  createUserGroup: {
+    defaultMessage: 'Create user group',
+    id: 'app.sidebar.links.createUserGroup',
+  },
+  places: {
+    defaultMessage: 'Places',
+    id: 'app.sidebar.links.places',
+  },
+  createPlace: {
+    defaultMessage: 'Create place',
+    id: 'app.sidebar.links.createPlace',
+  },
 });
 
 
@@ -70,11 +82,24 @@ export default class AppSideBar extends Component {
                 <span><FormattedMessage {...messages.createUser} /></span>
               </Link>
             </li>
+            <li>
+              <Link to="/users/groups/create">
+                <i className="fa fa-plus text-green"></i>
+                <span><FormattedMessage {...messages.createUserGroup} /></span>
+              </Link>
+            </li>
             <li className="header"><FormattedMessage {...messages.events} /></li>
             <li>
               <Link to="/events/create">
                 <i className="fa fa-plus text-green"></i>
                 <span><FormattedMessage {...messages.createEvent} /></span>
+              </Link>
+            </li>
+            <li className="header"><FormattedMessage {...messages.places} /></li>
+            <li>
+              <Link to="/locations/create">
+                <i className="fa fa-plus text-green"></i>
+                <span><FormattedMessage {...messages.createPlace} /></span>
               </Link>
             </li>
           </ul>

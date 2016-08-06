@@ -3,6 +3,8 @@ import config from './config/reducer';
 import intl from './intl/reducer';
 import users from './users/reducer';
 import events from './events/reducer';
+import nxLocations from './nxLocations/reducer';
+import attendeesGroup from './attendeesGroup/reducer';
 import { LOGOUT } from './app/actions';
 import { combineReducers } from 'redux';
 import { fieldsReducer as fields } from './lib/redux-fields';
@@ -27,9 +29,11 @@ export default function configureReducer(initialState, platformReducers) {
   let reducer = combineReducers({
     ...platformReducers,
     app,
+    attendeesGroup,
     config,
     fields,
     intl,
+    nxLocations,
     users,
     events,
     routing,

@@ -9,7 +9,7 @@
         {!! Html::style('adminlte/css/skins/_all-skins.min.css') !!}
         {!! Html::style('css/custom.css') !!}
     </head>
-    <body class="hold-transition skin-purple sidebar-mini fixed">
+    <body class="hold-transition skin-purple sidebar-mini fixed modal-open">
         <div id="app-container">
         </div>
         {!! React::script('app') !!}

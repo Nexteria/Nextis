@@ -4,6 +4,7 @@ import shortid from 'shortid';
 const User = Record({
   uid: shortid.generate(),
   firstName: '',
+  username: '',
   lastName: '',
   email: '',
   phone: '',
@@ -17,9 +18,15 @@ const User = Record({
   school: '',
   faculty: '',
   studyProgram: '',
-  roles: new List(['student']),
+  roles: new List(),
   activityPoints: '',
   tuitionDebt: '',
+  guideDescription: '',
+  lectorDescription: '',
+  buddyDescription: '',
+  state: 'inactive',
+  nexteriaTeamRole: '',
+  studentLevel: '',
 });
 
 export default User;

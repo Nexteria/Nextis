@@ -1,5 +1,9 @@
-import * as actions from './actions';
 import { Map } from 'immutable';
+
+import * as actions from './actions';
+import * as attendeesGroupActions from '../../attendeesGroup/actions';
+import * as eventsActions from '../../events/actions';
+import AttendeesGroup from '../../attendeesGroup/models/AttendeesGroup';
 
 export default function fieldsReducer(state = Map(), action) {
   switch (action.type) {
@@ -18,11 +22,26 @@ export default function fieldsReducer(state = Map(), action) {
       const { role, value } = action.payload;
 
       if (value) {
-        console.log(state);
         return state.updateIn(['editUser', 'roles'], roles => roles.push(role));
       }
 
       return state.deleteIn(['editUser', 'roles', state.get('editUser').get('roles').findIndex(val => val === role)]);
+    }
+
+    case attendeesGroupActions.UPDATE_ATTENDEES_GROUP: {
+      const group = new AttendeesGroup(action.payload);
+
+      return state.updateIn(['editEvent', 'attendeesGroups'], attendeesGroups =>
+        attendeesGroups.set(group.uid, group)
+      );
+    }
+
+    case eventsActions.REMOVE_ATTENDEES_GROUP: {
+      const groupUid = action.payload;
+
+      return state.updateIn(['editEvent', 'attendeesGroups'], attendeesGroups =>
+        attendeesGroups.delete(groupUid)
+      );
     }
 
   }

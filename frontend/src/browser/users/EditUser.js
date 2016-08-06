@@ -2,8 +2,9 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import { List } from 'immutable';
 
+
+import TextEditor from '../components/TextEditor';
 import './SettingsPage.scss';
 import { fields } from '../../common/lib/redux-fields/index';
 import * as fieldsActions from '../../common/lib/redux-fields/actions';
@@ -99,6 +100,50 @@ const messages = defineMessages({
     defaultMessage: 'Person roles',
     id: 'user.edit.personRoles',
   },
+  buddyDescription: {
+    defaultMessage: 'Buddy description',
+    id: 'user.edit.buddyDescription',
+  },
+  lectorDescription: {
+    defaultMessage: 'Lector description',
+    id: 'user.edit.lectorDescription',
+  },
+  guideDescription: {
+    defaultMessage: 'Guide description',
+    id: 'user.edit.guideDescription',
+  },
+  studentLevel: {
+    defaultMessage: 'Student level',
+    id: 'user.edit.studentLevel',
+  },
+  nexteriaTeamRole: {
+    defaultMessage: 'Nexteria team role',
+    id: 'user.edit.nexteriaTeamRole',
+  },
+  userState: {
+    defaultMessage: 'User state',
+    id: 'user.edit.userState',
+  },
+  activeUserState: {
+    defaultMessage: 'Active',
+    id: 'user.edit.activeUserState',
+  },
+  inactiveUserState: {
+    defaultMessage: 'Inactive',
+    id: 'user.edit.inactiveUserState',
+  },
+  temporarySuspendedUserState: {
+    defaultMessage: 'Temporary suspended',
+    id: 'user.edit.temporarySuspendedUserState',
+  },
+  username: {
+    defaultMessage: 'Username',
+    id: 'user.edit.username',
+  },
+  chooseStudentLevel: {
+    defaultMessage: 'Choose student level',
+    id: 'user.edit.chooseStudentLevel',
+  },
 });
 
 export class EditUser extends Component {
@@ -112,6 +157,8 @@ export class EditUser extends Component {
     setField: PropTypes.func,
     rolesList: PropTypes.object.isRequired,
     updateUserRole: PropTypes.func,
+    studentLevels: PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
@@ -121,9 +168,13 @@ export class EditUser extends Component {
   }
 
   render() {
-    const { fields, mode, title, rolesList } = this.props;
+    const { fields, mode, title, rolesList, studentLevels } = this.props;
     const { saveUser, updateUserRole } = this.props;
     const { formatMessage } = this.props.intl;
+
+    if (!fields.roles.value) {
+      return <div></div>;
+    }
 
     return (
       <div>
@@ -223,6 +274,21 @@ export class EditUser extends Component {
                       </div>
 
                       <div className="form-group">
+                        <label htmlFor="username" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.username} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <input
+                            type="text"
+                            className="form-control"
+                            {...fields.username}
+                            id="username"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group">
                         <label htmlFor="email" className="col-sm-2 control-label">
                           <FormattedMessage {...messages.email} />
                         </label>
@@ -250,6 +316,29 @@ export class EditUser extends Component {
                           />
                         </div>
                       </div>
+
+                      {fields.roles.value.includes('student') ?
+                        <div className="form-group">
+                          <label htmlFor="inputName" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.studentLevel} />
+                          </label>
+
+                          <div className="col-sm-10">
+                            <select
+                              className="form-control"
+                              {...fields.studentLevel}
+                              id="studentLevel"
+                            >
+                              <option readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
+                              {studentLevels.valueSeq().map(level =>
+                                <option key={level.uid} value={level.uid}>{level.name}</option>
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                        : ''
+                      }
+
                       <div className="form-group">
                         <label htmlFor="inputName" className="col-sm-2 control-label">
                           <FormattedMessage {...messages.facebookLink} />
@@ -284,15 +373,77 @@ export class EditUser extends Component {
                         </label>
 
                         <div className="col-sm-10">
-                          <textarea
-                            className="form-control"
-                            rows="3"
-                            {...fields.personalDescription}
+                          <TextEditor
+                            value={fields.personalDescription.value}
+                            onChange={(value) =>
+                              fields.personalDescription.onChange({ target: { value } })
+                            }
                             id="personalDescription"
                             placeholder="Personal description ..."
                           />
                         </div>
                       </div>
+
+                      {fields.roles.value.includes('guide') ?
+                        <div className="form-group">
+                          <label htmlFor="guideDescription" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.guideDescription} />
+                          </label>
+
+                          <div className="col-sm-10">
+                            <TextEditor
+                              value={fields.guideDescription.value}
+                              onChange={(value) =>
+                                fields.guideDescription.onChange({ target: { value } })
+                              }
+                              id="guideDescription"
+                              placeholder="Guide description ..."
+                            />
+                          </div>
+                        </div>
+                        : ''
+                      }
+
+                      {fields.roles.value.includes('lector') ?
+                        <div className="form-group">
+                          <label htmlFor="lectorDescription" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.lectorDescription} />
+                          </label>
+
+                          <div className="col-sm-10">
+                            <TextEditor
+                              value={fields.lectorDescription.value}
+                              onChange={(value) =>
+                                fields.lectorDescription.onChange({ target: { value } })
+                              }
+                              id="lectorDescription"
+                              placeholder="Lector description ..."
+                            />
+                          </div>
+                        </div>
+                        : ''
+                      }
+
+                      {fields.roles.value.includes('buddy') ?
+                        <div className="form-group">
+                          <label htmlFor="buddyDescription" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.buddyDescription} />
+                          </label>
+
+                          <div className="col-sm-10">
+                            <TextEditor
+                              value={fields.buddyDescription.value}
+                              onChange={(value) =>
+                                fields.buddyDescription.onChange({ target: { value } })
+                              }
+                              id="buddyDescription"
+                              placeholder="Buddy description ..."
+                            />
+                          </div>
+                        </div>
+                        : ''
+                      }
+
                       <div className="form-group">
                         <label htmlFor="actualJobInfo" className="col-sm-2 control-label">
                           <FormattedMessage {...messages.actualJobInfo} />
@@ -354,8 +505,50 @@ export class EditUser extends Component {
                       </div>
 
                       <div className="form-group">
+                        <label htmlFor="userState" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.userState} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <select
+                            className="form-control"
+                            {...fields.state}
+                            id="userState"
+                          >
+                            <option value={'active'}>
+                              {formatMessage(messages.activeUserState)}
+                            </option>
+                            <option value={'inactive'}>
+                              {formatMessage(messages.inactiveUserState)}
+                            </option>
+                            <option value={'temporarySuspended'}>
+                              {formatMessage(messages.temporarySuspendedUserState)}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {fields.roles.value.includes('nexteriaTeam') ?
+                        <div className="form-group">
+                          <label htmlFor="nexteriaTeamRole" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.nexteriaTeamRole} />
+                          </label>
+
+                          <div className="col-sm-10">
+                            <input
+                              type="text"
+                              className="form-control"
+                              {...fields.nexteriaTeamRole}
+                              id="nexteriaTeamRole"
+                            />
+                          </div>
+                        </div>
+                        : ''
+                      }
+
+                      <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                          <button type="button" className="btn btn-danger" onClick={() => saveUser(fields)}>
+                          <button type="button" className="btn btn-success" onClick={() => saveUser(fields)}>
                             <FormattedMessage {...messages.save} />
                           </button>
                         </div>
@@ -366,7 +559,6 @@ export class EditUser extends Component {
               </div>
             </div>
           </div>
-
         </section>
       </div>
     );
@@ -377,6 +569,7 @@ EditUser = fields(EditUser, {
   path: 'editUser',
   fields: [
     'uid',
+    'username',
     'firstName',
     'lastName',
     'email',
@@ -391,6 +584,12 @@ EditUser = fields(EditUser, {
     'personalDescription',
     'roles',
     'variableSymbol',
+    'lectorDescription',
+    'guideDescription',
+    'buddyDescription',
+    'nexteriaTeamRole',
+    'studentLevel',
+    'state',
   ],
 });
 
@@ -398,4 +597,5 @@ EditUser = injectIntl(EditUser);
 
 export default connect((state) => ({
   rolesList: state.users.rolesList,
+  studentLevels: state.users.studentLevels,
 }), fieldsActions)(EditUser);

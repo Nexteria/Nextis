@@ -1,14 +1,16 @@
-import { Record, List } from 'immutable';
+import { Record, List, Map } from 'immutable';
 import shortid from 'shortid';
+import moment from 'moment';
 
 const Event = Record({
   uid: shortid.generate(),
-  title: '',
+  name: '',
   activityPoints: 0,
-  hostUid: null,
+  host: null,
   lectors: new List(),
-  eventDateTime: null,
-  attendeesGroups: new List(),
+  eventStartDateTime: moment(),
+  eventEndDateTime: moment(),
+  attendeesGroups: new Map(),
   minCapacity: '',
   maxCapacity: '',
   description: '',
