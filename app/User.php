@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Role;
 use App\StudentLevel;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -34,6 +35,7 @@ class User extends Authenticatable
         'faculty',
         'studyProgram',
         'state',
+        'iban',
         'nexteriaTeamRole',
     ];
 
@@ -57,6 +59,11 @@ class User extends Authenticatable
         $user->buddyDescription = clean($attributes['buddyDescription']);
         $user->guideDescription = clean($attributes['guideDescription']);
         $user->lectorDescription = clean($attributes['lectorDescription']);
+        $user->variableSymbol = Carbon::now()->format("Ym").$user->id;
+
+        if ($attributes['newPassword'] === $attributes['confirmationPassword']) {
+          $user->password = \Hash::make($attributes['newPassword']);
+        }
         
         if ($attributes['profilePicture']) {
             $user->profilePictureId = $attributes['profilePicture']->id;

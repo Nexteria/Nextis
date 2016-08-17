@@ -9,6 +9,7 @@ const User = Record({
   email: '',
   phone: '',
   variableSymbol: '',
+  iban: '',
   facebookLink: '',
   linkedinLink: '',
   personalDescription: RichTextEditor.createEmptyValue(),
@@ -25,9 +26,12 @@ const User = Record({
   buddyDescription: RichTextEditor.createEmptyValue(),
   state: 'inactive',
   nexteriaTeamRole: '',
-  studentLevel: '',
+  studentLevelId: '',
   created_at: null,
   updated_at: null,
+  newPassword: '',
+  oldPassword: '',
+  confirmationPassword: '',
 });
 
 export default User;

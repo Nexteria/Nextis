@@ -42,6 +42,7 @@ class UserGroupsPage extends Component {
     removeUserGroup: PropTypes.func.isRequired,
     children: PropTypes.object,
     fields: PropTypes.object.isRequired,
+    hasPermission: PropTypes.func.isRequired,
   };
 
   editUserGroup(groupId) {
@@ -52,6 +53,7 @@ class UserGroupsPage extends Component {
     const { groups, fields, children } = this.props;
     const {
       removeUserGroup,
+      hasPermission,
     } = this.props;
 
     if (!groups) {
@@ -70,6 +72,14 @@ class UserGroupsPage extends Component {
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
+            {hasPermission('create_user_groups') ?
+              <i
+                className="fa fa-plus text-green"
+                style={{ cursor: 'pointer', marginLeft: '2em' }}
+                onClick={() => browserHistory.push('/admin/users/groups/create')}
+              ></i>
+             : ''
+            }
           </h1>
         </section>
         <section className="content">
@@ -130,11 +140,6 @@ class UserGroupsPage extends Component {
                           </td>
                         </tr>
                       }
-                      <tr style={{ cursor: 'pointer' }} onClick={() => browserHistory.push('/admin/users/groups/create')}>
-                        <td colSpan="3" style={{ textAlign: 'center', fontSize: '1.5em' }}>
-                          <i className="fa fa-plus text-green"></i>
-                        </td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -156,5 +161,6 @@ UserGroupsPage = fields(UserGroupsPage, {
 });
 
 export default connect(state => ({
-  groups: state.users.groups
+  groups: state.users.groups,
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(UserGroupsPage);

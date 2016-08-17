@@ -65,6 +65,14 @@ class RolesPage extends Component {
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
+            {hasPermission('create_roles') ?
+              <i
+                className="fa fa-plus text-green"
+                style={{ cursor: 'pointer', marginLeft: '2em' }}
+                onClick={() => browserHistory.push('/admin/roles/create')}
+              ></i>
+             : ''
+            }
           </h1>
         </section>
         <section className="content">
@@ -91,7 +99,7 @@ class RolesPage extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="box-body table-responsive no-padding">
+                <div className="box-body table-responsive no-padding items-container">
                   <table className="table table-hover">
                     <tbody>
                       <tr>
@@ -120,14 +128,6 @@ class RolesPage extends Component {
                             <FormattedMessage {...messages.noRoles} />
                           </td>
                         </tr>
-                      }
-                      {hasPermission('create_role') ?
-                        <tr style={{ cursor: 'pointer' }} onClick={() => browserHistory.push('/admin/roles/create')}>
-                          <td colSpan="2" style={{ textAlign: 'center', fontSize: '1.5em' }}>
-                            <i className="fa fa-plus text-green"></i>
-                          </td>
-                        </tr>
-                        : ''
                       }
                     </tbody>
                   </table>

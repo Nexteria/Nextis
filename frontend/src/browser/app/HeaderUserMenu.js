@@ -20,12 +20,12 @@ export default class HeaderUserMenu extends Component {
     const { openUserMenu, closeUserMenu } = this.props;
 
     return (
-      <li className={`dropdown user user-menu ${isUserMenuOpen ? 'open' : ''}`}>
+      <li className={`dropdown user user-menu ${isUserMenuOpen ? 'open' : ''}`} onBlur={() => setTimeout(closeUserMenu, 200)}>
         <button onFocus={openUserMenu} className="dropdown-toggle" data-toggle="dropdown">
           <i className="fa fa-user avatar-icon-md"></i>
           <span className="hidden-xs">{`${viewer.firstName} ${viewer.lastName}`}</span>
         </button>
-        <ul className="dropdown-menu" onBlur={closeUserMenu}>
+        <ul className="dropdown-menu">
           <li className="user-header">
             <i className="fa fa-user avatar-icon-lg"></i>
             <p>

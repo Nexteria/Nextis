@@ -13,6 +13,7 @@
 
 Route::auth();
 
+Route::post('/payments', 'PaymentsController@processPayment');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
@@ -63,7 +64,6 @@ Route::group(['middleware' => 'auth'], function () {
         return view('index');
     })->where('slug', '(?!api).*');
 });
-
 
 Route::any('{slug}', function ($slug = null) {
     return redirect('/login');

@@ -32,7 +32,7 @@ class UserTransformer extends Transformer
             'buddyDescription' => $user->buddyDescription,
             'state' => $user->state,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
-            'studentLevelId' => $user->studentLevelId,
+            'studentLevelId' => (int) $user->studentLevelId,
             'created_at' => $user->created_at ? $user->created_at->__toString() : null ,
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null ,
          ];

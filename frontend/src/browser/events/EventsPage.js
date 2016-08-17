@@ -36,6 +36,7 @@ class EventsPage extends Component {
     events: PropTypes.object,
     fields: PropTypes.object.isRequired,
     removeEvent: PropTypes.func.isRequired,
+    hasPermission: PropTypes.func.isRequired,
   };
 
   editEvent(eventId) {
@@ -44,7 +45,7 @@ class EventsPage extends Component {
 
   render() {
     const { events, fields } = this.props;
-    const { removeEvent } = this.props;
+    const { removeEvent, hasPermission } = this.props;
 
     if (!events) {
       return <div></div>;
@@ -63,6 +64,14 @@ class EventsPage extends Component {
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
+            {hasPermission('create_events') ?
+              <i
+                className="fa fa-plus text-green"
+                style={{ cursor: 'pointer', marginLeft: '2em' }}
+                onClick={() => browserHistory.push('/admin/events/create')}
+              ></i>
+             : ''
+            }
           </h1>
         </section>
         <section className="content">
@@ -89,7 +98,7 @@ class EventsPage extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="box-body table-responsive no-padding">
+                <div className="box-body table-responsive no-padding items-container">
                   <table className="table table-hover">
                     <tbody>
                       <tr>
@@ -119,11 +128,6 @@ class EventsPage extends Component {
                           </td>
                         </tr>
                       }
-                      <tr style={{ cursor: 'pointer' }} onClick={() => browserHistory.push('/admin/events/create')}>
-                        <td colSpan="2" style={{ textAlign: 'center', fontSize: '1.5em' }}>
-                          <i className="fa fa-plus text-green"></i>
-                        </td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -144,5 +148,6 @@ EventsPage = fields(EventsPage, {
 });
 
 export default connect(state => ({
-  events: state.events.events
+  events: state.events.events,
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(EventsPage);

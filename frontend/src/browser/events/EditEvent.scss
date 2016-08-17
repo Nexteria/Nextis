@@ -20,6 +20,12 @@
   max-width: 10em;
 }
 
+#items-pool, #members-pool ul {
+  max-height: 400px;
+  overflow-y: scroll;
+  width: 100%;
+}
+
 #items-pool li, #members-pool li {
   background-color: #ccc;
   cursor: pointer;

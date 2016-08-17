@@ -29,6 +29,14 @@ const messages = defineMessages({
     defaultMessage: 'Phone',
     id: 'user.edit.phone',
   },
+  iban: {
+    defaultMessage: 'Iban',
+    id: 'user.edit.iban',
+  },
+  variableSymbol: {
+    defaultMessage: 'Variable symbol',
+    id: 'user.edit.variableSymbol',
+  },
   save: {
     defaultMessage: 'Save',
     id: 'user.edit.save',
@@ -116,6 +124,18 @@ const messages = defineMessages({
   endedUserState: {
     defaultMessage: 'Ended',
     id: 'user.edit.endedUserState',
+  },
+  oldPassword: {
+    defaultMessage: 'Old password',
+    id: 'user.edit.oldPassword',
+  },
+  newPassword: {
+    defaultMessage: 'New password',
+    id: 'user.edit.newPassword',
+  },
+  confirmationPassword: {
+    defaultMessage: 'Confirmation password',
+    id: 'user.edit.confirmationPassword',
   },
 });
 
@@ -293,7 +313,7 @@ export class EditUser extends Component {
                           <div className="col-sm-10">
                             <select
                               className="form-control"
-                              {...fields.studentLevel}
+                              {...fields.studentLevelId}
                               id="studentLevel"
                             >
                               <option readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
@@ -331,6 +351,35 @@ export class EditUser extends Component {
                             className="form-control"
                             {...fields.linkedinLink}
                             id="linkedinLink"
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="iban" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.iban} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <input
+                            type="text"
+                            className="form-control"
+                            {...fields.iban}
+                            id="iban"
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="iban" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.variableSymbol} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <input
+                            type="text"
+                            className="form-control"
+                            readOnly
+                            value={fields.variableSymbol.value}
+                            id="variableSymbol"
                           />
                         </div>
                       </div>
@@ -519,6 +568,56 @@ export class EditUser extends Component {
                         : ''
                       }
 
+                      {fields.id.value === null ?
+                        <div>
+                          <div className="form-group">
+                            <label htmlFor="newPassword" className="col-sm-2 control-label">
+                              <FormattedMessage {...messages.newPassword} />
+                            </label>
+
+                            <div className="col-sm-10">
+                              <input
+                                type="password"
+                                className="form-control"
+                                {...fields.newPassword}
+                                id="newPassword"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="confirmationPassword" className="col-sm-2 control-label">
+                              <FormattedMessage {...messages.confirmationPassword} />
+                            </label>
+
+                            <div className="col-sm-10">
+                              <input
+                                type="password"
+                                className="form-control"
+                                {...fields.confirmationPassword}
+                                id="confirmationPassword"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        : ''
+                      }
+
+                      <div className="form-group">
+                          <label htmlFor="nexteriaTeamRole" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.nexteriaTeamRole} />
+                          </label>
+
+                          <div className="col-sm-10">
+                            <input
+                              type="text"
+                              className="form-control"
+                              {...fields.nexteriaTeamRole}
+                              id="nexteriaTeamRole"
+                            />
+                          </div>
+                        </div>
+
                       {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
                         <div className="form-group">
                           <div className="col-sm-offset-2 col-sm-10">
@@ -559,12 +658,17 @@ EditUser = fields(EditUser, {
     'studyProgram',
     'personalDescription',
     'roles',
+    'iban',
+    'variableSymbol',
     'lectorDescription',
     'guideDescription',
     'buddyDescription',
     'nexteriaTeamRole',
-    'studentLevel',
+    'studentLevelId',
     'state',
+    'newPassword',
+    'oldPassword',
+    'confirmationPassword',
   ],
 });
 

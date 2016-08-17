@@ -48,7 +48,7 @@ class App extends Component {
     loading: PropTypes.number.isRequired,
     events: PropTypes.object,
     hasPermission: PropTypes.func.isRequired,
-    rolesList: PropTypes.object.isRequired,
+    rolesList: PropTypes.object,
   };
 
   componentWillMount() {

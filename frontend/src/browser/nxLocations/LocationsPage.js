@@ -40,6 +40,7 @@ class LocationsPage extends Component {
     locations: PropTypes.object,
     fields: PropTypes.object.isRequired,
     removeLocation: PropTypes.func.isRequired,
+    hasPermission: PropTypes.func.isRequired,
   };
 
   editLocation(locationId) {
@@ -48,7 +49,7 @@ class LocationsPage extends Component {
 
   render() {
     const { locations, fields } = this.props;
-    const { removeLocation } = this.props;
+    const { removeLocation, hasPermission } = this.props;
 
     if (!locations) {
       return <div></div>;
@@ -67,6 +68,14 @@ class LocationsPage extends Component {
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
+            {hasPermission('create_roles') ?
+              <i
+                className="fa fa-plus text-green"
+                style={{ cursor: 'pointer', marginLeft: '2em' }}
+                onClick={() => browserHistory.push('/admin/nxLocations/create')}
+              ></i>
+             : ''
+            }
           </h1>
         </section>
         <section className="content">
@@ -129,14 +138,6 @@ class LocationsPage extends Component {
                           </td>
                         </tr>
                       }
-                      <tr
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => browserHistory.push('/admin/nxLocations/create')}
-                      >
-                        <td colSpan="3" style={{ textAlign: 'center', fontSize: '1.5em' }}>
-                          <i className="fa fa-plus text-green"></i>
-                        </td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -157,5 +158,6 @@ LocationsPage = fields(LocationsPage, {
 });
 
 export default connect(state => ({
-  locations: state.nxLocations.locations
+  locations: state.nxLocations.locations,
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(LocationsPage);

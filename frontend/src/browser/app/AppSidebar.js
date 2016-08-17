@@ -81,7 +81,6 @@ export default class AppSideBar extends Component {
             {hasPermission('view_admin_section') ?
               <div className="admin-section">
                 <li className="admin-header"><FormattedMessage {...messages.adminSection} /></li>
-                <li className="header"><FormattedMessage {...messages.users} /></li>
                 <li>
                   <Link to="/admin/userGroups">
                     <span><FormattedMessage {...messages.userGroups} /></span>
@@ -97,13 +96,11 @@ export default class AppSideBar extends Component {
                     <span><FormattedMessage {...messages.roles} /></span>
                   </Link>
                 </li>
-                <li className="header"><FormattedMessage {...messages.events} /></li>
                 <li>
                   <Link to="/admin/events">
                     <span><FormattedMessage {...messages.events} /></span>
                   </Link>
                 </li>
-                <li className="header"><FormattedMessage {...messages.locations} /></li>
                 <li>
                   <Link to="/admin/nxLocations">
                     <span><FormattedMessage {...messages.locations} /></span>

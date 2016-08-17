@@ -65,6 +65,14 @@ class UsersPage extends Component {
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
+            {hasPermission('create_users') ?
+              <i
+                className="fa fa-plus text-green"
+                style={{ cursor: 'pointer', marginLeft: '2em' }}
+                onClick={() => browserHistory.push('/admin/users/create')}
+              ></i>
+             : ''
+            }
           </h1>
         </section>
         <section className="content">
@@ -91,7 +99,7 @@ class UsersPage extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="box-body table-responsive no-padding">
+                <div className="box-body table-responsive no-padding items-container">
                   <table className="table table-hover">
                     <tbody>
                       <tr>
@@ -124,14 +132,6 @@ class UsersPage extends Component {
                             <FormattedMessage {...messages.noUsers} />
                           </td>
                         </tr>
-                      }
-                      {hasPermission('create_users') ?
-                        <tr style={{ cursor: 'pointer' }} onClick={() => browserHistory.push('/admin/users/create')}>
-                          <td colSpan="2" style={{ textAlign: 'center', fontSize: '1.5em' }}>
-                            <i className="fa fa-plus text-green"></i>
-                          </td>
-                        </tr>
-                        : ''
                       }
                     </tbody>
                   </table>

@@ -32,18 +32,24 @@ class AddDefaultRoles extends Migration
 
         DB::table('roles')->insert([
             'id' => 4,
+            'name' => 'ALUMNI',
+            'display_name' => 'Nexteria alumni',
+        ]);
+
+        DB::table('roles')->insert([
+            'id' => 5,
             'name' => 'GUIDE',
             'display_name' => 'Nexteria Guide',
         ]);
 
         DB::table('roles')->insert([
-            'id' => 5,
+            'id' => 6,
             'name' => 'BUDDY',
             'display_name' => 'Nexteria Buddy',
         ]);
 
         DB::table('roles')->insert([
-            'id' => 6,
+            'id' => 7,
             'name' => 'NEXTERIA_TEAM',
             'display_name' => 'Nexteria Team',
         ]);

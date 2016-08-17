@@ -46,3 +46,8 @@ body, html {
 .react-progress-bar.loading-bar {
   top: 54%;
 }
+
+.items-container {
+  max-height: 400px;
+  overflow-y: scroll;
+}

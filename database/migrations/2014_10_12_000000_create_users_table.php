@@ -31,6 +31,8 @@ class CreateUsersTable extends Migration
             $table->text('buddyDescription');
             $table->text('guideDescription');
             $table->text('lectorDescription');
+            $table->integer('variableSymbol')->unsigned()->nullable()->unique();
+            $table->string('iban')->nullable();
             $table->integer('profilePictureId')->unsigned()->nullable();
             $table->integer('studentLevelId')->unsigned()->nullable();
             $table->string('nexteriaTeamRole');
