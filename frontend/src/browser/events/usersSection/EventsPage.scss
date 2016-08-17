@@ -1,0 +1,15 @@
+.user-events-page {
+  li.time-label {
+    width: 4.5em;
+    text-align: center;
+
+    span {
+      width: 4em;
+    }
+  }
+
+  li#show-prev-events-button.time-label {
+    width: 100%;
+    text-align: center;
+  }
+}

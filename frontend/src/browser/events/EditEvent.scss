@@ -1,21 +1,14 @@
-.attendees-groups .trash-group {
-  font-size: 1.5em;
-  color: red;
-  cursor: pointer;
-  margin-left: 1em;
-}
-
 #eventStartDateTime, #eventEndDateTime {
   max-width: 250px;
 }
 
-#user-pool-container .searchbox {
+#items-pool-container .searchbox {
   width: 250px;
   margin-bottom: 5px;
 }
 
-#user-pool-container > label,
-#group-members-container > label {
+#items-pool-container > label,
+#members-pool-container > label {
   margin-bottom: 1em;
 }
 
@@ -27,26 +20,26 @@
   max-width: 10em;
 }
 
-#users-pool li, #group-members li {
+#items-pool li, #members-pool li {
   background-color: #ccc;
   cursor: pointer;
 }
 
-#users-pool li.group span.label {
+#items-pool li.group span.label {
   background-color: black;
   font-size: 1em;
   color: white;
 }
 
-#users-pool li a:hover {
+#items-pool li a:hover {
   background-color: #00a65a;
 }
 
-#group-members li a:hover {
+#members-pool li a:hover {
   background-color: #dd4b39;
 }
 
-#group-members {
+#members-pool {
   min-height: 300px;
 }
 

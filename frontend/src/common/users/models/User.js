@@ -1,18 +1,17 @@
 import { Record, List } from 'immutable';
-import shortid from 'shortid';
+import RichTextEditor from 'react-rte';
 
 const User = Record({
-  uid: shortid.generate(),
+  id: null,
   firstName: '',
   username: '',
   lastName: '',
   email: '',
   phone: '',
-  visibleContacts: false,
   variableSymbol: '',
   facebookLink: '',
   linkedinLink: '',
-  personalDescription: '',
+  personalDescription: RichTextEditor.createEmptyValue(),
   photo: '',
   actualJobInfo: '',
   school: '',
@@ -21,12 +20,14 @@ const User = Record({
   roles: new List(),
   activityPoints: '',
   tuitionDebt: '',
-  guideDescription: '',
-  lectorDescription: '',
-  buddyDescription: '',
+  guideDescription: RichTextEditor.createEmptyValue(),
+  lectorDescription: RichTextEditor.createEmptyValue(),
+  buddyDescription: RichTextEditor.createEmptyValue(),
   state: 'inactive',
   nexteriaTeamRole: '',
   studentLevel: '',
+  created_at: null,
+  updated_at: null,
 });
 
 export default User;

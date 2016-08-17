@@ -1,7 +1,8 @@
-let isomorphicFetch = require('fetch-ponyfill')();
+import isomorphicFetch from 'isomorphic-fetch';
 
 import URI from 'urijs';
 import config from './config';
+import toastr from 'toastr';
 
 
 function ensureAbsoluteUrl(apiUrl, input) {
@@ -14,11 +15,22 @@ function ensureAbsoluteUrl(apiUrl, input) {
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
-  } else {
-    let error = new Error(response.statusText);
-    error.response = response;
-    throw error;
   }
+
+  const error = new Error(response.statusText);
+  error.response = response;
+
+  if (response.status === 500) {
+    toastr.error('INTERNAL SERVER ERROR');
+  } else {
+    response.json().then(resp => {
+      toastr.options.closeButton = true;
+      toastr.options.timeOut = 15000;
+      toastr.error(resp.error);
+    });
+  }
+
+  throw error;
 }
 
 // Wrapper over isomorphicFetch making relative urls absolute. We don't want

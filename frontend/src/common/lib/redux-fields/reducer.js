@@ -29,18 +29,21 @@ export default function fieldsReducer(state = Map(), action) {
     }
 
     case attendeesGroupActions.UPDATE_ATTENDEES_GROUP: {
-      const group = new AttendeesGroup(action.payload);
+      const group = new AttendeesGroup(action.payload.group);
+      const index = action.payload.index;
 
-      return state.updateIn(['editEvent', 'attendeesGroups'], attendeesGroups =>
-        attendeesGroups.set(group.uid, group)
-      );
+      if (index === null) {
+        return state.updateIn(['editEvent', 'attendeesGroups'], groups => groups.push(group));
+      }
+
+      return state.setIn(['editEvent', 'attendeesGroups', index], group);
     }
 
     case eventsActions.REMOVE_ATTENDEES_GROUP: {
-      const groupUid = action.payload;
+      const index = action.payload;
 
       return state.updateIn(['editEvent', 'attendeesGroups'], attendeesGroups =>
-        attendeesGroups.delete(groupUid)
+        attendeesGroups.delete(index)
       );
     }
 

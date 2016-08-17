@@ -20,7 +20,7 @@ class React
             $url = env('HOT_LOAD_SERVER')."/build/".$module_name.'.js';
             $attributes['src'] = $url;
         } else {
-            $contents = file_get_contents(base_path().'/assets/build/file_hash.json');
+            $contents = file_get_contents(base_path().'/public/build/file_hash.json');
             $contents = utf8_encode($contents);
             $hashes = json_decode($contents);
 

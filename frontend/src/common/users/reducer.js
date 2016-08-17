@@ -1,90 +1,79 @@
 import * as actions from './actions';
 import { Record, Map, List } from 'immutable';
-import shortid from 'shortid';
+import RichTextEditor from 'react-rte';
 
 import User from './models/User';
 import Group from './models/Group';
+import Role from './models/Role';
+import StudentLevel from './models/StudentLevel';
+import Permission from './models/Permission';
+
+function hasPermission(permission, state) {
+  const viewer = state.users.viewer;
+  const roles = state.users.rolesList;
+
+  return viewer.roles.some(roleId => {
+    const actualRole = roles.find(role => role.id === roleId);
+    return actualRole.permissions.has(permission);
+  });
+}
 
 const InitialState = Record({
   viewer: null,
-  users: new Map(),
-  rolesList: new List([
-    'student',
-    'alumni',
-    'supporter',
-    'lector',
-    'guide',
-    'buddy',
-    'admin',
-    'nexteriaTeam',
-  ]),
-  groups: new Map(),
+  users: null,
+  rolesList: null,
+  groups: null,
   editingUserGroup: null,
-  studentLevels: new Map([
-    ['x_yS25', new Record({
-      uid: 'x_yS25',
-      name: 'Level 1 (2016)',
-      groupUid: '',
-      state: 'active',
-    })()],
-    ['x_y125', new Record({
-      uid: 'x_y125',
-      name: 'Level 2 (2016)',
-      groupUid: '',
-      state: 'active',
-    })()],
-    ['x_yx25', new Record({
-      uid: 'x_yx25',
-      name: 'Level 3 (2016)',
-      groupUid: '',
-      state: 'active',
-    })()],
-  ]),
+  studentLevels: null,
+  permissionsList: null,
+  hasPermission,
 }, 'users');
 
-export default function intlReducer(state = new InitialState, action) {
+export default function usersReducer(state = new InitialState, action) {
   switch (action.type) {
     case actions.LOAD_VIEWER_SUCCESS: {
-      const viewer = new Record(action.payload)();
+      const user = action.payload;
+      const viewer = new User({
+        ...user,
+        roles: new List(user.roles.map(role => role.id)),
+        studentLevelId: parseInt(user.studentLevelId, 10),
+        personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
+        guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
+        lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+        buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
+      });
 
-      const uid1 = shortid.generate();
-      const uid2 = shortid.generate();
-      const users = new Map([
-      [uid1, new Record({
-        uid: uid1,
-        username: 'tomas.sabo',
-        firstName: 'Tomas',
-        lastName: 'Sabo',
-        roles: ['lector'],
-      })()],
-      [uid2, new Record({
-        uid: uid2,
-        username: 'martin.filek',
-        firstName: 'Martin',
-        lastName: 'Filek',
-        roles: ['lector'],
-      })()],
-      [viewer.uid, viewer],
-    ]);
-
-      return state.set('viewer', viewer)
-              .set('users', users);
+      return state.set('viewer', viewer);
     }
 
-    case actions.SAVE_USER: {
-      const user = new User(action.payload);
+    case actions.LOAD_PERMISSIONS_LIST_SUCCESS: {
+      return state.set('permissionsList', new List(action.payload.map(permission =>
+        new Permission(permission)
+      )));
+    }
 
-      if (state.viewer.uid === user.uid) {
-        return state.update('users', users => users.set(user.uid, user))
+    case actions.SAVE_USER_SUCCESS: {
+      const user = new User({
+        ...action.payload,
+        roles: new List(action.payload.roles.map(role => role.id)),
+        studentLevelId: parseInt(action.payload.studentLevelId, 10),
+        personalDescription: RichTextEditor.createValueFromString(action.payload.personalDescription, 'html'),
+        guideDescription: RichTextEditor.createValueFromString(action.payload.guideDescription, 'html'),
+        lectorDescription: RichTextEditor.createValueFromString(action.payload.lectorDescription, 'html'),
+        buddyDescription: RichTextEditor.createValueFromString(action.payload.buddyDescription, 'html'),
+      });
+
+      if (state.viewer.id === user.id) {
+        return state.update('users', users => users.set(user.id, user))
                 .set('viewer', user);
       }
 
-      return state.update('users', users => users.set(user.uid, user));
+      return state.update('users', users => users.set(user.id, user));
     }
 
     case actions.ADD_USER_TO_GROUP: {
-      const userUid = action.payload;
-      return state.updateIn(['editingUserGroup', 'users'], users => users.set(userUid, userUid));
+      const userid = action.payload;
+      return state.updateIn(['editingUserGroup', 'users'], users => users.set(userid, userid));
     }
 
     case actions.ADD_GROUP_TO_GROUP: {
@@ -93,15 +82,18 @@ export default function intlReducer(state = new InitialState, action) {
       return state.updateIn(['editingUserGroup', 'users'], users => users.merge(userGroup));
     }
 
-    case actions.UPDATE_USER_GROUP: {
+    case actions.UPDATE_USER_GROUP_SUCCESS: {
       const userGroup = action.payload;
 
-      return state.update('groups', groups => groups.set(userGroup.uid, userGroup));
+      return state.update('groups', groups => groups.set(userGroup.id, new Group({
+        ...userGroup,
+        users: new Map(userGroup.users.map(user => [user, user])),
+      })));
     }
 
     case actions.REMOVE_USER_FROM_GROUP: {
-      const userUid = action.payload;
-      return state.updateIn(['editingUserGroup', 'users'], users => users.delete(userUid));
+      const userid = action.payload;
+      return state.updateIn(['editingUserGroup', 'users'], users => users.delete(userid));
     }
 
     case actions.CHANGE_USER_GROUP_NAME: {
@@ -110,15 +102,79 @@ export default function intlReducer(state = new InitialState, action) {
     }
 
     case actions.ADD_USER_GROUP: {
-      const group = new Group();
+      const groupId = action.payload;
+      let group = new Group();
 
-      return state.set('editingUserGroup', group.set('uid', shortid.generate()));
+      if (groupId) {
+        group = state.get('groups').get(groupId);
+      }
+
+      return state.set('editingUserGroup', group);
     }
 
     case actions.CLOSE_USER_GROUP_DIALOG: {
       return state.set('editingUserGroup', null);
     }
 
+    case actions.LOAD_ROLES_LIST_SUCCESS: {
+      return state.set('rolesList', new Map(action.payload.map(role =>
+        [role.name, new Role({
+          ...role,
+          permissions: new Map(role.permissions.map(permission =>
+            [permission.name, new Permission(permission)]))
+        })]
+      )));
+    }
+
+    case actions.LOAD_STUDENT_LEVELS_LIST_SUCCESS: {
+      return state.set('studentLevels', new Map(action.payload.map(level =>
+        [level.id, new StudentLevel(level)]
+      )));
+    }
+
+    case actions.LOAD_USERS_LIST_SUCCESS: {
+      return state.set('users', new Map(action.payload.map(user =>
+        [user.id, new User({
+          ...user,
+          roles: new List(user.roles.map(role => role.id)),
+          studentLevelId: parseInt(user.studentLevelId, 10),
+          personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
+          guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
+          lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+          buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
+        })]
+      )));
+    }
+
+    case actions.LOAD_USER_GROUPS_LIST_SUCCESS: {
+      return state.set('groups', new Map(action.payload.map(group =>
+        [group.id, new Group({
+          ...group,
+          users: new Map(group.users.map(user => [user, user])),
+        })]
+      )));
+    }
+
+    case actions.REMOVE_USER_GROUP_SUCCESS: {
+      return state.update('groups', groups => groups.delete(action.payload));
+    }
+
+    case actions.REMOVE_USER_SUCCESS: {
+      return state.update('users', users => users.delete(action.payload));
+    }
+
+    case actions.REMOVE_ROLE_SUCCESS: {
+      return state.update('rolesList', rolesList => rolesList.delete(action.payload));
+    }
+
+    case actions.UPDATE_ROLE_SUCCESS: {
+      const role = action.payload;
+      return state.update('rolesList', rolesList => rolesList.set(role.name, new Role({
+        ...role,
+        permissions: new Map(role.permissions.map(permission =>
+          [permission.name, new Permission(permission)]))
+      })));
+    }
 
     default:
       return state;

@@ -1,5 +1,5 @@
 import { loadViewer } from '../users/actions';
-export const APP_START = 'APP_START';
+export const APP_STARTED = 'APP_STARTED';
 export const APP_STORAGE_LOAD = 'APP_STORAGE_LOAD';
 
 export const LOGOUT = 'LOGOUT';
@@ -17,7 +17,7 @@ export function start() {
     dispatch(loadViewer());
 
     return {
-      type: APP_START
+      type: APP_STARTED
     };
   };
 }

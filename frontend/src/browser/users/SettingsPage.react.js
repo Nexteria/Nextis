@@ -28,7 +28,7 @@ export class SettingsPage extends Component {
     return (
       <div>
         <EditUser
-          mode="edit"
+          mode="profile"
           user={viewer}
           title={<FormattedMessage {...messages.title} />}
           saveUser={saveUser}

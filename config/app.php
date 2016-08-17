@@ -147,7 +147,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -157,6 +156,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ReactServiceProvider::class,
+
+        Mews\Purifier\PurifierServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
 
     ],
 
@@ -205,6 +208,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'React' => App\React\Facades\React::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Purifier' => Mews\Purifier\Facades\Purifier::class,
+        'Input' => Illuminate\Support\Facades\Input::class,
 
     ],
 

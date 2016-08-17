@@ -29,16 +29,16 @@ export default class GroupMembers extends Component {
     const { removeUser } = this.props;
 
     return (
-      <div className="col-md-6" id="group-members-container">
+      <div className="col-md-6" id="members-pool-container">
         <label><FormattedMessage {...messages.groupMembers} /></label>
-        <div id="group-members">
+        <div id="members-pool">
           {users ?
             <ul className="nav nav-pills nav-stacked">
               {users.valueSeq().map(user =>
                 <li
-                  key={user.get('uid')}
+                  key={user.get('id')}
                   className="group"
-                  onClick={() => removeUser(user.get('uid'))}
+                  onClick={() => removeUser(user.get('id'))}
                 >
                   <a><i className="fa fa-user"></i>
                   {`${user.get('firstName')} ${user.get('lastName')} (${user.get('username')})`}

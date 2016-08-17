@@ -1,3 +1,48 @@
 body, html {
   height: 100%;
 }
+
+.trash-group {
+  font-size: 1.5em;
+  color: red;
+  cursor: pointer;
+  margin-left: 1em;
+}
+
+.action-buttons i {
+  cursor: pointer;
+  margin-left: 1em;
+  font-size: 1.5em;
+}
+
+.loading-bar {
+  .react-progress-bar-percent {
+    height: 4px;
+    background: #000000;
+    box-shadow: 0 0 10px #000, 0 0 5px #000;
+    position: absolute;
+    left: 50.8%;
+  }
+
+  .react-progress-bar-spinner-icon {
+    border: solid 4px transparent;
+    border-top-color: #000000;
+    border-left-color: #333;
+    border-radius: 50%;
+    height: 5em;
+    width: 5em;
+  }
+
+  .react-progress-bar-percent:before {
+    content: 'Loading';
+  }
+
+  .react-progress-bar-spinner-left {
+    left: 50%;
+    top: 50%;
+  }
+}
+
+.react-progress-bar.loading-bar {
+  top: 54%;
+}

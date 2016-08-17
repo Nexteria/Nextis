@@ -1,8 +1,7 @@
 import { Record, Map } from 'immutable';
-import shortid from 'shortid';
 
 const AttendeesGroup = Record({
-  uid: shortid.generate(),
+  id: null,
   name: '',
   signUpOpenDateTime: null,
   signUpDeadlineDateTime: null,

@@ -79,43 +79,124 @@ const messages = defineMessages({
   noAttendeesGroups: {
     defaultMessage: 'There are no attendees groups',
     id: 'event.edit.noAttendeesGroups',
-  }
+  },
+  shortDescription: {
+    defaultMessage: 'Event short description',
+    id: 'event.edit.shortDescription',
+  },
+  eventType: {
+    defaultMessage: 'Type',
+    id: 'event.edit.eventType',
+  },
+  chooseEventType: {
+    defaultMessage: 'Choose event type',
+    id: 'event.edit.chooseEventType',
+  },
+  eventType_dbk: {
+    defaultMessage: 'DBK',
+    id: 'event.edit.eventType_dbk',
+  },
+  eventType_ik: {
+    defaultMessage: 'IK',
+    id: 'event.edit.eventType_ik',
+  },
+  eventType_other: {
+    defaultMessage: 'Other',
+    id: 'event.edit.eventType_other',
+  },
+  eventStatus: {
+    defaultMessage: 'Event status',
+    id: 'event.edit.eventStatus',
+  },
+  followingEvents: {
+    defaultMessage: 'Following events',
+    id: 'event.edit.followingEvents',
+  },
+  addFollowingEvents: {
+    defaultMessage: 'Add events',
+    id: 'event.edit.addFollowingEvents',
+  },
+  curriculumLevel: {
+    defaultMessage: 'Curriculum level',
+    id: 'event.edit.curriculumLevel',
+  },
+  noCurriculumLevel: {
+    defaultMessage: 'Do no include in curriculum',
+    id: 'event.edit.noCurriculumLevel',
+  },
+  eventLocation: {
+    defaultMessage: 'Location',
+    id: 'event.edit.eventLocation',
+  },
+  chooseEventLocation: {
+    defaultMessage: 'Choose event location',
+    id: 'event.edit.chooseEventLocation',
+  },
 });
 
 export class EditEvent extends Component {
 
   static propTypes = {
     fields: PropTypes.object.isRequired,
-    mode: PropTypes.string,
-    title: PropTypes.object.isRequired,
+    title: PropTypes.object,
     event: PropTypes.object,
+    events: PropTypes.object.isRequired,
     saveEvent: PropTypes.func.isRequired,
     setField: PropTypes.func,
     locale: PropTypes.string,
     addAttendeesGroup: PropTypes.func.isRequired,
     removeAttendeesGroup: PropTypes.func.isRequired,
+    editAttendeesGroup: PropTypes.func.isRequired,
+    rolesList: PropTypes.object,
+    params: PropTypes.object,
+    users: PropTypes.object,
+    intl: PropTypes.object.isRequired,
+    eventsStatuses: PropTypes.object.isRequired,
+    studentLevels: PropTypes.object.isRequired,
+    locations: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
-    const { setField, event } = this.props;
+    const { setField, events, event, params } = this.props;
 
-    setField(['editEvent'], event ? event : new Event());
+    const eventId = params ? params.eventId : null;
+    let activeEvent = event;
+
+    if (eventId) {
+      activeEvent = events.get(parseInt(eventId, 10));
+    }
+
+    setField(['editEvent'], activeEvent ? activeEvent : new Event());
   }
 
   render() {
-    const { fields, mode, title, users, locale } = this.props;
-    const { saveEvent, setField, addAttendeesGroup, removeAttendeesGroup } = this.props;
+    const { fields, events, locations, eventTypes, studentLevels, eventsStatuses, rolesList, title, users, locale } = this.props;
+    const {
+      saveEvent,
+      setField,
+      addAttendeesGroup,
+      removeAttendeesGroup,
+      editAttendeesGroup,
+    } = this.props;
+
     const { formatMessage } = this.props.intl;
 
-    const lectors = users.filter(user => fields.lectors.value.includes(user.uid)).map(user => ({ id: user.uid, text: `${user.firstName} ${user.lastName}` }));
-    let host = users.get(fields.host.value);
+    if (!fields.description.value || !rolesList) {
+      return <div></div>;
+    }
 
+    const lectors = users.filter(user => fields.lectors.value.includes(user.id))
+      .map(user => ({ id: user.id, text: `${user.firstName} ${user.lastName}` }));
+
+    const followingEvents = events.filter(event => fields.followingEvents.value.includes(event.id))
+      .map(event => ({ id: event.id, text: event.name }));
+
+    let host = users.get(fields.hostId.value);
     if (host) {
-      host = [{ id: host.uid, text: `${host.firstName} ${host.lastName}`}];
+      host = [{ id: host.id, text: `${host.firstName} ${host.lastName}` }];
     } else {
       host = [];
     }
-    
 
     return (
       <div>
@@ -162,6 +243,48 @@ export class EditEvent extends Component {
 
                       <div className="form-group">
                         <label htmlFor="inputName" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.eventType} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <select
+                            className="form-control"
+                            {...fields.eventType}
+                            id="eventType"
+                          >
+                            <option readOnly>{formatMessage(messages.chooseEventType)}</option>
+                            {eventTypes.valueSeq().map(type =>
+                              <option key={type} value={type}>{formatMessage(messages[`eventType_${type}`])}</option>
+                            )}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="eventLocation" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.eventLocation} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <select
+                            className="form-control"
+                            {...fields.nxLocationId}
+                            id="eventLocation"
+                          >
+                            <option readOnly>{formatMessage(messages.chooseEventLocation)}</option>
+                            {locations.valueSeq().map(location =>
+                              <option key={location.id} value={location.id}>
+                              {`${location.name} (${location.addressLine1}`}
+                              {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
+                              {`, ${location.city}, ${location.zipCode}, ${location.countryCode})`}
+                              </option>
+                            )}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="inputName" className="col-sm-2 control-label">
                           <FormattedMessage {...messages.host} />
                         </label>
 
@@ -171,8 +294,8 @@ export class EditEvent extends Component {
                             placeholder={formatMessage(messages.addHost)}
                             tags={host}
                             suggestions={users.map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
-                            handleDelete={(i) => setField(['editEvent', 'host'], null)}
-                            handleAddition={(tag) => setField(['editEvent', 'host'], users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).uid)}
+                            handleDelete={(i) => setField(['editEvent', 'hostId'], null)}
+                            handleAddition={(tag) => setField(['editEvent', 'hostId'], users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id)}
                           />
                         </div>
                       </div>
@@ -187,9 +310,26 @@ export class EditEvent extends Component {
                             id="lectors"
                             placeholder={formatMessage(messages.addLectors)}
                             tags={lectors.toArray()}
-                            suggestions={users.filter(user => user.roles.includes('lector') && !fields.lectors.value.includes(user.uid)).map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
-                            handleDelete={(i) => setField(['editEvent', 'lectors'], lectors.delete(i).map(lector => lector.uid))}
-                            handleAddition={(tag) => setField(['editEvent', 'lectors'], fields.lectors.value.push(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).uid))}
+                            suggestions={users.filter(user => user.roles.includes(rolesList.get('LECTOR').id) && !fields.lectors.value.includes(user.id)).map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
+                            handleDelete={(i) => setField(['editEvent', 'lectors'], fields.lectors.value.delete(i).map(lector => lector.id))}
+                            handleAddition={(tag) => setField(['editEvent', 'lectors'], fields.lectors.value.push(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id))}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="inputName" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.followingEvents} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <ReactTags
+                            id="events"
+                            placeholder={formatMessage(messages.addFollowingEvents)}
+                            tags={followingEvents.toArray()}
+                            suggestions={events.filter(event => event.id !== fields.id.value && !fields.followingEvents.value.includes(event.id)).map(event => event.name).toArray()}
+                            handleDelete={(i) => setField(['editEvent', 'followingEvents'], fields.followingEvents.value.delete(i).map(event => event.id))}
+                            handleAddition={(tag) => setField(['editEvent', 'followingEvents'], fields.followingEvents.value.push(events.find(event => event.name === tag).id))}
                           />
                         </div>
                       </div>
@@ -204,6 +344,7 @@ export class EditEvent extends Component {
                             inputProps={{ id: 'eventStartDateTime' }}
                             locale={locale}
                             {...fields.eventStartDateTime}
+                            onChange={(moment) => fields.eventStartDateTime.onChange({ target: {value: moment }})}
                           />
                         </div>
                       </div>
@@ -218,6 +359,7 @@ export class EditEvent extends Component {
                             inputProps={{ id: 'eventEndDateTime' }}
                             locale={locale}
                             {...fields.eventEndDateTime}
+                            onChange={(moment) => fields.eventEndDateTime.onChange({ target: {value: moment }})}
                           />
                         </div>
                       </div>
@@ -252,6 +394,25 @@ export class EditEvent extends Component {
                         </div>
                       </div>
 
+                      <div className="form-group">
+                        <label htmlFor="curriculumLevel" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.curriculumLevel} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <select
+                            className="form-control"
+                            {...fields.curriculumLevelId}
+                            id="curriculumLevel"
+                          >
+                            <option value="">{formatMessage(messages.noCurriculumLevel)}</option>
+                            {studentLevels.valueSeq().map(level =>
+                              <option key={level.id} value={level.id}>{level.name}</option>
+                            )}
+                          </select>
+                        </div>
+                      </div>
+
                       <div className="form-group attendees-groups">
                         <label htmlFor="inputName" className="col-sm-2 control-label">
                           <FormattedMessage {...messages.attendeesGroups} />
@@ -263,19 +424,25 @@ export class EditEvent extends Component {
                           </div>
                           <ul className="nav nav-pills nav-stacked">
                             {fields.attendeesGroups.value ?
-                              fields.attendeesGroups.value.valueSeq().map(group =>
-                                <li key={group.uid} className="active">
+                              fields.attendeesGroups.value.map((group, index) =>
+                                <li key={index} className="active">
                                   <a><i className="fa fa-users"></i> {group.name}
-                                    <i
-                                      className="fa fa-trash-o trash-group pull-right"
-                                      onClick={() => removeAttendeesGroup(group.uid)}
-                                    ></i>
-                                    <span className="label pull-right">
-                                      <span className="confirmed-will-come">{group.users.filter(user => user.signedIn).size}</span>
-                                      <span> / </span>
-                                      <span className="confirmed-wont-come">{group.users.filter(user => user.signedOut || user.wontGo).size}</span>
-                                      <span> / </span>
-                                      <span className="total">{group.users.size}</span>
+                                    <span className="action-buttons pull-right">
+                                      <span className="label">
+                                        <span className="confirmed-will-come">{group.users.filter(user => user.signedIn).size}</span>
+                                        <span> / </span>
+                                        <span className="confirmed-wont-come">{group.users.filter(user => user.signedOut || user.wontGo).size}</span>
+                                        <span> / </span>
+                                        <span className="total">{group.users.size}</span>
+                                      </span>
+                                      <i
+                                        className="fa fa-trash-o trash-group"
+                                        onClick={() => removeAttendeesGroup(index)}
+                                      ></i>
+                                      <i
+                                        className="fa fa-pencil"
+                                        onClick={() => editAttendeesGroup(group, index)}
+                                      ></i>
                                     </span>
                                   </a>
                                 </li>
@@ -305,6 +472,41 @@ export class EditEvent extends Component {
                       </div>
 
                       <div className="form-group">
+                        <label htmlFor="shortDescription" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.shortDescription} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <TextEditor
+                            value={fields.shortDescription.value}
+                            onChange={(value) =>
+                              fields.shortDescription.onChange({ target: { value } })
+                            }
+                            id="shortDescription"
+                            placeholder="Event short description ..."
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="inputName" className="col-sm-2 control-label">
+                          <FormattedMessage {...messages.eventStatus} />
+                        </label>
+
+                        <div className="col-sm-10">
+                          <select
+                            className="form-control"
+                            {...fields.status}
+                            id="eventStatus"
+                          >
+                            {eventsStatuses.map(status =>
+                              <option key={status} value={status}>{status}</option>
+                            )}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
                           <button type="button" className="btn btn-success" onClick={() => saveEvent(fields)}>
                             <FormattedMessage {...messages.save} />
@@ -327,10 +529,10 @@ export class EditEvent extends Component {
 EditEvent = fields(EditEvent, {
   path: 'editEvent',
   fields: [
-    'uid',
+    'id',
     'name',
     'activityPoints',
-    'host',
+    'hostId',
     'lectors',
     'eventStartDateTime',
     'eventEndDateTime',
@@ -338,6 +540,12 @@ EditEvent = fields(EditEvent, {
     'minCapacity',
     'maxCapacity',
     'description',
+    'shortDescription',
+    'eventType',
+    'status',
+    'curriculumLevelId',
+    'followingEvents',
+    'nxLocationId',
   ],
 });
 
@@ -346,5 +554,10 @@ EditEvent = injectIntl(EditEvent);
 export default connect((state) => ({
   rolesList: state.users.rolesList,
   users: state.users.users,
+  events: state.events.events,
+  eventsStatuses: state.events.eventsStatuses,
   locale: state.intl.currentLocale,
+  eventTypes: state.events.eventTypes,
+  studentLevels: state.users.studentLevels,
+  locations: state.nxLocations.locations,
 }), { ...fieldsActions, ...attendeesGroupActions, ...eventActions })(EditEvent);

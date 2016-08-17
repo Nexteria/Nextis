@@ -1,8 +1,7 @@
 import { Record, Map } from 'immutable';
-import shortid from 'shortid';
 
 const Group = Record({
-  uid: shortid.generate(),
+  id: null,
   users: new Map(),
   name: '',
   createdBy: null,

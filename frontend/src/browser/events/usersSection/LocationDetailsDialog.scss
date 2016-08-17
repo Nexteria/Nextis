@@ -1,0 +1,22 @@
+.locations-details-dialog {
+  .form-group {
+    margin-top: 1em;
+  }
+
+  .images {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+   .image {
+      display: inline-block;
+      margin: 1em;
+      position: relative;
+    }
+
+    img {
+      max-width: 200px;
+    }
+  }
+}

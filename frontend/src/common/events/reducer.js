@@ -1,6 +1,10 @@
 import * as actions from './actions';
 import Event from './models/Event';
-import { Record, List } from 'immutable';
+import AttendeesGroup from '../attendeesGroup/models/AttendeesGroup';
+import { Record, List, Map } from 'immutable';
+import moment from 'moment';
+import RichTextEditor from 'react-rte';
+
 
 const InitialState = Record({
   eventTypes: new List([
@@ -8,16 +12,175 @@ const InitialState = Record({
     'ik',
     'other',
   ]),
-  events: new Map(),
+  eventsStatuses: new List([
+    'draft',
+    'published',
+  ]),
+  events: null,
+  eventDetailsId: null,
+  locationDetailsId: null,
+  signOut: new Record({
+    userId: null,
+    reason: '',
+    eventId: null,
+    groupId: null,
+  })(),
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
   switch (action.type) {
-    case actions.SAVE_EVENT: {
-      const event = new Event(action.payload);
+    case actions.SAVE_EVENT_SUCCESS: {
+      const event = new Event({
+        ...action.payload,
+        lectors: new List(action.payload.lectors),
+        followingEvents: new List(action.payload.followingEvents),
+        eventStartDateTime: moment(action.payload.eventStartDateTime),
+        eventEndDateTime: moment(action.payload.eventEndDateTime),
+        description: RichTextEditor.createValueFromString(action.payload.description, 'html'),
+        shortDescription: RichTextEditor.createValueFromString(action.payload.shortDescription, 'html'),
+        attendeesGroups: new List(action.payload.attendeesGroups.map(group => new AttendeesGroup({
+          ...group,
+          signUpDeadlineDateTime: moment(group.signUpDeadlineDateTime),
+          signUpOpenDateTime: moment(group.signUpOpenDateTime),
+          users: new Map(group.users.map(user => [user.id, new Map({
+            id: user.id,
+            signedIn: user.signedIn ? moment(user.signedIn) : null,
+            signedOut: user.signedOut ? moment(user.signedOut) : null,
+            wontGo: user.wontGo ? moment(user.wontGo) : null,
+            signedOutReason: user.signedOutReason,
+          })])),
+        }))),
+      });
 
-      return state.update('events', events => events.set(event.uid, event));
+      return state.update('events', events => events.set(event.id, event));
     }
+
+    case actions.LOAD_EVENTS_LIST_SUCCESS: {
+      return state.set('events', new Map(action.payload.map(event =>
+        [event.id, new Event({
+          ...event,
+          lectors: new List(event.lectors),
+          followingEvents: new List(event.followingEvents),
+          eventStartDateTime: moment(event.eventStartDateTime),
+          eventEndDateTime: moment(event.eventEndDateTime),
+          description: RichTextEditor.createValueFromString(event.description, 'html'),
+          shortDescription: RichTextEditor.createValueFromString(event.shortDescription, 'html'),
+          attendeesGroups: new List(event.attendeesGroups.map(group => new AttendeesGroup({
+            ...group,
+            signUpDeadlineDateTime: moment(group.signUpDeadlineDateTime),
+            signUpOpenDateTime: moment(group.signUpOpenDateTime),
+            users: new Map(group.users.map(user => [user.id, new Map({
+              id: user.id,
+              signedIn: user.signedIn ? moment(user.signedIn) : null,
+              signedOut: user.signedOut ? moment(user.signedOut) : null,
+              wontGo: user.wontGo ? moment(user.wontGo) : null,
+              signedOutReason: user.signedOutReason,
+            })])),
+          }))),
+        })]
+      )));
+    }
+
+    case actions.REMOVE_EVENT_SUCCESS: {
+      return state.update('events', events => events.delete(action.payload));
+    }
+
+    case actions.TOGGLE_EVENT_ACTIONS: {
+      const eventId = action.payload.eventId;
+      const visible = action.payload.visible;
+      return state.setIn(['events', eventId, 'visibleDetails'], visible);
+    }
+
+    case actions.CLOSE_EVENT_DETAILS_DIALOG: {
+      return state.set('eventDetailsId', null);
+    }
+
+    case actions.OPEN_EVENT_DETAILS_DIALOG: {
+      return state.set('eventDetailsId', action.payload);
+    }
+
+    case actions.ATTENDEE_WONT_GO_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('wontGo', moment(response.wontGo))
+        .set('signedIn', null)
+        .set('signedOut', null));
+    }
+
+    case actions.ATTENDEE_SIGN_IN_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('signedIn', moment(response.signedIn))
+        .set('signedOut', null)
+        .set('wontGo', null));
+    }
+
+    case actions.ATTENDEE_SIGN_OUT_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('signedOut', moment(response.signedOut))
+        .set('signedOutReason', response.signedOutReason)
+        .set('signedIn', null)
+        .set('wontGo', null))
+        .setIn(['signOut', 'userId'], null)
+        .setIn(['signOut', 'eventId'], null)
+        .setIn(['signOut', 'reason'], '')
+        .setIn(['signOut', 'groupId'], null);
+    }
+
+    case actions.OPEN_SIGN_OUT_DIALOG: {
+      const { userId, eventId, groupId } = action.payload;
+      return state.setIn(['signOut', 'userId'], userId)
+                  .setIn(['signOut', 'eventId'], eventId)
+                  .setIn(['signOut', 'groupId'], groupId);
+    }
+
+    case actions.CHANGE_SIGNOUT_REASON: {
+      return state.setIn(['signOut', 'reason'], action.payload);
+    }
+
+    case actions.CANCEL_SIGN_OUT: {
+      return state.setIn(['signOut', 'userId'], null)
+                  .setIn(['signOut', 'eventId'], null)
+                  .setIn(['signOut', 'reason'], '')
+                  .setIn(['signOut', 'groupId'], null);
+    }
+
+    case actions.OPEN_LOCATION_DETAILS_DIALOG: {
+      return state.set('locationDetailsId', action.payload);
+    }
+
+    case actions.CLOSE_LOCATION_DETAILS_DIALOG: {
+      return state.set('locationDetailsId', null);
+    }
+
   }
 
   return state;

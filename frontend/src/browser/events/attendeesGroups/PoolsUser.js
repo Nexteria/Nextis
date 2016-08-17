@@ -15,7 +15,7 @@ export default class PoolsUser extends Component {
 
     return (
       <li className="group">
-        <a onClick={() => addUser(user.uid)}><i className="fa fa-user"></i>
+        <a onClick={() => addUser(user.id)}><i className="fa fa-user"></i>
         {`${user.firstName} ${user.lastName} (${user.username})`}
         </a>
       </li>

@@ -24,11 +24,11 @@ const messages = defineMessages({
     id: 'event.edit.attendeesGroup.saveAttendeeGroupButton',
   },
   openingSignupDate: {
-    defaultMessage: 'Opening sign up date',
+    defaultMessage: 'Signup from',
     id: 'event.edit.attendeesGroup.openingSignupDate',
   },
   deadlineSignupDate: {
-    defaultMessage: 'Deadline sign up date',
+    defaultMessage: 'Signup to',
     id: 'event.edit.attendeesGroup.deadlineSignupDate',
   },
   groupName: {
@@ -50,7 +50,7 @@ export class AttendeesGroupsDialog extends Component {
   static propTypes = {
     users: PropTypes.object.isRequired,
     groups: PropTypes.object.isRequired,
-    attendeesGroup: PropTypes.object.isRequired,
+    attendeesGroup: PropTypes.object,
     addUser: PropTypes.func.isRequired,
     addGroup: PropTypes.func.isRequired,
     locale: PropTypes.string.isRequired,
@@ -65,7 +65,7 @@ export class AttendeesGroupsDialog extends Component {
   }
 
   render() {
-    const { groups, users, locale, attendeesGroup } = this.props;
+    const { groups, users, locale, attendeesGroup, attendeesGroupIndex } = this.props;
     const {
       addUser,
       addGroup,
@@ -79,7 +79,7 @@ export class AttendeesGroupsDialog extends Component {
       changeAttendeeGroupMaxCapacity,
     } = this.props;
 
-    if (!attendeesGroup.uid) {
+    if (!attendeesGroup) {
       return <div></div>;
     }
 
@@ -89,7 +89,7 @@ export class AttendeesGroupsDialog extends Component {
 
     return (
       <Modal
-        show={attendeesGroup.uid ? true : false}
+        show
         dialogClassName="create-attendee-group-modal"
         onHide={closeAttendeesGroupDialog}
       >
@@ -192,7 +192,7 @@ export class AttendeesGroupsDialog extends Component {
           <div className="col-md-12">
             <button
               className="btn btn-success"
-              onClick={() => updateAttendeesGroup(attendeesGroup)}
+              onClick={() => updateAttendeesGroup(attendeesGroup, attendeesGroupIndex)}
             >
               <FormattedMessage {...messages.saveAttendeeGroupButton} />
             </button>
@@ -208,5 +208,6 @@ export default connect((state) => ({
   users: state.users.users,
   groups: state.users.groups,
   locale: state.intl.currentLocale,
-  attendeesGroup: state.attendeesGroup,
+  attendeesGroup: state.attendeesGroup.group,
+  attendeesGroupIndex: state.attendeesGroup.groupIndex,
 }), actions)(AttendeesGroupsDialog);

@@ -1581,20 +1581,25 @@
 .skin-purple .user-panel > .info > a {
   color: #fff;
 }
-.skin-purple .sidebar-menu > li.header {
+.skin-purple .sidebar-menu > li.header,
+.skin-purple .sidebar-menu div.admin-section > li.header {
   color: #4b646f;
   background: #1a2226;
 }
-.skin-purple .sidebar-menu > li > a {
+.skin-purple .sidebar-menu > li > a,
+.skin-purple .sidebar-menu div.admin-section > li > a {
   border-left: 3px solid transparent;
 }
 .skin-purple .sidebar-menu > li:hover > a,
-.skin-purple .sidebar-menu > li.active > a {
+.skin-purple .sidebar-menu div.admin-section > li:hover > a,
+.skin-purple .sidebar-menu > li.active > a,
+.skin-purple .sidebar-menu div.admin-section > li.active > a {
   color: #ffffff;
   background: #1e282c;
   border-left-color: #605ca8;
 }
-.skin-purple .sidebar-menu > li > .treeview-menu {
+.skin-purple .sidebar-menu > li > .treeview-menu,
+.skin-purple .sidebar-menu div.admin-section > li > .treeview-menu {
   margin: 0 1px;
   background: #2c3b41;
 }

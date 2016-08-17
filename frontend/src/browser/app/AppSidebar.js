@@ -23,10 +23,6 @@ const messages = defineMessages({
     defaultMessage: 'Users',
     id: 'app.sidebar.links.users',
   },
-  createUser: {
-    defaultMessage: 'Create user',
-    id: 'app.sidebar.links.createUser',
-  },
   events: {
     defaultMessage: 'Events',
     id: 'app.sidebar.links.events',
@@ -39,17 +35,17 @@ const messages = defineMessages({
     defaultMessage: 'Admin section',
     id: 'app.sidebar.links.adminSection',
   },
-  createUserGroup: {
-    defaultMessage: 'Create user group',
-    id: 'app.sidebar.links.createUserGroup',
+  locations: {
+    defaultMessage: 'Locations',
+    id: 'app.sidebar.links.locations',
   },
-  places: {
-    defaultMessage: 'Places',
-    id: 'app.sidebar.links.places',
+  userGroups: {
+    defaultMessage: 'User groups',
+    id: 'app.sidebar.links.userGroups',
   },
-  createPlace: {
-    defaultMessage: 'Create place',
-    id: 'app.sidebar.links.createPlace',
+  roles: {
+    defaultMessage: 'Roles',
+    id: 'app.sidebar.links.roles',
   },
 });
 
@@ -57,15 +53,23 @@ const messages = defineMessages({
 export default class AppSideBar extends Component {
 
   static propTypes = {
-    viewer: PropTypes.object.isRequired
+    viewer: PropTypes.object.isRequired,
+    hasPermission: PropTypes.func.isRequired,
   };
 
   render() {
+    const { hasPermission } = this.props;
+
     return (
       <aside className="main-sidebar">
         <section className="sidebar">
           <ul className="sidebar-menu">
             <li className="header"><FormattedMessage {...messages.studies} /></li>
+            <li>
+              <Link to="/events">
+                <span><FormattedMessage {...messages.events} /></span>
+              </Link>
+            </li>
             <li className="header"><FormattedMessage {...messages.network} /></li>
             <li>
               <Link to="/contacts">
@@ -74,34 +78,40 @@ export default class AppSideBar extends Component {
               </Link>
             </li>
 
-            <li className="admin-header"><FormattedMessage {...messages.adminSection} /></li>
-            <li className="header"><FormattedMessage {...messages.users} /></li>
-            <li>
-              <Link to="/users/create">
-                <i className="fa fa-plus text-green"></i>
-                <span><FormattedMessage {...messages.createUser} /></span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/users/groups/create">
-                <i className="fa fa-plus text-green"></i>
-                <span><FormattedMessage {...messages.createUserGroup} /></span>
-              </Link>
-            </li>
-            <li className="header"><FormattedMessage {...messages.events} /></li>
-            <li>
-              <Link to="/events/create">
-                <i className="fa fa-plus text-green"></i>
-                <span><FormattedMessage {...messages.createEvent} /></span>
-              </Link>
-            </li>
-            <li className="header"><FormattedMessage {...messages.places} /></li>
-            <li>
-              <Link to="/locations/create">
-                <i className="fa fa-plus text-green"></i>
-                <span><FormattedMessage {...messages.createPlace} /></span>
-              </Link>
-            </li>
+            {hasPermission('view_admin_section') ?
+              <div className="admin-section">
+                <li className="admin-header"><FormattedMessage {...messages.adminSection} /></li>
+                <li className="header"><FormattedMessage {...messages.users} /></li>
+                <li>
+                  <Link to="/admin/userGroups">
+                    <span><FormattedMessage {...messages.userGroups} /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/users">
+                    <span><FormattedMessage {...messages.users} /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/roles">
+                    <span><FormattedMessage {...messages.roles} /></span>
+                  </Link>
+                </li>
+                <li className="header"><FormattedMessage {...messages.events} /></li>
+                <li>
+                  <Link to="/admin/events">
+                    <span><FormattedMessage {...messages.events} /></span>
+                  </Link>
+                </li>
+                <li className="header"><FormattedMessage {...messages.locations} /></li>
+                <li>
+                  <Link to="/admin/nxLocations">
+                    <span><FormattedMessage {...messages.locations} /></span>
+                  </Link>
+                </li>
+              </div>
+              : ''
+            }
           </ul>
         </section>
       </aside>

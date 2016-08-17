@@ -511,7 +511,8 @@ a:focus {
   margin: 0;
   padding: 0;
 }
-.sidebar-menu > li {
+.sidebar-menu > li,
+.sidebar-menu div.admin-section > li {
   position: relative;
   margin: 0;
   padding: 0;
@@ -520,17 +521,30 @@ a:focus {
   padding: 12px 5px 12px 15px;
   display: block;
 }
+.sidebar-menu > div.admin-section > li > a {
+  padding: 12px 5px 12px 15px;
+  display: block;
+}
+div.admin-section {
+  margin-top:2em;
+}
 .sidebar-menu > li > a > .fa,
 .sidebar-menu > li > a > .glyphicon,
-.sidebar-menu > li > a > .ion {
+.sidebar-menu > li > a > .ion,
+.sidebar-menu div.admin-section > li > a > .fa,
+.sidebar-menu div.admin-section > li > a > .glyphicon,
+.sidebar-menu div.admin-section > li > a > .ion {
   width: 20px;
 }
 .sidebar-menu > li .label,
-.sidebar-menu > li .badge {
+.sidebar-menu > li .badge,
+.sidebar-menu div.admin-section > li .label,
+.sidebar-menu div.admin-section > li .badge {
   margin-top: 3px;
   margin-right: 5px;
 }
-.sidebar-menu li.header {
+.sidebar-menu li.header,
+.sidebar-menu div.admin-section li.header {
   padding: 10px 25px 10px 15px;
   font-size: 12px;
 }

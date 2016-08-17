@@ -1,0 +1,81 @@
+.users-event {
+  a {
+    cursor: pointer;
+  }
+
+  div.event-type {
+    font-size: 0.8em;
+  }
+
+  .timeline-item {
+    display: inline-block;
+
+    div.timeline-header {
+      padding:0;
+      border: none;
+
+      h3 {
+        margin: 10px
+      }
+    }
+
+    .event-date {
+      font-size:1em;
+      padding-top:12px;
+    }
+  }
+
+  .attendance-container {
+    font-size: 1.5em;
+    text-align: right;
+    float: right;
+    padding-top: 0.4em;
+
+    .wasnt-here {
+      color: red;
+    }
+
+    .was-here {
+      color: green;
+    }
+  }
+
+  div.event-type {
+    top: 10px;
+  }
+
+  div.event-actions {
+    margin-top: -2px;
+
+    button {
+      margin-left: 0.4em;
+      font-size: 0.6em;
+    }
+
+    .fa-bars {
+      margin-left: 1em;
+      font-size: 0.8em;
+      cursor: pointer;
+    }
+  }
+
+  .signIn-date-notes {
+    font-size: 0.6em;
+    text-align: center;
+  }
+
+  .lectors-container {
+    margin: 0.5em 0;
+  }
+
+  .event-details {
+    margin-bottom: 0.5em;
+  }
+
+  .lector-picture {
+    margin-top: 1em;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+}

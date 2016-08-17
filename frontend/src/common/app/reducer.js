@@ -5,6 +5,7 @@ const InitialState = Record({
   online: false,
   storageLoaded: false,
   isUserMenuOpen: false,
+  loading: 0,
 }, 'app');
 
 export default function appReducer(state = new InitialState, action) {
@@ -24,6 +25,18 @@ export default function appReducer(state = new InitialState, action) {
 
     case actions.CLOSE_USER_MENU:
       return state.set('isUserMenuOpen', false);
+  }
+
+  if (/.*_START$/.test(action.type)) {
+    return state.update('loading', loading => loading + 1);
+  }
+
+  if (/.*_SUCCESS$/.test(action.type)) {
+    return state.update('loading', loading => loading - 1);
+  }
+
+  if (/.*_ERROR$/.test(action.type)) {
+    return state.update('loading', loading => loading - 1);
   }
 
   return state;

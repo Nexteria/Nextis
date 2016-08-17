@@ -1,23 +1,54 @@
+import React from 'react';
+import { Route } from 'react-router';
+
+
 import App from './app/App.react';
 import NotFound from './notfound/NotFoundPage.react';
-import React from 'react';
 import Settings from './users/SettingsPage.react';
 import CreateUserPage from './users/CreateUserPage';
 import CreateEventPage from './events/CreateEventPage';
-import CreateUserGroupDialog from './users/EditUserGroup';
+import EditUserGroup from './users/EditUserGroup';
 import CreateLocationDialog from './nxLocations/CreateLocationDialog';
-import { Route } from 'react-router';
 import ContactList from './users/ContactList';
+import UserGroupsPage from './users/UserGroupsPage';
+import EditUser from './users/EditUser';
+import UsersPage from './users/UsersPage';
+import EditEvent from './events/EditEvent';
+import EventsPage from './events/EventsPage';
+import AdminApp from './app/AdminApp';
+import UserEventsPage from './events/usersSection/EventsPage';
+import LocationsPage from './nxLocations/LocationsPage';
+import RolesPage from './users/roles/RolesPage';
+import EditRole from './users/roles/EditRole';
 
 export default function createRoutes() {
   return (
     <Route component={App} path="/">
+      <Route component={UserEventsPage} path="/events" />
       <Route component={ContactList} path="contacts" />
       <Route component={Settings} path="/users/me/settings" />
-      <Route component={CreateUserPage} path="/users/create" />
-      <Route component={CreateUserGroupDialog} path="/users/groups/create" />
-      <Route component={CreateEventPage} path="/events/create" />
-      <Route component={CreateLocationDialog} path="/locations/create" />
+      <Route component={AdminApp} path="admin">
+        <Route component={UsersPage} path="users" />
+        <Route component={CreateUserPage} path="users/create" />
+        <Route component={EditUser} path="users/:userId" />
+
+        <Route component={EditUserGroup} path="users/groups/create" />
+        <Route component={UserGroupsPage} path="userGroups">
+          <Route component={EditUserGroup} path=":groupId" />
+        </Route>
+
+        <Route component={EventsPage} path="events" />
+        <Route component={EditEvent} path="events/:eventId" />
+        <Route component={CreateEventPage} path="events/create" />
+
+        <Route component={RolesPage} path="roles" />
+        <Route component={EditRole} path="roles/create" />
+        <Route component={EditRole} path="roles/:roleId" />
+
+        <Route component={LocationsPage} path="nxLocations" />
+        <Route component={CreateLocationDialog} path="nxLocations/create" />
+        <Route component={CreateLocationDialog} path="nxLocations/:locationId" />
+      </Route>
       <Route component={NotFound} path="*" />
     </Route>
   );

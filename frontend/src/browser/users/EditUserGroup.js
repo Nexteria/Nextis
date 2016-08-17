@@ -42,11 +42,17 @@ export class EditUserGroup extends Component {
     changeUserGroupName: PropTypes.func.isRequired,
     addUserGroup: PropTypes.func.isRequired,
     closeUserGroupDialog: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
-    const { addUserGroup } = this.props;
-    addUserGroup();
+    const { addUserGroup, params } = this.props;
+
+    if (params.groupId) {
+      addUserGroup(parseInt(params.groupId, 10));
+    } else {
+      addUserGroup();
+    }
   }
 
   componentWillUnmount() {
@@ -116,7 +122,7 @@ export class EditUserGroup extends Component {
           <div className="col-md-12">
             <button
               className="btn btn-success"
-              onClick={() => updateUserGroup(userGroup)}
+              onClick={() => updateUserGroup(userGroup, groupMembers)}
             >
               <FormattedMessage {...messages.saveAttendeeGroupButton} />
             </button>

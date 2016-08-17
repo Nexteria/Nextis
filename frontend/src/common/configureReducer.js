@@ -3,6 +3,7 @@ import config from './config/reducer';
 import intl from './intl/reducer';
 import users from './users/reducer';
 import events from './events/reducer';
+import pictures from './picturesUpload/reducer';
 import nxLocations from './nxLocations/reducer';
 import attendeesGroup from './attendeesGroup/reducer';
 import { LOGOUT } from './app/actions';
@@ -32,6 +33,7 @@ export default function configureReducer(initialState, platformReducers) {
     attendeesGroup,
     config,
     fields,
+    pictures,
     intl,
     nxLocations,
     users,

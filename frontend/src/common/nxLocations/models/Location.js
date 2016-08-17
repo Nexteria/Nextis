@@ -1,20 +1,21 @@
-import { Record } from 'immutable';
-import shortid from 'shortid';
+import { Record, List } from 'immutable';
+import RichTextEditor from 'react-rte';
 
 const Location = Record({
-  uid: shortid.generate(),
+  id: null,
   name: '',
-  instructions: '',
-  description: '',
-  userUid: '',
-  photo: '',
-  latitude: '',
-  longitude: '',
+  instructions: RichTextEditor.createEmptyValue(),
+  description: RichTextEditor.createEmptyValue(),
+  userid: '',
+  pictures: new List(),
+  latitude: null,
+  longitude: null,
   addressLine1: '',
   addressLine2: '',
   city: '',
   zipCode: '',
   countryCode: '',
+  isMapVisible: false,
 });
 
 export default Location;

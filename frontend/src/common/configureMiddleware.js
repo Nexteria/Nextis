@@ -25,7 +25,7 @@ export default function configureMiddleware(initialState, platformDeps, platform
     injectMiddleware({
       ...platformDeps,
       fetch,
-      getUid: () => shortid.generate(),
+      getid: () => shortid.generate(),
       now: () => Date.now(),
       storageEngine,
       validate,
@@ -42,7 +42,7 @@ export default function configureMiddleware(initialState, platformDeps, platform
 
   const enableLogger =
     process.env.NODE_ENV !== 'production' &&
-    process.env.IS_BROWSER || initialState.device.isReactNative;
+    process.env.IS_BROWSER;
 
   // Logger must be the last middleware in chain.
   if (enableLogger) {

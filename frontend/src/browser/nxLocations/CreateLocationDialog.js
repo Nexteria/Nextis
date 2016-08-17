@@ -4,13 +4,17 @@ import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
+import Dropzone from 'react-dropzone';
+import { Map, TileLayer, Marker } from 'react-leaflet';
 
 
 import { fields } from '../../common/lib/redux-fields/index';
 import NextLocation from '../../common/nxLocations/models/Location';
 import * as fieldActions from '../../common/lib/redux-fields/actions';
 import TextEditor from '../components/TextEditor';
-
+import * as pictureActions from '../../common/picturesUpload/actions';
+import * as locationsActions from '../../common/nxLocations/actions';
+import './CreateLocationDialog.scss';
 
 const messages = defineMessages({
   saveLocationButton: {
@@ -57,6 +61,22 @@ const messages = defineMessages({
     defaultMessage: 'Choose country',
     id: 'location.edit.chooseCountry',
   },
+  dragPictureHere: {
+    defaultMessage: 'Drag picture here',
+    id: 'location.edit.dragPictureHere',
+  },
+  or: {
+    defaultMessage: 'or',
+    id: 'location.edit.pictureUpload.or',
+  },
+  choosePicture: {
+    defaultMessage: 'Choose picture',
+    id: 'location.edit.choosePicture',
+  },
+  checkLocation: {
+    defaultMessage: 'Check location',
+    id: 'location.edit.checkLocation',
+  }
 });
 
 export class CreateLocationDialog extends Component {
@@ -67,25 +87,57 @@ export class CreateLocationDialog extends Component {
     nxLocation: PropTypes.object,
     intl: PropTypes.object.isRequired,
     countries: PropTypes.object,
+    uploadLocationPicture: PropTypes.func.isRequired,
+    updateLocationCoords: PropTypes.func.isRequired,
+    checkLocationCoords: PropTypes.func.isRequired,
+    mapZoom: PropTypes.number.isRequired,
+    isMapVisible: PropTypes.bool.isRequired,
+    changeMapZoom: PropTypes.func.isRequired,
+    saveNxLocation: PropTypes.func.isRequired,
+    hideLocationMap: PropTypes.func.isRequired,
+    params: PropTypes.object,
+    locations: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
-    const { nxLocation, setField } = this.props;
-    setField(['editLocation'], nxLocation ? nxLocation : new NextLocation());
+    const { nxLocation, setField, params, locations } = this.props;
+
+    const locationId = params ? params.locationId : null;
+    let activeLocation = nxLocation;
+
+    if (locationId) {
+      activeLocation = locations.get(parseInt(locationId, 10));
+    }
+
+    setField(['editLocation'], activeLocation ? activeLocation : new NextLocation());
+  }
+
+  componentWillUnmount() {
+    const { hideLocationMap } = this.props;
+    hideLocationMap();
   }
 
   render() {
-    const { fields, countries } = this.props;
+    const { fields, countries, isMapVisible, mapZoom } = this.props;
+    const {
+      uploadLocationPicture,
+      updateLocationCoords,
+      changeMapZoom,
+      checkLocationCoords,
+      saveNxLocation,
+      setField,
+    } = this.props;
+
     const { formatMessage } = this.props.intl;
 
-    if (!countries) {
+    if (!countries || !fields.instructions.value) {
       return <div></div>;
     }
 
     return (
       <Modal
         show
-        dialogClassName="create-attendee-group-modal"
+        dialogClassName="create-location-modal"
         onHide={() => browserHistory.goBack()}
       >
         <Header closeButton>
@@ -155,7 +207,7 @@ export class CreateLocationDialog extends Component {
                 id="zipCode"
                 name="zipCode"
                 className="form-control"
-                {...fields.city}
+                {...fields.zipCode}
               />
             </div>
 
@@ -175,9 +227,38 @@ export class CreateLocationDialog extends Component {
                 )}
               </select>
             </div>
+            <div className="form-group location-check">
+              <button className="btn btn-primary" onClick={() => checkLocationCoords(fields)}><FormattedMessage {...messages.checkLocation} /></button>
+            </div>
           </div>
 
           <div className="col-md-6">
+            {isMapVisible === true || (fields.latitude.value !== null && fields.longitude.value !== null) ?
+              <div className="map" style={{ maxWidth: '550px', height: '300px' }}>
+                <Map
+                  onClick={({ latlng }) => updateLocationCoords(latlng.lat, latlng.lng)}
+                  center={[
+                    fields.latitude.value,
+                    fields.longitude.value
+                  ]}
+                  zoom={mapZoom}
+                  onZoomend={(e) => changeMapZoom(e.target._zoom)}
+                  maxHeight={300}
+                  maxWidth={500}
+                  style={{ maxWidth: '550px', height: '300px' }}
+                >
+                  <TileLayer
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  {fields.latitude.value !== null && fields.longitude.value !== null ?
+                    <Marker position={[fields.latitude.value, fields.longitude.value]} />
+                    : ''
+                  }
+                </Map>
+              </div>
+              : ''
+            }
           </div>
 
           <div className="col-md-6">
@@ -213,13 +294,41 @@ export class CreateLocationDialog extends Component {
               />
             </div>
           </div>
+
+          <div className="images col-md-12">
+            {fields.pictures.value.map((picture, index) =>
+              <div
+                key={picture.id}
+                className="image"
+                onClick={() => setField(['editLocation', 'pictures'], fields.pictures.value.delete(index))}
+              >
+                <div className="picture-remove-overlay">
+                  <i className="fa fa-trash-o"></i>
+                </div>
+                <img src={picture.url} alt={picture.caption} />
+              </div>
+            )}
+
+            <div className="image upload">
+              <Dropzone multiple={false} accept="image/png,image/jpeg" onDrop={(files) => uploadLocationPicture(files, fields.pictures.value)}>
+                <div id="dropzone">
+                  <label htmlFor="image-upload">
+                    <div>{formatMessage(messages.dragPictureHere)}</div>
+                    <div>{formatMessage(messages.or)}</div>
+                    <span className="btn btn-primary">{formatMessage(messages.choosePicture)}</span>
+                    <i className="icon icon-plus"></i>
+                  </label>
+                </div>
+              </Dropzone>
+            </div>
+          </div>
         </Body>
 
         <Footer>
           <div className="col-md-12">
             <button
               className="btn btn-success"
-              onClick={() => console.log('Save')}
+              onClick={() => saveNxLocation(fields)}
             >
               <FormattedMessage {...messages.saveLocationButton} />
             </button>
@@ -233,12 +342,12 @@ export class CreateLocationDialog extends Component {
 CreateLocationDialog = fields(CreateLocationDialog, {
   path: 'editLocation',
   fields: [
-    'uid',
+    'id',
     'name',
     'description',
     'instructions',
     'userUid',
-    'photo',
+    'pictures',
     'latitude',
     'longitude',
     'addressLine1',
@@ -254,4 +363,7 @@ CreateLocationDialog = injectIntl(CreateLocationDialog);
 export default connect((state) => ({
   locale: state.intl.currentLocale,
   countries: state.nxLocations.countries,
-}), fieldActions)(CreateLocationDialog);
+  mapZoom: state.nxLocations.mapZoom,
+  isMapVisible: state.nxLocations.isMapVisible,
+  locations: state.nxLocations.locations,
+}), {...fieldActions, ...pictureActions, ...locationsActions})(CreateLocationDialog);

@@ -1,19 +1,27 @@
-import { Record, List, Map } from 'immutable';
-import shortid from 'shortid';
+import { Record, List } from 'immutable';
+import RichTextEditor from 'react-rte';
 import moment from 'moment';
 
 const Event = Record({
-  uid: shortid.generate(),
+  id: null,
   name: '',
   activityPoints: 0,
-  host: null,
+  hostId: null,
+  nxLocationId: null,
+  eventType: '',
   lectors: new List(),
   eventStartDateTime: moment(),
   eventEndDateTime: moment(),
-  attendeesGroups: new Map(),
+  attendeesGroups: new List(),
   minCapacity: '',
   maxCapacity: '',
-  description: '',
+  status: 'draft',
+  parentEventId: null,
+  followingEvents: new List(),
+  curriculumLevelId: '',
+  shortDescription: RichTextEditor.createEmptyValue(),
+  description: RichTextEditor.createEmptyValue(),
+  visibleDetails: false,
 });
 
 export default Event;

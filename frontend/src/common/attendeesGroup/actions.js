@@ -12,18 +12,19 @@ export const CHANGE_SIGNUP_DEADLINE_DATETIME = 'CHANGE_SIGNUP_DEADLINE_DATETIME'
 export const CHANGE_ATTENDEE_GROUP_MIN_CAPACITY = 'CHANGE_ATTENDEE_GROUP_MIN_CAPACITY';
 export const CHANGE_ATTENDEE_GROUP_MAX_CAPACITY = 'CHANGE_ATTENDEE_GROUP_MAX_CAPACITY';
 export const UPDATE_ATTENDEES_GROUP_COORDINATE = 'UPDATE_ATTENDEES_GROUP_COORDINATE';
+export const START_EDITING_ATTENDEES_GROUP = 'START_EDITING_ATTENDEES_GROUP';
 
-export function addUser(userUid) {
+export function addUser(userid) {
   return () => ({
     type: ADD_USER,
-    payload: userUid,
+    payload: userid,
   });
 }
 
-export function removeUser(userUid) {
+export function removeUser(userid) {
   return () => ({
     type: REMOVE_USER,
-    payload: userUid,
+    payload: userid,
   });
 }
 
@@ -48,12 +49,15 @@ export function closeAttendeesGroupDialog() {
   });
 }
 
-export function updateAttendeesGroup(group) {
+export function updateAttendeesGroup(group, index) {
   return ({ dispatch }) => ({
     type: UPDATE_ATTENDEES_GROUP_COORDINATE,
     payload: {
       promise: new Promise((resolve) => {
-        dispatch({ type: UPDATE_ATTENDEES_GROUP, payload: group });
+        dispatch({ type: UPDATE_ATTENDEES_GROUP, payload: {
+          group,
+          index,
+        }});
         dispatch(closeAttendeesGroupDialog());
         resolve();
       }),
@@ -94,4 +98,14 @@ export function changeAttendeeGroupMaxCapacity(maxCapacity) {
     type: CHANGE_ATTENDEE_GROUP_MAX_CAPACITY,
     payload: maxCapacity,
   });
+}
+
+export function editAttendeesGroup(group, index) {
+  return {
+    type: START_EDITING_ATTENDEES_GROUP,
+    payload: {
+      group,
+      index,
+    },
+  };
 }

@@ -8,42 +8,11 @@ import TextEditor from '../components/TextEditor';
 import './SettingsPage.scss';
 import { fields } from '../../common/lib/redux-fields/index';
 import * as fieldsActions from '../../common/lib/redux-fields/actions';
+import * as actions from '../../common/users/actions';
 import './EditUser.scss';
 import User from '../../common/users/models/User';
 
 const messages = defineMessages({
-  student: {
-    defaultMessage: 'Nexteria Student',
-    id: 'user.edit.role.student',
-  },
-  alumni: {
-    defaultMessage: 'Nexteria Alumni',
-    id: 'user.edit.role.alumni',
-  },
-  supporter: {
-    defaultMessage: 'Nexteria Supporter',
-    id: 'user.edit.role.supporter',
-  },
-  buddy: {
-    defaultMessage: 'Nexteria Buddy',
-    id: 'user.edit.role.buddy',
-  },
-  admin: {
-    defaultMessage: 'Nexteria Admin',
-    id: 'user.edit.role.admin',
-  },
-  lector: {
-    defaultMessage: 'Nexteria Lector',
-    id: 'user.edit.role.lector',
-  },
-  guide: {
-    defaultMessage: 'Nexteria Guide',
-    id: 'user.edit.role.guide',
-  },
-  nexteriaTeam: {
-    defaultMessage: 'Nexteria Team member',
-    id: 'user.edit.role.nexteriaTeam',
-  },
   firstName: {
     defaultMessage: 'First name',
     id: 'user.edit.firstName',
@@ -92,10 +61,6 @@ const messages = defineMessages({
     defaultMessage: 'Study program',
     id: 'user.edit.studyProgram',
   },
-  variableSymbol: {
-    defaultMessage: 'Variable symbol',
-    id: 'user.edit.variableSymbol',
-  },
   personRoles: {
     defaultMessage: 'Person roles',
     id: 'user.edit.personRoles',
@@ -109,7 +74,7 @@ const messages = defineMessages({
     id: 'user.edit.lectorDescription',
   },
   guideDescription: {
-    defaultMessage: 'Guide description',
+    defaultMessage: 'Gide description',
     id: 'user.edit.guideDescription',
   },
   studentLevel: {
@@ -144,6 +109,14 @@ const messages = defineMessages({
     defaultMessage: 'Choose student level',
     id: 'user.edit.chooseStudentLevel',
   },
+  expelledUserState: {
+    defaultMessage: 'Expelled',
+    id: 'user.edit.expelledUserState',
+  },
+  endedUserState: {
+    defaultMessage: 'Ended',
+    id: 'user.edit.endedUserState',
+  },
 });
 
 export class EditUser extends Component {
@@ -151,28 +124,40 @@ export class EditUser extends Component {
   static propTypes = {
     fields: PropTypes.object.isRequired,
     mode: PropTypes.string,
-    title: PropTypes.object.isRequired,
+    title: PropTypes.object,
     user: PropTypes.object,
     saveUser: PropTypes.func.isRequired,
     setField: PropTypes.func,
-    rolesList: PropTypes.object.isRequired,
+    rolesList: PropTypes.object,
     updateUserRole: PropTypes.func,
-    studentLevels: PropTypes.object.isRequired,
+    studentLevels: PropTypes.object,
     intl: PropTypes.object.isRequired,
+    loadRolesList: PropTypes.func.isRequired,
+    loadStudentLevelsList: PropTypes.func.isRequired,
+    params: PropTypes.object,
+    users: PropTypes.object.isRequired,
+    hasPermission: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
-    const { setField, user } = this.props;
+    const { setField, users, user, params } = this.props;
 
-    setField(['editUser'], user ? user : new User());
+    const userId = params ? params.userId : null;
+    let activeUser = user;
+
+    if (userId) {
+      activeUser = users.get(parseInt(userId, 10));
+    }
+
+    setField(['editUser'], activeUser ? activeUser : new User());
   }
 
   render() {
     const { fields, mode, title, rolesList, studentLevels } = this.props;
-    const { saveUser, updateUserRole } = this.props;
+    const { saveUser, updateUserRole, hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
-    if (!fields.roles.value) {
+    if (!fields.roles.value || !rolesList) {
       return <div></div>;
     }
 
@@ -200,42 +185,24 @@ export class EditUser extends Component {
                     {`${fields.firstName.value} ${fields.lastName.value}`}
                   </h3>
 
-                  {mode === 'create' ?
+                  {mode !== 'profile' ?
                     <div className="form-group text-left">
                       <label><FormattedMessage {...messages.personRoles} /></label>
-                        {rolesList.map(type =>
-                          <div className="checkbox" key={type}>
+                        {rolesList.valueSeq().map(role =>
+                          <div className="checkbox" key={role.id}>
                             <label>
                               <input
                                 type="checkbox"
-                                onChange={() => updateUserRole(type, !fields.roles.value.includes(type))}
-                                checked={fields.roles.value.includes(type)}
+                                onChange={() => updateUserRole(role.id, !fields.roles.value.includes(role.id))}
+                                checked={fields.roles.value.includes(role.id)}
                               />
-                              <FormattedMessage {...messages[type]} />
+                              {role.display_name}
                             </label>
                           </div>
                         )}
                     </div>
-                    :
-                    <p className={`${mode === 'create' ? '' : 'text-muted'} text-center`}>
-                      {fields.roles.value.map(role => 
-                        <FormattedMessage key={role} {...messages[role]} />
-                      )}
-                    </p>
+                    : ''
                   }
-
-                  <ul className="list-group list-group-unbordered">
-                    <li className="list-group-item text-center">
-                      <b><FormattedMessage {...messages.variableSymbol} /></b>
-                      <input
-                        type="text"
-                        className="form-control"
-                        {...fields.variableSymbol}
-                        id="variableSymbol"
-                        readOnly={mode !== 'create'}
-                      />
-                    </li>
-                  </ul>
                 </div>
               </div>
             </div>
@@ -317,7 +284,7 @@ export class EditUser extends Component {
                         </div>
                       </div>
 
-                      {fields.roles.value.includes('student') ?
+                      {fields.roles.value.includes(rolesList.get('STUDENT').id) ?
                         <div className="form-group">
                           <label htmlFor="inputName" className="col-sm-2 control-label">
                             <FormattedMessage {...messages.studentLevel} />
@@ -331,7 +298,7 @@ export class EditUser extends Component {
                             >
                               <option readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
                               {studentLevels.valueSeq().map(level =>
-                                <option key={level.uid} value={level.uid}>{level.name}</option>
+                                <option key={level.id} value={level.id}>{level.name}</option>
                               )}
                             </select>
                           </div>
@@ -384,7 +351,7 @@ export class EditUser extends Component {
                         </div>
                       </div>
 
-                      {fields.roles.value.includes('guide') ?
+                      {fields.roles.value.includes(rolesList.get('GUIDE').id) ?
                         <div className="form-group">
                           <label htmlFor="guideDescription" className="col-sm-2 control-label">
                             <FormattedMessage {...messages.guideDescription} />
@@ -397,14 +364,14 @@ export class EditUser extends Component {
                                 fields.guideDescription.onChange({ target: { value } })
                               }
                               id="guideDescription"
-                              placeholder="Guide description ..."
+                              placeholder="Gide description ..."
                             />
                           </div>
                         </div>
                         : ''
                       }
 
-                      {fields.roles.value.includes('lector') ?
+                      {fields.roles.value.includes(rolesList.get('LECTOR').id) ?
                         <div className="form-group">
                           <label htmlFor="lectorDescription" className="col-sm-2 control-label">
                             <FormattedMessage {...messages.lectorDescription} />
@@ -424,7 +391,7 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      {fields.roles.value.includes('buddy') ?
+                      {fields.roles.value.includes(rolesList.get('BUDDY').id) ?
                         <div className="form-group">
                           <label htmlFor="buddyDescription" className="col-sm-2 control-label">
                             <FormattedMessage {...messages.buddyDescription} />
@@ -524,11 +491,17 @@ export class EditUser extends Component {
                             <option value={'temporarySuspended'}>
                               {formatMessage(messages.temporarySuspendedUserState)}
                             </option>
+                            <option value={'temporarySuspended'}>
+                              {formatMessage(messages.expelledUserState)}
+                            </option>
+                            <option value={'temporarySuspended'}>
+                              {formatMessage(messages.endedUserState)}
+                            </option>
                           </select>
                         </div>
                       </div>
 
-                      {fields.roles.value.includes('nexteriaTeam') ?
+                      {fields.roles.value.includes(rolesList.get('NEXTERIA_TEAM').id) ?
                         <div className="form-group">
                           <label htmlFor="nexteriaTeamRole" className="col-sm-2 control-label">
                             <FormattedMessage {...messages.nexteriaTeamRole} />
@@ -546,13 +519,16 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      <div className="form-group">
-                        <div className="col-sm-offset-2 col-sm-10">
-                          <button type="button" className="btn btn-success" onClick={() => saveUser(fields)}>
-                            <FormattedMessage {...messages.save} />
-                          </button>
+                      {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
+                        <div className="form-group">
+                          <div className="col-sm-offset-2 col-sm-10">
+                            <button type="button" className="btn btn-success" onClick={() => saveUser(fields, rolesList)}>
+                              <FormattedMessage {...messages.save} />
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                        : ''
+                      }
                     </form>
                   </div>
                 </div>
@@ -568,7 +544,7 @@ export class EditUser extends Component {
 EditUser = fields(EditUser, {
   path: 'editUser',
   fields: [
-    'uid',
+    'id',
     'username',
     'firstName',
     'lastName',
@@ -583,7 +559,6 @@ EditUser = fields(EditUser, {
     'studyProgram',
     'personalDescription',
     'roles',
-    'variableSymbol',
     'lectorDescription',
     'guideDescription',
     'buddyDescription',
@@ -597,5 +572,7 @@ EditUser = injectIntl(EditUser);
 
 export default connect((state) => ({
   rolesList: state.users.rolesList,
+  users: state.users.users,
   studentLevels: state.users.studentLevels,
-}), fieldsActions)(EditUser);
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
+}), { ...fieldsActions, ...actions })(EditUser);

@@ -4,7 +4,7 @@ import webpack from 'webpack';
 import fs from 'fs';
 
 export default function build(done) {
-  const config = makeWebpackConfig({ isDevelopment: false });
+  const config = makeWebpackConfig(false);
   webpack(config, (fatalError, stats) => {
     const jsonStats = stats.toJson();
 
@@ -29,7 +29,7 @@ export default function build(done) {
       chunkModules: false
     }));
 
-    fs.writeFileSync('../resources/assets/build/file_hash.json', JSON.stringify(jsonStats.assetsByChunkName));
+    fs.writeFileSync('../public/build/file_hash.json', JSON.stringify(jsonStats.assetsByChunkName));
 
     done();
   });

@@ -1,82 +1,92 @@
 import * as actions from './actions';
 import { Record, Map } from 'immutable';
 import shortid from 'shortid';
+import RichTextEditor from 'react-rte';
 
 
 import AttendeesGroup from './models/AttendeesGroup';
 
 const InitialState = Record({
+  groupIndex: null,
+  group: null,
 });
 
 export default function attendeesGroupReducer(state = new InitialState, action) {
   switch (action.type) {
     case actions.ADD_USER: {
-      const userUid = action.payload;
+      const userId = action.payload;
 
-      return state.update('users', users => users.set(userUid, new Map({
+      return state.updateIn(['group', 'users'], users => users.set(userId, new Map({
+        id: userId,
         signedIn: null,
         signedOut: null,
         wontGo: null,
+        signedOutReason: RichTextEditor.createValueFromString('', 'html'),
       })));
     }
 
     case actions.REMOVE_USER: {
-      const userUid = action.payload;
+      const userId = action.payload;
 
-      return state.update('users', users => users.delete(userUid));
+      return state.updateIn(['group', 'users'], users => users.delete(userId));
     }
 
     case actions.ADD_GROUP: {
       let groupUsers = action.payload;
 
       groupUsers = groupUsers.map(user => new Map({
-        uid: user,
+        id: user,
         signedIn: null,
         signedOut: null,
         wontGo: null,
+        signedOutReason: RichTextEditor.createValueFromString('', 'html'),
       }));
 
-      return state.update('users', users => users.merge(groupUsers));
+      return state.updateIn(['group', 'users'], users => users.merge(groupUsers));
     }
 
     case actions.ADD_ATTENDEES_GROUP: {
-      const group = new AttendeesGroup();
+      return state.set('group', new AttendeesGroup())
+                  .set('groupIndex', null);
+    }
 
-      return group.set('uid', shortid.generate());
+    case actions.START_EDITING_ATTENDEES_GROUP: {
+      return state.set('group', action.payload.group)
+                  .set('groupIndex', action.payload.index);
     }
 
     case actions.CLOSE_ATTENDEES_GROUP_DIALOG: {
-      return new Record({})();
+      return state.set('group', null).set('groupIndex', null);
     }
 
     case actions.CHANGE_ATTENDEE_GROUP_NAME: {
       const name = action.payload;
 
-      return state.set('name', name);
+      return state.setIn(['group', 'name'], name);
     }
 
     case actions.CHANGE_SIGNUP_OPEN_DATETIME: {
       const moment = action.payload;
 
-      return state.set('signUpOpenDateTime', moment);
+      return state.setIn(['group', 'signUpOpenDateTime'], moment);
     }
 
     case actions.CHANGE_SIGNUP_DEADLINE_DATETIME: {
       const moment = action.payload;
 
-      return state.set('signUpDeadlineDateTime', moment);
+      return state.setIn(['group', 'signUpDeadlineDateTime'], moment);
     }
 
     case actions.CHANGE_ATTENDEE_GROUP_MIN_CAPACITY: {
       const minCapacity = action.payload;
 
-      return state.set('minCapacity', minCapacity);
+      return state.setIn(['group', 'minCapacity'], minCapacity);
     }
 
     case actions.CHANGE_ATTENDEE_GROUP_MAX_CAPACITY: {
       const maxCapacity = action.payload;
 
-      return state.set('maxCapacity', maxCapacity);
+      return state.setIn(['group', 'maxCapacity'], maxCapacity);
     }
 
 
