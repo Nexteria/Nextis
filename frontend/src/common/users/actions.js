@@ -92,6 +92,8 @@ export function saveUser(fields) {
           roles: fields.roles.value,
           nexteriaTeamRole: fields.nexteriaTeamRole.value,
           state: fields.state.value,
+          newPassword: fields.newPassword.value,
+          confirmationPassword: fields.confirmationPassword.value,
         }),
       }).then(response => response.json())
       .then(response => { browserHistory.push('/admin/users'); return response; }),
