@@ -603,21 +603,6 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      <div className="form-group">
-                          <label htmlFor="nexteriaTeamRole" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.nexteriaTeamRole} />
-                          </label>
-
-                          <div className="col-sm-10">
-                            <input
-                              type="text"
-                              className="form-control"
-                              {...fields.nexteriaTeamRole}
-                              id="nexteriaTeamRole"
-                            />
-                          </div>
-                        </div>
-
                       {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
                         <div className="form-group">
                           <div className="col-sm-offset-2 col-sm-10">

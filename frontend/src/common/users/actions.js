@@ -83,7 +83,7 @@ export function saveUser(fields) {
           buddyDescription: fields.buddyDescription.value.toString('html'),
           guideDescription: fields.guideDescription.value.toString('html'),
           lectorDescription: fields.lectorDescription.value.toString('html'),
-          studentLevelId: fields.studentLevel.value,
+          studentLevelId: fields.studentLevelId.value,
           photo: fields.photo.value,
           actualJobInfo: fields.actualJobInfo.value,
           school: fields.school.value,
