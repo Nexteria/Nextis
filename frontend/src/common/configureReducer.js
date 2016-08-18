@@ -6,6 +6,8 @@ import events from './events/reducer';
 import pictures from './picturesUpload/reducer';
 import nxLocations from './nxLocations/reducer';
 import attendeesGroup from './attendeesGroup/reducer';
+import payments from './payments/reducer';
+
 import { LOGOUT } from './app/actions';
 import { combineReducers } from 'redux';
 import { fieldsReducer as fields } from './lib/redux-fields';
@@ -39,6 +41,7 @@ export default function configureReducer(initialState, platformReducers) {
     users,
     events,
     routing,
+    payments,
   });
 
   // The power of higher-order reducers, http://slides.com/omnidan/hor

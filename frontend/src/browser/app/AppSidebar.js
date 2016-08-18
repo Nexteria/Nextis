@@ -47,6 +47,10 @@ const messages = defineMessages({
     defaultMessage: 'Roles',
     id: 'app.sidebar.links.roles',
   },
+  payments: {
+    defaultMessage: 'Payments',
+    id: 'app.sidebar.links.payments',
+  },
 });
 
 
@@ -104,6 +108,11 @@ export default class AppSideBar extends Component {
                 <li>
                   <Link to="/admin/nxLocations">
                     <span><FormattedMessage {...messages.locations} /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/payments">
+                    <span><FormattedMessage {...messages.payments} /></span>
                   </Link>
                 </li>
               </div>

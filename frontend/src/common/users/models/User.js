@@ -31,6 +31,7 @@ const User = Record({
   updated_at: null,
   newPassword: '',
   oldPassword: '',
+  payments: null,
   confirmationPassword: '',
 });
 

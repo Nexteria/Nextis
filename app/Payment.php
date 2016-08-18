@@ -42,7 +42,6 @@ class Payment extends Model
         $matches = [];
         $email = preg_replace("/[\s>]/", '', $this->email);
         $success = preg_match_all("/[A-Z][A-Z][0-9][0-9][0-9A-Z]{0,30}/", $email, $matches);
-        \Log::error($matches);
         if (!$success || !isset($matches[1])) {
             return '';
         }
@@ -100,20 +99,20 @@ class Payment extends Model
             $matches
         );
 
-        if (!$success) {
-            return '';
-        }
-
-        $symbols = explode('/', strtolower($matches[1]));
         $results = [
-          'specialSymbol' => '',
+          'specificSymbol' => '',
           'variableSymbol' => '',
           'constantSymbol' => '',
         ];
 
+        if (!$success) {
+            return $results;
+        }
+
+        $symbols = explode('/', strtolower($matches[1]));
         foreach ($symbols as$symbol) {
             if (substr($symbol, 0, 2) === 'ss') {
-              $results['specialSymbol'] = substr($symbol, 2);
+              $results['specificSymbol'] = substr($symbol, 2);
             }
 
             if (substr($symbol, 0, 2) === 'vs') {
@@ -151,7 +150,7 @@ class Payment extends Model
 
         $payment->message = $payment->parseMessage();
         $symbols = $payment->parseSymbols();
-        $payment->specialSymbol = $symbols['specialSymbol'];
+        $payment->specificSymbol = $symbols['specificSymbol'];
         $payment->variableSymbol = $symbols['variableSymbol'];
         $payment->constantSymbol = $symbols['constantSymbol'];
 
@@ -167,14 +166,16 @@ class Payment extends Model
         if ($payment->variableSymbol) {
             $user = User::where('variableSymbol', '=', $payment->variableSymbol);
             if ($user->count() === 1) {
-              $payment->userId = $user->id;
+                $user = $user->first();
+                $payment->userId = $user->id;
             }
         }
 
         if ($payment->payerIban) {
             $user = User::where('iban', '=', $payment->payerIban);
             if ($user->count() === 1) {
-              $payment->userId = $user->id;
+                $user = $user->first();
+                $payment->userId = $user->id;
             }
         }
 

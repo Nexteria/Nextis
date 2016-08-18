@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
 {
@@ -33,6 +34,40 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        if (\Auth::user() != null) {
+            $user_id = \Auth::user()->id;
+            $username = \Auth::user()->username;
+        } else {
+            $user_id = null;
+            $username = "NONE";
+        }
+
+        $headers = \Request::instance()->headers;
+        $query = \Request::instance()->getQueryString();
+        $request_content = \Request::instance()->getContent();
+        $request_data = $headers.$query.$request_content;
+
+        $time = date('m/d/Y h:i:s a', time());
+        $url = \Request::url();
+        $data = array('user_id' => $user_id,
+                'username' => $username,
+                'time' => $time,
+                'url' => $url,
+                'exception' => $e);
+
+
+        if (env('MAIL_EXCEPTIONS', false)) {
+            \Mail::send(['text' => 'view'], $data, function ($message) {
+                $message->from('nextis@space.nexteria.sk', 'Nextis');
+                $message->to('dev@space.nexteria.sk', 'Nextis dev team');
+                $message->subject("Nextis - exception");
+            });
+        }
+
+        $format = "\n\nException: %s\nUrl: %s\nUser: %s(%s)\nData:\n%s\nStacktrace:\n %s";
+        $message = sprintf($format, $time, $url, $username, $user_id, $request_data, $e);
+        \Log::error($message);
+        
         parent::report($e);
     }
 

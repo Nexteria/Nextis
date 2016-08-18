@@ -15,10 +15,14 @@ class UsersController extends Controller
      * @var \App\Transformers\UserTransformer
      */
     protected $userTransformer;
+    protected $paymentTransformer;
 
-    public function __construct(\App\Transformers\UserTransformer $userTransformer)
-    {
+    public function __construct(
+        \App\Transformers\UserTransformer $userTransformer,
+        \App\Transformers\PaymentTransformer $paymentTransformer
+    ) {
         $this->userTransformer = $userTransformer;
+        $this->paymentTransformer = $paymentTransformer;
     }
 
     public function createUser()
@@ -66,5 +70,11 @@ class UsersController extends Controller
     public function deleteUser($userId)
     {
         User::findOrFail($userId)->delete();
+    }
+
+    public function getUserPayments($userId)
+    {
+        $user = User::findOrFail($userId);
+        return response()->json($this->paymentTransformer->transformCollection($user->payments));
     }
 }

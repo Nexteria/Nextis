@@ -124,4 +124,9 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\StudentLevel', 'studentLevelId');
     }
+
+    public function studentLevel()
+    {
+        return $this->hasMany('App\Payment', 'userId');
+    }
 }

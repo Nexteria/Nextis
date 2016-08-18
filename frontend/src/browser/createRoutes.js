@@ -20,6 +20,9 @@ import UserEventsPage from './events/usersSection/EventsPage';
 import LocationsPage from './nxLocations/LocationsPage';
 import RolesPage from './users/roles/RolesPage';
 import EditRole from './users/roles/EditRole';
+import PaymentsPage from './payments/PaymentsPage';
+import UnassociatedPaymentsDialog from './payments/UnassociatedPaymentsDialog';
+import UsersPaymentsDialog from './payments/UsersPaymentsDialog';
 
 export default function createRoutes() {
   return (
@@ -31,6 +34,7 @@ export default function createRoutes() {
         <Route component={UsersPage} path="users" />
         <Route component={CreateUserPage} path="users/create" />
         <Route component={EditUser} path="users/:userId" />
+        <Route component={UsersPaymentsDialog} path="users/:userId/payments" />
 
         <Route component={EditUserGroup} path="users/groups/create" />
         <Route component={UserGroupsPage} path="userGroups">
@@ -44,6 +48,9 @@ export default function createRoutes() {
         <Route component={RolesPage} path="roles" />
         <Route component={EditRole} path="roles/create" />
         <Route component={EditRole} path="roles/:roleId" />
+
+        <Route component={UnassociatedPaymentsDialog} path="payments/unassociated" />
+        <Route component={PaymentsPage} path="payments" />
 
         <Route component={LocationsPage} path="nxLocations" />
         <Route component={CreateLocationDialog} path="nxLocations/create" />

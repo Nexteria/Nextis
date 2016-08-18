@@ -20,6 +20,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/levels', 'LevelsController@getLevels');
         Route::get('/permissions', 'PermissionsController@getPermissions');
 
+        Route::get('payments/unassociated', 'PaymentsController@getUnassociatedPayments');
+        Route::put('payments/{paymentId}', 'PaymentsController@updatePayment');
+
         Route::get('/roles', 'RolesController@getRoles');
         Route::post('/roles', ['middleware' => ['permission:create_roles'], 'uses' => 'RolesController@createRole']);
         Route::put('/roles/{roleId}', ['middleware' => ['permission:update_roles'], 'uses' => 'RolesController@updateRole']);
@@ -44,7 +47,8 @@ Route::group(['middleware' => 'auth'], function () {
           ->where(array('groupId' => '[0-9]+'));
 
         Route::get('/users', 'UsersController@getUsers');
-        Route::get('/users/{id}', 'UsersController@getUsers')->where(['id' => '[0-9+]|me']);
+        Route::get('/users/{id}', 'UsersController@getUsers')->where(['id' => '[0-9]+|me']);
+        Route::get('/users/{id}/payments', 'UsersController@getUserPayments')->where(['id' => '[0-9]+']);
         Route::post('/users', 'UsersController@createUser');
         Route::put('/users', 'UsersController@updateUser');
         Route::delete('/users/{userId}', 'UsersController@deleteUser')

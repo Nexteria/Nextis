@@ -82,6 +82,7 @@
     "react": "15.2.0",
     "react-addons-test-utils": "15.2.0",
     "react-bootstrap": "^0.30.1",
+    "react-bootstrap-typeahead": "^0.8.5",
     "react-datetime": "^2.5.0",
     "react-dom": "15.2.0",
     "react-dropzone": "^3.5.3",
