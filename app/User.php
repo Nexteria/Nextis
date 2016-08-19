@@ -125,8 +125,13 @@ class User extends Authenticatable
         return $this->hasOne('App\StudentLevel', 'studentLevelId');
     }
 
-    public function studentLevel()
+    public function payments()
     {
         return $this->hasMany('App\Payment', 'userId');
+    }
+
+    public function hostedEvents()
+    {
+        return $this->hasMany('App\NxEvent', 'hostId');
     }
 }

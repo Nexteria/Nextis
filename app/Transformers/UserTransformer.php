@@ -33,6 +33,7 @@ class UserTransformer extends Transformer
             'state' => $user->state,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
             'studentLevelId' => (int) $user->studentLevelId,
+            'hostedEvents' => array_map('intval', $user->hostedEvents()->lists('id')->toArray()),
             'created_at' => $user->created_at ? $user->created_at->__toString() : null ,
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null ,
          ];

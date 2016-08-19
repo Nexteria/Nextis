@@ -23,6 +23,8 @@ import EditRole from './users/roles/EditRole';
 import PaymentsPage from './payments/PaymentsPage';
 import UnassociatedPaymentsDialog from './payments/UnassociatedPaymentsDialog';
 import UsersPaymentsDialog from './payments/UsersPaymentsDialog';
+import HostedEventsPage from './events/HostedEventsPage';
+import EventAttendanceDialog from './events/EventAttendanceDialog';
 
 export default function createRoutes() {
   return (
@@ -30,6 +32,9 @@ export default function createRoutes() {
       <Route component={UserEventsPage} path="/events" />
       <Route component={ContactList} path="contacts" />
       <Route component={Settings} path="/users/me/settings" />
+      <Route component={HostedEventsPage} path="host/events" />
+      <Route component={EventAttendanceDialog} path="host/events/:eventId" />
+
       <Route component={AdminApp} path="admin">
         <Route component={UsersPage} path="users" />
         <Route component={CreateUserPage} path="users/create" />

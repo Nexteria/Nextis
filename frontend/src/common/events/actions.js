@@ -21,6 +21,12 @@ export const ATTENDEE_SIGN_OUT = 'ATTENDEE_SIGN_OUT';
 export const ATTENDEE_SIGN_OUT_START = 'ATTENDEE_SIGN_OUT_START';
 export const ATTENDEE_SIGN_OUT_SUCCESS = 'ATTENDEE_SIGN_OUT_SUCCESS';
 
+export const CHANGE_ATTENDEE_FEEDBACK_STATUS = 'CHANGE_ATTENDEE_FEEDBACK_STATUS';
+export const CHANGE_ATTENDEE_FEEDBACK_STATUS_SUCCESS = 'CHANGE_ATTENDEE_FEEDBACK_STATUS_SUCCESS';
+
+export const CHANGE_ATTENDEE_PRESENCE_STATUS = 'CHANGE_ATTENDEE_PRESENCE_STATUS';
+export const CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS = 'CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS';
+
 export const REMOVE_ATTENDEES_GROUP = 'REMOVE_ATTENDEES_GROUP';
 export const TOGGLE_EVENT_ACTIONS = 'TOGGLE_EVENT_ACTIONS';
 export const CLOSE_EVENT_DETAILS_DIALOG = 'CLOSE_EVENT_DETAILS_DIALOG';
@@ -140,8 +146,8 @@ export function attendeeWontGo(event, viewer, groupId) {
   return ({ fetch }) => ({
     type: ATTENDEE_WONT_GO,
     payload: {
-      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}/attendance`, {
-        method: 'post',
+      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
+        method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ wontGo: true }),
@@ -159,8 +165,8 @@ export function attendeeSignIn(event, viewer, groupId) {
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_IN,
     payload: {
-      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}/attendance`, {
-        method: 'post',
+      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
+        method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ signIn: true }),
@@ -178,8 +184,8 @@ export function attendeeSignOut(signOut) {
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_OUT,
     payload: {
-      promise: fetch(`/nxEvents/${signOut.eventId}/users/${signOut.userId}/attendance`, {
-        method: 'post',
+      promise: fetch(`/nxEvents/${signOut.eventId}/users/${signOut.userId}`, {
+        method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -191,6 +197,48 @@ export function attendeeSignOut(signOut) {
           ...response,
           groupId: signOut.groupId,
           eventId: signOut.eventId,
+        })),
+    },
+  });
+}
+
+export function changeAttendeePresenceStatus(eventId, user, groupId) {
+  return ({ fetch }) => ({
+    type: CHANGE_ATTENDEE_PRESENCE_STATUS,
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/users/${user.get('id')}`, {
+        method: 'put',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wasPresent: !user.get('wasPresent'),
+        }),
+      }).then(response => response.json())
+        .then(response => ({
+          ...response,
+          groupId,
+          eventId,
+        })),
+    },
+  });
+}
+
+export function changeAttendeeFeedbackStatus(eventId, user, groupId) {
+  return ({ fetch }) => ({
+    type: CHANGE_ATTENDEE_FEEDBACK_STATUS,
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/users/${user.get('id')}`, {
+        method: 'put',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filledFeedback: !user.get('filledFeedback'),
+        }),
+      }).then(response => response.json())
+        .then(response => ({
+          ...response,
+          groupId,
+          eventId,
         })),
     },
   });

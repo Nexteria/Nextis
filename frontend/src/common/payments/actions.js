@@ -62,8 +62,9 @@ export function loadUsersPayments(userId) {
   return ({ fetch }) => ({
     type: LOAD_USER_PAYMENTS,
     payload: {
-      promise: fetch(`/user/${userId}/payments`, {
+      promise: fetch(`/users/${userId}/payments`, {
         credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
       }).then(response => response.json()),
     },
   });

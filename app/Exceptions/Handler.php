@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
 
 
         if (env('MAIL_EXCEPTIONS', false)) {
-            \Mail::send(['text' => 'view'], $data, function ($message) {
+            \Mail::send('emails.exception', $data, function ($message) {
                 $message->from('nextis@space.nexteria.sk', 'Nextis');
                 $message->to('dev@space.nexteria.sk', 'Nextis dev team');
                 $message->subject("Nextis - exception");
@@ -83,7 +83,7 @@ class Handler extends ExceptionHandler
         $error = $this->convertExceptionToResponse($e);
         return response()->json([
           "code" => $error->getStatusCode(),
-          "message" => $e->getMessage(),
+          "error" => $e->getMessage(),
         ], $error->getStatusCode());
     }
 }

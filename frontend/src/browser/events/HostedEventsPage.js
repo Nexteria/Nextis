@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import { FormattedMessage, defineMessages, FormattedDate, FormattedTime } from 'react-intl';
 import { Map } from 'immutable';
-import { FormattedMessage, defineMessages, FormattedRelative } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
@@ -10,62 +10,57 @@ import * as actions from '../../common/events/actions';
 
 const messages = defineMessages({
   title: {
-    defaultMessage: 'Events',
-    id: 'events.manage.title'
+    defaultMessage: 'Hosted Events',
+    id: 'events.hosted.title'
   },
   tableTitle: {
-    defaultMessage: 'Events - managment',
-    id: 'events.manage.table.title'
+    defaultMessage: 'Events',
+    id: 'events.hosted.table.title'
   },
   noEvents: {
     defaultMessage: 'No events here',
-    id: 'events.manage.noEvents'
+    id: 'events.hosted.noEvents'
   },
   eventName: {
     defaultMessage: 'Event name',
-    id: 'events.manage.eventName'
-  },
-  actions: {
-    defaultMessage: 'Actions',
-    id: 'events.manage.actions'
-  },
-  eventStarts: {
-    defaultMessage: 'Starts',
-    id: 'events.manage.eventStarts'
+    id: 'events.hosted.eventName'
   },
   minCapacity: {
-    defaultMessage: 'Min Capacity',
-    id: 'events.manage.minCapacity'
+    defaultMessage: 'Min capacity',
+    id: 'events.hosted.minCapacity'
   },
   maxCapacity: {
     defaultMessage: 'Max capacity',
-    id: 'events.manage.maxCapacity'
+    id: 'events.hosted.maxCapacity'
   },
   signedIn: {
     defaultMessage: 'Signed in',
-    id: 'events.manage.signedIn'
+    id: 'events.hosted.signedIn'
   },
   wontCome: {
     defaultMessage: 'Wont come',
-    id: 'events.manage.wontCome'
+    id: 'events.hosted.wontCome'
   },
   invited: {
     defaultMessage: 'Invited',
-    id: 'events.manage.invited'
+    id: 'events.hosted.invited'
+  },
+  eventDate: {
+    defaultMessage: 'Begining date',
+    id: 'events.hosted.eventDate'
   },
 });
 
-class EventsPage extends Component {
+class HostedEventsPage extends Component {
 
   static propTypes = {
     events: PropTypes.object,
     fields: PropTypes.object.isRequired,
-    removeEvent: PropTypes.func.isRequired,
+    viewer: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
   };
 
   getEventRow(event) {
-    const { removeEvent } = this.props;
     const attendees = event.attendeesGroups.reduce((reduction, group) =>
       reduction.merge(group.users)
     , new Map());
@@ -74,43 +69,31 @@ class EventsPage extends Component {
     const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
 
     return (
-      <tr key={event.id}>
+      <tr key={event.id} style={{ cursor: 'pointer' }} onClick={() => browserHistory.push(`/host/events/${event.id}`)}>
         <td>{`${event.name}`}</td>
         <td>
-          <FormattedRelative value={event.eventStartDateTime} />
+          <FormattedDate value={event.eventStartDateTime} />
+          <span> </span>
+          <FormattedTime value={event.eventStartDateTime} />
         </td>
         <td>{`${event.minCapacity}`}</td>
         <td>{`${event.maxCapacity}`}</td>
         <td>{`${attending.size}`}</td>
         <td>{`${notAttending.size}`}</td>
         <td>{`${attendees.size}`}</td>
-        <td className="action-buttons">
-          <i
-            className="fa fa-trash-o trash-group"
-            onClick={() => removeEvent(event.id)}
-          ></i>
-          <i
-            className="fa fa-pencil"
-            onClick={() => this.editEvent(event.id)}
-          ></i>
-        </td>
       </tr>
     );
   }
 
-  editEvent(eventId) {
-    browserHistory.push(`/admin/events/${eventId}`);
-  }
-
   render() {
-    const { events, fields } = this.props;
-    const { removeEvent, hasPermission } = this.props;
+    const { events, viewer, fields } = this.props;
+    const { hasPermission } = this.props;
 
     if (!events) {
       return <div></div>;
     }
 
-    let filteredEvents = events.valueSeq().map(event => event);
+    let filteredEvents = viewer.hostedEvents.map(eventId => events.get(eventId));
     if (fields.filter.value) {
       filteredEvents = events.valueSeq().filter(event =>
         `${event.name}`.toLowerCase()
@@ -119,18 +102,10 @@ class EventsPage extends Component {
     }
 
     return (
-      <div className="event-managment-page">
+      <div className="hosted-events-managment-page">
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
-            {hasPermission('create_events') ?
-              <i
-                className="fa fa-plus text-green"
-                style={{ cursor: 'pointer', marginLeft: '2em' }}
-                onClick={() => browserHistory.push('/admin/events/create')}
-              ></i>
-             : ''
-            }
           </h1>
         </section>
         <section className="content">
@@ -157,18 +132,17 @@ class EventsPage extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="box-body table-responsive no-padding items-container">
+                <div className="box-body table-responsive no-padding">
                   <table className="table table-hover">
                     <tbody>
                       <tr>
                         <th><FormattedMessage {...messages.eventName} /></th>
-                        <th><FormattedMessage {...messages.eventStarts} /></th>
+                        <th><FormattedMessage {...messages.eventDate} /></th>
                         <th><FormattedMessage {...messages.minCapacity} /></th>
                         <th><FormattedMessage {...messages.maxCapacity} /></th>
                         <th><FormattedMessage {...messages.signedIn} /></th>
                         <th><FormattedMessage {...messages.wontCome} /></th>
                         <th><FormattedMessage {...messages.invited} /></th>
-                        <th><FormattedMessage {...messages.actions} /></th>
                       </tr>
                       {filteredEvents ?
                         filteredEvents.map(event => this.getEventRow(event))
@@ -191,8 +165,8 @@ class EventsPage extends Component {
   }
 }
 
-EventsPage = fields(EventsPage, {
-  path: 'events',
+HostedEventsPage = fields(HostedEventsPage, {
+  path: 'hostedEvents',
   fields: [
     'filter',
   ],
@@ -200,5 +174,6 @@ EventsPage = fields(EventsPage, {
 
 export default connect(state => ({
   events: state.events.events,
+  viewer: state.users.viewer,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), actions)(EventsPage);
+}), actions)(HostedEventsPage);

@@ -19,7 +19,7 @@ class NxEventAttendeesController extends Controller
         $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
     }
 
-    public function changeAttendance($eventId, $userId)
+    public function updateAttendee($eventId, $userId)
     {
         $attendee = NxEventAttendee::where('userId', '=', $userId)
             ->whereHas('attendeesGroup', function ($query) use ($eventId) {
@@ -29,6 +29,8 @@ class NxEventAttendeesController extends Controller
         if (!$attendee) {
             abort(401);
         }
+
+        $attendee->fill(\Input::all());
 
         if (\Input::has('signIn') && \Input::get('signIn')) {
             $attendee->signedIn = Carbon::now();
@@ -47,7 +49,7 @@ class NxEventAttendeesController extends Controller
             $attendee->signedOut = Carbon::now();
             $attendee->signedOutReason = clean(\Input::get('reason'));
             $attendee->wontGo = null;
-            $attendee->signedIn = Carbon::now();
+            $attendee->signedIn = null;
         }
 
         if (\Input::has('wontGo') && \Input::get('wontGo')) {

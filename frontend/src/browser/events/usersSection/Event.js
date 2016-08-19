@@ -85,7 +85,7 @@ export default class Event extends Component {
       reduction.merge(group.users)
     , new Map());
 
-    const attending = attendees.filter(user => user.signedIn);
+    const attending = attendees.filter(user => user.get('signedIn'));
 
     // TODO what if user will be in multiple groups?
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();

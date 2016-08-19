@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/roles/{roleId}', ['middleware' => ['permission:update_roles'], 'uses' => 'RolesController@updateRole']);
         Route::delete('/roles/{roleId}', ['middleware' => ['permission:delete_roles'], 'uses' => 'RolesController@deleteRole']);
         
-        Route::post('/nxEvents/{eventId}/users/{userId}/attendance', 'NxEventAttendeesController@changeAttendance');
+        Route::put('/nxEvents/{eventId}/users/{userId}', 'NxEventAttendeesController@updateAttendee');
         Route::get('/nxEvents', 'NxEventsController@getNxEvents');
         Route::post('/nxEvents', ['middleware' => ['permission:create_events'], 'uses' => 'NxEventsController@createNxEvent']);
         Route::put('/nxEvents/{eventId}', ['middleware' => ['permission:update_events'], 'uses' => 'NxEventsController@updateNxEvent']);
@@ -48,7 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/users', 'UsersController@getUsers');
         Route::get('/users/{id}', 'UsersController@getUsers')->where(['id' => '[0-9]+|me']);
-        Route::get('/users/{id}/payments', 'UsersController@getUserPayments')->where(['id' => '[0-9]+']);
+        Route::get('/users/{userId}/payments', 'UsersController@getUserPayments')->where(['userId' => '[0-9]+']);
         Route::post('/users', 'UsersController@createUser');
         Route::put('/users', 'UsersController@updateUser');
         Route::delete('/users/{userId}', 'UsersController@deleteUser')

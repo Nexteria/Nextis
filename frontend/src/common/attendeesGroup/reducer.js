@@ -16,13 +16,15 @@ export default function attendeesGroupReducer(state = new InitialState, action) 
     case actions.ADD_USER: {
       const userId = action.payload;
 
-      return state.updateIn(['group', 'users'], users => users.set(userId, new Map({
+      return state.updateIn(['group', 'users'], users => users.set(userId, new Record({
         id: userId,
         signedIn: null,
+        wasPresent: null,
+        filledFeedback: null,
         signedOut: null,
         wontGo: null,
         signedOutReason: RichTextEditor.createValueFromString('', 'html'),
-      })));
+      }())));
     }
 
     case actions.REMOVE_USER: {
@@ -34,13 +36,15 @@ export default function attendeesGroupReducer(state = new InitialState, action) 
     case actions.ADD_GROUP: {
       let groupUsers = action.payload;
 
-      groupUsers = groupUsers.map(user => new Map({
+      groupUsers = groupUsers.map(user => new Record({
         id: user,
+        wasPresent: null,
+        filledFeedback: null,
         signedIn: null,
         signedOut: null,
         wontGo: null,
         signedOutReason: RichTextEditor.createValueFromString('', 'html'),
-      }));
+      }()));
 
       return state.updateIn(['group', 'users'], users => users.merge(groupUsers));
     }

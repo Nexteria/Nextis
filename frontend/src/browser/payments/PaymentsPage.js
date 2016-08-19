@@ -114,7 +114,6 @@ class PaymentsPage extends Component {
                             <td className="action-buttons">
                               <i
                                 className="fa fa-pencil"
-                                onClick={() => this.showUserPayment(user.id)}
                               ></i>
                             </td>
                           </tr>

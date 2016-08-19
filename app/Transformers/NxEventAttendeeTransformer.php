@@ -12,6 +12,8 @@ class NxEventAttendeeTransformer extends Transformer
             'signedOut' => $attendee->signedOut ? $attendee->signedOut->__toString() : null,
             'wontGo' => $attendee->wontGo ? $attendee->wontGo->__toString() : null,
             'signedOutReason' => $attendee->signedOutReason,
+            'wasPresent' => (boolean) $attendee->wasPresent,
+            'filledFeedback' => (boolean) $attendee->filledFeedback,
          ];
     }
 }

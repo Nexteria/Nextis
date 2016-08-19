@@ -18,10 +18,11 @@ class ContactList extends Component {
 
   static propTypes = {
     users: PropTypes.object,
+    rolesList: PropTypes.object,
   };
 
   render() {
-    const { users } = this.props;
+    const { users, rolesList } = this.props;
 
     return (
       <div>
@@ -58,7 +59,7 @@ class ContactList extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="box-body table-responsive no-padding">
+                <div className="box-body table-responsive no-padding items-container">
                   <table className="table table-hover">
                     <tbody>
                       <tr>
@@ -68,7 +69,7 @@ class ContactList extends Component {
                         <th>Telefón</th>
                       </tr>
                       {users ?
-                        users.filter(user => user.roles.includes('student')).valueSeq().map(student =>
+                        users.filter(user => user.roles.includes(rolesList.get('STUDENT').id)).valueSeq().map(student =>
                           <tr key={student.id}>
                             <td>{student.firstName} {student.lastName}</td>
                             <td>{student.level}</td>
@@ -95,5 +96,6 @@ class ContactList extends Component {
 }
 
 export default connect(state => ({
-  users: state.users.users
+  users: state.users.users,
+  rolesList: state.users.rolesList,
 }))(ContactList);

@@ -32,6 +32,7 @@ const User = Record({
   newPassword: '',
   oldPassword: '',
   payments: null,
+  hostedEvents: null,
   confirmationPassword: '',
 });
 

@@ -35,6 +35,7 @@ export default function usersReducer(state = new InitialState, action) {
       const user = action.payload;
       const viewer = new User({
         ...user,
+        hostedEvents: new List(user.hostedEvents),
         roles: new List(user.roles.map(role => role.id)),
         studentLevelId: parseInt(user.studentLevelId, 10),
         personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
@@ -55,6 +56,7 @@ export default function usersReducer(state = new InitialState, action) {
     case actions.SAVE_USER_SUCCESS: {
       const user = new User({
         ...action.payload,
+        hostedEvents: new List(action.payload.hostedEvents),
         roles: new List(action.payload.roles.map(role => role.id)),
         studentLevelId: parseInt(action.payload.studentLevelId, 10),
         personalDescription: RichTextEditor.createValueFromString(action.payload.personalDescription, 'html'),
@@ -136,6 +138,7 @@ export default function usersReducer(state = new InitialState, action) {
       return state.set('users', new Map(action.payload.map(user =>
         [user.id, new User({
           ...user,
+          hostedEvents: new List(user.hostedEvents),
           roles: new List(user.roles.map(role => role.id)),
           studentLevelId: parseInt(user.studentLevelId, 10),
           personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),

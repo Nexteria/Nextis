@@ -7,7 +7,9 @@ Homestead.json
 frontend/src/common/config.js
 public/build
 
-public/uploads
+!public
+public/uploads/*
 !public/uploads/.gitkeep
-public/uploads/images
+!public/uploads/images
+public/uploads/images/*
 !public/uploads/images/.gitkeep

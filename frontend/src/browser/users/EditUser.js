@@ -520,35 +520,38 @@ export class EditUser extends Component {
                         </div>
                       </div>
 
-                      <div className="form-group">
-                        <label htmlFor="userState" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.userState} />
-                        </label>
+                      {mode !== 'profile' ?
+                        <div className="form-group">
+                          <label htmlFor="userState" className="col-sm-2 control-label">
+                            <FormattedMessage {...messages.userState} />
+                          </label>
 
-                        <div className="col-sm-10">
-                          <select
-                            className="form-control"
-                            {...fields.state}
-                            id="userState"
-                          >
-                            <option value={'active'}>
-                              {formatMessage(messages.activeUserState)}
-                            </option>
-                            <option value={'inactive'}>
-                              {formatMessage(messages.inactiveUserState)}
-                            </option>
-                            <option value={'temporarySuspended'}>
-                              {formatMessage(messages.temporarySuspendedUserState)}
-                            </option>
-                            <option value={'temporarySuspended'}>
-                              {formatMessage(messages.expelledUserState)}
-                            </option>
-                            <option value={'temporarySuspended'}>
-                              {formatMessage(messages.endedUserState)}
-                            </option>
-                          </select>
+                          <div className="col-sm-10">
+                            <select
+                              className="form-control"
+                              {...fields.state}
+                              id="userState"
+                            >
+                              <option value={'active'}>
+                                {formatMessage(messages.activeUserState)}
+                              </option>
+                              <option value={'inactive'}>
+                                {formatMessage(messages.inactiveUserState)}
+                              </option>
+                              <option value={'temporarySuspended'}>
+                                {formatMessage(messages.temporarySuspendedUserState)}
+                              </option>
+                              <option value={'temporarySuspended'}>
+                                {formatMessage(messages.expelledUserState)}
+                              </option>
+                              <option value={'temporarySuspended'}>
+                                {formatMessage(messages.endedUserState)}
+                              </option>
+                            </select>
+                          </div>
                         </div>
-                      </div>
+                        : ''
+                      }
 
                       {fields.roles.value.includes(rolesList.get('NEXTERIA_TEAM').id) ?
                         <div className="form-group">

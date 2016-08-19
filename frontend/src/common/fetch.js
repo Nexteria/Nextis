@@ -33,6 +33,14 @@ function checkStatus(response) {
   throw error;
 }
 
+function checkAuth(response) {
+  if (response.status === 401) {
+    window.location = '/logout';
+  }
+
+  return response;
+}
+
 // Wrapper over isomorphicFetch making relative urls absolute. We don't want
 // hardcode fetch urls since they are different when app is deployed or not.
 export default function fetch(input, init) {
@@ -42,6 +50,10 @@ export default function fetch(input, init) {
     delete init['api'];
   }
 
+  if (!init.hasOwnProperty('headers')) {
+    init['headers'] = { 'Content-Type': 'application/json' };
+  }
+
   let customStatusCheck = checkStatus;
   if (init.hasOwnProperty('customStatusCheck')) {
     customStatusCheck = init.customStatusCheck;
@@ -49,5 +61,5 @@ export default function fetch(input, init) {
   }
 
   input = ensureAbsoluteUrl(apiUrl, input);
-  return isomorphicFetch(input, init).then(customStatusCheck);
+  return isomorphicFetch(input, init).then(response => checkAuth(response)).then(customStatusCheck);
 }

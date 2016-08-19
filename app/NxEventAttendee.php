@@ -22,6 +22,8 @@ class NxEventAttendee extends Authenticatable
         'signedIn',
         'signedOut',
         'wontGo',
+        'wasPresent',
+        'filledFeedback',
     ];
 
     protected $dates = ['deleted_at', 'signedIn', 'signedOut', 'wontGo'];

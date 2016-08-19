@@ -43,6 +43,7 @@ export default function eventsReducer(state = new InitialState, action) {
           signUpDeadlineDateTime: moment(group.signUpDeadlineDateTime),
           signUpOpenDateTime: moment(group.signUpOpenDateTime),
           users: new Map(group.users.map(user => [user.id, new Map({
+            ...user,
             id: user.id,
             signedIn: user.signedIn ? moment(user.signedIn) : null,
             signedOut: user.signedOut ? moment(user.signedOut) : null,
@@ -70,6 +71,7 @@ export default function eventsReducer(state = new InitialState, action) {
             signUpDeadlineDateTime: moment(group.signUpDeadlineDateTime),
             signUpOpenDateTime: moment(group.signUpOpenDateTime),
             users: new Map(group.users.map(user => [user.id, new Map({
+              ...user,
               id: user.id,
               signedIn: user.signedIn ? moment(user.signedIn) : null,
               signedOut: user.signedOut ? moment(user.signedOut) : null,
@@ -153,6 +155,36 @@ export default function eventsReducer(state = new InitialState, action) {
         .setIn(['signOut', 'eventId'], null)
         .setIn(['signOut', 'reason'], '')
         .setIn(['signOut', 'groupId'], null);
+    }
+
+    case actions.CHANGE_ATTENDEE_FEEDBACK_STATUS_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('filledFeedback', response.filledFeedback));
+    }
+
+    case actions.CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('wasPresent', response.wasPresent));
     }
 
     case actions.OPEN_SIGN_OUT_DIALOG: {

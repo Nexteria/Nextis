@@ -51,6 +51,14 @@ const messages = defineMessages({
     defaultMessage: 'Payments',
     id: 'app.sidebar.links.payments',
   },
+  hostedEvents: {
+    defaultMessage: 'Hosted events',
+    id: 'app.sidebar.links.hostedEvents',
+  },
+  important: {
+    defaultMessage: 'Important',
+    id: 'app.sidebar.links.important',
+  },
 });
 
 
@@ -62,7 +70,7 @@ export default class AppSideBar extends Component {
   };
 
   render() {
-    const { hasPermission } = this.props;
+    const { viewer, hasPermission } = this.props;
 
     return (
       <aside className="main-sidebar">
@@ -74,6 +82,16 @@ export default class AppSideBar extends Component {
                 <span><FormattedMessage {...messages.events} /></span>
               </Link>
             </li>
+            {viewer.hostedEvents.size > 0 ?
+              <li>
+                <Link to="/host/events">
+                  <span><FormattedMessage {...messages.hostedEvents} /></span>
+                  <small className="label pull-right bg-red"><FormattedMessage {...messages.important} /></small>
+                </Link>
+              </li>
+              : ''
+            }
+            
             <li className="header"><FormattedMessage {...messages.network} /></li>
             <li>
               <Link to="/contacts">
