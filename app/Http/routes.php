@@ -68,7 +68,3 @@ Route::group(['middleware' => 'auth'], function () {
         return view('index');
     })->where('slug', '(?!api).*');
 });
-
-Route::any('{slug}', function ($slug = null) {
-    return redirect('/login');
-})->where('slug', '(?!api)([A-z\d-\/_.]+)?');

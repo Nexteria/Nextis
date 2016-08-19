@@ -34,9 +34,7 @@ function checkStatus(response) {
 }
 
 function checkAuth(response) {
-  if (response.status === 401) {
-    window.location = '/logout';
-  }
+  
 
   return response;
 }
