@@ -93,6 +93,11 @@ class EventsPage extends Component {
             className="fa fa-pencil"
             onClick={() => this.editEvent(event.id)}
           ></i>
+          <i
+            className="fa fa-envelope-o"
+            onClick={() => browserHistory.push(`/admin/events/${event.id}/emails`)}
+          >
+          </i>
         </td>
       </tr>
     );

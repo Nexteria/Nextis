@@ -25,6 +25,7 @@ import UnassociatedPaymentsDialog from './payments/UnassociatedPaymentsDialog';
 import UsersPaymentsDialog from './payments/UsersPaymentsDialog';
 import HostedEventsPage from './events/HostedEventsPage';
 import EventAttendanceDialog from './events/EventAttendanceDialog';
+import EventEmailsDialog from './events/EventEmailsDialog';
 
 export default function createRoutes() {
   return (
@@ -48,6 +49,7 @@ export default function createRoutes() {
 
         <Route component={EventsPage} path="events" />
         <Route component={EditEvent} path="events/:eventId" />
+        <Route component={EventEmailsDialog} path="events/:eventId/emails" />
         <Route component={CreateEventPage} path="events/create" />
 
         <Route component={RolesPage} path="roles" />

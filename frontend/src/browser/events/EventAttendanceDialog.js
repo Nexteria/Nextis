@@ -38,10 +38,6 @@ const messages = defineMessages({
     defaultMessage: 'Was present',
     id: 'event.hosted.attendance.wasPresent',
   },
-  filledFeedback: {
-    defaultMessage: 'Filled feedback',
-    id: 'event.hosted.attendance.filledFeedback',
-  },
   userName: {
     defaultMessage: 'Username',
     id: 'event.hosted.attendance.userName',
@@ -55,7 +51,6 @@ export class EventAttendanceDialog extends Component {
     users: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
-    changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
   }
@@ -63,7 +58,6 @@ export class EventAttendanceDialog extends Component {
   getUsersTable(usersList, event) {
     const { users } = this.props;
     const {
-      changeAttendeeFeedbackStatus,
       changeAttendeePresenceStatus,
     } = this.props;
 
@@ -75,7 +69,6 @@ export class EventAttendanceDialog extends Component {
               <tr>
                 <th><FormattedMessage {...messages.userName} /></th>
                 <th><FormattedMessage {...messages.wasPresent} /></th>
-                <th><FormattedMessage {...messages.filledFeedback} /></th>
               </tr>
               {usersList ?
                 usersList.valueSeq().map(user =>
@@ -91,21 +84,6 @@ export class EventAttendanceDialog extends Component {
                       }
                     >
                       {user.get('wasPresent') ?
-                        <i className="fa fa-check"></i>
-                        :
-                        <i className="fa fa-times"></i>
-                      }
-                    </td>
-                    <td
-                      onClick={() =>
-                        changeAttendeeFeedbackStatus(
-                          event.id,
-                          user,
-                          event.attendeesGroups.filter(group => group.users.has(user.get('id'))).first().id
-                        )
-                      }
-                    >
-                      {user.get('filledFeedback') ?
                         <i className="fa fa-check"></i>
                         :
                         <i className="fa fa-times"></i>

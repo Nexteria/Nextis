@@ -34,14 +34,8 @@ class Header extends Component {
           </span>
         </Link>
         <nav className="navbar navbar-static-top">
-          <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
-            <span className="sr-only"><FormattedMessage {...messages.toggle_sidebar} /></span>
-          </a>
-
           <div className="navbar-custom-menu">
             <ul className="nav navbar-nav">
-              <HeaderMessages />
-              <HeaderNotifications />
               <HeaderUserMenu {...{ viewer, openUserMenu, closeUserMenu, isUserMenuOpen }} />
             </ul>
           </div>
