@@ -17,6 +17,9 @@ Route::post('/payments', 'PaymentsController@processPayment');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
+        Route::post('/usernames', 'UsersController@checkUsernameAvailability');
+        Route::post('/emails', 'UsersController@checkEmailAvailability');
+
         Route::get('/levels', 'LevelsController@getLevels');
         Route::get('/permissions', 'PermissionsController@getPermissions');
 

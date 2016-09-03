@@ -1,3 +1,5 @@
+import { reducer as formReducer } from 'redux-form';
+
 import app from './app/reducer';
 import config from './config/reducer';
 import intl from './intl/reducer';
@@ -42,6 +44,7 @@ export default function configureReducer(initialState, platformReducers) {
     events,
     routing,
     payments,
+    form: formReducer,
   });
 
   // The power of higher-order reducers, http://slides.com/omnidan/hor

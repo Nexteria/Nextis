@@ -25,6 +25,59 @@ class UsersController extends Controller
         $this->paymentTransformer = $paymentTransformer;
     }
 
+    public function checkUsernameAvailability()
+    {
+        $username = \Input::get('username');
+        if (strlen($username) < 5) {
+            return response()->json([
+              "error" => "Username is too short.",
+              "code" => 400,
+            ], 400);
+        }
+
+        if (\Input::has('id')) {
+          $isAvailable = !User::where('username', '=', $username)->where('id', '!=', \Input::get('id'))->exists();  
+        } else {
+          $isAvailable = !User::where('username', '=', $username)->exists();
+        }
+
+        if (!$isAvailable) {
+            return response()->json([
+              "error" => "Username is not available",
+              "code" => 403,
+            ], 403);
+        }
+
+        return response()->json();
+    }
+
+    public function checkEmailAvailability()
+    {
+        $email = \Input::get('email');
+        if (strlen($email) < 5) {
+            return response()->json([
+              "error" => "Email is too short.",
+              "code" => 400,
+            ], 400);
+        }
+
+        if (\Input::has('id')) {
+          $isAvailable = !User::where('email', '=', $email)->where('id', '!=', \Input::get('id'))->exists();  
+        } else {
+          $isAvailable = !User::where('email', '=', $email)->exists();
+        }
+        
+
+        if (!$isAvailable) {
+            return response()->json([
+              "error" => "Email is not available",
+              "code" => 403,
+            ], 403);
+        }
+
+        return response()->json();
+    }
+
     public function createUser()
     {
         $profilePicture = null;
@@ -50,7 +103,7 @@ class UsersController extends Controller
         $user = User::findOrFail(\Input::get('id'));
         $user->updateData(\Input::all());
 
-        return response()->json($user->fresh(['roles']));
+        return response()->json($this->userTransformer->transform($user->fresh(['roles'])));
     }
 
     public function getUsers($userId = null)

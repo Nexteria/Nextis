@@ -43,6 +43,12 @@ export const REMOVE_ROLE_SUCCESS = 'REMOVE_ROLE_SUCCESS';
 export const UPDATE_ROLE = 'UPDATE_ROLE';
 export const UPDATE_ROLE_SUCCESS = 'UPDATE_ROLE_SUCCESS';
 
+export const VERIFY_USERNAME_AVALABLE = 'VERIFY_USERNAME_AVALABLE';
+export const VERIFY_USERNAME_AVALABLE_SUCCESS = 'VERIFY_USERNAME_AVALABLE_SUCCESS';
+
+export const VERIFY_EMAIL_AVALABLE = 'VERIFY_EMAIL_AVALABLE';
+export const VERIFY_EMAIL_AVALABLE_SUCCESS = 'VERIFY_EMAIL_AVALABLE_SUCCESS';
+
 export const LOAD_USER_FOR_EDITING = 'LOAD_USER_FOR_EDITING';
 export const ADD_USER_TO_GROUP = 'ADD_USER_TO_GROUP';
 export const ADD_GROUP_TO_GROUP = 'ADD_GROUP_TO_GROUP';
@@ -62,38 +68,80 @@ export function loadViewer() {
   });
 }
 
-export function saveUser(fields) {
+export function verifyUsernameAvailable(username, id) {
+  return ({ fetch }) => ({
+    type: VERIFY_USERNAME_AVALABLE,
+    payload: {
+      data: 'no-loader',
+      promise: fetch('/usernames', {
+        credentials: 'same-origin',
+        method: 'post',
+        notifications: false,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username,
+          id,
+        }),
+      }).catch(e => {
+        throw {username: 'That username is taken'};
+      }),
+    }
+  });
+}
+
+export function verifyEmailAvailable(email, id) {
+  return ({ fetch }) => ({
+    type: VERIFY_EMAIL_AVALABLE,
+    payload: {
+      data: 'no-loader',
+      promise: fetch('/emails', {
+        credentials: 'same-origin',
+        method: 'post',
+        notifications: false,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          id,
+        }),
+      }).catch(e => {
+        throw {email: 'That email is taken'};
+      }),
+    }
+  });
+}
+
+export function saveUser(values) {
   return ({ fetch }) => ({
     type: 'SAVE_USER',
     payload: {
       promise: fetch('/users', {
-        method: fields.id.value ? 'put' : 'post',
+        method: values.id ? 'put' : 'post',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: fields.id.value,
-          username: fields.username.value,
-          firstName: fields.firstName.value,
-          lastName: fields.lastName.value,
-          email: fields.email.value,
-          phone: fields.phone.value,
-          facebookLink: fields.facebookLink.value,
-          linkedinLink: fields.linkedinLink.value,
-          personalDescription: fields.personalDescription.value.toString('html'),
-          buddyDescription: fields.buddyDescription.value.toString('html'),
-          guideDescription: fields.guideDescription.value.toString('html'),
-          lectorDescription: fields.lectorDescription.value.toString('html'),
-          studentLevelId: fields.studentLevelId.value,
-          photo: fields.photo.value,
-          actualJobInfo: fields.actualJobInfo.value,
-          school: fields.school.value,
-          faculty: fields.faculty.value,
-          studyProgram: fields.studyProgram.value,
-          roles: fields.roles.value,
-          nexteriaTeamRole: fields.nexteriaTeamRole.value,
-          state: fields.state.value,
-          newPassword: fields.newPassword.value,
-          confirmationPassword: fields.confirmationPassword.value,
+          id: values.id,
+          username: values.username,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          phone: values.phone,
+          facebookLink: values.facebookLink,
+          linkedinLink: values.linkedinLink,
+          personalDescription: values.personalDescription.toString('html'),
+          buddyDescription: values.buddyDescription.toString('html'),
+          guideDescription: values.guideDescription.toString('html'),
+          lectorDescription: values.lectorDescription.toString('html'),
+          studentLevelId: values.studentLevelId,
+          photo: values.photo,
+          actualJobInfo: values.actualJobInfo,
+          school: values.school,
+          faculty: values.faculty,
+          studyProgram: values.studyProgram,
+          roles: values.roles,
+          nexteriaTeamRole: values.nexteriaTeamRole,
+          state: values.state,
+          newPassword: values.newPassword,
+          confirmationPassword: values.confirmationPassword,
         }),
       }).then(response => response.json())
       .then(response => { browserHistory.push('/admin/users'); return response; }),

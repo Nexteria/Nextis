@@ -12,7 +12,7 @@ function ensureAbsoluteUrl(apiUrl, input) {
   return URI(apiUrl + input).normalize().toString();
 }
 
-function checkStatus(response) {
+function checkStatus(response, notifications) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
@@ -20,14 +20,16 @@ function checkStatus(response) {
   const error = new Error(response.statusText);
   error.response = response;
 
-  if (response.status === 500) {
-    toastr.error('INTERNAL SERVER ERROR');
-  } else {
-    response.json().then(resp => {
-      toastr.options.closeButton = true;
-      toastr.options.timeOut = 15000;
-      toastr.error(resp.error);
-    });
+  if (notifications) {
+    if (response.status === 500) {
+      toastr.error('INTERNAL SERVER ERROR');
+    } else {
+      response.json().then(resp => {
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 15000;
+        toastr.error(resp.error);
+      });
+    }
   }
 
   throw error;
@@ -43,9 +45,15 @@ function checkAuth(response) {
 // hardcode fetch urls since they are different when app is deployed or not.
 export default function fetch(input, init) {
   let apiUrl = config.APIS.default;
+  let notifications = true;
   if (init.hasOwnProperty('api')) {
     apiUrl = init.api;
     delete init['api'];
+  }
+
+  if (init.hasOwnProperty('notifications')) {
+    notifications = init.notifications;
+    delete init['notifications'];
   }
 
   if (!init.hasOwnProperty('headers')) {
@@ -59,5 +67,5 @@ export default function fetch(input, init) {
   }
 
   input = ensureAbsoluteUrl(apiUrl, input);
-  return isomorphicFetch(input, init).then(response => checkAuth(response)).then(customStatusCheck);
+  return isomorphicFetch(input, init).then(response => checkAuth(response, notifications)).then(customStatusCheck);
 }

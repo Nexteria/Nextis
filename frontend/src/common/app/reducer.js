@@ -28,6 +28,10 @@ export default function appReducer(state = new InitialState, action) {
   }
 
   if (/.*_START$/.test(action.type)) {
+    if (action.payload && action.payload === 'no-loader') {
+      return state;
+    }
+
     return state.update('loading', loading => loading + 1);
   }
 
@@ -36,6 +40,12 @@ export default function appReducer(state = new InitialState, action) {
   }
 
   if (/.*_ERROR$/.test(action.type)) {
+    if (action.payload && !(action.payload instanceof Error)) {
+      return state;
+    }
+
+    console.log('-1');
+
     return state.update('loading', loading => loading - 1);
   }
 

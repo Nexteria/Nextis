@@ -2,6 +2,9 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { Field, reduxForm } from 'redux-form';
+import validator from 'validator';
+import { PhoneNumberUtil } from 'google-libphonenumber';
 
 
 import TextEditor from '../components/TextEditor';
@@ -137,7 +140,88 @@ const messages = defineMessages({
     defaultMessage: 'Confirmation password',
     id: 'user.edit.confirmationPassword',
   },
+  requiredField: {
+    defaultMessage: 'This field is required',
+    id: 'user.edit.requiredField',
+  },
+  validEmailError: {
+    defaultMessage: 'Must be valid email address',
+    id: 'user.edit.validEmailError',
+  },
+  validPhoneError: {
+    defaultMessage: 'Must be valid phone number (+xxxxxxxxxxxx)',
+    id: 'user.edit.validPhoneError',
+  },
 });
+
+const validate = (values, props) => {
+  const { formatMessage } = props.intl;
+
+  const errors = {};
+  if (!values.firstName) {
+    errors.firstName = formatMessage(messages.requiredField);
+  }
+
+  if (!values.nexteriaTeamRole) {
+    errors.nexteriaTeamRole = formatMessage(messages.requiredField);
+  }
+
+  if (!values.lastName) {
+    errors.lastName = formatMessage(messages.requiredField);
+  }
+
+  if (!values.studentLevel) {
+    errors.studentLevel = formatMessage(messages.requiredField);
+  }
+
+  if (!values.username) {
+    errors.username = formatMessage(messages.requiredField);
+  }
+
+  if (!values.email) {
+    errors.email = formatMessage(messages.requiredField);
+  } else if (!validator.isEmail(values.email)) {
+    errors.email = formatMessage(messages.validEmailError);
+  }
+
+  if (!values.phone) {
+    errors.phone = formatMessage(messages.requiredField);
+  } else {
+    try {
+      const phoneUtil = PhoneNumberUtil.getInstance();
+      const isValid = phoneUtil.isValidNumber(phoneUtil.parse(values.phone));
+      if (!isValid) {
+        errors.phone = formatMessage(messages.validPhoneError);
+      }
+    } catch (e) {
+      errors.phone = formatMessage(messages.validPhoneError);
+    }
+  }
+
+  return errors;
+};
+
+const asyncValidate = (values, dispatch) => {
+  let validation = null;
+  let errors = {};
+  if (values.username) {
+    validation = dispatch(actions.verifyUsernameAvailable(values.username,  values.id)).then(() => {}, () => {
+      errors.username = 'That username is taken'
+    });
+  }
+
+  if (values.email) {
+    if (validation) {
+      validation = validation.then(() => dispatch(actions.verifyEmailAvailable(values.email, values.id)));
+    } else {
+      validation = dispatch(actions.verifyEmailAvailable(values.email, values.id));
+    }
+
+    validation.then(() => {}, () => errors.email = 'That email is taken');
+  }
+
+  return validation.then(() => errors, () => errors);
+}
 
 export class EditUser extends Component {
 
@@ -157,6 +241,9 @@ export class EditUser extends Component {
     params: PropTypes.object,
     users: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    pristine: PropTypes.bool,
+    submitting: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -172,9 +259,67 @@ export class EditUser extends Component {
     setField(['editUser'], activeUser ? activeUser : new User());
   }
 
+  parsePhone(value) {
+    const phoneUtil = PhoneNumberUtil.getInstance();
+
+    try {
+      return phoneUtil.formatInOriginalFormat(phoneUtil.parseAndKeepRawInput(value));
+    } catch (e) {
+      return value;
+    }
+  }
+
+  renderInput({ input, label, type, meta: { asyncValidating, touched, error, pristine } }) {
+
+    return (
+      <div className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className={`col-sm-10 ${asyncValidating ? 'async-validating' : ''}`}>
+          <input
+            {...input}
+            placeholder={label} type={type}
+            className="form-control"
+          />
+          {pristine && input.value ?
+            ''
+            :
+            <div className="has-error">
+              {touched && error && <label>{error}</label>}
+            </div>
+          }
+        </div>
+      </div>
+    );
+  }
+
+  renderSelect(data) {
+    const { input, label, children, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          <select
+            {...input}
+            className="form-control"
+          >
+          {children}
+          </select>
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const { fields, mode, title, rolesList, studentLevels } = this.props;
-    const { saveUser, updateUserRole, hasPermission } = this.props;
+    const { fields, mode, pristine, submitting, title, rolesList, studentLevels } = this.props;
+    const { saveUser, handleSubmit, updateUserRole, hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
     if (!fields.roles.value || !rolesList) {
@@ -230,99 +375,55 @@ export class EditUser extends Component {
               <div className="nav-tabs-custom">
                 <div className="tab-content">
                   <div className="tab-pane active" id="settings">
-                    <form className="form-horizontal">
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.firstName} />
-                        </label>
+                    <form className="form-horizontal" onSubmit={handleSubmit((data) => saveUser(data))}>
+                      <Field
+                        name="firstName"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.firstName)}*`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.firstName}
-                            id="firstName"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.lastName} />
-                        </label>
+                      <Field
+                        name="lastName"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.lastName)}*`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.lastName}
-                            id="lastName"
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="username"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.username)}*`}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="username" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.username} />
-                        </label>
+                      <Field
+                        name="email"
+                        type="email"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.email)}*`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.username}
-                            id="username"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="email" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.email} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <input
-                            type="email"
-                            className="form-control"
-                            {...fields.email}
-                            id="email"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.phone} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.phone}
-                            id="phone"
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="phone"
+                        type="text"
+                        parse={this.parsePhone}
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.phone)}*`}
+                      />
 
                       {fields.roles.value.includes(rolesList.get('STUDENT').id) ?
-                        <div className="form-group">
-                          <label htmlFor="inputName" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.studentLevel} />
-                          </label>
 
-                          <div className="col-sm-10">
-                            <select
-                              className="form-control"
-                              {...fields.studentLevelId}
-                              id="studentLevel"
-                            >
-                              <option readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
-                              {studentLevels.valueSeq().map(level =>
-                                <option key={level.id} value={level.id}>{level.name}</option>
-                              )}
-                            </select>
-                          </div>
-                        </div>
+                        <Field
+                          name="studentLevelId"
+                          component={this.renderSelect}
+                          label={`${formatMessage(messages.studentLevel)}*`}
+                        >
+                          <option value="" readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
+                          {studentLevels.valueSeq().map(level =>
+                            <option key={level.id} value={level.id}>{level.name}</option>
+                          )}
+                        </Field>
                         : ''
                       }
 
@@ -554,20 +655,12 @@ export class EditUser extends Component {
                       }
 
                       {fields.roles.value.includes(rolesList.get('NEXTERIA_TEAM').id) ?
-                        <div className="form-group">
-                          <label htmlFor="nexteriaTeamRole" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.nexteriaTeamRole} />
-                          </label>
-
-                          <div className="col-sm-10">
-                            <input
-                              type="text"
-                              className="form-control"
-                              {...fields.nexteriaTeamRole}
-                              id="nexteriaTeamRole"
-                            />
-                          </div>
-                        </div>
+                        <Field
+                          name="nexteriaTeamRole"
+                          type="text"
+                          component={this.renderInput}
+                          label={`${formatMessage(messages.nexteriaTeamRole)}*`}
+                        />
                         : ''
                       }
 
@@ -609,7 +702,7 @@ export class EditUser extends Component {
                       {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
                         <div className="form-group">
                           <div className="col-sm-offset-2 col-sm-10">
-                            <button type="button" className="btn btn-success" onClick={() => saveUser(fields, rolesList)}>
+                            <button type="submit" disabled={pristine || submitting} className="btn btn-success">
                               <FormattedMessage {...messages.save} />
                             </button>
                           </div>
@@ -635,11 +728,11 @@ EditUser = fields(EditUser, {
     'username',
     'firstName',
     'lastName',
-    'email',
     'facebookLink',
     'linkedinLink',
-    'phone',
     'photo',
+    'email',
+    'phone',
     'actualJobInfo',
     'school',
     'faculty',
@@ -660,6 +753,13 @@ EditUser = fields(EditUser, {
   ],
 });
 
+EditUser = reduxForm({
+  form: 'editUser',
+  validate,
+  asyncValidate,
+  asyncBlurFields: ['username', 'email'],
+})(EditUser);
+
 EditUser = injectIntl(EditUser);
 
 export default connect((state) => ({
@@ -667,4 +767,5 @@ export default connect((state) => ({
   users: state.users.users,
   studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
+  initialValues: state.fields.get('editUser') ? state.fields.get('editUser').toObject() : state.fields.get('editUser'),
 }), { ...fieldsActions, ...actions })(EditUser);
