@@ -82,6 +82,7 @@ export function saveEvent(fields) {
         method: fields.id.value ? 'put' : 'post',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
         body: JSON.stringify(data),
       }).then(response => response.json())
       .then(response => { browserHistory.push('/admin/events'); return response; }),
@@ -113,6 +114,7 @@ export function removeEvent(eventId) {
     payload: {
       promise: fetch(`/nxEvents/${eventId}`, {
         method: 'delete',
+        notifications: 'both',
         credentials: 'same-origin',
       }).then(() => eventId),
     },
@@ -149,6 +151,7 @@ export function attendeeWontGo(event, viewer, groupId) {
       promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
         method: 'put',
         credentials: 'same-origin',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ wontGo: true }),
       }).then(response => response.json())
@@ -168,6 +171,7 @@ export function attendeeSignIn(event, viewer, groupId) {
       promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
         method: 'put',
         credentials: 'same-origin',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ signIn: true }),
       }).then(response => response.json())
@@ -187,6 +191,7 @@ export function attendeeSignOut(signOut) {
       promise: fetch(`/nxEvents/${signOut.eventId}/users/${signOut.userId}`, {
         method: 'put',
         credentials: 'same-origin',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           signOut: true,

@@ -31,6 +31,7 @@ class UserTransformer extends Transformer
             'lectorDescription' => $user->lectorDescription,
             'buddyDescription' => $user->buddyDescription,
             'state' => $user->state,
+            'iban' => $user->iban,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
             'studentLevelId' => (int) $user->studentLevelId,
             'hostedEvents' => array_map('intval', $user->hostedEvents()->lists('id')->toArray()),

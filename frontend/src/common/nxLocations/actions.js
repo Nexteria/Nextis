@@ -24,6 +24,7 @@ export function saveNxLocation(fields) {
       promise: fetch(`/nxLocations${fields.id.value ? `/${fields.id.value}` : ''}`, {
         method: fields.id.value ? 'put' : 'post',
         credentials: 'same-origin',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: fields.id.value,
@@ -53,6 +54,7 @@ export function removeLocation(locationId) {
     payload: {
       promise: fetch(`/nxLocations/${locationId}`, {
         method: 'delete',
+        notifications: 'both',
         credentials: 'same-origin',
       }).then(() => locationId),
     },

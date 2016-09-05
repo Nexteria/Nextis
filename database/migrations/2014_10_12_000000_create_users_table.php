@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('faculty')->nullable();
             $table->string('studyProgram')->nullable();
             $table->string('state')->nullable();
-            $table->dateTime('dateOfBirth')->nullable();
+            $table->date('dateOfBirth')->nullable();
             $table->text('personalDescription')->nullable();
             $table->text('buddyDescription')->nullable();
             $table->text('guideDescription')->nullable();

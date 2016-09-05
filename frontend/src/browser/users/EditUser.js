@@ -247,7 +247,7 @@ export class EditUser extends Component {
   }
 
   componentWillMount() {
-    const { setField, users, user, params } = this.props;
+    const { setField, initialize, users, user, params } = this.props;
 
     const userId = params ? params.userId : null;
     let activeUser = user;
@@ -257,6 +257,7 @@ export class EditUser extends Component {
     }
 
     setField(['editUser'], activeUser ? activeUser : new User());
+    initialize(activeUser ? activeUser.toObject() : new User().toObject());
   }
 
   parsePhone(value) {
@@ -269,7 +270,8 @@ export class EditUser extends Component {
     }
   }
 
-  renderInput({ input, label, type, meta: { asyncValidating, touched, error, pristine } }) {
+  renderInput(data) {
+    const { input, label, type, meta: { asyncValidating, touched, error, pristine } } = data;
 
     return (
       <div className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}>
@@ -279,6 +281,7 @@ export class EditUser extends Component {
         <div className={`col-sm-10 ${asyncValidating ? 'async-validating' : ''}`}>
           <input
             {...input}
+            readOnly={data.readOnly}
             placeholder={label} type={type}
             className="form-control"
           />
@@ -289,6 +292,26 @@ export class EditUser extends Component {
               {touched && error && <label>{error}</label>}
             </div>
           }
+        </div>
+      </div>
+    );
+  }
+
+  renderEditor(data) {
+    const { input, label, children, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          <TextEditor
+            {...input}
+          />
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
         </div>
       </div>
     );
@@ -313,6 +336,32 @@ export class EditUser extends Component {
             {touched && error && <label>{error}</label>}
           </div>
         </div>
+      </div>
+    );
+  }
+
+  renderRoles(data, rolesList) {
+    const { input, label, children, meta: { touched, error } } = data;
+
+    return (
+      <div className="form-group text-left">
+        <label>{label}</label>
+          {rolesList.valueSeq().map(role =>
+            <div className="checkbox" key={role.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={() => input.onChange(input.value.includes(role.id) ? 
+                    input.value.delete(input.value.findIndex(input.value.includes(role.id)))
+                    :
+                    input.value.push(role.id))
+                  }
+                  checked={input.value.includes(role.id)}
+                />
+                {role.display_name}
+              </label>
+            </div>
+          )}
       </div>
     );
   }
@@ -351,21 +400,11 @@ export class EditUser extends Component {
                   </h3>
 
                   {mode !== 'profile' ?
-                    <div className="form-group text-left">
-                      <label><FormattedMessage {...messages.personRoles} /></label>
-                        {rolesList.valueSeq().map(role =>
-                          <div className="checkbox" key={role.id}>
-                            <label>
-                              <input
-                                type="checkbox"
-                                onChange={() => updateUserRole(role.id, !fields.roles.value.includes(role.id))}
-                                checked={fields.roles.value.includes(role.id)}
-                              />
-                              {role.display_name}
-                            </label>
-                          </div>
-                        )}
-                    </div>
+                    <Field
+                      name="roles"
+                      component={(data) => this.renderRoles(data, rolesList)}
+                      label={`${formatMessage(messages.personRoles)}`}
+                    />
                     : ''
                   }
                 </div>
@@ -427,230 +466,120 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.facebookLink} />
-                        </label>
+                      <Field
+                        name="facebookLink"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.facebookLink)}`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.facebookLink}
-                            id="facebookLink"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.linkedinLink} />
-                        </label>
+                      <Field
+                        name="linkedinLink"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.linkedinLink)}`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.linkedinLink}
-                            id="linkedinLink"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="iban" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.iban} />
-                        </label>
+                      <Field
+                        name="iban"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.iban)}`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.iban}
-                            id="iban"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="iban" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.variableSymbol} />
-                        </label>
+                      <Field
+                        name="variableSymbol"
+                        type="text"
+                        readOnly
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.variableSymbol)}`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            readOnly
-                            value={fields.variableSymbol.value}
-                            id="variableSymbol"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="personalDescription" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.personalDescription} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <TextEditor
-                            value={fields.personalDescription.value}
-                            onChange={(value) =>
-                              fields.personalDescription.onChange({ target: { value } })
-                            }
-                            id="personalDescription"
-                            placeholder="Personal description ..."
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="personalDescription"
+                        component={this.renderEditor}
+                        label={`${formatMessage(messages.personalDescription)}`}
+                      />
 
                       {fields.roles.value.includes(rolesList.get('GUIDE').id) ?
-                        <div className="form-group">
-                          <label htmlFor="guideDescription" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.guideDescription} />
-                          </label>
-
-                          <div className="col-sm-10">
-                            <TextEditor
-                              value={fields.guideDescription.value}
-                              onChange={(value) =>
-                                fields.guideDescription.onChange({ target: { value } })
-                              }
-                              id="guideDescription"
-                              placeholder="Gide description ..."
-                            />
-                          </div>
-                        </div>
+                        <Field
+                          name="guideDescription"
+                          component={this.renderEditor}
+                          label={`${formatMessage(messages.guideDescription)}`}
+                        />
                         : ''
                       }
 
                       {fields.roles.value.includes(rolesList.get('LECTOR').id) ?
-                        <div className="form-group">
-                          <label htmlFor="lectorDescription" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.lectorDescription} />
-                          </label>
-
-                          <div className="col-sm-10">
-                            <TextEditor
-                              value={fields.lectorDescription.value}
-                              onChange={(value) =>
-                                fields.lectorDescription.onChange({ target: { value } })
-                              }
-                              id="lectorDescription"
-                              placeholder="Lector description ..."
-                            />
-                          </div>
-                        </div>
+                        <Field
+                          name="lectorDescription"
+                          component={this.renderEditor}
+                          label={`${formatMessage(messages.lectorDescription)}`}
+                        />
                         : ''
                       }
 
                       {fields.roles.value.includes(rolesList.get('BUDDY').id) ?
-                        <div className="form-group">
-                          <label htmlFor="buddyDescription" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.buddyDescription} />
-                          </label>
-
-                          <div className="col-sm-10">
-                            <TextEditor
-                              value={fields.buddyDescription.value}
-                              onChange={(value) =>
-                                fields.buddyDescription.onChange({ target: { value } })
-                              }
-                              id="buddyDescription"
-                              placeholder="Buddy description ..."
-                            />
-                          </div>
-                        </div>
+                        <Field
+                          name="buddyDescription"
+                          type="text"
+                          readOnly
+                          component={this.renderEditor}
+                          label={`${formatMessage(messages.buddyDescription)}`}
+                        />
                         : ''
                       }
 
-                      <div className="form-group">
-                        <label htmlFor="actualJobInfo" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.actualJobInfo} />
-                        </label>
+                      <Field
+                        name="actualJobInfo"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.actualJobInfo)}`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.actualJobInfo}
-                            id="actualJobInfo"
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="school"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.school)}`}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="school" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.school} />
-                        </label>
+                      <Field
+                        name="faculty"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.faculty)}`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.school}
-                            id="school"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="faculty" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.faculty} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.faculty}
-                            id="faculty"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="studyProgram" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.studyProgram} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.studyProgram}
-                            id="studyProgram"
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="studyProgram"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.studyProgram)}`}
+                      />
 
                       {mode !== 'profile' ?
-                        <div className="form-group">
-                          <label htmlFor="userState" className="col-sm-2 control-label">
-                            <FormattedMessage {...messages.userState} />
-                          </label>
-
-                          <div className="col-sm-10">
-                            <select
-                              className="form-control"
-                              {...fields.state}
-                              id="userState"
-                            >
-                              <option value={'active'}>
-                                {formatMessage(messages.activeUserState)}
-                              </option>
-                              <option value={'inactive'}>
-                                {formatMessage(messages.inactiveUserState)}
-                              </option>
-                              <option value={'temporarySuspended'}>
-                                {formatMessage(messages.temporarySuspendedUserState)}
-                              </option>
-                              <option value={'temporarySuspended'}>
-                                {formatMessage(messages.expelledUserState)}
-                              </option>
-                              <option value={'temporarySuspended'}>
-                                {formatMessage(messages.endedUserState)}
-                              </option>
-                            </select>
-                          </div>
-                        </div>
+                        <Field
+                          name="userState"
+                          component={this.renderSelect}
+                          label={`${formatMessage(messages.userState)}`}
+                        >
+                          <option value={'active'}>
+                            {formatMessage(messages.activeUserState)}
+                          </option>
+                          <option value={'inactive'}>
+                            {formatMessage(messages.inactiveUserState)}
+                          </option>
+                          <option value={'temporarySuspended'}>
+                            {formatMessage(messages.temporarySuspendedUserState)}
+                          </option>
+                          <option value={'temporarySuspended'}>
+                            {formatMessage(messages.expelledUserState)}
+                          </option>
+                          <option value={'temporarySuspended'}>
+                            {formatMessage(messages.endedUserState)}
+                          </option>
+                        </Field>
                         : ''
                       }
 
@@ -666,35 +595,19 @@ export class EditUser extends Component {
 
                       {fields.id.value === null ?
                         <div>
-                          <div className="form-group">
-                            <label htmlFor="newPassword" className="col-sm-2 control-label">
-                              <FormattedMessage {...messages.newPassword} />
-                            </label>
-
-                            <div className="col-sm-10">
-                              <input
-                                type="password"
-                                className="form-control"
-                                {...fields.newPassword}
-                                id="newPassword"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="form-group">
-                            <label htmlFor="confirmationPassword" className="col-sm-2 control-label">
-                              <FormattedMessage {...messages.confirmationPassword} />
-                            </label>
-
-                            <div className="col-sm-10">
-                              <input
-                                type="password"
-                                className="form-control"
-                                {...fields.confirmationPassword}
-                                id="confirmationPassword"
-                              />
-                            </div>
-                          </div>
+                          <Field
+                            name="newPassword"
+                            type="text"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.newPassword)}`}
+                          />
+                          
+                          <Field
+                            name="confirmationPassword"
+                            type="text"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.confirmationPassword)}`}
+                          />
                         </div>
                         : ''
                       }

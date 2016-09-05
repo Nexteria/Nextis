@@ -76,7 +76,7 @@ export function verifyUsernameAvailable(username, id) {
       promise: fetch('/usernames', {
         credentials: 'same-origin',
         method: 'post',
-        notifications: false,
+        notifications: 'none',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username,
@@ -97,7 +97,7 @@ export function verifyEmailAvailable(email, id) {
       promise: fetch('/emails', {
         credentials: 'same-origin',
         method: 'post',
-        notifications: false,
+        notifications: 'none',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
@@ -118,6 +118,7 @@ export function saveUser(values) {
         method: values.id ? 'put' : 'post',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
         body: JSON.stringify({
           id: values.id,
           username: values.username,
@@ -140,6 +141,7 @@ export function saveUser(values) {
           roles: values.roles,
           nexteriaTeamRole: values.nexteriaTeamRole,
           state: values.state,
+          iban: values.iban,
           newPassword: values.newPassword,
           confirmationPassword: values.confirmationPassword,
         }),
@@ -156,6 +158,7 @@ export function updateRole(fields) {
       promise: fetch(`/roles${fields.id.value ? `/${fields.id.value}` : ''}`, {
         method: fields.id.value ? 'put' : 'post',
         credentials: 'same-origin',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: fields.id.value,
@@ -210,6 +213,7 @@ export function updateUserGroup(group, groupMembers) {
       promise: fetch('/userGroups', {
         method: group.id ? 'put' : 'post',
         credentials: 'same-origin',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: group.name,
@@ -298,6 +302,7 @@ export function removeUserGroup(groupId) {
     payload: {
       promise: fetch(`/userGroups/${groupId}`, {
         method: 'delete',
+        notifications: 'both',
         credentials: 'same-origin',
       }).then(() => groupId),
     },
@@ -310,6 +315,7 @@ export function removeRole(role) {
     payload: {
       promise: fetch(`/roles/${role.id}`, {
         method: 'delete',
+        notifications: 'both',
         credentials: 'same-origin',
       }).then(() => role.name),
     },
@@ -322,6 +328,7 @@ export function removeUser(userId) {
     payload: {
       promise: fetch(`/users/${userId}`, {
         method: 'delete',
+        notifications: 'both',
         credentials: 'same-origin',
       }).then(() => userId),
     },

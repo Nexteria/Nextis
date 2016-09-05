@@ -49,6 +49,7 @@ export function associatePayment(userId, paymentId) {
       promise: fetch(`/payments/${paymentId}`, {
         credentials: 'same-origin',
         method: 'put',
+        notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId,
