@@ -111,7 +111,7 @@ export function checkLocationCoords(fields) {
   return ({ fetch, dispatch }) => ({
     type: CHECK_LOCATION_COORDS,
     payload: {
-      promise: fetch(`http://maps.googleapis.com/maps/api/geocode/json?${query}`, {
+      promise: fetch(`https://maps.googleapis.com/maps/api/geocode/json?${query}`, {
       }).then(response => response.json())
       .then(response => {
         if (response.status === 'ZERO_RESULTS') {

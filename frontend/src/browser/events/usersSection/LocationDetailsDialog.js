@@ -77,8 +77,8 @@ export class LocationDetailsDialog extends Component {
                 style={{ maxWidth: '550px', height: '300px' }}
               >
                 <TileLayer
-                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
                 <Marker position={[nxLocation.latitude, nxLocation.longitude]} />
               </Map>
