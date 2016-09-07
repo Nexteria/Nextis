@@ -3,7 +3,13 @@ import Raven from 'raven-js';
 // bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events
 const register = unhandledRejection => unhandledRejection(event => {
   event.preventDefault();
-  const { reason: error } = event.detail;
+  let error = null;
+  if (event.detail) {
+    error = event.detail.reason;
+  } else {
+    error = event;
+  }
+
   if (process.env.NODE_ENV === 'production') {
     // "error.reason || error" because redux-promise-middleware
     Raven.captureException(error.reason || error);

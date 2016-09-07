@@ -2,7 +2,7 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import validator from 'validator';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 
@@ -85,7 +85,7 @@ const messages = defineMessages({
     id: 'user.edit.lectorDescription',
   },
   guideDescription: {
-    defaultMessage: 'Gide description',
+    defaultMessage: 'Guide description',
     id: 'user.edit.guideDescription',
   },
   studentLevel: {
@@ -144,6 +144,10 @@ const messages = defineMessages({
     defaultMessage: 'This field is required',
     id: 'user.edit.requiredField',
   },
+  requiredLengthField: {
+    defaultMessage: 'This field is required, please type {characters} more.',
+    id: 'user.edit.requiredLengthField',
+  },
   validEmailError: {
     defaultMessage: 'Must be valid email address',
     id: 'user.edit.validEmailError',
@@ -195,6 +199,33 @@ const validate = (values, props) => {
       }
     } catch (e) {
       errors.phone = formatMessage(messages.validPhoneError);
+    }
+  }
+
+  if (props.mode === 'profile') {
+    if (!values.iban) {
+      errors.iban = formatMessage(messages.requiredField);
+    }
+
+    if (!values.school) {
+      errors.school = formatMessage(messages.requiredField);
+    }
+
+    if (!values.faculty) {
+      errors.faculty = formatMessage(messages.requiredField);
+    }
+
+    if (!values.studyProgram) {
+      errors.studyProgram = formatMessage(messages.requiredField);
+    }
+
+    if (!values.actualJobInfo) {
+      errors.actualJobInfo = formatMessage(messages.requiredField);
+    }
+
+    const descriptionLength = values.personalDescription ? values.personalDescription.toString('html').length : 0;
+    if (descriptionLength < 100) {
+      errors.personalDescription = formatMessage(messages.requiredLengthField, {characters: 100 - descriptionLength});
     }
   }
 
@@ -298,10 +329,10 @@ export class EditUser extends Component {
   }
 
   renderEditor(data) {
-    const { input, label, children, meta: { touched, error } } = data;
+    const { input, label, name, children, meta: { touched, error } } = data;
 
     return (
-      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+      <div className={`form-group ${error ? 'has-error' : ''}`}>
         <label className="col-sm-2 control-label">
           {label}
         </label>
@@ -310,7 +341,7 @@ export class EditUser extends Component {
             {...input}
           />
           <div className="has-error">
-            {touched && error && <label>{error}</label>}
+            {error && <label>{error}</label>}
           </div>
         </div>
       </div>
@@ -352,7 +383,7 @@ export class EditUser extends Component {
                 <input
                   type="checkbox"
                   onChange={() => input.onChange(input.value.includes(role.id) ? 
-                    input.value.delete(input.value.findIndex(input.value.includes(role.id)))
+                    input.value.delete(input.value.findIndex((value) => value === role.id))
                     :
                     input.value.push(role.id))
                   }
@@ -367,11 +398,11 @@ export class EditUser extends Component {
   }
 
   render() {
-    const { fields, mode, pristine, submitting, title, rolesList, studentLevels } = this.props;
-    const { saveUser, handleSubmit, updateUserRole, hasPermission } = this.props;
+    const { fields, mode, roles, pristine, submitting, title, rolesList, studentLevels } = this.props;
+    const { saveUser, touch, handleSubmit, updateUserRole, hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
-    if (!fields.roles.value || !rolesList) {
+    if (!roles || !rolesList) {
       return <div></div>;
     }
 
@@ -451,7 +482,7 @@ export class EditUser extends Component {
                         label={`${formatMessage(messages.phone)}*`}
                       />
 
-                      {fields.roles.value.includes(rolesList.get('STUDENT').id) ?
+                      {roles.includes(rolesList.get('STUDENT').id) ?
 
                         <Field
                           name="studentLevelId"
@@ -484,7 +515,7 @@ export class EditUser extends Component {
                         name="iban"
                         type="text"
                         component={this.renderInput}
-                        label={`${formatMessage(messages.iban)}`}
+                        label={`${formatMessage(messages.iban)}${mode === 'profile' ? '*' : ''}`}
                       />
 
                       <Field
@@ -498,10 +529,10 @@ export class EditUser extends Component {
                       <Field
                         name="personalDescription"
                         component={this.renderEditor}
-                        label={`${formatMessage(messages.personalDescription)}`}
+                        label={`${formatMessage(messages.personalDescription)}${mode === 'profile' ? '*' : ''}`}
                       />
 
-                      {fields.roles.value.includes(rolesList.get('GUIDE').id) ?
+                      {roles.includes(rolesList.get('GUIDE').id) ?
                         <Field
                           name="guideDescription"
                           component={this.renderEditor}
@@ -510,7 +541,7 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      {fields.roles.value.includes(rolesList.get('LECTOR').id) ?
+                      {roles.includes(rolesList.get('LECTOR').id) ?
                         <Field
                           name="lectorDescription"
                           component={this.renderEditor}
@@ -519,7 +550,7 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      {fields.roles.value.includes(rolesList.get('BUDDY').id) ?
+                      {roles.includes(rolesList.get('BUDDY').id) ?
                         <Field
                           name="buddyDescription"
                           type="text"
@@ -534,28 +565,28 @@ export class EditUser extends Component {
                         name="actualJobInfo"
                         type="text"
                         component={this.renderInput}
-                        label={`${formatMessage(messages.actualJobInfo)}`}
+                        label={`${formatMessage(messages.actualJobInfo)}${mode === 'profile' ? '*' : ''}`}
                       />
 
                       <Field
                         name="school"
                         type="text"
                         component={this.renderInput}
-                        label={`${formatMessage(messages.school)}`}
+                        label={`${formatMessage(messages.school)}${mode === 'profile' ? '*' : ''}`}
                       />
 
                       <Field
                         name="faculty"
                         type="text"
                         component={this.renderInput}
-                        label={`${formatMessage(messages.faculty)}`}
+                        label={`${formatMessage(messages.faculty)}${mode === 'profile' ? '*' : ''}`}
                       />
 
                       <Field
                         name="studyProgram"
                         type="text"
                         component={this.renderInput}
-                        label={`${formatMessage(messages.studyProgram)}`}
+                        label={`${formatMessage(messages.studyProgram)}${mode === 'profile' ? '*' : ''}`}
                       />
 
                       {mode !== 'profile' ?
@@ -583,7 +614,7 @@ export class EditUser extends Component {
                         : ''
                       }
 
-                      {fields.roles.value.includes(rolesList.get('NEXTERIA_TEAM').id) ?
+                      {roles.includes(rolesList.get('NEXTERIA_TEAM').id) ?
                         <Field
                           name="nexteriaTeamRole"
                           type="text"
@@ -674,9 +705,11 @@ EditUser = reduxForm({
 })(EditUser);
 
 EditUser = injectIntl(EditUser);
+const selector = formValueSelector('editUser');
 
 export default connect((state) => ({
   rolesList: state.users.rolesList,
+  roles: selector(state, 'roles'),
   users: state.users.users,
   studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),

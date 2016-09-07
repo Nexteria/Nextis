@@ -22,7 +22,7 @@
       <div class="login-footer">
         <div class="login-utils">
           <label>
-              <input type="checkbox" name="remember"> Remember Me
+              <input type="hidden" name="remember" value="true">
           </label>
           <a href="{{ url('/password/reset') }}">Forgot Your Password?</a>
         </div>

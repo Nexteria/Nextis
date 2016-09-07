@@ -87,6 +87,10 @@ class User extends Authenticatable
             $this->roles()->sync(Role::whereIn('id', $attributes['roles'])->lists('id')->toArray());
         }
 
+        if ($attributes['studentLevelId']) {
+          $this->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
+        }
+
         if (isset($attributes['personalDescription'])){
             $this->personalDescription = clean($attributes['personalDescription']);
         }
