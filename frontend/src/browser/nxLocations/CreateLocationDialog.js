@@ -248,7 +248,7 @@ export class CreateLocationDialog extends Component {
                   style={{ maxWidth: '550px', height: '300px' }}
                 >
                   <TileLayer
-                    url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                   />
                   {fields.latitude.value !== null && fields.longitude.value !== null ?
