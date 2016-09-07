@@ -160,6 +160,7 @@ return [
         Mews\Purifier\PurifierServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
+        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 
     ],
 
@@ -211,6 +212,7 @@ return [
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
         'Input' => Illuminate\Support\Facades\Input::class,
+        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
 
     ],
 
