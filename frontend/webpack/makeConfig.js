@@ -55,6 +55,7 @@ export default function makeConfig(isDevelopment) {
       ]
     },
     module: {
+      noParse: /node_modules\/google-libphonenumber\/dist/,
       loaders: [{
         loader: 'url-loader?limit=10000',
         test: /\.(gif|jpg|png|svg)$/
