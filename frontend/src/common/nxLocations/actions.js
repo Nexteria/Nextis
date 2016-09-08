@@ -21,24 +21,24 @@ export function saveNxLocation(fields) {
   return ({ fetch }) => ({
     type: SAVE_NX_LOCATION,
     payload: {
-      promise: fetch(`/nxLocations${fields.id.value ? `/${fields.id.value}` : ''}`, {
-        method: fields.id.value ? 'put' : 'post',
+      promise: fetch(`/nxLocations${fields.id ? `/${fields.id}` : ''}`, {
+        method: fields.id ? 'put' : 'post',
         credentials: 'same-origin',
         notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: fields.id.value,
-          name: fields.name.value,
-          pictures: fields.pictures.value.map(picture => picture.id),
-          latitude: fields.latitude.value,
-          longitude: fields.longitude.value,
-          addressLine1: fields.addressLine1.value,
-          addressLine2: fields.addressLine2.value,
-          city: fields.city.value,
-          zipCode: fields.zipCode.value,
-          countryCode: fields.countryCode.value,
-          description: fields.description.value.toString('html'),
-          instructions: fields.instructions.value.toString('html'),
+          id: fields.id,
+          name: fields.name,
+          pictures: fields.pictures.map(picture => picture.id),
+          latitude: fields.latitude,
+          longitude: fields.longitude,
+          addressLine1: fields.addressLine1,
+          addressLine2: fields.addressLine2,
+          city: fields.city,
+          zipCode: fields.zipCode,
+          countryCode: fields.countryCode,
+          description: fields.description.toString('html'),
+          instructions: fields.instructions.toString('html'),
         }),
       }).then(response => response.json()).then(response => {
         browserHistory.goBack();
@@ -101,12 +101,12 @@ export function changeMapZoom(value) {
   };
 }
 
-export function checkLocationCoords(fields) {
-  let query = `address=${fields.addressLine1.value}`;
-  query = `${query}${fields.addressLine2.value ? `, ${fields.addressLine2.value}` : ''}`;
-  query = `${query}, ${fields.city.value}`;
-  query = `${query}, ${fields.zipCode.value}`;
-  query = `${query}, ${fields.countryCode.value}`;
+export function checkLocationCoords(fields, changeLatitude, changeLongitude) {
+  let query = `address=${fields.addressLine1}`;
+  query = `${query}${fields.addressLine2 ? `, ${fields.addressLine2}` : ''}`;
+  query = `${query}, ${fields.city}`;
+  query = `${query}, ${fields.zipCode}`;
+  query = `${query}, ${fields.countryCode}`;
 
   return ({ fetch, dispatch }) => ({
     type: CHECK_LOCATION_COORDS,
@@ -116,11 +116,11 @@ export function checkLocationCoords(fields) {
       }).then(response => response.json())
       .then(response => {
         if (response.status === 'ZERO_RESULTS') {
-          dispatch(setField(['editLocation', 'latitude'], 48.1512152));
-          dispatch(setField(['editLocation', 'longitude'], 17.1039008));
+          changeLatitude(48.1512152);
+          changeLongitude(17.1039008);
         } else {
-          dispatch(setField(['editLocation', 'latitude'], response.results[0].geometry.location.lat));
-          dispatch(setField(['editLocation', 'longitude'], response.results[0].geometry.location.lng));
+          changeLatitude(response.results[0].geometry.location.lat);
+          changeLongitude(response.results[0].geometry.location.lng);
         }
 
         dispatch(setMapVisible());

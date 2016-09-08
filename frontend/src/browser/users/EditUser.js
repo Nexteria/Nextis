@@ -223,7 +223,9 @@ const validate = (values, props) => {
       errors.actualJobInfo = formatMessage(messages.requiredField);
     }
 
-    const descriptionLength = values.personalDescription ? values.personalDescription.toString('html').length : 0;
+    const descriptionLength = values.personalDescription ?
+      values.personalDescription.getEditorState().getCurrentContent().getPlainText().length
+      : 0;
     if (descriptionLength < 100) {
       errors.personalDescription = formatMessage(messages.requiredLengthField, {characters: 100 - descriptionLength});
     }

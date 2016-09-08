@@ -20,7 +20,7 @@ export function uploadPicture(files) {
     payload: {
       promise: fetch('/pictures', {
         credentials: 'same-origin',
-        'Content-Type': 'multipart/form-data',
+        headers: {},
         method: 'post',
         body: data,
       }).then(response => response.json()),
@@ -28,14 +28,12 @@ export function uploadPicture(files) {
   });
 }
 
-export function uploadLocationPicture(files, pictures) {
+export function uploadLocationPicture(files, pictures, changePictures) {
   return ({ dispatch }) => ({
     type: UPLOAD_LOCATION_PICTURE,
     payload: {
       promise: dispatch(uploadPicture(files)).then(response => new Picture(response.action.payload))
-      .then(picture => dispatch(setField(
-        ['editLocation', 'pictures'], pictures.push(picture)
-      )))
+      .then(picture => changePictures(pictures.push(picture))),
     },
   });
 }
