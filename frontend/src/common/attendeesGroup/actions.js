@@ -1,5 +1,7 @@
 import { Map } from 'immutable';
 
+import AttendeesGroup from './models/AttendeesGroup';
+
 export const ADD_USER = 'ADD_USER';
 export const ADD_GROUP = 'ADD_GROUP';
 export const ADD_ATTENDEES_GROUP = 'ADD_ATTENDEES_GROUP';
@@ -49,15 +51,17 @@ export function closeAttendeesGroupDialog() {
   });
 }
 
-export function updateAttendeesGroup(group, index) {
+export function updateAttendeesGroup(data, index, onChange, eventGroups) {
   return ({ dispatch }) => ({
     type: UPDATE_ATTENDEES_GROUP_COORDINATE,
     payload: {
       promise: new Promise((resolve) => {
-        dispatch({ type: UPDATE_ATTENDEES_GROUP, payload: {
-          group,
-          index,
-        }});
+        if (index === null) {
+          onChange(eventGroups.push(new AttendeesGroup(data)));
+        } else {
+          onChange(eventGroups.set(index, new AttendeesGroup(data)));
+        }
+        
         dispatch(closeAttendeesGroupDialog());
         resolve();
       }),

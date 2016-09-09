@@ -39,16 +39,16 @@ export const CLOSE_LOCATION_DETAILS_DIALOG = 'CLOSE_LOCATION_DETAILS_DIALOG';
 
 export function saveEvent(fields) {
   let data = {
-    id: fields.id.value,
-    name: fields.name.value,
-    eventType: fields.eventType.value,
-    activityPoints: fields.activityPoints.value,
-    hostId: fields.hostId.value,
-    lectors: fields.lectors.value,
-    nxLocationId: fields.nxLocationId.value,
-    eventStartDateTime: fields.eventStartDateTime.value.utc().format('YYYY-MM-DD HH:mm:ss'),
-    eventEndDateTime: fields.eventEndDateTime.value.utc().format('YYYY-MM-DD HH:mm:ss'),
-    attendeesGroups: fields.attendeesGroups.value.map(group => ({
+    id: fields.id,
+    name: fields.name,
+    eventType: fields.eventType,
+    activityPoints: fields.activityPoints,
+    hostId: fields.hostId,
+    lectors: fields.lectors,
+    nxLocationId: fields.nxLocationId,
+    eventStartDateTime: fields.eventStartDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
+    eventEndDateTime: fields.eventEndDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
+    attendeesGroups: fields.attendeesGroups.map(group => ({
       id: group.id,
       maxCapacity: group.maxCapacity,
       minCapacity: group.minCapacity,
@@ -63,23 +63,23 @@ export function saveEvent(fields) {
         signedOutReason: user.get('signedOutReason').toString('html'),
       })),
     })),
-    minCapacity: fields.minCapacity.value,
-    status: fields.status.value,
-    followingEvents: fields.followingEvents.value,
-    maxCapacity: fields.maxCapacity.value,
-    description: fields.description.value.toString('html'),
-    shortDescription: fields.shortDescription.value.toString('html'),
+    minCapacity: fields.minCapacity,
+    status: fields.status,
+    followingEvents: fields.followingEvents,
+    maxCapacity: fields.maxCapacity,
+    description: fields.description.toString('html'),
+    shortDescription: fields.shortDescription.toString('html'),
   };
 
-  if (fields.curriculumLevelId.value) {
-    data.curriculumLevelId = fields.curriculumLevelId.value;
+  if (fields.curriculumLevelId) {
+    data.curriculumLevelId = fields.curriculumLevelId;
   }
 
   return ({ fetch }) => ({
     type: 'SAVE_EVENT',
     payload: {
-      promise: fetch(`/nxEvents${fields.id.value ? `/${fields.id.value}` : ''}`, {
-        method: fields.id.value ? 'put' : 'post',
+      promise: fetch(`/nxEvents${fields.id ? `/${fields.id}` : ''}`, {
+        method: fields.id ? 'put' : 'post',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
@@ -87,13 +87,6 @@ export function saveEvent(fields) {
       }).then(response => response.json())
       .then(response => { browserHistory.push('/admin/events'); return response; }),
     },
-  });
-}
-
-export function removeAttendeesGroup(index) {
-  return () => ({
-    type: REMOVE_ATTENDEES_GROUP,
-    payload: index,
   });
 }
 

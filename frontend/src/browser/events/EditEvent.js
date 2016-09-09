@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Datetime from 'react-datetime';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
+import validator from 'validator';
+import moment from 'moment';
 
 
 import { fields } from '../../common/lib/redux-fields/index';
@@ -77,7 +80,7 @@ const messages = defineMessages({
     id: 'event.edit.attendeeGroupName',
   },
   noAttendeesGroups: {
-    defaultMessage: 'There are no attendees groups',
+    defaultMessage: 'There are no attendees groups! Nobody will be able to sign in!',
     id: 'event.edit.noAttendeesGroups',
   },
   shortDescription: {
@@ -132,7 +135,109 @@ const messages = defineMessages({
     defaultMessage: 'Choose event location',
     id: 'event.edit.chooseEventLocation',
   },
+  requiredField: {
+    defaultMessage: 'This field is required',
+    id: 'event.edit.requiredField',
+  },
+  minCapacityMustBeSE: {
+    defaultMessage: 'Min capacity must be smaller or equal max capacity!',
+    id: 'event.edit.minCapacityMustBeSE',
+  },
+  maxCapacityMustBeGE: {
+    defaultMessage: 'Max capacity must be greater or equal min capacity!',
+    id: 'event.edit.maxCapacityMustBeGE',
+  },
+  mustBeValidNumber: {
+    defaultMessage: 'This field must be valid number',
+    id: 'event.edit.mustBeValidNumber',
+  },
+  dateMustBeInFuture: {
+    defaultMessage: 'This date must be in future',
+    id: 'event.edit.dateMustBeInFuture',
+  },
+  startDateMustBeBeforeEndDate: {
+    defaultMessage: 'Start date must be before end date!',
+    id: 'event.edit.startDateMustBeBeforeEndDate',
+  },
+  endDateMustBeAfterStartDate: {
+    defaultMessage: 'End date must be after start date!',
+    id: 'event.edit.endDateMustBeAfterStartDate',
+  },
+  requiredLengthField: {
+    defaultMessage: 'This field is required, please type {characters} more.',
+    id: 'event.edit.requiredLengthField',
+  },
 });
+
+const validate = (values, props) => {
+  const { formatMessage } = props.intl;
+
+  const errors = {};
+  if (!values.name) {
+    errors.name = formatMessage(messages.requiredField);
+  }
+
+  if (!values.nxLocationId) {
+    errors.nxLocationId = formatMessage(messages.requiredField);
+  }
+
+  if (!values.activityPoints) {
+    errors.activityPoints = formatMessage(messages.requiredField);
+  } else if (!validator.isDecimal(`${values.activityPoints}`)) {
+    errors.activityPoints = formatMessage(messages.mustBeValidNumber);
+  } else if (values.activityPoints < 0) {
+    errors.activityPoints = formatMessage(messages.mustBeValidNumber);
+  }
+
+  if (!values.eventType) {
+    errors.eventType = formatMessage(messages.requiredField);
+  }
+
+  if (!values.hostId) {
+    errors.hostId = formatMessage(messages.requiredField);
+  }
+
+  if (!values.attendeesGroups || values.attendeesGroups.size === 0) {
+    errors.attendeesGroups = formatMessage(messages.noAttendeesGroups);
+  }
+
+  if (!values.eventStartDateTime) {
+    errors.eventStartDateTime = formatMessage(messages.requiredField);
+  } else if (moment().utc().isAfter(values.eventStartDateTime) && !values.id) {
+    errors.eventStartDateTime = formatMessage(messages.dateMustBeInFuture);
+  } else if (values.eventEndDateTime && values.eventStartDateTime.isAfter(values.eventEndDateTime)) {
+    errors.eventStartDateTime = formatMessage(messages.startDateMustBeBeforeEndDate);
+  }
+
+  if (!values.eventEndDateTime) {
+    errors.eventEndDateTime = formatMessage(messages.requiredField);
+  } else if (moment().utc().isAfter(values.eventEndDateTime) && !values.id) {
+    errors.eventEndDateTime = formatMessage(messages.dateMustBeInFuture);
+  } else if (values.eventStartDateTime && values.eventStartDateTime.isAfter(values.eventEndDateTime)) {
+    errors.eventStartDateTime = formatMessage(messages.endDateMustBeAfterStartDate);
+  }
+
+  if (!values.minCapacity) {
+    errors.minCapacity = formatMessage(messages.requiredField);
+  } else if (values.maxCapacity && parseInt(values.minCapacity) > parseInt(values.maxCapacity)){
+    errors.minCapacity = formatMessage(messages.minCapacityMustBeSE);
+  }
+
+  if (!values.maxCapacity) {
+    errors.maxCapacity = formatMessage(messages.requiredField);
+  } else if (values.minCapacity && parseInt(values.minCapacity) > parseInt(values.maxCapacity)){
+    errors.maxCapacity = formatMessage(messages.maxCapacityMustBeGE);
+  }
+
+  const shortDescriptionLength = values.shortDescription ?
+      values.shortDescription.getEditorState().getCurrentContent().getPlainText().length
+      : 0;
+    if (shortDescriptionLength < 150) {
+      errors.shortDescription = formatMessage(messages.requiredLengthField, {characters: 150 - shortDescriptionLength});
+    }
+
+  return errors;
+};
 
 export class EditEvent extends Component {
 
@@ -145,7 +250,6 @@ export class EditEvent extends Component {
     setField: PropTypes.func,
     locale: PropTypes.string,
     addAttendeesGroup: PropTypes.func.isRequired,
-    removeAttendeesGroup: PropTypes.func.isRequired,
     editAttendeesGroup: PropTypes.func.isRequired,
     rolesList: PropTypes.object,
     params: PropTypes.object,
@@ -157,7 +261,7 @@ export class EditEvent extends Component {
   }
 
   componentWillMount() {
-    const { setField, events, event, params } = this.props;
+    const { setField, initialize, events, event, params } = this.props;
 
     const eventId = params ? params.eventId : null;
     let activeEvent = event;
@@ -167,15 +271,275 @@ export class EditEvent extends Component {
     }
 
     setField(['editEvent'], activeEvent ? activeEvent : new Event());
+    initialize(activeEvent ? activeEvent.toObject() : new Event().toObject());
+  }
+
+  renderInput(data) {
+    const { input, label, type, meta: { asyncValidating, touched, error, pristine } } = data;
+
+    return (
+      <div className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className={`col-sm-10 ${asyncValidating ? 'async-validating' : ''}`}>
+          <input
+            {...input}
+            readOnly={data.readOnly}
+            placeholder={label} type={type}
+            className="form-control"
+            id={input.name}
+          />
+          {pristine && input.value ?
+            ''
+            :
+            <div className="has-error">
+              {touched && error && <label>{error}</label>}
+            </div>
+          }
+        </div>
+      </div>
+    );
+  }
+
+  renderSelect(data) {
+    const { input, label, children, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          <select
+            {...input}
+            className="form-control"
+          >
+          {children}
+          </select>
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderHost(data) {
+    const { input, label, users, meta: { touched, error } } = data;
+
+    const user = users.find(user => user.id === input.value);
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+
+        <div className={`col-sm-10 ${input.value ? 'disabled-host' : ''}`}>
+          <ReactTags
+            id={input.name}
+            placeholder={label}
+            tags={user ? [{id: user.id, text: `${user.firstName} ${user.lastName}`}] : []}
+            suggestions={users.map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
+            handleDelete={(i) => input.onChange(null)}
+            handleAddition={(tag) => input.onChange(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id)}
+          />
+          <div className="has-error col-md-12" style={{paddingLeft: '0px'}}>
+            {touched && error && <label>{error}</label>}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderLectors(data) {
+    const { input, label, rolesList, users, meta: { touched, error } } = data;
+
+    const lectors = input.value.map(userId => {
+      const lector = users.filter(user => user.id === userId).first();
+      return {
+        id: lector.id,
+        text: `${lector.firstName} ${lector.lastName}`,
+      };
+    });
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+
+        <div className="col-sm-10">
+          <ReactTags
+            id={input.name}
+            placeholder={label}
+            tags={lectors.toArray()}
+            suggestions={users.filter(user => user.roles.includes(rolesList.get('LECTOR').id) && !input.value.includes(user.id)).map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
+            handleDelete={(i) => input.onChange(input.value.delete(i))}
+            handleAddition={(tag) => input.onChange(input.value.push(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id))}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  renderFollowingEvents(data) {
+    const { input, label, events, actualEventId, meta: { touched, error } } = data;
+
+    const followingEvents = input.value.map(eventId => {
+      const event = events.filter(e => e.id === eventId).first();
+      return {
+        id: event.id,
+        text: event.name,
+      };
+    });
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+
+        <div className="col-sm-10">
+          <ReactTags
+            id={input.name}
+            placeholder={label}
+            tags={followingEvents.toArray()}
+            suggestions={events.filter(event => event.id !== actualEventId && !input.value.includes(event.id)).map(event => event.name).toArray()}
+            handleDelete={(i) => input.onChange(input.value.delete(i).map(event => event.id))}
+            handleAddition={(tag) => input.onChange(input.value.push(events.find(event => event.name === tag).id))}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  renderDate(data) {
+    const { input, label, locale, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+
+        <div className="col-sm-10">
+          <Datetime
+            inputProps={{ id: input.name }}
+            locale={locale}
+            value={input.value}
+            onBlur={input.onBlur}
+            onChange={(moment) => input.onChange(moment)}
+          />
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderSelect(data) {
+    const { input, label, children, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          <select
+            {...input}
+            className="form-control"
+          >
+          {children}
+          </select>
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderEditor(data) {
+    const { input, label, name, children, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group ${error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          <TextEditor
+            {...input}
+          />
+          <div className="has-error">
+            {error && <label>{error}</label>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderAttendeesGroups(data) {
+    const { input, addAttendeesGroup, actualEvent, editAttendeesGroup, emptyLabel, label, meta: { touched, error } } = data;
+
+    return (
+      <div className={`form-group attendees-groups ${touched && error ? 'has-error' : ''}`}>
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+
+        <div className="col-sm-10">
+          <div className="form-control add-group-button">
+            <i className="fa fa-plus text-green" onClick={addAttendeesGroup}></i>
+          </div>
+          <ul className="nav nav-pills nav-stacked">
+            {input.value ?
+              input.value.map((group, index) =>
+                <li key={index} className="active">
+                  <a><i className="fa fa-users"></i> {group.name}
+                    <span className="action-buttons pull-right">
+                      <span className="label">
+                        <span className="confirmed-will-come">{group.users.filter(user => user.signedIn).size}</span>
+                        <span> / </span>
+                        <span className="confirmed-wont-come">{group.users.filter(user => user.signedOut || user.wontGo).size}</span>
+                        <span> / </span>
+                        <span className="total">{group.users.size}</span>
+                      </span>
+                      <i
+                        className="fa fa-trash-o trash-group"
+                        onClick={() => input.onChange(input.value.delete(index))}
+                      ></i>
+                      <i
+                        className="fa fa-pencil"
+                        onClick={() => editAttendeesGroup(group, index)}
+                      ></i>
+                    </span>
+                  </a>
+                </li>
+              )
+              : ''
+            }
+          </ul>
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
+        </div>
+        <AttendeesGroupsDialog actualEvent={actualEvent} onChange={input.onChange} eventGroups={input.value}/>
+      </div>
+    );
   }
 
   render() {
-    const { fields, events, locations, eventTypes, studentLevels, eventsStatuses, rolesList, title, users, locale } = this.props;
+    const { fields, actualEvent, pristine, submitting, events, locations, actualEventId, eventTypes, studentLevels, eventsStatuses, rolesList, title, users, locale } = this.props;
     const {
       saveEvent,
       setField,
+      handleSubmit,
       addAttendeesGroup,
-      removeAttendeesGroup,
       editAttendeesGroup,
     } = this.props;
 
@@ -210,307 +574,144 @@ export class EditEvent extends Component {
               <div className="nav-tabs-custom">
                 <div className="tab-content">
                   <div className="tab-pane active" id="settings">
-                    <form className="form-horizontal">
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.eventName} />
-                        </label>
+                    <form className="form-horizontal" onSubmit={handleSubmit((data) => saveEvent(data))}>
+                      <Field
+                        name="name"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.eventName)}*`}
+                      />
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.name}
-                            id="name"
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="activityPoints"
+                        type="text"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.activityPoints)}*`}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.activityPoints} />
-                        </label>
+                      <Field
+                        name="eventType"
+                        component={this.renderSelect}
+                        label={`${formatMessage(messages.eventType)}*`}
+                      >
+                        <option readOnly>{formatMessage(messages.chooseEventType)}</option>
+                        {eventTypes.valueSeq().map(type =>
+                          <option key={type} value={type}>{formatMessage(messages[`eventType_${type}`])}</option>
+                        )}
+                      </Field>
 
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.activityPoints}
-                            id="activityPoints"
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="nxLocationId"
+                        component={this.renderSelect}
+                        label={`${formatMessage(messages.eventLocation)}*`}
+                      >
+                        <option readOnly>{formatMessage(messages.chooseEventLocation)}</option>
+                        {locations.valueSeq().map(location =>
+                          <option key={location.id} value={location.id}>
+                          {`${location.name} (${location.addressLine1}`}
+                          {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
+                          {`, ${location.city}, ${location.zipCode}, ${location.countryCode})`}
+                          </option>
+                        )}
+                      </Field>
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.eventType} />
-                        </label>
+                      <Field
+                        name="hostId"
+                        component={this.renderHost}
+                        label={`${formatMessage(messages.host)}*`}
+                        users={users}
+                      />
 
-                        <div className="col-sm-10">
-                          <select
-                            className="form-control"
-                            {...fields.eventType}
-                            id="eventType"
-                          >
-                            <option readOnly>{formatMessage(messages.chooseEventType)}</option>
-                            {eventTypes.valueSeq().map(type =>
-                              <option key={type} value={type}>{formatMessage(messages[`eventType_${type}`])}</option>
-                            )}
-                          </select>
-                        </div>
-                      </div>
+                      <Field
+                        name="lectors"
+                        component={this.renderLectors}
+                        label={`${formatMessage(messages.lectors)}`}
+                        users={users}
+                        rolesList={rolesList}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="eventLocation" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.eventLocation} />
-                        </label>
+                      <Field
+                        name="followingEvents"
+                        component={this.renderFollowingEvents}
+                        label={`${formatMessage(messages.followingEvents)}`}
+                        events={events}
+                        actualEventId={actualEventId}
+                      />
 
-                        <div className="col-sm-10">
-                          <select
-                            className="form-control"
-                            {...fields.nxLocationId}
-                            id="eventLocation"
-                          >
-                            <option readOnly>{formatMessage(messages.chooseEventLocation)}</option>
-                            {locations.valueSeq().map(location =>
-                              <option key={location.id} value={location.id}>
-                              {`${location.name} (${location.addressLine1}`}
-                              {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
-                              {`, ${location.city}, ${location.zipCode}, ${location.countryCode})`}
-                              </option>
-                            )}
-                          </select>
-                        </div>
-                      </div>
+                      <Field
+                        name="eventStartDateTime"
+                        component={this.renderDate}
+                        label={`${formatMessage(messages.eventStartDateTime)}*`}
+                        locale={locale}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.host} />
-                        </label>
+                      <Field
+                        name="eventEndDateTime"
+                        component={this.renderDate}
+                        label={`${formatMessage(messages.eventEndDateTime)}*`}
+                        locale={locale}
+                      />
 
-                        <div className={`col-sm-10 ${host.length ? 'disabled-host' : ''}`}>
-                          <ReactTags
-                            id="host"
-                            placeholder={formatMessage(messages.addHost)}
-                            tags={host}
-                            suggestions={users.map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
-                            handleDelete={(i) => setField(['editEvent', 'hostId'], null)}
-                            handleAddition={(tag) => setField(['editEvent', 'hostId'], users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id)}
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="minCapacity"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.minCapacity)}*`}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.lectors} />
-                        </label>
+                      <Field
+                        name="maxCapacity"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.maxCapacity)}*`}
+                      />
 
-                        <div className="col-sm-10">
-                          <ReactTags
-                            id="lectors"
-                            placeholder={formatMessage(messages.addLectors)}
-                            tags={lectors.toArray()}
-                            suggestions={users.filter(user => user.roles.includes(rolesList.get('LECTOR').id) && !fields.lectors.value.includes(user.id)).map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
-                            handleDelete={(i) => setField(['editEvent', 'lectors'], fields.lectors.value.delete(i).map(lector => lector.id))}
-                            handleAddition={(tag) => setField(['editEvent', 'lectors'], fields.lectors.value.push(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id))}
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="curriculumLevel"
+                        component={this.renderSelect}
+                        label={`${formatMessage(messages.curriculumLevel)}`}
+                      >
+                        <option value="">{formatMessage(messages.noCurriculumLevel)}</option>
+                        {studentLevels.valueSeq().map(level =>
+                          <option key={level.id} value={level.id}>{level.name}</option>
+                        )}
+                      </Field>
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.followingEvents} />
-                        </label>
+                      <Field
+                        name="attendeesGroups"
+                        component={this.renderAttendeesGroups}
+                        label={`${formatMessage(messages.attendeesGroups)}*`}
+                        addAttendeesGroup={addAttendeesGroup}
+                        editAttendeesGroup={editAttendeesGroup}
+                        emptyLabel={`${formatMessage(messages.noAttendeesGroups)}`}
+                        actualEvent={actualEvent}
+                      />
 
-                        <div className="col-sm-10">
-                          <ReactTags
-                            id="events"
-                            placeholder={formatMessage(messages.addFollowingEvents)}
-                            tags={followingEvents.toArray()}
-                            suggestions={events.filter(event => event.id !== fields.id.value && !fields.followingEvents.value.includes(event.id)).map(event => event.name).toArray()}
-                            handleDelete={(i) => setField(['editEvent', 'followingEvents'], fields.followingEvents.value.delete(i).map(event => event.id))}
-                            handleAddition={(tag) => setField(['editEvent', 'followingEvents'], fields.followingEvents.value.push(events.find(event => event.name === tag).id))}
-                          />
-                        </div>
-                      </div>
+                      <Field
+                        name="description"
+                        component={this.renderEditor}
+                        label={formatMessage(messages.description)}
+                      />
 
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.eventStartDateTime} />
-                        </label>
+                      <Field
+                        name="shortDescription"
+                        component={this.renderEditor}
+                        label={`${formatMessage(messages.shortDescription)}*`}
+                      />
 
-                        <div className="col-sm-10">
-                          <Datetime
-                            inputProps={{ id: 'eventStartDateTime' }}
-                            locale={locale}
-                            {...fields.eventStartDateTime}
-                            onChange={(moment) => fields.eventStartDateTime.onChange({ target: {value: moment }})}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.eventEndDateTime} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <Datetime
-                            inputProps={{ id: 'eventEndDateTime' }}
-                            locale={locale}
-                            {...fields.eventEndDateTime}
-                            onChange={(moment) => fields.eventEndDateTime.onChange({ target: {value: moment }})}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.minCapacity} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.minCapacity}
-                            id="minCapacity"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.maxCapacity} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...fields.maxCapacity}
-                            id="maxCapacity"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="curriculumLevel" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.curriculumLevel} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <select
-                            className="form-control"
-                            {...fields.curriculumLevelId}
-                            id="curriculumLevel"
-                          >
-                            <option value="">{formatMessage(messages.noCurriculumLevel)}</option>
-                            {studentLevels.valueSeq().map(level =>
-                              <option key={level.id} value={level.id}>{level.name}</option>
-                            )}
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="form-group attendees-groups">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.attendeesGroups} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <div className="form-control add-group-button">
-                            <i className="fa fa-plus text-green" onClick={addAttendeesGroup}></i>
-                          </div>
-                          <ul className="nav nav-pills nav-stacked">
-                            {fields.attendeesGroups.value ?
-                              fields.attendeesGroups.value.map((group, index) =>
-                                <li key={index} className="active">
-                                  <a><i className="fa fa-users"></i> {group.name}
-                                    <span className="action-buttons pull-right">
-                                      <span className="label">
-                                        <span className="confirmed-will-come">{group.users.filter(user => user.signedIn).size}</span>
-                                        <span> / </span>
-                                        <span className="confirmed-wont-come">{group.users.filter(user => user.signedOut || user.wontGo).size}</span>
-                                        <span> / </span>
-                                        <span className="total">{group.users.size}</span>
-                                      </span>
-                                      <i
-                                        className="fa fa-trash-o trash-group"
-                                        onClick={() => removeAttendeesGroup(index)}
-                                      ></i>
-                                      <i
-                                        className="fa fa-pencil"
-                                        onClick={() => editAttendeesGroup(group, index)}
-                                      ></i>
-                                    </span>
-                                  </a>
-                                </li>
-                              )
-                              :
-                              <FormattedMessage {...messages.noAttendeesGroups} />
-                            }
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="personalDescription" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.description} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <TextEditor
-                            value={fields.description.value}
-                            onChange={(value) =>
-                              fields.description.onChange({ target: { value } })
-                            }
-                            id="description"
-                            placeholder="Event description ..."
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="shortDescription" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.shortDescription} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <TextEditor
-                            value={fields.shortDescription.value}
-                            onChange={(value) =>
-                              fields.shortDescription.onChange({ target: { value } })
-                            }
-                            id="shortDescription"
-                            placeholder="Event short description ..."
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="inputName" className="col-sm-2 control-label">
-                          <FormattedMessage {...messages.eventStatus} />
-                        </label>
-
-                        <div className="col-sm-10">
-                          <select
-                            className="form-control"
-                            {...fields.status}
-                            id="eventStatus"
-                          >
-                            {eventsStatuses.map(status =>
-                              <option key={status} value={status}>{status}</option>
-                            )}
-                          </select>
-                        </div>
-                      </div>
+                      <Field
+                        name="status"
+                        component={this.renderSelect}
+                        label={`${formatMessage(messages.eventStatus)}`}
+                      >
+                        {eventsStatuses.map(status =>
+                          <option key={status} value={status}>{status}</option>
+                        )}
+                      </Field>
 
                       <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                          <button type="button" className="btn btn-success" onClick={() => saveEvent(fields)}>
-                            <FormattedMessage {...messages.save} />
-                          </button>
+                          <button type="submit" disabled={pristine || submitting} className="btn btn-success">
+                              <FormattedMessage {...messages.save} />
+                            </button>
                         </div>
                       </div>
                     </form>
@@ -520,7 +721,6 @@ export class EditEvent extends Component {
             </div>
           </div>
         </section>
-        <AttendeesGroupsDialog />
       </div>
     );
   }
@@ -549,15 +749,30 @@ EditEvent = fields(EditEvent, {
   ],
 });
 
+EditEvent = reduxForm({
+  form: 'editEvent',
+  validate,
+})(EditEvent);
+
 EditEvent = injectIntl(EditEvent);
+const selector = formValueSelector('editEvent');
 
 export default connect((state) => ({
   rolesList: state.users.rolesList,
   users: state.users.users,
+  actualEvent: {
+    minCapacity: selector(state, 'minCapacity'),
+    minCapacity: selector(state, 'maxCapacity'),
+    eventStartDateTime: selector(state, 'eventStartDateTime'),
+    eventEndDateTime: selector(state, 'eventEndDateTime'),
+    attendeesGroups: selector(state, 'attendeesGroups'),
+  },
   events: state.events.events,
   eventsStatuses: state.events.eventsStatuses,
   locale: state.intl.currentLocale,
   eventTypes: state.events.eventTypes,
   studentLevels: state.users.studentLevels,
   locations: state.nxLocations.locations,
+  initialValues: state.fields.get('editEvent') ? state.fields.get('editEvent').toObject() : state.fields.get('editEvent'),
+  actualEventId: selector(state, 'id'),
 }), { ...fieldsActions, ...attendeesGroupActions, ...eventActions })(EditEvent);

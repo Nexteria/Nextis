@@ -630,14 +630,14 @@ export class EditUser extends Component {
                         <div>
                           <Field
                             name="newPassword"
-                            type="text"
+                            type="password"
                             component={this.renderInput}
                             label={`${formatMessage(messages.newPassword)}`}
                           />
                           
                           <Field
                             name="confirmationPassword"
-                            type="text"
+                            type="password"
                             component={this.renderInput}
                             label={`${formatMessage(messages.confirmationPassword)}`}
                           />

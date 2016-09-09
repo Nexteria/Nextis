@@ -44,8 +44,6 @@ export default function appReducer(state = new InitialState, action) {
       return state;
     }
 
-    console.log('-1');
-
     return state.update('loading', loading => loading - 1);
   }
 
