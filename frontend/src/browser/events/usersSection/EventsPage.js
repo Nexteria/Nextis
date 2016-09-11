@@ -64,10 +64,13 @@ class EventsPage extends Component {
       viewer,
       signOut,
       users,
+      params,
       eventDetailsId,
       visiblePastEvents,
       visibleFutureEvents,
     } = this.props;
+
+    const eventId = parseInt(params.eventId);
 
     const {
       toggleEventDetails,
@@ -90,24 +93,18 @@ class EventsPage extends Component {
       .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime));
 
     return (
-      <div className="user-events-page">
-        <section className="content-header">
-          <h1>
-            <FormattedMessage {...messages.title} />
-          </h1>
-        </section>
-        <section className="content">
-          <div className="row">
-            <div className="col-md-12 timeline">
-              {visiblePastEvents ?
-                Array(moment().month()).fill().map((_, index) =>
-                  <ul key={index} className="timeline">
-                    <li className="time-label">
-                      <span className="bg-yellow">
-                        {moment().month(index).format('MMMM')}
-                      </span>
-                    </li>
-                    {sortedEvents.filter(event => index === event.eventStartDateTime.month()).map(event =>
+        eventId ?
+          <div className="user-events-page">
+            <section className="content-header">
+              <h1>
+                <FormattedMessage {...messages.title} />
+              </h1>
+            </section>
+            <section className="content">
+              <div className="row">
+                <div className="col-md-12">
+                  <ul className="timeline">
+                    {sortedEvents.filter(event => event.id === eventId).map(event =>
                       <Event
                         key={event.id}
                         users={users}
@@ -121,101 +118,155 @@ class EventsPage extends Component {
                         openSignOutDialog={openSignOutDialog}
                         attendeeWontGo={attendeeWontGo}
                         toggleEventDetails={toggleEventDetails}
+                        datailsOpen
                       />
                     )}
                   </ul>
-                )
-                : ''
-              }
-              <ul className="timeline">
-                <li className="time-label">
-                  <span className="bg-yellow">
-                    {moment().format('MMMM')}
-                  </span>
-                </li>
+                </div>
+              </div>
+            </section>
+            {eventDetailsId ?
+            <DetailsDialog event={events.get(eventDetailsId)} />
+              : ''
+            }
 
-                <li className="time-label" id="show-prev-events-button">
-                  <a onClick={togglePastEvents} style={{cursor: 'pointer'}}>
-                    {visiblePastEvents ?
-                      <FormattedMessage {...messages.hidePastEvents} />
-                    :
-                      <FormattedMessage {...messages.showPastEvents} />
-                    }
-                  </a>
-                </li>
-                {sortedEvents.filter(event => moment().month() === event.eventStartDateTime.month()).map(event =>
-                    <Event
-                      key={event.id}
-                      users={users}
-                      event={event}
-                      viewer={viewer}
-                      nxLocation={nxLocations.get(event.nxLocationId)}
-                      openEventDetailsDialog={openEventDetailsDialog}
-                      openLocationDetailsDialog={openLocationDetailsDialog}
-                      closeLocationDetailsDialog={closeLocationDetailsDialog}
-                      attendeeSignIn={attendeeSignIn}
-                      openSignOutDialog={openSignOutDialog}
-                      attendeeWontGo={attendeeWontGo}
-                      toggleEventDetails={toggleEventDetails}
-                    />
-                  )}
-                <li className="time-label" id="show-prev-events-button">
-                  <a onClick={toggleFutureEvents} style={{cursor: 'pointer'}}>
-                    {visibleFutureEvents ?
-                      <FormattedMessage {...messages.hideFutureEvents} />
-                    :
-                      <FormattedMessage {...messages.showFutureEvents} />
-                    }
-                  </a>
-                </li>
-              </ul>
-              {visibleFutureEvents ?
-                Array(11 - moment().month()).fill().map((_, index) =>
-                  <ul key={index} className="timeline">
-                    <li className="time-label">
-                      <span className="bg-yellow">
-                        {moment().month(moment().month() + index + 1).format('MMMM')}
-                      </span>
-                    </li>
-                    {sortedEvents.filter(event => moment().month() + 1 + index === event.eventStartDateTime.month()).map(event =>
-                      <Event
-                        key={event.id}
-                        users={users}
-                        event={event}
-                        viewer={viewer}
-                        nxLocation={nxLocations.get(event.nxLocationId)}
-                        openEventDetailsDialog={openEventDetailsDialog}
-                        openLocationDetailsDialog={openLocationDetailsDialog}
-                        closeLocationDetailsDialog={closeLocationDetailsDialog}
-                        attendeeSignIn={attendeeSignIn}
-                        openSignOutDialog={openSignOutDialog}
-                        attendeeWontGo={attendeeWontGo}
-                        toggleEventDetails={toggleEventDetails}
-                      />
-                    )}
-                  </ul>
-                )
-                : ''
-              }
-            </div>
+            {signOut.eventId && signOut.userId && signOut.groupId ?
+              <SignOutDialog />
+              : ''
+            }
+
+            {locationDetailsId ?
+              <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
+              : ''
+            }
           </div>
-        </section>
-        {eventDetailsId ?
-          <DetailsDialog event={events.get(eventDetailsId)} />
-          : ''
-        }
+        :
+        <div className="user-events-page">
+          <section className="content-header">
+            <h1>
+              <FormattedMessage {...messages.title} />
+            </h1>
+          </section>
+          <section className="content">
+            <div className="row">
+              <div className="col-md-12 timeline">
+                {visiblePastEvents ?
+                  Array(moment().month()).fill().map((_, index) =>
+                    <ul key={index} className="timeline">
+                      <li className="time-label">
+                        <span className="bg-yellow">
+                          {moment().month(index).format('MMMM')}
+                        </span>
+                      </li>
+                      {sortedEvents.filter(event => index === event.eventStartDateTime.month()).map(event =>
+                        <Event
+                          key={event.id}
+                          users={users}
+                          event={event}
+                          viewer={viewer}
+                          nxLocation={nxLocations.get(event.nxLocationId)}
+                          openEventDetailsDialog={openEventDetailsDialog}
+                          openLocationDetailsDialog={openLocationDetailsDialog}
+                          closeLocationDetailsDialog={closeLocationDetailsDialog}
+                          attendeeSignIn={attendeeSignIn}
+                          openSignOutDialog={openSignOutDialog}
+                          attendeeWontGo={attendeeWontGo}
+                          toggleEventDetails={toggleEventDetails}
+                        />
+                      )}
+                    </ul>
+                  )
+                  : ''
+                }
+                <ul className="timeline">
+                  <li className="time-label">
+                    <span className="bg-yellow">
+                      {moment().format('MMMM')}
+                    </span>
+                  </li>
 
-        {signOut.eventId && signOut.userId && signOut.groupId ?
-          <SignOutDialog />
-          : ''
-        }
+                  <li className="time-label" id="show-prev-events-button">
+                    <a onClick={togglePastEvents} style={{cursor: 'pointer'}}>
+                      {visiblePastEvents ?
+                        <FormattedMessage {...messages.hidePastEvents} />
+                      :
+                        <FormattedMessage {...messages.showPastEvents} />
+                      }
+                    </a>
+                  </li>
+                  {sortedEvents.filter(event => moment().month() === event.eventStartDateTime.month()).map(event =>
+                      <Event
+                        key={event.id}
+                        users={users}
+                        event={event}
+                        viewer={viewer}
+                        nxLocation={nxLocations.get(event.nxLocationId)}
+                        openEventDetailsDialog={openEventDetailsDialog}
+                        openLocationDetailsDialog={openLocationDetailsDialog}
+                        closeLocationDetailsDialog={closeLocationDetailsDialog}
+                        attendeeSignIn={attendeeSignIn}
+                        openSignOutDialog={openSignOutDialog}
+                        attendeeWontGo={attendeeWontGo}
+                        toggleEventDetails={toggleEventDetails}
+                      />
+                    )}
+                  <li className="time-label" id="show-prev-events-button">
+                    <a onClick={toggleFutureEvents} style={{cursor: 'pointer'}}>
+                      {visibleFutureEvents ?
+                        <FormattedMessage {...messages.hideFutureEvents} />
+                      :
+                        <FormattedMessage {...messages.showFutureEvents} />
+                      }
+                    </a>
+                  </li>
+                </ul>
+                {visibleFutureEvents ?
+                  Array(11 - moment().month()).fill().map((_, index) =>
+                    <ul key={index} className="timeline">
+                      <li className="time-label">
+                        <span className="bg-yellow">
+                          {moment().month(moment().month() + index + 1).format('MMMM')}
+                        </span>
+                      </li>
+                      {sortedEvents.filter(event => moment().month() + 1 + index === event.eventStartDateTime.month()).map(event =>
+                        <Event
+                          key={event.id}
+                          users={users}
+                          event={event}
+                          viewer={viewer}
+                          nxLocation={nxLocations.get(event.nxLocationId)}
+                          openEventDetailsDialog={openEventDetailsDialog}
+                          openLocationDetailsDialog={openLocationDetailsDialog}
+                          closeLocationDetailsDialog={closeLocationDetailsDialog}
+                          attendeeSignIn={attendeeSignIn}
+                          openSignOutDialog={openSignOutDialog}
+                          attendeeWontGo={attendeeWontGo}
+                          toggleEventDetails={toggleEventDetails}
+                        />
+                      )}
+                    </ul>
+                  )
+                  : ''
+                }
+              </div>
+            </div>
+          </section>
 
-        {locationDetailsId ?
-          <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
-          : ''
-        }
+          {eventDetailsId ?
+            <DetailsDialog event={events.get(eventDetailsId)} />
+            : ''
+          }
 
-      </div>
+          {signOut.eventId && signOut.userId && signOut.groupId ?
+            <SignOutDialog />
+            : ''
+          }
+
+          {locationDetailsId ?
+            <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
+            : ''
+          }
+        </div>
     );
   }
 }

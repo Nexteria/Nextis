@@ -78,10 +78,11 @@ export default class Event extends Component {
     openSignOutDialog: PropTypes.func.isRequired,
     openLocationDetailsDialog: PropTypes.func.isRequired,
     nxLocation: PropTypes.object.isRequired,
+    datailsOpen: PropTypes.bool,
   };
 
   render() {
-    const { event, viewer, nxLocation, users } = this.props;
+    const { event, viewer, datailsOpen, nxLocation, users } = this.props;
     const { toggleEventDetails, openLocationDetailsDialog, openEventDetailsDialog, openSignOutDialog, attendeeWontGo, attendeeSignIn } = this.props;
 
     const oldEvent = event.eventStartDateTime.isBefore(moment.utc());
@@ -136,7 +137,7 @@ export default class Event extends Component {
                   :
                   <div>
                     <div className="signIn-date-notes col-md-6">
-                      <div style={{display: !event.visibleDetails ? '' : 'none' }}>
+                      <div style={{display: !event.visibleDetails || datailsOpen ? '' : 'none' }}>
                         <div><FormattedMessage {...messages.signInNoteTitle} /></div>
                         <div>
                           <FormattedDate value={group.signUpDeadlineDateTime} />
@@ -180,7 +181,7 @@ export default class Event extends Component {
               </div>
             }
           </div>
-          <div style={{ display: event.visibleDetails ? '' : 'none' }}>
+          <div style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}>
             <div className="col-md-8">
               <div><strong><FormattedMessage {...messages.shortDescription} />:</strong></div>
               <div dangerouslySetInnerHTML={{ __html: event.shortDescription.toString('html') }}></div>

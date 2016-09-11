@@ -31,6 +31,7 @@ export default function createRoutes() {
   return (
     <Route component={App} path="/">
       <Route component={UserEventsPage} path="/events" />
+      <Route component={UserEventsPage} path="/events/:eventId" />
       <Route component={ContactList} path="contacts" />
       <Route component={Settings} path="/users/me/settings" />
       <Route component={HostedEventsPage} path="host/events" />
