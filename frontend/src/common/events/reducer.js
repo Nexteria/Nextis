@@ -16,6 +16,8 @@ const InitialState = Record({
     'draft',
     'published',
   ]),
+  visiblePastEvents: false,
+  visibleFutureEvents: false,
   events: null,
   eventDetailsId: null,
   locationDetailsId: null,
@@ -29,6 +31,14 @@ const InitialState = Record({
 
 export default function eventsReducer(state = new InitialState, action) {
   switch (action.type) {
+    case actions.TOGGLE_PAST_EVENTS: {
+      return state.update('visiblePastEvents', visiblePastEvents => !visiblePastEvents);
+    }
+
+    case actions.TOGGLE_FUTURE_EVENTS: {
+      return state.update('visibleFutureEvents', visibleFutureEvents => !visibleFutureEvents);
+    }
+
     case actions.SAVE_EVENT_SUCCESS: {
       const event = new Event({
         ...action.payload,

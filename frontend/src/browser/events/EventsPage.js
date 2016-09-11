@@ -33,13 +33,9 @@ const messages = defineMessages({
     defaultMessage: 'Starts',
     id: 'events.manage.eventStarts'
   },
-  minCapacity: {
-    defaultMessage: 'Min Capacity',
-    id: 'events.manage.minCapacity'
-  },
-  maxCapacity: {
-    defaultMessage: 'Max capacity',
-    id: 'events.manage.maxCapacity'
+  capacity: {
+    defaultMessage: 'Capacity',
+    id: 'events.manage.capacity'
   },
   signedIn: {
     defaultMessage: 'Signed in',
@@ -79,8 +75,7 @@ class EventsPage extends Component {
         <td>
           <FormattedRelative value={event.eventStartDateTime} />
         </td>
-        <td>{`${event.minCapacity}`}</td>
-        <td>{`${event.maxCapacity}`}</td>
+        <td>{`${event.minCapacity} - ${event.maxCapacity}`}</td>
         <td>{`${attending.size}`}</td>
         <td>{`${notAttending.size}`}</td>
         <td>{`${attendees.size}`}</td>
@@ -120,7 +115,10 @@ class EventsPage extends Component {
       return <div></div>;
     }
 
-    let filteredEvents = events.valueSeq().map(event => event);
+    let filteredEvents = events.valueSeq()
+      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime))
+      .map(event => event);
+
     if (fields.filter.value) {
       filteredEvents = events.valueSeq().filter(event =>
         `${event.name}`.toLowerCase()
@@ -173,8 +171,7 @@ class EventsPage extends Component {
                       <tr>
                         <th><FormattedMessage {...messages.eventName} /></th>
                         <th><FormattedMessage {...messages.eventStarts} /></th>
-                        <th><FormattedMessage {...messages.minCapacity} /></th>
-                        <th><FormattedMessage {...messages.maxCapacity} /></th>
+                        <th><FormattedMessage {...messages.capacity} /></th>
                         <th><FormattedMessage {...messages.signedIn} /></th>
                         <th><FormattedMessage {...messages.wontCome} /></th>
                         <th><FormattedMessage {...messages.invited} /></th>

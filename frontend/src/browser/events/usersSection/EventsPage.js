@@ -20,7 +20,19 @@ const messages = defineMessages({
   },
   showPastEvents: {
     defaultMessage: 'Show past events',
-    id: 'events.users.showPastEvents'
+    id: 'events.users.showPastEvents',
+  },
+  hidePastEvents: {
+    defaultMessage: 'Hide past events',
+    id: 'events.users.hidePastEvents',
+  },
+  showFutureEvents: {
+    defaultMessage: 'Show future events',
+    id: 'events.users.showFutureEvents',
+  },
+  hideFutureEvents: {
+    defaultMessage: 'Hide future events',
+    id: 'events.users.hideFutureEvents',
   },
 });
 
@@ -45,7 +57,18 @@ class EventsPage extends Component {
   };
 
   render() {
-    const { events, nxLocations, locationDetailsId, viewer, signOut, users, eventDetailsId } = this.props;
+    const {
+      events,
+      nxLocations,
+      locationDetailsId,
+      viewer,
+      signOut,
+      users,
+      eventDetailsId,
+      visiblePastEvents,
+      visibleFutureEvents,
+    } = this.props;
+
     const {
       toggleEventDetails,
       openEventDetailsDialog,
@@ -55,11 +78,16 @@ class EventsPage extends Component {
       openLocationDetailsDialog,
       closeLocationDetailsDialog,
       openSignOutDialog,
+      togglePastEvents,
+      toggleFutureEvents,
     } = this.props;
 
     if (!events || !nxLocations) {
       return <div></div>;
     }
+
+    const sortedEvents = events.valueSeq().filter(event => event.status === 'published')
+      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime));
 
     return (
       <div className="user-events-page">
@@ -70,41 +98,105 @@ class EventsPage extends Component {
         </section>
         <section className="content">
           <div className="row">
-            <div className="col-md-12">
+            <div className="col-md-12 timeline">
+              {visiblePastEvents ?
+                Array(moment().month()).fill().map((_, index) =>
+                  <ul key={index} className="timeline">
+                    <li className="time-label">
+                      <span className="bg-yellow">
+                        {moment().month(index).format('MMMM')}
+                      </span>
+                    </li>
+                    {sortedEvents.filter(event => index === event.eventStartDateTime.month()).map(event =>
+                      <Event
+                        key={event.id}
+                        users={users}
+                        event={event}
+                        viewer={viewer}
+                        nxLocation={nxLocations.get(event.nxLocationId)}
+                        openEventDetailsDialog={openEventDetailsDialog}
+                        openLocationDetailsDialog={openLocationDetailsDialog}
+                        closeLocationDetailsDialog={closeLocationDetailsDialog}
+                        attendeeSignIn={attendeeSignIn}
+                        openSignOutDialog={openSignOutDialog}
+                        attendeeWontGo={attendeeWontGo}
+                        toggleEventDetails={toggleEventDetails}
+                      />
+                    )}
+                  </ul>
+                )
+                : ''
+              }
               <ul className="timeline">
-                {Array(moment().month()).fill().map((_, index) =>
-                  <li key={index} className="time-label">
-                    <span className="bg-yellow">
-                      {moment().month(index).format('MMMM')}
-                    </span>
-                  </li>
-                )}
                 <li className="time-label">
                   <span className="bg-yellow">
                     {moment().format('MMMM')}
                   </span>
                 </li>
-                <li className="time-label" id="show-prev-events-button">
-                  <a onClick={() => console.log('SHOW PAST EVENTS')}>Predchádzajúce udalosti</a>
-                </li>
-                {events.valueSeq().map(event =>
-                  <Event
-                    key={event.id}
-                    users={users}
-                    event={event}
-                    viewer={viewer}
-                    nxLocation={nxLocations.get(event.nxLocationId)}
-                    openEventDetailsDialog={openEventDetailsDialog}
-                    openLocationDetailsDialog={openLocationDetailsDialog}
-                    closeLocationDetailsDialog={closeLocationDetailsDialog}
-                    attendeeSignIn={attendeeSignIn}
-                    openSignOutDialog={openSignOutDialog}
-                    attendeeWontGo={attendeeWontGo}
-                    toggleEventDetails={toggleEventDetails}
-                  />
-                )}
 
+                <li className="time-label" id="show-prev-events-button">
+                  <a onClick={togglePastEvents} style={{cursor: 'pointer'}}>
+                    {visiblePastEvents ?
+                      <FormattedMessage {...messages.hidePastEvents} />
+                    :
+                      <FormattedMessage {...messages.showPastEvents} />
+                    }
+                  </a>
+                </li>
+                {sortedEvents.filter(event => moment().month() === event.eventStartDateTime.month()).map(event =>
+                    <Event
+                      key={event.id}
+                      users={users}
+                      event={event}
+                      viewer={viewer}
+                      nxLocation={nxLocations.get(event.nxLocationId)}
+                      openEventDetailsDialog={openEventDetailsDialog}
+                      openLocationDetailsDialog={openLocationDetailsDialog}
+                      closeLocationDetailsDialog={closeLocationDetailsDialog}
+                      attendeeSignIn={attendeeSignIn}
+                      openSignOutDialog={openSignOutDialog}
+                      attendeeWontGo={attendeeWontGo}
+                      toggleEventDetails={toggleEventDetails}
+                    />
+                  )}
+                <li className="time-label" id="show-prev-events-button">
+                  <a onClick={toggleFutureEvents} style={{cursor: 'pointer'}}>
+                    {visibleFutureEvents ?
+                      <FormattedMessage {...messages.hideFutureEvents} />
+                    :
+                      <FormattedMessage {...messages.showFutureEvents} />
+                    }
+                  </a>
+                </li>
               </ul>
+              {visibleFutureEvents ?
+                Array(11 - moment().month()).fill().map((_, index) =>
+                  <ul key={index} className="timeline">
+                    <li className="time-label">
+                      <span className="bg-yellow">
+                        {moment().month(moment().month() + index + 1).format('MMMM')}
+                      </span>
+                    </li>
+                    {sortedEvents.filter(event => moment().month() + 1 + index === event.eventStartDateTime.month()).map(event =>
+                      <Event
+                        key={event.id}
+                        users={users}
+                        event={event}
+                        viewer={viewer}
+                        nxLocation={nxLocations.get(event.nxLocationId)}
+                        openEventDetailsDialog={openEventDetailsDialog}
+                        openLocationDetailsDialog={openLocationDetailsDialog}
+                        closeLocationDetailsDialog={closeLocationDetailsDialog}
+                        attendeeSignIn={attendeeSignIn}
+                        openSignOutDialog={openSignOutDialog}
+                        attendeeWontGo={attendeeWontGo}
+                        toggleEventDetails={toggleEventDetails}
+                      />
+                    )}
+                  </ul>
+                )
+                : ''
+              }
             </div>
           </div>
         </section>
@@ -130,6 +222,8 @@ class EventsPage extends Component {
 
 export default connect(state => ({
   events: state.events.events,
+  visiblePastEvents: state.events.visiblePastEvents,
+  visibleFutureEvents: state.events.visibleFutureEvents,
   eventDetailsId: state.events.eventDetailsId,
   viewer: state.users.viewer,
   signOut: state.events.signOut,

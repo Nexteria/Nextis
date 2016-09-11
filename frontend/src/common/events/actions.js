@@ -36,6 +36,20 @@ export const CHANGE_SIGNOUT_REASON = 'CHANGE_SIGNOUT_REASON';
 export const CANCEL_SIGN_OUT = 'CANCEL_SIGN_OUT';
 export const OPEN_LOCATION_DETAILS_DIALOG = 'OPEN_LOCATION_DETAILS_DIALOG';
 export const CLOSE_LOCATION_DETAILS_DIALOG = 'CLOSE_LOCATION_DETAILS_DIALOG';
+export const TOGGLE_PAST_EVENTS = 'TOGGLE_PAST_EVENTS';
+export const TOGGLE_FUTURE_EVENTS = 'TOGGLE_FUTURE_EVENTS';
+
+export function togglePastEvents() {
+  return {
+    type: TOGGLE_PAST_EVENTS,
+  };
+}
+
+export function toggleFutureEvents() {
+  return {
+    type: TOGGLE_FUTURE_EVENTS,
+  };
+}
 
 export function saveEvent(fields) {
   let data = {
