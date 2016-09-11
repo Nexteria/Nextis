@@ -38,6 +38,10 @@ const messages = defineMessages({
     defaultMessage: 'Was present',
     id: 'event.hosted.attendance.wasPresent',
   },
+  filledFeedback: {
+    defaultMessage: 'Filled feedback',
+    id: 'event.hosted.attendance.filledFeedback',
+  },
   userName: {
     defaultMessage: 'Username',
     id: 'event.hosted.attendance.userName',
@@ -56,9 +60,10 @@ export class EventAttendanceDialog extends Component {
   }
 
   getUsersTable(usersList, event) {
-    const { users } = this.props;
+    const { users, hasPermission } = this.props;
     const {
       changeAttendeePresenceStatus,
+      changeAttendeeFeedbackStatus,
     } = this.props;
 
     return (
@@ -69,6 +74,10 @@ export class EventAttendanceDialog extends Component {
               <tr>
                 <th><FormattedMessage {...messages.userName} /></th>
                 <th><FormattedMessage {...messages.wasPresent} /></th>
+                {hasPermission('set_filled_feedback_flag') ?
+                  <th><FormattedMessage {...messages.filledFeedback} /></th>
+                  : ''
+                }
               </tr>
               {usersList ?
                 usersList.valueSeq().map(user =>
@@ -89,6 +98,24 @@ export class EventAttendanceDialog extends Component {
                         <i className="fa fa-times"></i>
                       }
                     </td>
+                    {hasPermission('set_filled_feedback_flag') ?
+                      <td
+                        onClick={() =>
+                          changeAttendeeFeedbackStatus(
+                            event.id,
+                            user,
+                            event.attendeesGroups.filter(group => group.users.has(user.get('id'))).first().id
+                          )
+                        }
+                      >
+                        {user.get('filledFeedback') ?
+                          <i className="fa fa-check"></i>
+                          :
+                          <i className="fa fa-times"></i>
+                        }
+                      </td>
+                      : ''
+                    }
                   </tr>
                 )
                 :
@@ -170,4 +197,5 @@ EventAttendanceDialog = injectIntl(EventAttendanceDialog);
 export default connect((state) => ({
   events: state.events.events,
   users: state.users.users,
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(EventAttendanceDialog);

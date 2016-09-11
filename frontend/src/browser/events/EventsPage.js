@@ -98,6 +98,11 @@ class EventsPage extends Component {
             onClick={() => browserHistory.push(`/admin/events/${event.id}/emails`)}
           >
           </i>
+          <i
+            className="fa fa-list-alt"
+            onClick={() => browserHistory.push(`/host/events/${event.id}`)}
+          >
+          </i>
         </td>
       </tr>
     );

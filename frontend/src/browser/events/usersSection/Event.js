@@ -121,7 +121,7 @@ export default class Event extends Component {
                     <div className="col-md-6"></div>
                     <div className="event-actions col-md-6">
                       {attending.has(viewer.id) ?
-                        attendee.filledFeedback ?
+                        attendee.get('filledFeedback') ?
                           <i className="fa fa-check was-here"></i>
                         :
                           <a className="btn btn-info btn-xs" target="_blank" href={event.feedbackLink}>
