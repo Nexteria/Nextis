@@ -19,6 +19,7 @@ class NxEvent extends Model
         'minCapacity',
         'maxCapacity',
         'eventType',
+        'feedbackLink',
         'status',
     ];
 

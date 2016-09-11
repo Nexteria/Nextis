@@ -64,6 +64,7 @@ export function saveEvent(fields) {
       })),
     })),
     minCapacity: fields.minCapacity,
+    feedbackLink: fields.feedbackLink,
     status: fields.status,
     followingEvents: fields.followingEvents,
     maxCapacity: fields.maxCapacity,

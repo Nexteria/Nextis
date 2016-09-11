@@ -16,6 +16,7 @@ const Event = Record({
   minCapacity: '',
   maxCapacity: '',
   status: 'draft',
+  feedbackLink: '',
   parentEventId: null,
   followingEvents: new List(),
   curriculumLevelId: '',

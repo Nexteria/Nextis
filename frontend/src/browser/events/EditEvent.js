@@ -167,6 +167,10 @@ const messages = defineMessages({
     defaultMessage: 'This field is required, please type {characters} more.',
     id: 'event.edit.requiredLengthField',
   },
+  feedbackLink: {
+    defaultMessage: 'Feedback link',
+    id: 'event.edit.feedbackLink',
+  },
 });
 
 const validate = (values, props) => {
@@ -195,6 +199,10 @@ const validate = (values, props) => {
 
   if (!values.hostId) {
     errors.hostId = formatMessage(messages.requiredField);
+  }
+
+  if (!values.feedbackLink) {
+    errors.feedbackLink = formatMessage(messages.requiredField);
   }
 
   if (!values.attendeesGroups || values.attendeesGroups.size === 0) {
@@ -503,9 +511,9 @@ export class EditEvent extends Component {
                   <a><i className="fa fa-users"></i> {group.name}
                     <span className="action-buttons pull-right">
                       <span className="label">
-                        <span className="confirmed-will-come">{group.users.filter(user => user.signedIn).size}</span>
+                        <span className="confirmed-will-come">{group.users.filter(user => user.get('signedIn')).size}</span>
                         <span> / </span>
-                        <span className="confirmed-wont-come">{group.users.filter(user => user.signedOut || user.wontGo).size}</span>
+                        <span className="confirmed-wont-come">{group.users.filter(user => user.get('signedOut') || user.get('wontGo')).size}</span>
                         <span> / </span>
                         <span className="total">{group.users.size}</span>
                       </span>
@@ -686,6 +694,12 @@ export class EditEvent extends Component {
                       />
 
                       <Field
+                        name="feedbackLink"
+                        component={this.renderInput}
+                        label={`${formatMessage(messages.feedbackLink)}*`}
+                      />
+
+                      <Field
                         name="description"
                         component={this.renderEditor}
                         label={formatMessage(messages.description)}
@@ -745,6 +759,7 @@ EditEvent = fields(EditEvent, {
     'status',
     'curriculumLevelId',
     'followingEvents',
+    'feedbackLink',
     'nxLocationId',
   ],
 });

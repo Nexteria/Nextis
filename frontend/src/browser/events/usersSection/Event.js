@@ -59,6 +59,10 @@ const messages = defineMessages({
     defaultMessage: 'Sign out',
     id: 'event.users.signOut',
   },
+  fillFeedback: {
+    defaultMessage: 'Fill feedback',
+    id: 'event.users.fillFeedback',
+  },
 });
 
 export default class Event extends Component {
@@ -89,6 +93,10 @@ export default class Event extends Component {
 
     // TODO what if user will be in multiple groups?
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
+    const isSignInOpen = group ?
+      moment().utc().isAfter(group.signUpOpenDateTime) && moment().utc().isBefore(group.signUpDeadlineDateTime)
+    : false;
+
     const attendee = group ? group.users.get(viewer.id) : null;
 
     const undecided = attendee && !attendee.get('signedIn') && !attendee.get('wontGo') && !attendee.get('signedOut');
@@ -113,8 +121,13 @@ export default class Event extends Component {
                     <div className="col-md-6"></div>
                     <div className="event-actions col-md-6">
                       {attending.has(viewer.id) ?
-                        <i className="fa fa-check was-here"></i>
+                        attendee.filledFeedback ?
+                          <i className="fa fa-check was-here"></i>
                         :
+                          <a className="btn btn-info btn-xs" target="_blank" href={event.feedbackLink}>
+                            <FormattedMessage {...messages.fillFeedback} />
+                          </a>
+                      :
                         <i className="fa fa-times wasnt-here"></i>
                       }
                       <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
@@ -130,30 +143,32 @@ export default class Event extends Component {
                         </div>
                       </div>
                     </div>
-                    {undecided ?
-                      <div className="event-actions col-md-6">
-                        <button className="btn btn-success btn-xs" onClick={() => attendeeSignIn(event, viewer, group.id)}>
-                          <FormattedMessage {...messages.signIn} />
-                        </button>
-                        <button className="btn btn-danger btn-xs" onClick={() => attendeeWontGo(event, viewer, group.id)}>
-                          <FormattedMessage {...messages.wontGo} />
-                        </button>
-                        <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
-                      </div>
-                      :
-                      <div className="event-actions col-md-6">
-                        {!attendee.get('wontGo') && !attendee.get('signedOut') ?
-                          <button className="btn btn-danger btn-xs" onClick={() => openSignOutDialog(event, viewer, group.id)}>
-                            <FormattedMessage {...messages.signOut} />
-                          </button>
-                          :
-                          <button className="btn btn-success btn-xs" onClick={() => attendeeSignIn(event, viewer, group.id)}>
-                            <FormattedMessage {...messages.signIn} />
-                          </button>
+                        {undecided && isSignInOpen ?
+                          <div className="event-actions col-md-6">
+                            <button className="btn btn-success btn-xs" onClick={() => attendeeSignIn(event, viewer, group.id)}>
+                              <FormattedMessage {...messages.signIn} />
+                            </button>
+                            <button className="btn btn-danger btn-xs" onClick={() => attendeeWontGo(event, viewer, group.id)}>
+                              <FormattedMessage {...messages.wontGo} />
+                            </button>
+                            <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
+                          </div>
+                        :
+                          <div className="event-actions col-md-6">
+                            {!attendee.get('wontGo') && !attendee.get('signedOut') ?
+                              <button className="btn btn-danger btn-xs" onClick={() => openSignOutDialog(event, viewer, group.id)}>
+                                <FormattedMessage {...messages.signOut} />
+                              </button>
+                              :
+                                isSignInOpen ?
+                                  <button className="btn btn-success btn-xs" onClick={() => attendeeSignIn(event, viewer, group.id)}>
+                                    <FormattedMessage {...messages.signIn} />
+                                  </button>
+                                  : ''
+                            }
+                            <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
+                          </div>
                         }
-                        <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
-                      </div>
-                    }
                   </div>
                 }
               </div>
