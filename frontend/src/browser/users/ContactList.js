@@ -22,7 +22,19 @@ class ContactList extends Component {
   };
 
   render() {
-    const { users, rolesList } = this.props;
+    const { users, rolesList, studentLevels } = this.props;
+    let students = [];
+
+    if (users) {
+      students = users.filter(user => user.roles.includes(rolesList.get('STUDENT').id))
+        .valueSeq().sort((a, b) => {
+          if (studentLevels.get(a.studentLevelId).name === studentLevels.get(b.studentLevelId).name) {
+            return a.lastName > b.lastName;
+          }
+          
+          return studentLevels.get(a.studentLevelId).name > studentLevels.get(b.studentLevelId).name;
+        });
+    }
 
     return (
       <div>
@@ -30,10 +42,6 @@ class ContactList extends Component {
           <h1>
             <FormattedMessage {...messages.title} />
           </h1>
-          <ol className="breadcrumb">
-            <li><a href="#"><i className="fa fa-dashboard"></i> Home</a></li>
-            <li className="active">Dashboard</li>
-          </ol>
         </section>
         <section className="content">
           <div className="row">
@@ -69,10 +77,10 @@ class ContactList extends Component {
                         <th>Telefón</th>
                       </tr>
                       {users ?
-                        users.filter(user => user.roles.includes(rolesList.get('STUDENT').id)).valueSeq().map(student =>
+                        students.map(student =>
                           <tr key={student.id}>
                             <td>{student.firstName} {student.lastName}</td>
-                            <td>{student.level}</td>
+                            <td>{studentLevels.get(student.studentLevelId).name}</td>
                             <td>{student.email}</td>
                             <td>{student.phone}</td>
                           </tr>
@@ -97,5 +105,6 @@ class ContactList extends Component {
 
 export default connect(state => ({
   users: state.users.users,
+  studentLevels: state.users.studentLevels,
   rolesList: state.users.rolesList,
 }))(ContactList);
