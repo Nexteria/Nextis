@@ -33,6 +33,10 @@ const messages = defineMessages({
     defaultMessage: 'Undecided',
     id: 'event.emails.attendance.undecided',
   },
+  eventLink: {
+    defaultMessage: 'Event link',
+    id: 'event.emails.attendance.eventLink',
+  }
 });
 
 export class EventEmailsDialog extends Component {
@@ -70,6 +74,18 @@ export class EventEmailsDialog extends Component {
         </Header>
 
         <Body>
+          <div className="form-group col-md-12">
+            <label className="col-sm-2 control-label">
+              <FormattedMessage {...messages.eventLink} />
+            </label>
+            <div className="col-sm-10">
+              <input
+                readonly
+                value={`${location.origin ? location.origin : `${location.protocol}//${location.host}`}/events/${params.eventId}`}
+                className="form-control" />
+            </div>
+          </div>
+
           <Tabs defaultActiveKey={1} id="emails-lists" className="nav-tabs-custom">
             <Tab eventKey={1} title={formatMessage(messages.attending)}>
               <textarea readOnly>
