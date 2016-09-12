@@ -156,6 +156,14 @@ const messages = defineMessages({
     defaultMessage: 'Must be valid phone number (+xxxxxxxxxxxx)',
     id: 'user.edit.validPhoneError',
   },
+  usernameIsTaken: {
+    defaultMessage: 'That username is taken',
+    id: 'user.edit.usernameIsTaken',
+  },
+  emailIsTaken: {
+    defaultMessage: 'That email is taken',
+    id: 'user.edit.emailIsTaken',
+  },
 });
 
 const validate = (values, props) => {
@@ -234,12 +242,13 @@ const validate = (values, props) => {
   return errors;
 };
 
-const asyncValidate = (values, dispatch) => {
+const asyncValidate = (values, dispatch, props) => {
+  const { formatMessage } = props.intl;
   let validation = null;
   let errors = {};
   if (values.username) {
     validation = dispatch(actions.verifyUsernameAvailable(values.username,  values.id)).then(() => {}, () => {
-      errors.username = 'That username is taken'
+      errors.username = formatMessage(messages.usernameIsTaken);
     });
   }
 
@@ -250,7 +259,7 @@ const asyncValidate = (values, dispatch) => {
       validation = dispatch(actions.verifyEmailAvailable(values.email, values.id));
     }
 
-    validation.then(() => {}, () => errors.email = 'That email is taken');
+    validation.then(() => {}, () => errors.email = formatMessage(messages.emailIsTaken));
   }
 
   return validation.then(() => errors, () => errors);

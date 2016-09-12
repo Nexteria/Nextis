@@ -26,26 +26,10 @@ const messages = defineMessages({
     defaultMessage: 'Save',
     id: 'event.edit.attendeesGroup.saveAttendeeGroupButton',
   },
-  openingSignupDate: {
-    defaultMessage: 'Signup from',
-    id: 'event.edit.attendeesGroup.openingSignupDate',
-  },
-  deadlineSignupDate: {
-    defaultMessage: 'Signup to',
-    id: 'event.edit.attendeesGroup.deadlineSignupDate',
-  },
   groupName: {
     defaultMessage: 'Group name',
     id: 'event.edit.attendeesGroup.groupName',
   },
-  minCapacity: {
-    defaultMessage: 'Min capacity',
-    id: 'event.edit.attendeesGroup.minCapacity',
-  },
-  maxCapacity: {
-    defaultMessage: 'Max capacity',
-    id: 'event.edit.attendeesGroup.maxCapacity',
-  }
 });
 
 export class EditRole extends Component {

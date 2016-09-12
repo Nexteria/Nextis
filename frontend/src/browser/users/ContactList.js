@@ -12,6 +12,26 @@ const messages = defineMessages({
     defaultMessage: 'No contacts here',
     id: 'contacts.list.no_contacts'
   },
+  contactStudentsTitile: {
+    defaultMessage: 'Contacts - students',
+    id: 'contacts.list.contactStudentsTitile'
+  },
+  fullName: {
+    defaultMessage: 'Full name',
+    id: 'contacts.list.fullName',
+  },
+  level: {
+    defaultMessage: 'Level',
+    id: 'contacts.list.level',
+  },
+  email: {
+    defaultMessage: 'Email',
+    id: 'contacts.list.email',
+  },
+  phone: {
+    defaultMessage: 'Phone',
+    id: 'contacts.list.phone',
+  },
 });
 
 class ContactList extends Component {
@@ -48,7 +68,7 @@ class ContactList extends Component {
             <div className="col-xs-12">
               <div className="box">
                 <div className="box-header">
-                  <h3 className="box-title">Kontakty - študenti</h3>
+                  <h3 className="box-title"><FormattedMessage {...messages.contactStudentsTitile} /></h3>
 
                   <div className="box-tools">
                     <div className="input-group input-group-sm" style={{ width: '150px' }}>
@@ -71,10 +91,10 @@ class ContactList extends Component {
                   <table className="table table-hover">
                     <tbody>
                       <tr>
-                        <th>Meno a priezvisko</th>
-                        <th>Level</th>
-                        <th>Email</th>
-                        <th>Telefón</th>
+                        <th><FormattedMessage {...messages.fullName} /></th>
+                        <th><FormattedMessage {...messages.level} /></th>
+                        <th><FormattedMessage {...messages.email} /></th>
+                        <th><FormattedMessage {...messages.phone} /></th>
                       </tr>
                       {users ?
                         students.map(student =>

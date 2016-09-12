@@ -1,3 +1,1059 @@
 /* eslint-disable max-len, quote-props, quotes */
 export default [
+  {
+    "id": "app.header.messages.no_new_messages",
+    "defaultMessage": "Žiadne nové spŕavy."
+  },
+  {
+    "id": "app.header.notifications.no_new_notifications",
+    "defaultMessage": "Žiadne nové notifikácie."
+  },
+  {
+    "id": "app.header.panel.toggle_sidebar",
+    "defaultMessage": "Prepnúť bočný panel"
+  },
+  {
+    "id": "app.header.user.menu.logout",
+    "defaultMessage": "Odhlásiť"
+  },
+  {
+    "id": "app.sidebar.links.adminSection",
+    "defaultMessage": "Admin sekcia"
+  },
+  {
+    "id": "app.sidebar.links.contacts",
+    "defaultMessage": "Kontakty"
+  },
+  {
+    "id": "app.sidebar.links.createEvent",
+    "defaultMessage": "Vytvoriť event"
+  },
+  {
+    "id": "app.sidebar.links.events",
+    "defaultMessage": "Eventy"
+  },
+  {
+    "id": "app.sidebar.links.hostedEvents",
+    "defaultMessage": "Hostované eventy"
+  },
+  {
+    "id": "app.sidebar.links.important",
+    "defaultMessage": "Dôležité"
+  },
+  {
+    "id": "app.sidebar.links.locations",
+    "defaultMessage": "Miesta"
+  },
+  {
+    "id": "app.sidebar.links.network",
+    "defaultMessage": "Network"
+  },
+  {
+    "id": "app.sidebar.links.payments",
+    "defaultMessage": "Platby"
+  },
+  {
+    "id": "app.sidebar.links.roles",
+    "defaultMessage": "Role"
+  },
+  {
+    "id": "app.sidebar.links.studies",
+    "defaultMessage": "Štúdia"
+  },
+  {
+    "id": "app.sidebar.links.userGroups",
+    "defaultMessage": "Uživateľské skupiny"
+  },
+  {
+    "id": "app.sidebar.links.users",
+    "defaultMessage": "Uživatelia"
+  },
+  {
+    "id": "contacts.list.contactStudentsTitile",
+    "defaultMessage": "Kontakty - študenti"
+  },
+  {
+    "id": "contacts.list.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "contacts.list.fullName",
+    "defaultMessage": "Meno a priezvisko"
+  },
+  {
+    "id": "contacts.list.level",
+    "defaultMessage": "Level"
+  },
+  {
+    "id": "contacts.list.no_contacts",
+    "defaultMessage": "Žiadne kontakty"
+  },
+  {
+    "id": "contacts.list.phone",
+    "defaultMessage": "Telefón"
+  },
+  {
+    "id": "contacts.list.title",
+    "defaultMessage": "Zoznam kontaktov"
+  },
+  {
+    "id": "event.edit..attendeesGroup.confirmedAttendance",
+    "defaultMessage": "Skupina je prázdna"
+  },
+  {
+    "id": "event.edit.activityPoints",
+    "defaultMessage": "Aktivity body"
+  },
+  {
+    "id": "event.edit.addFollowingEvents",
+    "defaultMessage": "Pridať event"
+  },
+  {
+    "id": "event.edit.addHost",
+    "defaultMessage": "Pridať hosta ..."
+  },
+  {
+    "id": "event.edit.addLectors",
+    "defaultMessage": "Pridať lektora"
+  },
+  {
+    "id": "event.edit.attendeeGroupName",
+    "defaultMessage": "Názov skupiny účastníkov"
+  },
+  {
+    "id": "event.edit.attendeesGroup.createAttendeeGroup",
+    "defaultMessage": "Vytvoriť skupinu účastníkov"
+  },
+  {
+    "id": "event.edit.attendeesGroup.dateMustBeBeforeEvent",
+    "defaultMessage": "Dátum musí byť pred začiatkom eventu"
+  },
+  {
+    "id": "event.edit.attendeesGroup.deadlineSignupDate",
+    "defaultMessage": "Prihlasovanie do"
+  },
+  {
+    "id": "event.edit.attendeesGroup.endDateMustBeAfterStartDate",
+    "defaultMessage": "Dátum musí byť po začiatku prihlasovania!"
+  },
+  {
+    "id": "event.edit.attendeesGroup.groupName",
+    "defaultMessage": "Názov skupiny účastníkov"
+  },
+  {
+    "id": "event.edit.attendeesGroup.maxCapacity",
+    "defaultMessage": "Max. kapacita"
+  },
+  {
+    "id": "event.edit.attendeesGroup.maxCapacityMustBeGE",
+    "defaultMessage": "Maximálna kapacita musí byť väčšia alebo rovná minimálnej kapacite!"
+  },
+  {
+    "id": "event.edit.attendeesGroup.minCapacity",
+    "defaultMessage": "Min. kapacita"
+  },
+  {
+    "id": "event.edit.attendeesGroup.minCapacityMustBeSE",
+    "defaultMessage": "Minimálna kapacita musí byť menšia alebo rovná ako maximálna kapacita!"
+  },
+  {
+    "id": "event.edit.attendeesGroup.openingSignupDate",
+    "defaultMessage": "Prihlasovanie od"
+  },
+  {
+    "id": "event.edit.attendeesGroup.requiredField",
+    "defaultMessage": "Toto políčko je povinné"
+  },
+  {
+    "id": "event.edit.attendeesGroup.saveAttendeeGroupButton",
+    "defaultMessage": "Uložiť"
+  },
+  {
+    "id": "event.edit.attendeesGroup.startDateMustBeBeforeEndDate",
+    "defaultMessage": "Dátum musí byť pred koncom prihlasovania!"
+  },
+  {
+    "id": "event.edit.attendeesGroup.usersMustBeEnough",
+    "defaultMessage": "Počet uživateľov v skupine musí byť viac ako minimálna kapacita!"
+  },
+  {
+    "id": "event.edit.attendeesGroup.usersPool",
+    "defaultMessage": "Zoznam uživateľov"
+  },
+  {
+    "id": "event.edit.attendeesGroups",
+    "defaultMessage": "Skupiny účastníkov"
+  },
+  {
+    "id": "event.edit.chooseEventLocation",
+    "defaultMessage": "Zvoľte miesto konania"
+  },
+  {
+    "id": "event.edit.chooseEventType",
+    "defaultMessage": "Zvoľte typ eventu"
+  },
+  {
+    "id": "event.edit.curriculumLevel",
+    "defaultMessage": "Curriculum level"
+  },
+  {
+    "id": "event.edit.dateMustBeInFuture",
+    "defaultMessage": "Dátum musí byť v budúcnosti"
+  },
+  {
+    "id": "event.edit.description",
+    "defaultMessage": "Popis"
+  },
+  {
+    "id": "event.edit.emptyGroup",
+    "defaultMessage": "Skupina je prázdna"
+  },
+  {
+    "id": "event.edit.endDateMustBeAfterStartDate",
+    "defaultMessage": "Koncový dátum musí byť po dátume začiatku!"
+  },
+  {
+    "id": "event.edit.eventDescription",
+    "defaultMessage": "Popis eventu ..."
+  },
+  {
+    "id": "event.edit.eventEndDateTime",
+    "defaultMessage": "Koniec eventu"
+  },
+  {
+    "id": "event.edit.eventLocation",
+    "defaultMessage": "Miesto"
+  },
+  {
+    "id": "event.edit.eventName",
+    "defaultMessage": "Názov eventu"
+  },
+  {
+    "id": "event.edit.eventStartDateTime",
+    "defaultMessage": "Začiatok eventu"
+  },
+  {
+    "id": "event.edit.eventStatus",
+    "defaultMessage": "Stav eventu"
+  },
+  {
+    "id": "event.edit.eventType",
+    "defaultMessage": "Typ"
+  },
+  {
+    "id": "event.edit.eventType_dbk",
+    "defaultMessage": "DBK"
+  },
+  {
+    "id": "event.edit.eventType_ik",
+    "defaultMessage": "IK"
+  },
+  {
+    "id": "event.edit.eventType_other",
+    "defaultMessage": "Iné"
+  },
+  {
+    "id": "event.edit.feedbackLink",
+    "defaultMessage": "Odkaz na feedback"
+  },
+  {
+    "id": "event.edit.followingEvents",
+    "defaultMessage": "Nadväzujúce eventy"
+  },
+  {
+    "id": "event.edit.groupMembers",
+    "defaultMessage": "Členovia skupiny"
+  },
+  {
+    "id": "event.edit.host",
+    "defaultMessage": "Host"
+  },
+  {
+    "id": "event.edit.lectors",
+    "defaultMessage": "Lektori"
+  },
+  {
+    "id": "event.edit.maxCapacity",
+    "defaultMessage": "Max. kapacita"
+  },
+  {
+    "id": "event.edit.maxCapacityMustBeGE",
+    "defaultMessage": "Max. kapacita musí byť väčšia alebo rovná min. kapacite!"
+  },
+  {
+    "id": "event.edit.minCapacity",
+    "defaultMessage": "Min. kapacita"
+  },
+  {
+    "id": "event.edit.minCapacityMustBeSE",
+    "defaultMessage": "Min. kapacita musí byť menšia alebo rovná max. kapacite!"
+  },
+  {
+    "id": "event.edit.mustBeValidNumber",
+    "defaultMessage": "Toto musí byť valídne číslo."
+  },
+  {
+    "id": "event.edit.noAttendeesGroups",
+    "defaultMessage": "Chýbajú skupiny účastníkov. Nikto sa nebude vedieť prihlásiť!"
+  },
+  {
+    "id": "event.edit.noCurriculumLevel",
+    "defaultMessage": "Nepatrí do curricula"
+  },
+  {
+    "id": "event.edit.requiredField",
+    "defaultMessage": "Toto políčko je povinné"
+  },
+  {
+    "id": "event.edit.requiredLengthField",
+    "defaultMessage": "Toto políčko je povinné, vyplňte ešte {characters} znakov."
+  },
+  {
+    "id": "event.edit.save",
+    "defaultMessage": "Uložiť"
+  },
+  {
+    "id": "event.edit.shortDescription",
+    "defaultMessage": "Krátky popis eventu"
+  },
+  {
+    "id": "event.edit.startDateMustBeBeforeEndDate",
+    "defaultMessage": "Začiatočný dátum musí byť pred koncovím!"
+  },
+  {
+    "id": "event.edit.userGroup.createUserGroup",
+    "defaultMessage": "Vytvoriť skupinu účastníkov"
+  },
+  {
+    "id": "event.edit.userGroup.groupName",
+    "defaultMessage": "Názov skupiny"
+  },
+  {
+    "id": "event.edit.userGroup.saveButton",
+    "defaultMessage": "Uložiť"
+  },
+  {
+    "id": "event.edit.userGroup.usersPool",
+    "defaultMessage": "Zoznam uživateľov"
+  },
+  {
+    "id": "event.edit.usersPool",
+    "defaultMessage": "Zoznam uživateľov"
+  },
+  {
+    "id": "event.emails.attendance.attending",
+    "defaultMessage": "Potvrdený prídu"
+  },
+  {
+    "id": "event.emails.attendance.closeButton",
+    "defaultMessage": "Zatvoriť"
+  },
+  {
+    "id": "event.emails.attendance.notAttending",
+    "defaultMessage": "Potvrdený - neprídu"
+  },
+  {
+    "id": "event.emails.attendance.undecided",
+    "defaultMessage": "Nerozhodný"
+  },
+  {
+    "id": "event.emails.title",
+    "defaultMessage": "Emaily eventu"
+  },
+  {
+    "id": "event.hosted.attendance.attending",
+    "defaultMessage": "Potvrdený - prídu"
+  },
+  {
+    "id": "event.hosted.attendance.closeButton",
+    "defaultMessage": "Zavrieť"
+  },
+  {
+    "id": "event.hosted.attendance.filledFeedback",
+    "defaultMessage": "Vyplnil feedback"
+  },
+  {
+    "id": "event.hosted.attendance.notAttending",
+    "defaultMessage": "Potvrdený - nepríde"
+  },
+  {
+    "id": "event.hosted.attendance.title",
+    "defaultMessage": "Účasť na evente"
+  },
+  {
+    "id": "event.hosted.attendance.undecided",
+    "defaultMessage": "Nerozhodný"
+  },
+  {
+    "id": "event.hosted.attendance.userName",
+    "defaultMessage": "Uživateľské meno"
+  },
+  {
+    "id": "event.hosted.attendance.wasPresent",
+    "defaultMessage": "Bol prítomný"
+  },
+  {
+    "id": "event.users.actionPoints",
+    "defaultMessage": "akčné body"
+  },
+  {
+    "id": "event.users.detail.closeButton",
+    "defaultMessage": "Zavrieť"
+  },
+  {
+    "id": "event.users.detail.reasonDescription",
+    "defaultMessage": "Prosím napíš odôvodnenie prečo neprídeš:"
+  },
+  {
+    "id": "event.users.detail.signOutButton",
+    "defaultMessage": "Odhlásiť"
+  },
+  {
+    "id": "event.users.detail.signOutQuestion",
+    "defaultMessage": "Ćhcete sa odhlásiť z eventu: {eventName} ?"
+  },
+  {
+    "id": "event.users.details",
+    "defaultMessage": "Detaily"
+  },
+  {
+    "id": "event.users.eventType_dbk",
+    "defaultMessage": "DBK"
+  },
+  {
+    "id": "event.users.eventType_ik",
+    "defaultMessage": "IK"
+  },
+  {
+    "id": "event.users.eventType_other",
+    "defaultMessage": "Iné"
+  },
+  {
+    "id": "event.users.fillFeedback",
+    "defaultMessage": "Vyplniť feedback"
+  },
+  {
+    "id": "event.users.invited",
+    "defaultMessage": "Pozvaných"
+  },
+  {
+    "id": "event.users.lectors",
+    "defaultMessage": "Lektori"
+  },
+  {
+    "id": "event.users.locationDetails.address",
+    "defaultMessage": "Adresa"
+  },
+  {
+    "id": "event.users.locationDetails.closeButton",
+    "defaultMessage": "Zavrieť"
+  },
+  {
+    "id": "event.users.locationDetails.description",
+    "defaultMessage": "Popis"
+  },
+  {
+    "id": "event.users.locationDetails.instructions",
+    "defaultMessage": "Inštrukcie"
+  },
+  {
+    "id": "event.users.locationDetails.pictures",
+    "defaultMessage": "Obrázky"
+  },
+  {
+    "id": "event.users.noLectors",
+    "defaultMessage": "Nie sú žiadny lektori"
+  },
+  {
+    "id": "event.users.shortDescription",
+    "defaultMessage": "Krátky popis"
+  },
+  {
+    "id": "event.users.showMoreInfo",
+    "defaultMessage": "Zobraziť detaily"
+  },
+  {
+    "id": "event.users.signedIn",
+    "defaultMessage": "Prihlásený"
+  },
+  {
+    "id": "event.users.signIn",
+    "defaultMessage": "Prihlásiť"
+  },
+  {
+    "id": "event.users.signInNoteTitle",
+    "defaultMessage": "Deadline na prihlásenie:"
+  },
+  {
+    "id": "event.users.signOut",
+    "defaultMessage": "Odhlásiť"
+  },
+  {
+    "id": "event.users.wontGo",
+    "defaultMessage": "Nezúčastním sa"
+  },
+  {
+    "id": "events.create.title",
+    "defaultMessage": "Vytvoriť event"
+  },
+  {
+    "id": "events.hosted.eventDate",
+    "defaultMessage": "Začiatočný dátum"
+  },
+  {
+    "id": "events.hosted.eventName",
+    "defaultMessage": "Názov eventu"
+  },
+  {
+    "id": "events.hosted.invited",
+    "defaultMessage": "Pozvaný"
+  },
+  {
+    "id": "events.hosted.maxCapacity",
+    "defaultMessage": "Max. kapacita"
+  },
+  {
+    "id": "events.hosted.minCapacity",
+    "defaultMessage": "Min. kapacita"
+  },
+  {
+    "id": "events.hosted.noEvents",
+    "defaultMessage": "Žiadne eventy"
+  },
+  {
+    "id": "events.hosted.signedIn",
+    "defaultMessage": "Prihlásený"
+  },
+  {
+    "id": "events.hosted.table.title",
+    "defaultMessage": "Eventy"
+  },
+  {
+    "id": "events.hosted.title",
+    "defaultMessage": "Hostované eventy"
+  },
+  {
+    "id": "events.hosted.wontCome",
+    "defaultMessage": "Neprídu"
+  },
+  {
+    "id": "events.manage.actions",
+    "defaultMessage": "Akcie"
+  },
+  {
+    "id": "events.manage.capacity",
+    "defaultMessage": "Kapacita"
+  },
+  {
+    "id": "events.manage.eventName",
+    "defaultMessage": "Názov eventu"
+  },
+  {
+    "id": "events.manage.eventStarts",
+    "defaultMessage": "Začiatok"
+  },
+  {
+    "id": "events.manage.invited",
+    "defaultMessage": "Pozvaný"
+  },
+  {
+    "id": "events.manage.noEvents",
+    "defaultMessage": "Žiadne eventy"
+  },
+  {
+    "id": "events.manage.signedIn",
+    "defaultMessage": "Prihlásený"
+  },
+  {
+    "id": "events.manage.table.title",
+    "defaultMessage": "Eventy - manažment"
+  },
+  {
+    "id": "events.manage.title",
+    "defaultMessage": "Eventy"
+  },
+  {
+    "id": "events.manage.wontCome",
+    "defaultMessage": "Neprídu"
+  },
+  {
+    "id": "events.users.hideFutureEvents",
+    "defaultMessage": "Skryť budúce eventy"
+  },
+  {
+    "id": "events.users.hidePastEvents",
+    "defaultMessage": "Skryť minulé eventy"
+  },
+  {
+    "id": "events.users.showFutureEvents",
+    "defaultMessage": "Zobraziť budúce eventy"
+  },
+  {
+    "id": "events.users.showPastEvents",
+    "defaultMessage": "Zobraziť minulé eventy"
+  },
+  {
+    "id": "events.users.title",
+    "defaultMessage": "Eventy"
+  },
+  {
+    "id": "location.edit.addressLine1",
+    "defaultMessage": "Adresa"
+  },
+  {
+    "id": "location.edit.addressLine2",
+    "defaultMessage": "Adresa"
+  },
+  {
+    "id": "location.edit.checkLocation",
+    "defaultMessage": "Skontrolovať miesto"
+  },
+  {
+    "id": "location.edit.checkMapLocation",
+    "defaultMessage": "Prosím skontrolujte miesto!"
+  },
+  {
+    "id": "location.edit.chooseCountry",
+    "defaultMessage": "Zvoľte krajinu"
+  },
+  {
+    "id": "location.edit.choosePicture",
+    "defaultMessage": "Zvoľte obrázok"
+  },
+  {
+    "id": "location.edit.city",
+    "defaultMessage": "Mesto"
+  },
+  {
+    "id": "location.edit.countryCode",
+    "defaultMessage": "Krajina"
+  },
+  {
+    "id": "location.edit.createLocationTitle",
+    "defaultMessage": "Vytvoriť miesto"
+  },
+  {
+    "id": "location.edit.description",
+    "defaultMessage": "Popis"
+  },
+  {
+    "id": "location.edit.dragPictureHere",
+    "defaultMessage": "Pretiahnite obrázok sem"
+  },
+  {
+    "id": "location.edit.instructions",
+    "defaultMessage": "Inštrukcie"
+  },
+  {
+    "id": "location.edit.locationName",
+    "defaultMessage": "Názov miesta"
+  },
+  {
+    "id": "location.edit.pictureUpload.or",
+    "defaultMessage": "alebo"
+  },
+  {
+    "id": "location.edit.requiredField",
+    "defaultMessage": "Toto políčko je povinné"
+  },
+  {
+    "id": "location.edit.saveLocationButton",
+    "defaultMessage": "Uložiť"
+  },
+  {
+    "id": "location.edit.validZipCodeRequired",
+    "defaultMessage": "Psč musí byť číslo bez medzier!"
+  },
+  {
+    "id": "location.edit.zipCode",
+    "defaultMessage": "Psč"
+  },
+  {
+    "id": "locations.manage.actions",
+    "defaultMessage": "Akcie"
+  },
+  {
+    "id": "locations.manage.address",
+    "defaultMessage": "Adresa"
+  },
+  {
+    "id": "locations.manage.locationName",
+    "defaultMessage": "Názov miesta"
+  },
+  {
+    "id": "locations.manage.noLocations",
+    "defaultMessage": "Žiadne miesta"
+  },
+  {
+    "id": "locations.manage.table.title",
+    "defaultMessage": "Miesta - manažment"
+  },
+  {
+    "id": "locations.manage.title",
+    "defaultMessage": "Miesta"
+  },
+  {
+    "id": "me.settingsPage.title",
+    "defaultMessage": "Uživateľský profil"
+  },
+  {
+    "id": "notFound.continue",
+    "defaultMessage": "Pokračujte tu prosím."
+  },
+  {
+    "id": "notFound.h1",
+    "defaultMessage": "Táto stránka nie je dostupná"
+  },
+  {
+    "id": "notFound.p",
+    "defaultMessage": "Odkaz nie je funkčný alebo stránka bola odstránená."
+  },
+  {
+    "id": "notFound.title",
+    "defaultMessage": "Stránka nenájdená"
+  },
+  {
+    "id": "payments.associate.associateButton",
+    "defaultMessage": "Priradiť"
+  },
+  {
+    "id": "payments.associate.closeButton",
+    "defaultMessage": "Zrušiť"
+  },
+  {
+    "id": "payments.associatePayment",
+    "defaultMessage": "Priradiť platby"
+  },
+  {
+    "id": "payments.associatePayment.chooseUser",
+    "defaultMessage": "Zvoliť uživateľa"
+  },
+  {
+    "id": "payments.unassociated.amount",
+    "defaultMessage": "Suma"
+  },
+  {
+    "id": "payments.unassociated.closeButton",
+    "defaultMessage": "Zavrieť"
+  },
+  {
+    "id": "payments.unassociated.constantSymbol",
+    "defaultMessage": "Konštantný symbol"
+  },
+  {
+    "id": "payments.unassociated.createdAt",
+    "defaultMessage": "Dátum prijatia"
+  },
+  {
+    "id": "payments.unassociated.message",
+    "defaultMessage": "Správa"
+  },
+  {
+    "id": "payments.unassociated.noPayments",
+    "defaultMessage": "Žiadne platby"
+  },
+  {
+    "id": "payments.unassociated.specificSymbol",
+    "defaultMessage": "Špecifický symbol"
+  },
+  {
+    "id": "payments.unassociated.transactionType",
+    "defaultMessage": "Typ transakcie"
+  },
+  {
+    "id": "payments.unassociated.unassociatedPayments",
+    "defaultMessage": "Nepriradené platby"
+  },
+  {
+    "id": "payments.unassociated.variableSymbol",
+    "defaultMessage": "Variabilný symbol"
+  },
+  {
+    "id": "payments.users.amount",
+    "defaultMessage": "Suma"
+  },
+  {
+    "id": "payments.users.closeButton",
+    "defaultMessage": "Zavrieť"
+  },
+  {
+    "id": "payments.users.constantSymbol",
+    "defaultMessage": "Konštantný symbol"
+  },
+  {
+    "id": "payments.users.createdAt",
+    "defaultMessage": "Dátum prijatia"
+  },
+  {
+    "id": "payments.users.message",
+    "defaultMessage": "Správa"
+  },
+  {
+    "id": "payments.users.noPayments",
+    "defaultMessage": "Žiadne platby"
+  },
+  {
+    "id": "payments.users.specificSymbol",
+    "defaultMessage": "Špecifický symbol"
+  },
+  {
+    "id": "payments.users.transactionType",
+    "defaultMessage": "Typ transakcie"
+  },
+  {
+    "id": "payments.users.userPayments",
+    "defaultMessage": "Platby uživateľa"
+  },
+  {
+    "id": "payments.users.variableSymbol",
+    "defaultMessage": "Variabilný symbol"
+  },
+  {
+    "id": "role.edit.noPermissions",
+    "defaultMessage": "Žiadne oprávnenia"
+  },
+  {
+    "id": "role.edit.permissionsPool",
+    "defaultMessage": "Zoznam oprávnení"
+  },
+  {
+    "id": "role.edit.rolePermissions",
+    "defaultMessage": "Oprávnenia role"
+  },
+  {
+    "id": "roles.manage.actions",
+    "defaultMessage": "Akcie"
+  },
+  {
+    "id": "roles.manage.noRoles",
+    "defaultMessage": "Žiadne role"
+  },
+  {
+    "id": "roles.manage.roleName",
+    "defaultMessage": "Názov role"
+  },
+  {
+    "id": "roles.manage.table.title",
+    "defaultMessage": "Role - manažment"
+  },
+  {
+    "id": "roles.manage.title",
+    "defaultMessage": "Role"
+  },
+  {
+    "id": "user.edit.activeUserState",
+    "defaultMessage": "Aktívny"
+  },
+  {
+    "id": "user.edit.actualJobInfo",
+    "defaultMessage": "Aktuálne zamestnanie"
+  },
+  {
+    "id": "user.edit.buddyDescription",
+    "defaultMessage": "Buddy popis"
+  },
+  {
+    "id": "user.edit.chooseStudentLevel",
+    "defaultMessage": "Zvoľte level študenta"
+  },
+  {
+    "id": "user.edit.confirmationPassword",
+    "defaultMessage": "Potvrdenie hesla"
+  },
+  {
+    "id": "user.edit.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "user.edit.emailIsTaken",
+    "defaultMessage": "Tento email je obsadený"
+  },
+  {
+    "id": "user.edit.endedUserState",
+    "defaultMessage": "Skončený"
+  },
+  {
+    "id": "user.edit.expelledUserState",
+    "defaultMessage": "Vylúčený"
+  },
+  {
+    "id": "user.edit.facebookLink",
+    "defaultMessage": "Facebook link"
+  },
+  {
+    "id": "user.edit.faculty",
+    "defaultMessage": "Fakulty"
+  },
+  {
+    "id": "user.edit.firstName",
+    "defaultMessage": "Krstné meno"
+  },
+  {
+    "id": "user.edit.guideDescription",
+    "defaultMessage": "Guide popis"
+  },
+  {
+    "id": "user.edit.iban",
+    "defaultMessage": "Iban"
+  },
+  {
+    "id": "user.edit.inactiveUserState",
+    "defaultMessage": "Neaktívny"
+  },
+  {
+    "id": "user.edit.lastName",
+    "defaultMessage": "Priezvisko"
+  },
+  {
+    "id": "user.edit.lectorDescription",
+    "defaultMessage": "Popis lektora"
+  },
+  {
+    "id": "user.edit.linkedinLink",
+    "defaultMessage": "LinkedIn link"
+  },
+  {
+    "id": "user.edit.newPassword",
+    "defaultMessage": "Nové heslo"
+  },
+  {
+    "id": "user.edit.nexteriaTeamRole",
+    "defaultMessage": "Nexteria team rola"
+  },
+  {
+    "id": "user.edit.oldPassword",
+    "defaultMessage": "Staré heslo"
+  },
+  {
+    "id": "user.edit.personalDescription",
+    "defaultMessage": "Osobný popis"
+  },
+  {
+    "id": "user.edit.personRoles",
+    "defaultMessage": "Role uživateľa"
+  },
+  {
+    "id": "user.edit.phone",
+    "defaultMessage": "Telefón"
+  },
+  {
+    "id": "user.edit.requiredField",
+    "defaultMessage": "Toto pole je potrebné"
+  },
+  {
+    "id": "user.edit.requiredLengthField",
+    "defaultMessage": "Toto políčko je povinné, vyplňte ešte {characters} znakov."
+  },
+  {
+    "id": "user.edit.save",
+    "defaultMessage": "Uložiť"
+  },
+  {
+    "id": "user.edit.school",
+    "defaultMessage": "Škola"
+  },
+  {
+    "id": "user.edit.studentLevel",
+    "defaultMessage": "Študentský level"
+  },
+  {
+    "id": "user.edit.studyProgram",
+    "defaultMessage": "Študentský program"
+  },
+  {
+    "id": "user.edit.temporarySuspendedUserState",
+    "defaultMessage": "Dočasne suspendovaný"
+  },
+  {
+    "id": "user.edit.username",
+    "defaultMessage": "Uživateľské meno"
+  },
+  {
+    "id": "user.edit.usernameIsTaken",
+    "defaultMessage": "Toto uživateľské meno je obsadené"
+  },
+  {
+    "id": "user.edit.userState",
+    "defaultMessage": "Stav uživateľa"
+  },
+  {
+    "id": "user.edit.validEmailError",
+    "defaultMessage": "Toto musí byť valídna emailová adresa"
+  },
+  {
+    "id": "user.edit.validPhoneError",
+    "defaultMessage": "Toto musí byť valídne telefónne číslo (+xxxxxxxxxxxx)"
+  },
+  {
+    "id": "user.edit.variableSymbol",
+    "defaultMessage": "Variabilný symbol"
+  },
+  {
+    "id": "user.groups.manage.actions",
+    "defaultMessage": "Akcie"
+  },
+  {
+    "id": "user.groups.manage.groupName",
+    "defaultMessage": "Názov skupiny"
+  },
+  {
+    "id": "user.groups.manage.noGroups",
+    "defaultMessage": "Žiadne skupiny"
+  },
+  {
+    "id": "user.groups.manage.numberOfUsers",
+    "defaultMessage": "Počet ľudí"
+  },
+  {
+    "id": "user.groups.manage.table.title",
+    "defaultMessage": "Uživateľské skupiny - manažment"
+  },
+  {
+    "id": "user.groups.manage.title",
+    "defaultMessage": "Uživateľské skupiny"
+  },
+  {
+    "id": "users.create.title",
+    "defaultMessage": "Vytvoriť použivateľa"
+  },
+  {
+    "id": "users.create.title",
+    "defaultMessage": "Vytvoriť použivateľa"
+  },
+  {
+    "id": "users.edit.permissions.title",
+    "defaultMessage": "Uživateľské oprávnenia"
+  },
+  {
+    "id": "users.manage.actions",
+    "defaultMessage": "Akcie"
+  },
+  {
+    "id": "users.manage.noUsers",
+    "defaultMessage": "Žiadny uživateľia"
+  },
+  {
+    "id": "users.manage.table.title",
+    "defaultMessage": "Uživatelia - platby"
+  },
+  {
+    "id": "users.manage.table.title",
+    "defaultMessage": "Uživatelia - manažment"
+  },
+  {
+    "id": "users.manage.title",
+    "defaultMessage": "Platbby"
+  },
+  {
+    "id": "users.manage.title",
+    "defaultMessage": "Uživatelia"
+  },
+  {
+    "id": "users.manage.unassociatedPayments",
+    "defaultMessage": "Nepriradené platby"
+  },
+  {
+    "id": "users.manage.userName",
+    "defaultMessage": "Uzivateľské meno"
+  },
 ];

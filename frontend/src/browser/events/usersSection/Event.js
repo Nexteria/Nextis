@@ -63,6 +63,22 @@ const messages = defineMessages({
     defaultMessage: 'Fill feedback',
     id: 'event.users.fillFeedback',
   },
+  details: {
+    defaultMessage: 'Details',
+    id: 'event.users.details',
+  },
+  actionPoints: {
+    defaultMessage: 'action points',
+    id: 'event.users.actionPoints',
+  },
+  invited: {
+    defaultMessage: 'Invited',
+    id: 'event.users.invited',
+  },
+  signedIn: {
+    defaultMessage: 'Signed in',
+    id: 'event.users.signedIn',
+  },
 });
 
 export default class Event extends Component {
@@ -213,7 +229,7 @@ export default class Event extends Component {
             </div>
             <div className="col-md-4 event-details">
               <div className="col-md-12">
-                <strong>Podrobnosti:</strong>
+                <strong><FormattedMessage {...messages.details} />:</strong>
               </div>
               <div className="col-md-12">
                 <div className="col-md-2">
@@ -228,7 +244,7 @@ export default class Event extends Component {
                   <i className="fa fa-usd"></i>
                 </div>
                 <div className="col-md-10">
-                  {event.activityPoints} kreditov
+                  {event.activityPoints} <FormattedMessage {...messages.actionPoints} />
                 </div>
               </div>
               <div className="col-md-12">
@@ -248,7 +264,7 @@ export default class Event extends Component {
                     {attending.size} ({event.minCapacity} - {event.maxCapacity})
                   </div>
                   <div>
-                    Prihlásených
+                    <FormattedMessage {...messages.signedIn} />
                   </div>
                 </div>
                 <div className="col-md-5">
@@ -256,7 +272,7 @@ export default class Event extends Component {
                     {attendees.size}
                   </div>
                   <div>
-                    Pozvaných 
+                    <FormattedMessage {...messages.invited} />
                   </div>
                 </div>
               </div>

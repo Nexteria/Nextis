@@ -16,7 +16,7 @@ export default function loadMessages(options) {
   return fs.readdirSync('messages')
     .filter(isDictionary)
     .map(fileName => ({
-      descriptors: require(`../../../messages/${fileName}`).default,
+      descriptors: require(`../../messages/${fileName}`).default,
       locale: fileName.split('.')[0]
     }))
     .reduce((previous, { descriptors, locale }) => ({
