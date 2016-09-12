@@ -3,6 +3,8 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 
+import { fields } from '../../common/lib/redux-fields/index';
+
 const messages = defineMessages({
   title: {
     defaultMessage: 'Contact list',
@@ -42,7 +44,7 @@ class ContactList extends Component {
   };
 
   render() {
-    const { users, rolesList, studentLevels } = this.props;
+    const { users, rolesList, studentLevels, fields } = this.props;
     let students = [];
 
     if (users) {
@@ -54,6 +56,13 @@ class ContactList extends Component {
           
           return studentLevels.get(a.studentLevelId).name > studentLevels.get(b.studentLevelId).name;
         });
+
+      if (fields.filter.value) {
+        students = students.filter(user =>
+          `${user.firstName} ${user.lastName}`.toLowerCase()
+            .indexOf(fields.filter.value.toLowerCase()) !== -1
+        );
+      }
     }
 
     return (
@@ -77,6 +86,7 @@ class ContactList extends Component {
                         name="table_search"
                         className="form-control pull-right"
                         placeholder="Search"
+                        {...fields.filter}
                       />
 
                       <div className="input-group-btn">
@@ -120,8 +130,14 @@ class ContactList extends Component {
       </div>
     );
   }
-
 }
+
+ContactList = fields(ContactList, {
+  path: 'contactList',
+  fields: [
+    'filter',
+  ],
+});
 
 export default connect(state => ({
   users: state.users.users,
