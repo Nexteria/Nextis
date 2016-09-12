@@ -219,6 +219,13 @@ class EventsPage extends Component {
                       }
                     </a>
                   </li>
+                  {visibleFutureEvents ?
+                    ''
+                  :
+                    <li>
+                      <i className="fa fa-clock-o bg-gray"></i>
+                    </li>
+                  }
                 </ul>
                 {visibleFutureEvents ?
                   Array(11 - moment().month()).fill().map((_, index) =>
@@ -244,6 +251,9 @@ class EventsPage extends Component {
                           toggleEventDetails={toggleEventDetails}
                         />
                       )}
+                      <li>
+                        <i className="fa fa-clock-o bg-gray"></i>
+                      </li>
                     </ul>
                   )
                   : ''

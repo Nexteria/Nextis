@@ -44,20 +44,20 @@ export default function eventsReducer(state = new InitialState, action) {
         ...action.payload,
         lectors: new List(action.payload.lectors),
         followingEvents: new List(action.payload.followingEvents),
-        eventStartDateTime: moment(action.payload.eventStartDateTime),
-        eventEndDateTime: moment(action.payload.eventEndDateTime),
+        eventStartDateTime: moment.utc(action.payload.eventStartDateTime),
+        eventEndDateTime: moment.utc(action.payload.eventEndDateTime),
         description: RichTextEditor.createValueFromString(action.payload.description, 'html'),
         shortDescription: RichTextEditor.createValueFromString(action.payload.shortDescription, 'html'),
         attendeesGroups: new List(action.payload.attendeesGroups.map(group => new AttendeesGroup({
           ...group,
-          signUpDeadlineDateTime: moment(group.signUpDeadlineDateTime),
-          signUpOpenDateTime: moment(group.signUpOpenDateTime),
+          signUpDeadlineDateTime: moment.utc(group.signUpDeadlineDateTime),
+          signUpOpenDateTime: moment.utc(group.signUpOpenDateTime),
           users: new Map(group.users.map(user => [user.id, new Map({
             ...user,
             id: user.id,
-            signedIn: user.signedIn ? moment(user.signedIn) : null,
-            signedOut: user.signedOut ? moment(user.signedOut) : null,
-            wontGo: user.wontGo ? moment(user.wontGo) : null,
+            signedIn: user.signedIn ? moment.utc(user.signedIn) : null,
+            signedOut: user.signedOut ? moment.utc(user.signedOut) : null,
+            wontGo: user.wontGo ? moment.utc(user.wontGo) : null,
             signedOutReason: user.signedOutReason,
           })])),
         }))),
@@ -72,14 +72,14 @@ export default function eventsReducer(state = new InitialState, action) {
           ...event,
           lectors: new List(event.lectors),
           followingEvents: new List(event.followingEvents),
-          eventStartDateTime: moment(event.eventStartDateTime),
-          eventEndDateTime: moment(event.eventEndDateTime),
+          eventStartDateTime: moment.utc(event.eventStartDateTime),
+          eventEndDateTime: moment.utc(event.eventEndDateTime),
           description: RichTextEditor.createValueFromString(event.description, 'html'),
           shortDescription: RichTextEditor.createValueFromString(event.shortDescription, 'html'),
           attendeesGroups: new List(event.attendeesGroups.map(group => new AttendeesGroup({
             ...group,
-            signUpDeadlineDateTime: moment(group.signUpDeadlineDateTime),
-            signUpOpenDateTime: moment(group.signUpOpenDateTime),
+            signUpDeadlineDateTime: moment.utc(group.signUpDeadlineDateTime),
+            signUpOpenDateTime: moment.utc(group.signUpOpenDateTime),
             users: new Map(group.users.map(user => [user.id, new Map({
               ...user,
               id: user.id,
@@ -123,7 +123,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('wontGo', moment(response.wontGo))
+      ], user => user.set('wontGo', moment.utc(response.wontGo))
         .set('signedIn', null)
         .set('signedOut', null));
     }
@@ -140,7 +140,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('signedIn', moment(response.signedIn))
+      ], user => user.set('signedIn', moment.utc(response.signedIn))
         .set('signedOut', null)
         .set('wontGo', null));
     }
@@ -157,7 +157,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('signedOut', moment(response.signedOut))
+      ], user => user.set('signedOut', moment.utc(response.signedOut))
         .set('signedOutReason', response.signedOutReason)
         .set('signedIn', null)
         .set('wontGo', null))

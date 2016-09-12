@@ -34,6 +34,12 @@ class Header extends Component {
           </span>
         </Link>
         <nav className="navbar navbar-static-top">
+          <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span className="sr-only">Toggle navigation</span>
+            <span className="icon-bar"></span>
+            <span className="icon-bar"></span>
+            <span className="icon-bar"></span>
+          </a>
           <div className="navbar-custom-menu">
             <ul className="nav navbar-nav">
               <HeaderUserMenu {...{ viewer, openUserMenu, closeUserMenu, isUserMenuOpen }} />
