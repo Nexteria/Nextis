@@ -1068,4 +1068,20 @@ export default [
     defaultMessage: 'Event je plne obsadený',
     id: 'event.users.eventIsFull',
   },
+  {
+    defaultMessage: 'Potvrdenie nového hesla',
+    id: 'user.edit.newPasswordConfirmation',
+  },
+  {
+    defaultMessage: 'Zmena hesla',
+    id: 'user.edit.changePassword',
+  },
+  {
+    defaultMessage: 'Nové heslo a potvrdenie hesla nesedia!',
+    id: 'user.edit.passwordsDoNotMatch',
+  },
+  {
+    defaultMessage: 'Heslo',
+    id: 'user.edit.password',
+  },
 ];

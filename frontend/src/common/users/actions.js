@@ -59,6 +59,7 @@ export const REMOVE_USER_FROM_GROUP = 'REMOVE_USER_FROM_GROUP';
 export const CHANGE_USER_GROUP_NAME = 'CHANGE_USER_GROUP_NAME';
 export const ADD_USER_GROUP = 'ADD_USER_GROUP';
 export const CLOSE_USER_GROUP_DIALOG = 'CLOSE_USER_GROUP_DIALOG';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
 export function loadViewer() {
   return ({ fetch }) => ({
@@ -66,6 +67,25 @@ export function loadViewer() {
     payload: {
       promise: fetch('/users/me', {
         credentials: 'same-origin',
+      }).then(response => response.json()),
+    }
+  });
+}
+
+export function changePassword(values) {
+  return ({ fetch }) => ({
+    type: CHANGE_PASSWORD,
+    payload: {
+      promise: fetch('/users/me/password', {
+        credentials: 'same-origin',
+        method: 'put',
+        notifications: 'both',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          oldPassword: values.oldPassword,
+          newPassword: values.newPassword,
+          newPasswordConfirmation: values.newPasswordConfirmation,
+        }),
       }).then(response => response.json()),
     }
   });

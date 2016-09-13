@@ -5,6 +5,8 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import validator from 'validator';
 import { PhoneNumberUtil } from 'google-libphonenumber';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 
 
 import TextEditor from '../components/TextEditor';
@@ -14,11 +16,16 @@ import * as fieldsActions from '../../common/lib/redux-fields/actions';
 import * as actions from '../../common/users/actions';
 import './EditUser.scss';
 import User from '../../common/users/models/User';
+import PasswordChange from './PasswordChange';
 
 const messages = defineMessages({
   firstName: {
     defaultMessage: 'First name',
     id: 'user.edit.firstName',
+  },
+  info: {
+    defaultMessage: 'Info',
+    id: 'user.edit.info',
   },
   lastName: {
     defaultMessage: 'Last name',
@@ -163,6 +170,10 @@ const messages = defineMessages({
   emailIsTaken: {
     defaultMessage: 'That email is taken',
     id: 'user.edit.emailIsTaken',
+  },
+  password: {
+    defaultMessage: 'Password',
+    id: 'user.edit.password',
   },
 });
 
@@ -453,221 +464,226 @@ export class EditUser extends Component {
               </div>
             </div>
             <div className="col-md-9">
-              <div className="nav-tabs-custom">
-                <div className="tab-content">
-                  <div className="tab-pane active" id="settings">
-                    <form className="form-horizontal" onSubmit={handleSubmit((data) => saveUser(data))}>
+              <Tabs defaultActiveKey={1} id="users-info-tabs" className="nav-tabs-custom">
+                <Tab eventKey={1} title={formatMessage(messages.info)}>
+                  <form className="form-horizontal" onSubmit={handleSubmit((data) => saveUser(data))}>
+                    <Field
+                      name="firstName"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.firstName)}*`}
+                    />
+
+                    <Field
+                      name="lastName"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.lastName)}*`}
+                    />
+
+                    <Field
+                      name="username"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.username)}*`}
+                    />
+
+                    <Field
+                      name="email"
+                      type="email"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.email)}*`}
+                    />
+
+                    <Field
+                      name="phone"
+                      type="text"
+                      parse={this.parsePhone}
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.phone)}*`}
+                    />
+
+                    {roles.includes(rolesList.get('STUDENT').id) ?
+
                       <Field
-                        name="firstName"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.firstName)}*`}
+                        name="studentLevelId"
+                        component={this.renderSelect}
+                        label={`${formatMessage(messages.studentLevel)}*`}
+                      >
+                        <option value="" readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
+                        {studentLevels.valueSeq().map(level =>
+                          <option key={level.id} value={level.id}>{level.name}</option>
+                        )}
+                      </Field>
+                      : ''
+                    }
+
+                    <Field
+                      name="facebookLink"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.facebookLink)}`}
+                    />
+
+                    <Field
+                      name="linkedinLink"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.linkedinLink)}`}
+                    />
+
+                    <Field
+                      name="iban"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.iban)}${mode === 'profile' ? '*' : ''}`}
+                    />
+
+                    <Field
+                      name="variableSymbol"
+                      type="text"
+                      readOnly
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.variableSymbol)}`}
+                    />
+
+                    <Field
+                      name="personalDescription"
+                      component={this.renderEditor}
+                      label={`${formatMessage(messages.personalDescription)}${mode === 'profile' ? '*' : ''}`}
+                    />
+
+                    {roles.includes(rolesList.get('GUIDE').id) ?
+                      <Field
+                        name="guideDescription"
+                        component={this.renderEditor}
+                        label={`${formatMessage(messages.guideDescription)}`}
                       />
+                      : ''
+                    }
 
+                    {roles.includes(rolesList.get('LECTOR').id) ?
                       <Field
-                        name="lastName"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.lastName)}*`}
+                        name="lectorDescription"
+                        component={this.renderEditor}
+                        label={`${formatMessage(messages.lectorDescription)}`}
                       />
+                      : ''
+                    }
 
+                    {roles.includes(rolesList.get('BUDDY').id) ?
                       <Field
-                        name="username"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.username)}*`}
-                      />
-
-                      <Field
-                        name="email"
-                        type="email"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.email)}*`}
-                      />
-
-                      <Field
-                        name="phone"
-                        type="text"
-                        parse={this.parsePhone}
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.phone)}*`}
-                      />
-
-                      {roles.includes(rolesList.get('STUDENT').id) ?
-
-                        <Field
-                          name="studentLevelId"
-                          component={this.renderSelect}
-                          label={`${formatMessage(messages.studentLevel)}*`}
-                        >
-                          <option value="" readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
-                          {studentLevels.valueSeq().map(level =>
-                            <option key={level.id} value={level.id}>{level.name}</option>
-                          )}
-                        </Field>
-                        : ''
-                      }
-
-                      <Field
-                        name="facebookLink"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.facebookLink)}`}
-                      />
-
-                      <Field
-                        name="linkedinLink"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.linkedinLink)}`}
-                      />
-
-                      <Field
-                        name="iban"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.iban)}${mode === 'profile' ? '*' : ''}`}
-                      />
-
-                      <Field
-                        name="variableSymbol"
+                        name="buddyDescription"
                         type="text"
                         readOnly
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.variableSymbol)}`}
-                      />
-
-                      <Field
-                        name="personalDescription"
                         component={this.renderEditor}
-                        label={`${formatMessage(messages.personalDescription)}${mode === 'profile' ? '*' : ''}`}
+                        label={`${formatMessage(messages.buddyDescription)}`}
                       />
+                      : ''
+                    }
 
-                      {roles.includes(rolesList.get('GUIDE').id) ?
-                        <Field
-                          name="guideDescription"
-                          component={this.renderEditor}
-                          label={`${formatMessage(messages.guideDescription)}`}
-                        />
-                        : ''
-                      }
+                    <Field
+                      name="actualJobInfo"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.actualJobInfo)}${mode === 'profile' ? '*' : ''}`}
+                    />
 
-                      {roles.includes(rolesList.get('LECTOR').id) ?
-                        <Field
-                          name="lectorDescription"
-                          component={this.renderEditor}
-                          label={`${formatMessage(messages.lectorDescription)}`}
-                        />
-                        : ''
-                      }
+                    <Field
+                      name="school"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.school)}${mode === 'profile' ? '*' : ''}`}
+                    />
 
-                      {roles.includes(rolesList.get('BUDDY').id) ?
-                        <Field
-                          name="buddyDescription"
-                          type="text"
-                          readOnly
-                          component={this.renderEditor}
-                          label={`${formatMessage(messages.buddyDescription)}`}
-                        />
-                        : ''
-                      }
+                    <Field
+                      name="faculty"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.faculty)}${mode === 'profile' ? '*' : ''}`}
+                    />
 
+                    <Field
+                      name="studyProgram"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.studyProgram)}${mode === 'profile' ? '*' : ''}`}
+                    />
+
+                    {mode !== 'profile' ?
                       <Field
-                        name="actualJobInfo"
+                        name="userState"
+                        component={this.renderSelect}
+                        label={`${formatMessage(messages.userState)}`}
+                      >
+                        <option value={'active'}>
+                          {formatMessage(messages.activeUserState)}
+                        </option>
+                        <option value={'inactive'}>
+                          {formatMessage(messages.inactiveUserState)}
+                        </option>
+                        <option value={'temporarySuspended'}>
+                          {formatMessage(messages.temporarySuspendedUserState)}
+                        </option>
+                        <option value={'temporarySuspended'}>
+                          {formatMessage(messages.expelledUserState)}
+                        </option>
+                        <option value={'temporarySuspended'}>
+                          {formatMessage(messages.endedUserState)}
+                        </option>
+                      </Field>
+                      : ''
+                    }
+
+                    {roles.includes(rolesList.get('NEXTERIA_TEAM').id) ?
+                      <Field
+                        name="nexteriaTeamRole"
                         type="text"
                         component={this.renderInput}
-                        label={`${formatMessage(messages.actualJobInfo)}${mode === 'profile' ? '*' : ''}`}
+                        label={`${formatMessage(messages.nexteriaTeamRole)}*`}
                       />
+                      : ''
+                    }
 
-                      <Field
-                        name="school"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.school)}${mode === 'profile' ? '*' : ''}`}
-                      />
-
-                      <Field
-                        name="faculty"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.faculty)}${mode === 'profile' ? '*' : ''}`}
-                      />
-
-                      <Field
-                        name="studyProgram"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.studyProgram)}${mode === 'profile' ? '*' : ''}`}
-                      />
-
-                      {mode !== 'profile' ?
+                    {fields.id.value === null ?
+                      <div>
                         <Field
-                          name="userState"
-                          component={this.renderSelect}
-                          label={`${formatMessage(messages.userState)}`}
-                        >
-                          <option value={'active'}>
-                            {formatMessage(messages.activeUserState)}
-                          </option>
-                          <option value={'inactive'}>
-                            {formatMessage(messages.inactiveUserState)}
-                          </option>
-                          <option value={'temporarySuspended'}>
-                            {formatMessage(messages.temporarySuspendedUserState)}
-                          </option>
-                          <option value={'temporarySuspended'}>
-                            {formatMessage(messages.expelledUserState)}
-                          </option>
-                          <option value={'temporarySuspended'}>
-                            {formatMessage(messages.endedUserState)}
-                          </option>
-                        </Field>
-                        : ''
-                      }
-
-                      {roles.includes(rolesList.get('NEXTERIA_TEAM').id) ?
-                        <Field
-                          name="nexteriaTeamRole"
-                          type="text"
+                          name="newPassword"
+                          type="password"
                           component={this.renderInput}
-                          label={`${formatMessage(messages.nexteriaTeamRole)}*`}
+                          label={`${formatMessage(messages.newPassword)}`}
                         />
-                        : ''
-                      }
+                        
+                        <Field
+                          name="confirmationPassword"
+                          type="password"
+                          component={this.renderInput}
+                          label={`${formatMessage(messages.confirmationPassword)}`}
+                        />
+                      </div>
+                      : ''
+                    }
 
-                      {fields.id.value === null ?
-                        <div>
-                          <Field
-                            name="newPassword"
-                            type="password"
-                            component={this.renderInput}
-                            label={`${formatMessage(messages.newPassword)}`}
-                          />
-                          
-                          <Field
-                            name="confirmationPassword"
-                            type="password"
-                            component={this.renderInput}
-                            label={`${formatMessage(messages.confirmationPassword)}`}
-                          />
+                    {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
+                      <div className="form-group">
+                        <div className="col-sm-offset-2 col-sm-10">
+                          <button type="submit" disabled={pristine || submitting} className="btn btn-success">
+                            <FormattedMessage {...messages.save} />
+                          </button>
                         </div>
-                        : ''
-                      }
-
-                      {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
-                        <div className="form-group">
-                          <div className="col-sm-offset-2 col-sm-10">
-                            <button type="submit" disabled={pristine || submitting} className="btn btn-success">
-                              <FormattedMessage {...messages.save} />
-                            </button>
-                          </div>
-                        </div>
-                        : ''
-                      }
-                    </form>
-                  </div>
-                </div>
-              </div>
+                      </div>
+                      : ''
+                    }
+                  </form>
+                </Tab>
+                {mode === 'profile' ?
+                  <Tab eventKey={2} title={formatMessage(messages.password)}>
+                    <PasswordChange />
+                  </Tab>
+                :
+                  ''
+                }
+              </Tabs>
             </div>
           </div>
         </section>

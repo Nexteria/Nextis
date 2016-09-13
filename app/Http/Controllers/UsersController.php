@@ -51,6 +51,28 @@ class UsersController extends Controller
         return response()->json();
     }
 
+    public function changePassword()
+    {
+        $user = \Auth::user();
+
+        if (!\Hash::check(\Input::get('oldPassword'), $user->password)) {
+            return response()->json([
+              "error" => "Old password does not match!",
+              "code" => 400,
+            ], 400);
+        }
+
+        if (\Input::get('newPasswordConfirmation') !== \Input::get('newPassword')) {
+            return response()->json([
+              "error" => "New password does not match with confirmation!",
+              "code" => 400,
+            ], 400);
+        }
+
+        $user->password = \Hash::make(\Input::get('newPassword'));
+        $user->save();
+    }
+
     public function checkEmailAvailability()
     {
         $email = \Input::get('email');
@@ -62,7 +84,7 @@ class UsersController extends Controller
         }
 
         if (\Input::has('id')) {
-          $isAvailable = !User::where('email', '=', $email)->where('id', '!=', \Input::get('id'))->exists();  
+          $isAvailable = !User::where('email', '=', $email)->where('id', '!=', \Input::get('id'))->exists();
         } else {
           $isAvailable = !User::where('email', '=', $email)->exists();
         }
