@@ -958,7 +958,7 @@ export default [
   },
   {
     "id": "user.edit.studyProgram",
-    "defaultMessage": "Študentský program"
+    "defaultMessage": "Štúdijný program"
   },
   {
     "id": "user.edit.temporarySuspendedUserState",

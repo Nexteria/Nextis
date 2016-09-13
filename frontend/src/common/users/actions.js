@@ -169,7 +169,7 @@ export function saveUser(values) {
           confirmationPassword: values.confirmationPassword,
         }),
       }).then(response => response.json())
-      .then(response => { browserHistory.push('/admin/users'); return response; }),
+      .then(response => { browserHistory.goBack(); return response; }),
     },
   });
 }
