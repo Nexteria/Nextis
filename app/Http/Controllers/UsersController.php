@@ -132,7 +132,6 @@ class UsersController extends Controller
     {
         $user = \Auth::user();
         $user->confirmedPrivacyPolicy = true;
-        $user->confirmedMarketingUse = \Input::has('confirmedMarketingUse') ? \Input::get('confirmedMarketingUse') : false;
         $user->save();
 
         return response()->json($this->userTransformer->transform($user->fresh(['roles'])));

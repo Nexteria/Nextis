@@ -358,7 +358,7 @@ export function removeUser(userId) {
   });
 }
 
-export function confirmPrivacyPolicy(fields) {
+export function confirmPrivacyPolicy() {
   return ({ fetch }) => ({
     type: CONFIRM_PRIVACY_POLICY,
     payload: {
@@ -367,9 +367,6 @@ export function confirmPrivacyPolicy(fields) {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
-        body: JSON.stringify({
-          confirmedMarketingUse: fields.confirmedMarketingUse.value,
-        }),
       }).then(response => response.json())
       .then(response => { browserHistory.push('/users/me/settings'); return response; }),
     },
