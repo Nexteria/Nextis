@@ -1064,4 +1064,8 @@ export default [
     defaultMessage: 'Súhlasím',
     id: 'app.users.privacyPolicy.aggree',
   },
+  {
+    defaultMessage: 'Event je plne obsadený',
+    id: 'event.users.eventIsFull',
+  },
 ];
