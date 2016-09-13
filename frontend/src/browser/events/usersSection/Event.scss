@@ -3,19 +3,39 @@
     cursor: pointer;
   }
 
+  @media only screen and (max-device-width: 480px) {
+    .event-details {
+      padding:0;
+
+      .col-xs-12 {
+        padding: 0;
+      }
+    }
+
+    .event-actions {
+      text-align: center;
+    }
+
+    .event-actions button,
+    .event-actions .was-here,
+    .event-actions .wasnt-here {
+      display: block;
+      margin: auto !important;
+    }
+  }
+
   div.event-type {
     font-size: 0.8em;
   }
 
   .timeline-item {
-    display: inline-block;
 
     div.timeline-header {
       padding:0;
       border: none;
 
       h3 {
-        margin: 10px
+        margin-top: 10px
       }
     }
 
@@ -53,7 +73,7 @@
     }
 
     .fa-bars {
-      margin-left: 1em;
+      margin-left: 0.5em;
       font-size: 0.8em;
       cursor: pointer;
     }
