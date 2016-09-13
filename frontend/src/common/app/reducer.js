@@ -5,6 +5,7 @@ const InitialState = Record({
   online: false,
   storageLoaded: false,
   isUserMenuOpen: false,
+  isMobileSidebarOpen: false,
   loading: 0,
 }, 'app');
 
@@ -25,6 +26,9 @@ export default function appReducer(state = new InitialState, action) {
 
     case actions.CLOSE_USER_MENU:
       return state.set('isUserMenuOpen', false);
+
+    case actions.TOGGLE_SIDEBAR:
+      return state.update('isMobileSidebarOpen', isMobileSidebarOpen => !isMobileSidebarOpen);
   }
 
   if (/.*_START$/.test(action.type)) {

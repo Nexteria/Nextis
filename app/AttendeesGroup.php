@@ -36,7 +36,6 @@ class AttendeesGroup extends Model
 
     public function updateData($attributes)
     {
-        \Log::error($attributes);
         $this->fill($attributes);
         $this->ownerId = \Auth::user()->id;
 

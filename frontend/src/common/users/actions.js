@@ -49,6 +49,9 @@ export const VERIFY_USERNAME_AVALABLE_SUCCESS = 'VERIFY_USERNAME_AVALABLE_SUCCES
 export const VERIFY_EMAIL_AVALABLE = 'VERIFY_EMAIL_AVALABLE';
 export const VERIFY_EMAIL_AVALABLE_SUCCESS = 'VERIFY_EMAIL_AVALABLE_SUCCESS';
 
+export const CONFIRM_PRIVACY_POLICY = 'CONFIRM_PRIVACY_POLICY';
+export const CONFIRM_PRIVACY_POLICY_SUCCESS = 'CONFIRM_PRIVACY_POLICY_SUCCESS';
+
 export const LOAD_USER_FOR_EDITING = 'LOAD_USER_FOR_EDITING';
 export const ADD_USER_TO_GROUP = 'ADD_USER_TO_GROUP';
 export const ADD_GROUP_TO_GROUP = 'ADD_GROUP_TO_GROUP';
@@ -331,6 +334,24 @@ export function removeUser(userId) {
         notifications: 'both',
         credentials: 'same-origin',
       }).then(() => userId),
+    },
+  });
+}
+
+export function confirmPrivacyPolicy(fields) {
+  return ({ fetch }) => ({
+    type: CONFIRM_PRIVACY_POLICY,
+    payload: {
+      promise: fetch('/users/me/privacyPolicy', {
+        method: 'put',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
+        body: JSON.stringify({
+          confirmedMarketingUse: fields.confirmedMarketingUse.value,
+        }),
+      }).then(response => response.json())
+      .then(response => { browserHistory.push('/users/me/settings'); return response; }),
     },
   });
 }

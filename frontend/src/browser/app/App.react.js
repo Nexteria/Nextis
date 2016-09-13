@@ -17,6 +17,7 @@ import start from '../../common/app/start';
 import AppSidebar from './AppSidebar';
 import Header from './Header';
 import Footer from './Footer';
+import PrivacyPolicyDialog from '../users/PrivacyPolicyDialog';
 
 // v4-alpha.getbootstrap.com/getting-started/introduction/#starter-template
 const bootstrap4Metas = [
@@ -64,14 +65,14 @@ class App extends Component {
   }
 
   render() {
-    const { children, loading, hasPermission, currentLocale, rolesList, location, events, viewer, users } = this.props;
+    const { children, isMobileSidebarOpen, loading, hasPermission, currentLocale, rolesList, location, events, viewer, users } = this.props;
 
     if (!viewer || users === null || events === null || !rolesList) {
       return <div></div>;
     }
 
     return (
-      <div className="wrapper">
+      <div className={`${isMobileSidebarOpen ? 'sidebar-open' : ''} wrapper`}>
         {loading > 0 ?
           <ProgressBar className="loading-bar" percent={0} />
           :''
@@ -97,6 +98,11 @@ class App extends Component {
         <div className="content-wrapper">
           {children}
         </div>
+        {viewer.confirmedPrivacyPolicy ?
+          ''
+        :
+          <PrivacyPolicyDialog />
+        }
         <Footer />
       </div>
     );
@@ -112,6 +118,7 @@ export default connect(state => ({
   events: state.events.events,
   users: state.users.users,
   loading: state.app.loading,
+  isMobileSidebarOpen: state.app.isMobileSidebarOpen,
   rolesList: state.users.rolesList,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...usersActions, ...eventsActions, ...locationsActions })(App);

@@ -106,6 +106,16 @@ class UsersController extends Controller
         return response()->json($this->userTransformer->transform($user->fresh(['roles'])));
     }
 
+    public function confirmPrivacyPolicy()
+    {
+        $user = \Auth::user();
+        $user->confirmedPrivacyPolicy = true;
+        $user->confirmedMarketingUse = \Input::has('confirmedMarketingUse') ? \Input::get('confirmedMarketingUse') : false;
+        $user->save();
+
+        return response()->json($this->userTransformer->transform($user->fresh(['roles'])));
+    }
+
     public function getUsers($userId = null)
     {
         if ($userId) {

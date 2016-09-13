@@ -394,7 +394,7 @@ export default [
   },
   {
     "id": "event.users.actionPoints",
-    "defaultMessage": "akčné body"
+    "defaultMessage": "aktivity body"
   },
   {
     "id": "event.users.detail.closeButton",
@@ -1055,5 +1055,13 @@ export default [
   {
     "id": "users.manage.userName",
     "defaultMessage": "Uzivateľské meno"
+  },
+  {
+    defaultMessage: 'Nesúhlasím',
+    id: 'app.users.privacyPolicy.decline',
+  },
+  {
+    defaultMessage: 'Súhlasím',
+    id: 'app.users.privacyPolicy.aggree',
   },
 ];

@@ -91,20 +91,28 @@ class User extends Authenticatable
           $this->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
         }
 
-        if (isset($attributes['personalDescription'])){
+        if (isset($attributes['personalDescription'])) {
             $this->personalDescription = clean($attributes['personalDescription']);
         }
 
-        if (isset($attributes['buddyDescription'])){
+        if (isset($attributes['buddyDescription'])) {
             $this->buddyDescription = clean($attributes['buddyDescription']);
         }
 
-        if (isset($attributes['guideDescription'])){
+        if (isset($attributes['guideDescription'])) {
             $this->guideDescription = clean($attributes['guideDescription']);
         }
 
-        if (isset($attributes['lectorDescription'])){
+        if (isset($attributes['lectorDescription'])) {
             $this->lectorDescription = clean($attributes['lectorDescription']);
+        }
+
+        if (isset($attributes['confirmedPrivacyPolicy'])) {
+            $this->confirmedPrivacyPolicy = $attributes['confirmedPrivacyPolicy'];
+        }
+
+        if (isset($attributes['confirmedMarketingUse'])) {
+            $this->confirmedMarketingUse = $attributes['confirmedMarketingUse'];
         }
 
         if (isset($attributes['photo'])) {

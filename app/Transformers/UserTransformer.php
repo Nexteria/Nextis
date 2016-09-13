@@ -35,8 +35,10 @@ class UserTransformer extends Transformer
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
             'studentLevelId' => (int) $user->studentLevelId,
             'hostedEvents' => array_map('intval', $user->hostedEvents()->lists('id')->toArray()),
-            'created_at' => $user->created_at ? $user->created_at->__toString() : null ,
-            'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null ,
+            'created_at' => $user->created_at ? $user->created_at->__toString() : null,
+            'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
+            'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,
+            'confirmedMarketingUse' => $user->confirmedMarketingUse,
          ];
     }
 }

@@ -34,6 +34,8 @@ const User = Record({
   payments: null,
   hostedEvents: null,
   confirmationPassword: '',
+  confirmedPrivacyPolicy: false,
+  confirmedMarketingUse: false,
 });
 
 export default User;

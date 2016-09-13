@@ -47,6 +47,22 @@ export default function usersReducer(state = new InitialState, action) {
       return state.set('viewer', viewer);
     }
 
+    case actions.CONFIRM_PRIVACY_POLICY_SUCCESS: {
+      const user = action.payload;
+      const viewer = new User({
+        ...user,
+        hostedEvents: new List(user.hostedEvents),
+        roles: new List(user.roles.map(role => role.id)),
+        studentLevelId: parseInt(user.studentLevelId, 10),
+        personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
+        guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
+        lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+        buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
+      });
+
+      return state.set('viewer', viewer);
+    }
+
     case actions.LOAD_PERMISSIONS_LIST_SUCCESS: {
       return state.set('permissionsList', new List(action.payload.map(permission =>
         new Permission(permission)

@@ -5,6 +5,7 @@ export const APP_STORAGE_LOAD = 'APP_STORAGE_LOAD';
 export const LOGOUT = 'LOGOUT';
 export const OPEN_USER_MENU = 'OPEN_USER_MENU';
 export const CLOSE_USER_MENU = 'CLOSE_USER_MENU';
+export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR';
 
 const loadStorage = async (dispatch, storageEngine) => {
   const state = await storageEngine.load();
@@ -31,5 +32,11 @@ export function openUserMenu() {
 export function closeUserMenu() {
   return () => ({
     type: CLOSE_USER_MENU,
+  });
+}
+
+export function toggleSidebar() {
+  return () => ({
+    type: TOGGLE_SIDEBAR,
   });
 }

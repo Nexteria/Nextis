@@ -21,11 +21,11 @@ class Header extends Component {
 
   render() {
     const { viewer, isUserMenuOpen } = this.props;
-    const { openUserMenu, closeUserMenu } = this.props;
+    const { openUserMenu, toggleSidebar, closeUserMenu } = this.props;
 
     return (
       <header className="main-header">
-        <Link to="/" className="logo">
+        <Link to="/events" className="logo">
           <span className="logo-mini">
             <img src="/img/nexteria-logo-img.png" alt="Nexteria logo" />
           </span>
@@ -34,7 +34,7 @@ class Header extends Component {
           </span>
         </Link>
         <nav className="navbar navbar-static-top">
-          <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <a onClick={toggleSidebar} className="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span className="sr-only">Toggle navigation</span>
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
