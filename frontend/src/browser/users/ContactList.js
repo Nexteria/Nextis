@@ -2,6 +2,7 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+import diacritics from 'diacritics';
 
 import { fields } from '../../common/lib/redux-fields/index';
 
@@ -59,8 +60,8 @@ class ContactList extends Component {
 
       if (fields.filter.value) {
         students = students.filter(user =>
-          `${user.firstName} ${user.lastName}`.toLowerCase()
-            .indexOf(fields.filter.value.toLowerCase()) !== -1
+          diacritics.remove(`${user.firstName} ${user.lastName}`).toLowerCase()
+            .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
         );
       }
     }

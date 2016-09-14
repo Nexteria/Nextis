@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import diacritics from 'diacritics';
 
 import './UserGroupsPage.scss';
 import { fields } from '../../common/lib/redux-fields/index';
@@ -63,7 +64,7 @@ class UserGroupsPage extends Component {
     let filteredGroups = groups.valueSeq().map(group => group);
     if (fields.filter.value) {
       filteredGroups = groups.valueSeq().filter(group =>
-        group.name.toLowerCase().indexOf(fields.filter.value.toLowerCase()) !== -1
+        diacritics.remove(group.name).toLowerCase().indexOf(diacritics.remove(fields.filter.value).toLowerCase()) !== -1
       );
     }
 

@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import diacritics from 'diacritics';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as usersActions from '../../common/users/actions';
@@ -59,8 +60,8 @@ class PaymentsPage extends Component {
     let filteredUsers = users.valueSeq().map(user => user);
     if (fields.filter.value) {
       filteredUsers = users.valueSeq().filter(user =>
-        `${user.firstName} ${user.lastName} (${user.username})`.toLowerCase()
-          .indexOf(fields.filter.value.toLowerCase()) !== -1
+        diacritics.remove(`${user.firstName} ${user.lastName} (${user.username})`).toLowerCase()
+          .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
     }
 
@@ -138,7 +139,7 @@ class PaymentsPage extends Component {
 }
 
 PaymentsPage = fields(PaymentsPage, {
-  path: 'users',
+  path: 'payments',
   fields: [
     'filter',
   ],

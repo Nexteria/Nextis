@@ -1,6 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
+import diacritics from 'diacritics';
 
 import { fields } from '../../../common/lib/redux-fields/index';
 
@@ -33,7 +34,7 @@ export class PermissionsPool extends Component {
     const filter = fields.filter.value;
     if (filter) {
       permissions = permissions.valueSeq().filter(permission =>
-        `${permission.display_name}`.indexOf(filter) !== -1
+        diacritics.remove(`${permission.display_name}`).toLowerCase().indexOf(diacritics.remove(filter.toLowerCase())) !== -1
       );
     }
 

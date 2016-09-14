@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages, FormattedDate, FormattedTime } from '
 import { Map } from 'immutable';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import diacritics from 'diacritics';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as actions from '../../common/events/actions';
@@ -96,8 +97,8 @@ class HostedEventsPage extends Component {
     let filteredEvents = viewer.hostedEvents.map(eventId => events.get(eventId));
     if (fields.filter.value) {
       filteredEvents = events.valueSeq().filter(event =>
-        `${event.name}`.toLowerCase()
-          .indexOf(fields.filter.value.toLowerCase()) !== -1
+        diacritics.remove(`${event.name}`).toLowerCase()
+          .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
     }
 

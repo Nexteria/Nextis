@@ -1,6 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
+import diacritics from 'diacritics';
 
 import PoolsUser from './PoolsUser';
 import PoolsGroup from './PoolsGroup';
@@ -38,7 +39,7 @@ export class UsersPool extends Component {
     if (filter) {
       groups = groups.valueSeq().filter(group => group.name.indexOf(filter) !== -1);
       users = users.valueSeq().filter(user =>
-        `${user.firstName} ${user.lastName} (${user.username})`.indexOf(filter) !== -1
+        diacritics.remove(`${user.firstName} ${user.lastName} (${user.username})`).indexOf(diacritics.remove(filter)) !== -1
       );
     }
 

@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import diacritics from 'diacritics';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as actions from '../../common/nxLocations/actions';
@@ -58,8 +59,8 @@ class LocationsPage extends Component {
     let filteredLocations = locations.valueSeq().map(location => location);
     if (fields.filter.value) {
       filteredLocations = locations.valueSeq().filter(locations =>
-        `${locations.name}`.toLowerCase()
-          .indexOf(fields.filter.value.toLowerCase()) !== -1
+        diacritics.remove(`${locations.name}`).toLowerCase()
+          .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
     }
 

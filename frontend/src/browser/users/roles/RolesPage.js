@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import diacritics from 'diacritics';
 
 import { fields } from '../../../common/lib/redux-fields/index';
 import * as actions from '../../../common/users/actions';
@@ -55,8 +56,8 @@ class RolesPage extends Component {
     let filteredRoles = rolesList.valueSeq().map(role => role);
     if (fields.filter.value) {
       filteredRoles = rolesList.valueSeq().filter(role =>
-        `${role.display_name}`.toLowerCase()
-          .indexOf(fields.filter.value.toLowerCase()) !== -1
+        diacritics.remove(`${role.display_name}`).toLowerCase()
+          .indexOf(diacritics.remove(fields.filter.value).toLowerCase()) !== -1
       );
     }
 
