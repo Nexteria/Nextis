@@ -161,7 +161,7 @@ export function attendeeWontGo(event, viewer, groupId) {
         credentials: 'same-origin',
         notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wontGo: true }),
+        body: JSON.stringify({ wontGoFlag: true }),
       }).then(response => response.json())
         .then(response => ({
           ...response,

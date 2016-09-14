@@ -52,7 +52,7 @@ class NxEventAttendeesController extends Controller
             $attendee->signedIn = null;
         }
 
-        if (\Input::has('wontGo') && \Input::get('wontGo')) {
+        if (\Input::has('wontGoFlag') && \Input::get('wontGoFlag')) {
             $attendee->wontGo = Carbon::now();
         }
 

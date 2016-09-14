@@ -551,6 +551,7 @@
                                                                                                     <strong>Ahojte všetci,</strong>
                                                                                                     <br>
                                                                                                     <br> týmto emailom by som vám chcel v krátkosti predstaviť nový informačný systém Nexterie - Space.
+                                                                                                    <br> 
                                                                                                     <br> Čo v ňom zatiaľ nájdete:
                                                                                                     <ul>
                                                                                                         <li style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">podrobnosti a prihlasovanie na eventy</li>
@@ -567,6 +568,8 @@
                                                                                                     <br>Keď píšem dvaja študenti, myslím tým šikovní študenti NLA, ktorí svoj čas venovali Nexterii na administratívne činnosti. Aj tie sú dôležité, aby všetko fungovalo tak, ako má, no Nexteria informačný systém má za úlohu zjednodušiť a čo najviac zautomatizovať veci, ktoré sa zautomatizovať dajú, aby sa mohli šikovní ľudia viac venovať rozvoju NLA a vďaka tomu meniť Slovensko k lepšiemu.
                                                                                                     <br>
                                                                                                     <br>Systém sa spúšta do prevádzky vo verzií Beta, čo znamená, že môže a bude obsahovať aj nejaké chyby, preto by som chcel aj Teba, {{ $userName }}, poprosiť, ak akúkoľvek chybu nájdeš, alebo by si privítal nejakú novú funkcionalitu, daj nám o nej vedieť <strong><a href="https://wantoo.io/nexteria-space/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #6DC6DD;font-weight: normal;text-decoration: underline;">TU</a>.</strong>
+                                                                                                    <br>
+                                                                                                    <br> Samozrejme ak by bol z Tvojej strany záujem pomôcť s vývojom systému, môžeš si to vybrať aj ako ekvivalent projektu vo firme. Ak chces viac informacii, napíš mi na dusan.plavak@gmail.com
                                                                                                     <br>
                                                                                                     <br> Do systému sa môžeš prihlásiť na adrese: <a href="https://space.nexteria.sk/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #6DC6DD;font-weight: normal;text-decoration: underline;">https://space.nexteria.sk</a>
                                                                                                     <br>
