@@ -106,6 +106,7 @@ class EventsPage extends Component {
                   <ul className="timeline">
                     {sortedEvents.filter(event => event.id === eventId).map(event =>
                       <Event
+                        hide={false}
                         key={event.id}
                         users={users}
                         event={event}
@@ -160,6 +161,7 @@ class EventsPage extends Component {
                       </li>
                       {sortedEvents.filter(event => index === event.eventStartDateTime.month()).map(event =>
                         <Event
+                          hide={false}
                           key={event.id}
                           users={users}
                           event={event}
@@ -185,17 +187,9 @@ class EventsPage extends Component {
                     </span>
                   </li>
 
-                  <li className="time-label" id="show-prev-events-button">
-                    <a onClick={togglePastEvents} style={{cursor: 'pointer'}}>
-                      {visiblePastEvents ?
-                        <FormattedMessage {...messages.hidePastEvents} />
-                      :
-                        <FormattedMessage {...messages.showPastEvents} />
-                      }
-                    </a>
-                  </li>
-                  {sortedEvents.filter(event => moment().month() === event.eventStartDateTime.month()).map(event =>
+                  {sortedEvents.filter(event => moment().month() === event.eventStartDateTime.month() && moment().utc().isAfter(event.eventStartDateTime)).map(event =>
                       <Event
+                        hide={!visiblePastEvents}
                         key={event.id}
                         users={users}
                         event={event}
@@ -209,7 +203,63 @@ class EventsPage extends Component {
                         attendeeWontGo={attendeeWontGo}
                         toggleEventDetails={toggleEventDetails}
                       />
-                    )}
+                  )}
+                  <li className="time-label" id="show-prev-events-button">
+                    <a onClick={togglePastEvents} style={{cursor: 'pointer'}}>
+                      {visiblePastEvents ?
+                        <FormattedMessage {...messages.hidePastEvents} />
+                      :
+                        <FormattedMessage {...messages.showPastEvents} />
+                      }
+                    </a>
+                  </li>
+
+                  {sortedEvents.filter(event => moment().month() === event.eventStartDateTime.month() && moment().utc().isBefore(event.eventStartDateTime)).map(event =>
+                      <Event
+                        hide={false}
+                        key={event.id}
+                        users={users}
+                        event={event}
+                        viewer={viewer}
+                        nxLocation={nxLocations.get(event.nxLocationId)}
+                        openEventDetailsDialog={openEventDetailsDialog}
+                        openLocationDetailsDialog={openLocationDetailsDialog}
+                        closeLocationDetailsDialog={closeLocationDetailsDialog}
+                        attendeeSignIn={attendeeSignIn}
+                        openSignOutDialog={openSignOutDialog}
+                        attendeeWontGo={attendeeWontGo}
+                        toggleEventDetails={toggleEventDetails}
+                      />
+                  )}
+
+                  {(11 - moment().month() > 1) ?
+                    <ul className="timeline">
+                      <li className="time-label">
+                        <span className="bg-yellow">
+                          {moment().month(moment().month() + 1).format('MMMM')}
+                        </span>
+                      </li>
+                      {sortedEvents.filter(event => moment().month() + 1 === event.eventStartDateTime.month()).map(event =>
+                        <Event
+                          hide={false}
+                          key={event.id}
+                          users={users}
+                          event={event}
+                          viewer={viewer}
+                          nxLocation={nxLocations.get(event.nxLocationId)}
+                          openEventDetailsDialog={openEventDetailsDialog}
+                          openLocationDetailsDialog={openLocationDetailsDialog}
+                          closeLocationDetailsDialog={closeLocationDetailsDialog}
+                          attendeeSignIn={attendeeSignIn}
+                          openSignOutDialog={openSignOutDialog}
+                          attendeeWontGo={attendeeWontGo}
+                          toggleEventDetails={toggleEventDetails}
+                        />
+                      )}
+                    </ul>
+                    : ''
+                  }
+
                   <li className="time-label" id="show-prev-events-button">
                     <a onClick={toggleFutureEvents} style={{cursor: 'pointer'}}>
                       {visibleFutureEvents ?
@@ -225,11 +275,12 @@ class EventsPage extends Component {
                     <ul key={index} className="timeline">
                       <li className="time-label">
                         <span className="bg-yellow">
-                          {moment().month(moment().month() + index + 1).format('MMMM')}
+                          {moment().month(moment().month() + index + 2).format('MMMM')}
                         </span>
                       </li>
-                      {sortedEvents.filter(event => moment().month() + 1 + index === event.eventStartDateTime.month()).map(event =>
+                      {sortedEvents.filter(event => moment().month() + 2 + index === event.eventStartDateTime.month()).map(event =>
                         <Event
+                          hide={false}
                           key={event.id}
                           users={users}
                           event={event}

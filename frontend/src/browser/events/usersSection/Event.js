@@ -107,10 +107,11 @@ export default class Event extends Component {
     openLocationDetailsDialog: PropTypes.func.isRequired,
     nxLocation: PropTypes.object.isRequired,
     datailsOpen: PropTypes.bool,
+    hide: PropTypes.bool.isRequired,
   };
 
   render() {
-    const { event, viewer, datailsOpen, nxLocation, users } = this.props;
+    const { event, viewer, hide, datailsOpen, nxLocation, users } = this.props;
     const { toggleEventDetails, openLocationDetailsDialog, openEventDetailsDialog, openSignOutDialog, attendeeWontGo, attendeeSignIn } = this.props;
 
     const oldEvent = event.eventStartDateTime.isBefore(moment.utc());
@@ -140,7 +141,7 @@ export default class Event extends Component {
     const undecided = attendee && !attendee.get('signedIn') && !attendee.get('wontGo') && !attendee.get('signedOut');
 
     return (
-      <li className="users-event">
+      <li className="users-event" style={{display: hide ? 'none' : ''}}>
         <div className="fa bg-green event-type">
           <FormattedMessage {...messages[`eventType_${event.eventType}`]} />
         </div>
