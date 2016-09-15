@@ -18,6 +18,7 @@ const User = Record({
   school: '',
   faculty: '',
   studyProgram: '',
+  studyYear: '',
   roles: new List(),
   activityPoints: '',
   tuitionDebt: '',

@@ -700,15 +700,15 @@ export class EditEvent extends Component {
                       />
 
                       <Field
-                        name="description"
-                        component={this.renderEditor}
-                        label={formatMessage(messages.description)}
-                      />
-
-                      <Field
                         name="shortDescription"
                         component={this.renderEditor}
                         label={`${formatMessage(messages.shortDescription)}*`}
+                      />
+
+                      <Field
+                        name="description"
+                        component={this.renderEditor}
+                        label={formatMessage(messages.description)}
                       />
 
                       <Field

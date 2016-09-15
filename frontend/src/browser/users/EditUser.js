@@ -175,6 +175,10 @@ const messages = defineMessages({
     defaultMessage: 'Password',
     id: 'user.edit.password',
   },
+  studyYear: {
+    defaultMessage: 'Study year',
+    id: 'user.edit.studyYear',
+  },
 });
 
 const validate = (values, props) => {
@@ -236,6 +240,10 @@ const validate = (values, props) => {
 
     if (!values.studyProgram) {
       errors.studyProgram = formatMessage(messages.requiredField);
+    }
+
+    if (!values.studyYear) {
+      errors.studyYear = formatMessage(messages.requiredField);
     }
 
     if (!values.actualJobInfo) {
@@ -608,6 +616,13 @@ export class EditUser extends Component {
                       type="text"
                       component={this.renderInput}
                       label={`${formatMessage(messages.studyProgram)}${mode === 'profile' ? '*' : ''}`}
+                    />
+
+                    <Field
+                      name="studyYear"
+                      type="text"
+                      component={this.renderInput}
+                      label={`${formatMessage(messages.studyYear)}${mode === 'profile' ? '*' : ''}`}
                     />
 
                     {mode !== 'profile' ?

@@ -66,7 +66,7 @@ export default [
   },
   {
     "id": "app.sidebar.links.users",
-    "defaultMessage": "Uživatelia"
+    "defaultMessage": "Užívatelia"
   },
   {
     "id": "contacts.list.contactStudentsTitile",
@@ -1034,11 +1034,11 @@ export default [
   },
   {
     "id": "users.manage.table.title",
-    "defaultMessage": "Uživatelia - platby"
+    "defaultMessage": "Užívatelia - platby"
   },
   {
     "id": "users.manage.table.title",
-    "defaultMessage": "Uživatelia - manažment"
+    "defaultMessage": "Užívatelia - manažment"
   },
   {
     "id": "users.manage.title",
@@ -1046,7 +1046,7 @@ export default [
   },
   {
     "id": "users.manage.title",
-    "defaultMessage": "Uživatelia"
+    "defaultMessage": "Užívatelia"
   },
   {
     "id": "users.manage.unassociatedPayments",
@@ -1083,5 +1083,17 @@ export default [
   {
     defaultMessage: 'Heslo',
     id: 'user.edit.password',
+  },
+  {
+    defaultMessage: 'Prihlasovanie sa otvára:',
+    id: 'event.users.signInOpenTitle',
+  },
+  {
+    defaultMessage: 'Tento event nie je pre teba prístupný',
+    id: 'event.users.unavailableEvent',
+  },
+  {
+    defaultMessage: 'Rok štúdia',
+    id: 'user.edit.studyYear',
   },
 ];

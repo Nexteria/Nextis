@@ -55,6 +55,10 @@ const messages = defineMessages({
     defaultMessage: 'Sign in deadline:',
     id: 'event.users.signInNoteTitle',
   },
+  signInOpenTitle: {
+    defaultMessage: 'Sign in will be open:',
+    id: 'event.users.signInOpenTitle',
+  },
   signOut: {
     defaultMessage: 'Sign out',
     id: 'event.users.signOut',
@@ -82,6 +86,10 @@ const messages = defineMessages({
   eventIsFull: {
     defaultMessage: 'Event is full',
     id: 'event.users.eventIsFull',
+  },
+  unavailableEvent: {
+    defaultMessage: 'This event is not available for you',
+    id: 'event.users.unavailableEvent',
   },
 });
 
@@ -167,9 +175,19 @@ export default class Event extends Component {
                   <div>
                     <div className="signIn-date-notes col-md-6 col-sm-6 col-xs-12">
                       <div>
-                        <div><FormattedMessage {...messages.signInNoteTitle} /></div>
                         <div>
-                          <FormattedDate value={group.signUpDeadlineDateTime} />
+                          {isSignInOpen ?
+                              <FormattedMessage {...messages.signInNoteTitle} />
+                            :
+                              <FormattedMessage {...messages.signInOpenTitle} />
+                          }
+                        </div>
+                        <div>
+                          {isSignInOpen ?
+                              <FormattedDate value={group.signUpDeadlineDateTime} />
+                            :
+                              <FormattedDate value={group.signUpOpenDateTime} />
+                          }
                         </div>
                       </div>
                     </div>
@@ -205,7 +223,12 @@ export default class Event extends Component {
               </div>
               :
               <div className="col-md-6 col-sm-6 col-xs-12 attendance-container">
-                <div className="event-actions col-md-12 col-sm-12 col-xs-12">
+                <div className="signIn-date-notes col-md-6 col-sm-6 col-xs-12">
+                  <div className="pull-right">
+                    <FormattedMessage {...messages.unavailableEvent} />
+                  </div>
+                </div>
+                <div className="event-actions col-md-6 col-sm-12 col-xs-12">
                   <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
                 </div>
               </div>

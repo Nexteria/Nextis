@@ -161,6 +161,7 @@ export function saveUser(values) {
           school: values.school,
           faculty: values.faculty,
           studyProgram: values.studyProgram,
+          studyYear: values.studyYear,
           roles: values.roles,
           nexteriaTeamRole: values.nexteriaTeamRole,
           state: values.state,

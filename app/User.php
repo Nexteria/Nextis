@@ -34,6 +34,7 @@ class User extends Authenticatable
         'school',
         'faculty',
         'studyProgram',
+        'studyYear',
         'state',
         'iban',
         'nexteriaTeamRole',

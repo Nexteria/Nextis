@@ -25,6 +25,7 @@ class UserTransformer extends Transformer
             'school' => $user->school,
             'faculty' => $user->faculty,
             'studyProgram' => $user->studyProgram,
+            'studyYear' => $user->studyYear,
             'roles' => $roles,
             'activityPoints' => $user->activityPoints,
             'guideDescription' => $user->guideDescription ? $user->guideDescription : '',
