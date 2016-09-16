@@ -13,7 +13,7 @@ const config = {
   remoteHotReload: false,
   sentryUrl: '',
   APIS: {
-    default: 'http://127.0.0.1:8000',
+    default: 'http://nexteria_space/api',
   },
 };
 
