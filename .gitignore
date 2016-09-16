@@ -13,3 +13,5 @@ public/uploads/*
 !public/uploads/images
 public/uploads/images/*
 !public/uploads/images/.gitkeep
+
+.DS_Store
