@@ -40,9 +40,7 @@ export default function configureMiddleware(initialState, platformDeps, platform
     middleware.push(storageMiddleware);
   }
 
-  const enableLogger =
-    process.env.NODE_ENV !== 'production' &&
-    process.env.IS_BROWSER;
+  const enableLogger = false;
 
   // Logger must be the last middleware in chain.
   if (enableLogger) {
