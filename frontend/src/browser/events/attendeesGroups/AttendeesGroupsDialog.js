@@ -205,18 +205,22 @@ export class AttendeesGroupsDialog extends Component {
         <UsersPool
           groups={groups}
           users={users}
-          addUser={(id) => input.onChange(input.value.set(id, new Map({
-            id: id,
-            signedIn: null,
-            wasPresent: null,
-            filledFeedback: null,
-            signedOut: null,
-            wontGo: null,
-            signedOutReason: RichTextEditor.createValueFromString('', 'html'),
-          })))}
+          addUser={(id) => {
+            if (!input.value.has(id)) {
+              input.onChange(input.value.set(id, new Map({
+                id,
+                signedIn: null,
+                wasPresent: null,
+                filledFeedback: null,
+                signedOut: null,
+                wontGo: null,
+                signedOutReason: RichTextEditor.createValueFromString('', 'html'),
+              })));
+            }
+          }}
           addGroup={group => {
             const users = group.users.reduce((users, user) => users.set(user, user), new Map());
-            const groupUsers = users.map(user => new Map({
+            const groupUsers = users.filter(user => !input.value.has(user)).map(user => new Map({
               id: user,
               wasPresent: null,
               filledFeedback: null,
