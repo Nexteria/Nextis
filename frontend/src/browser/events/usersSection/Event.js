@@ -91,6 +91,10 @@ const messages = defineMessages({
     defaultMessage: 'This event is not available for you',
     id: 'event.users.unavailableEvent',
   },
+  signInExpired: {
+    defaultMessage: 'Sign in deadline was:',
+    id: 'event.users.signInExpired',
+  },
 });
 
 export default class Event extends Component {
@@ -130,6 +134,9 @@ export default class Event extends Component {
     const isSignInOpen = group ?
       moment().utc().isAfter(group.signUpOpenDateTime) && moment().utc().isBefore(group.signUpDeadlineDateTime)
     : false;
+
+    const signInExpired = group ?
+      moment().utc().isAfter(group.signUpDeadlineDateTime) : false;
 
     const attendee = group ? group.users.get(viewer.id) : null;
     const groupSignIns = group ? group.users.filter(user => user.get('signedIn')).size : 0;
@@ -178,16 +185,22 @@ export default class Event extends Component {
                       <div>
                         <div>
                           {isSignInOpen ?
-                              <FormattedMessage {...messages.signInNoteTitle} />
+                            <FormattedMessage {...messages.signInNoteTitle} />
                             :
-                              <FormattedMessage {...messages.signInOpenTitle} />
+                              signInExpired ?
+                                <FormattedMessage {...messages.signInExpired} />
+                                :
+                                <FormattedMessage {...messages.signInOpenTitle} />
                           }
                         </div>
                         <div>
                           {isSignInOpen ?
-                              <FormattedDate value={group.signUpDeadlineDateTime} />
+                            <FormattedDate value={group.signUpDeadlineDateTime} />
                             :
-                              <FormattedDate value={group.signUpOpenDateTime} />
+                              signInExpired ?
+                                <FormattedDate value={group.signUpDeadlineDateTime} />
+                                :
+                                <FormattedDate value={group.signUpOpenDateTime} />
                           }
                         </div>
                       </div>

@@ -1119,5 +1119,9 @@ export default [
   {
     "id": "users.manage.userName",
     "defaultMessage": "User name"
-  }
+  },
+  {
+    defaultMessage: 'Sign in deadline was:',
+    id: 'event.users.signInExpired',
+  },
 ];

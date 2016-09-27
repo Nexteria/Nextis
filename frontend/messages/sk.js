@@ -462,7 +462,7 @@ export default [
   },
   {
     "id": "event.users.noLectors",
-    "defaultMessage": "Nie sú žiadny lektori"
+    "defaultMessage": "Nie sú žiadni lektori"
   },
   {
     "id": "event.users.shortDescription",
@@ -1095,5 +1095,9 @@ export default [
   {
     defaultMessage: 'Rok štúdia',
     id: 'user.edit.studyYear',
+  },
+  {
+    defaultMessage: 'Prihlasovanie bolo možné do:',
+    id: 'event.users.signInExpired',
   },
 ];
