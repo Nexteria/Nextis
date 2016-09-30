@@ -29,6 +29,7 @@ import UsersPaymentsDialog from './payments/UsersPaymentsDialog';
 import HostedEventsPage from './events/HostedEventsPage';
 import EventAttendanceDialog from './events/EventAttendanceDialog';
 import EventEmailsDialog from './events/EventEmailsDialog';
+import UserProfileDialog from './users/UserProfileDialog'
 
 export default function createRoutes() {
   return (
@@ -43,6 +44,7 @@ export default function createRoutes() {
       <Route component={Settings} path="/users/me/settings" />
       <Route component={HostedEventsPage} path="host/events" />
       <Route component={EventAttendanceDialog} path="host/events/:eventId" />
+      <Route component={UserProfileDialog} path="users/:userId" />
 
       <Route component={AdminApp} path="admin">
         <Route component={UsersPage} path="users" />

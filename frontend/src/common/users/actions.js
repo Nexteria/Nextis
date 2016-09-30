@@ -61,6 +61,9 @@ export const ADD_USER_GROUP = 'ADD_USER_GROUP';
 export const CLOSE_USER_GROUP_DIALOG = 'CLOSE_USER_GROUP_DIALOG';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
+export const OPEN_USER_DETAIL_DIALOG = 'OPEN_USER_DETAIL_DIALOG';
+export const CLOSE_USER_DETAIL_DIALOG = 'CLOSE_USER_DETAIL_DIALOG';
+
 export function loadViewer() {
   return ({ fetch }) => ({
     type: 'LOAD_VIEWER',
@@ -375,3 +378,18 @@ export function confirmPrivacyPolicy() {
     },
   });
 }
+
+export function openUserDetail(userId) {
+  return {
+      type: OPEN_USER_DETAIL_DIALOG,
+      payload: userId
+    };
+}
+
+export function closeUserDetail() {
+  return {
+      type: CLOSE_USER_DETAIL_DIALOG
+  };
+}
+
+

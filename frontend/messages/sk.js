@@ -1216,4 +1216,48 @@ export default [
     defaultMessage: '75% z Tvojho bodového základu',
     id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
   },
+  {
+    defaultMessage: 'Profil',
+    id: 'app.users.userProfileDialog.title',
+  },
+  {
+    defaultMessage: 'O mne',
+    id: 'app.users.userProfileDialog.personalDescription',
+  },  
+  {
+    defaultMessage: 'Bazingaa...',
+    id: 'app.users.userProfileDialog.personalDescription_empty',
+  },
+  {
+    defaultMessage: 'Email',
+    id: 'app.users.userProfileDialog.email',
+  },
+  {
+    defaultMessage: 'Nevyplnil som si email :-O',
+    id: 'app.users.userProfileDialog.email_empty',
+  },  
+  {
+    defaultMessage: 'Telefón',
+    id: 'app.users.userProfileDialog.phone',
+  },
+  {
+    defaultMessage: 'Nevyplnol som telefón :-(',
+    id: 'app.users.userProfileDialog.phone_empty',
+  },
+  {
+    defaultMessage: 'Práca',
+    id: 'app.users.userProfileDialog.job',
+  },
+  {
+    defaultMessage: 'Nevyplnené :-)',
+    id: 'app.users.userProfileDialog.job_empty',
+  },
+  {
+    defaultMessage: 'Škola',
+    id: 'app.users.userProfileDialog.school',
+  },
+  {
+    defaultMessage: 'Nevyplnené',
+    id: 'app.users.userProfileDialog.school_empty',
+  },
 ];

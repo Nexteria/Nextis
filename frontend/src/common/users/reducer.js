@@ -26,6 +26,7 @@ const InitialState = Record({
   editingUserGroup: null,
   studentLevels: null,
   permissionsList: null,
+  user: null,
   hasPermission,
 }, 'users');
 
@@ -193,6 +194,14 @@ export default function usersReducer(state = new InitialState, action) {
         permissions: new Map(role.permissions.map(permission =>
           [permission.name, new Permission(permission)]))
       })));
+    }
+
+    case actions.OPEN_USER_DETAIL_DIALOG: {
+      return state.set('user', action.payload);
+    }
+
+    case actions.CLOSE_USER_DETAIL_DIALOG: {
+      return state.set('user', null);
     }
 
     default:

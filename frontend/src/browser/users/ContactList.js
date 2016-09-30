@@ -3,8 +3,12 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import diacritics from 'diacritics';
+import { browserHistory } from 'react-router'
 
 import { fields } from '../../common/lib/redux-fields/index';
+import UserProfileDialog from './UserProfileDialog';
+import * as actions from '../../common/users/actions';
+import './ContactList.scss';
 
 const messages = defineMessages({
   title: {
@@ -42,13 +46,14 @@ class ContactList extends Component {
   static propTypes = {
     users: PropTypes.object,
     rolesList: PropTypes.object,
-    studentLevels: PropTypes.object,
     fields: PropTypes.object,
-
+    user: PropTypes.number,
+    openUserDetail: PropTypes.func.isRequired,
+    studentLevels: PropTypes.object
   };
 
   render() {
-    const { users, rolesList, studentLevels, fields } = this.props;
+    const { users, rolesList, studentLevels, fields, user, openUserDetail } = this.props;
     let students = [];
     if (users) {
       students = users.filter(user => user.roles.includes(rolesList.get('STUDENT').id))
@@ -104,17 +109,19 @@ class ContactList extends Component {
                   </div>
                 </div>
                 <div className="box-body table-responsive no-padding items-container">
-                  <table className="table table-hover">
-                    <tbody>
+                  <table className="table table-hover contactListTable">
+                    <thead>
                       <tr>
                         <th><FormattedMessage {...messages.fullName} /></th>
                         <th><FormattedMessage {...messages.level} /></th>
                         <th><FormattedMessage {...messages.email} /></th>
                         <th><FormattedMessage {...messages.phone} /></th>
                       </tr>
+                      </thead>
+                      <tbody>
                       {users ?
                         students.map(student =>
-                          <tr key={student.id}>
+                          <tr key={student.id} onClick={() => browserHistory.push(`/users/${student.id}`)}>
                             <td>{student.firstName} {student.lastName}</td>
                             <td>{studentLevels.get(student.studentLevelId).name}</td>
                             <td>{student.email}</td>
@@ -134,6 +141,7 @@ class ContactList extends Component {
             </div>
           </div>
         </section>
+        {user ? <UserProfileDialog user={users.get(user)} /> : ""}
       </div>
     );
   }
@@ -148,6 +156,7 @@ ContactList = fields(ContactList, {
 
 export default connect(state => ({
   users: state.users.users,
+  user: state.users.user,
   studentLevels: state.users.studentLevels,
   rolesList: state.users.rolesList,
-}))(ContactList);
+}), actions)(ContactList);
