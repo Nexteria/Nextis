@@ -1,3 +1,9 @@
+#Laravel
+
+     cp .env.example .env
+     composer install
+     php artisan key:generate
+     php artisan migrate
 # React
 
 use node >= 6
@@ -8,7 +14,9 @@ use node >= 6
 
 For development run:
 
-     gulp
+     gulp // or ./node_modules/.bin/gulp
+
+     php artisan serve //or setup apache or nginx
 
 For production run:
 
