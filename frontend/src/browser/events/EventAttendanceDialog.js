@@ -46,6 +46,10 @@ const messages = defineMessages({
     defaultMessage: 'Username',
     id: 'event.hosted.attendance.userName',
   },
+  notAttendingReason: {
+    defaultMessage: 'Reason',
+    id: 'event.hosted.attendance.reason',
+  },
 });
 
 export class EventAttendanceDialog extends Component {
@@ -59,7 +63,7 @@ export class EventAttendanceDialog extends Component {
     fields: PropTypes.object.isRequired,
   }
 
-  getUsersTable(usersList, event) {
+  getUsersTable(usersList, event, type) {
     const { users, hasPermission } = this.props;
     const {
       changeAttendeePresenceStatus,
@@ -73,6 +77,10 @@ export class EventAttendanceDialog extends Component {
             <tbody>
               <tr>
                 <th><FormattedMessage {...messages.userName} /></th>
+                {type === 'notAttending' && hasPermission('set_filled_feedback_flag') ?
+                  <th><FormattedMessage {...messages.notAttendingReason} /></th>
+                  : null
+                }
                 <th><FormattedMessage {...messages.wasPresent} /></th>
                 {hasPermission('set_filled_feedback_flag') ?
                   <th><FormattedMessage {...messages.filledFeedback} /></th>
@@ -83,6 +91,12 @@ export class EventAttendanceDialog extends Component {
                 usersList.valueSeq().map(user =>
                   <tr key={user.get('id')}>
                     <td>{`${users.get(user.get('id')).firstName} ${users.get(user.get('id')).lastName} (${users.get(user.get('id')).username})`}</td>
+                    {type === 'notAttending' && hasPermission('set_filled_feedback_flag') ?
+                      <td>
+                        <span dangerouslySetInnerHTML={{ __html: user.get('signedOutReason') }}></span>
+                      </td>
+                      : null
+                    }
                     <td
                       onClick={() =>
                         changeAttendeePresenceStatus(
@@ -159,13 +173,13 @@ export class EventAttendanceDialog extends Component {
         <Body>
           <Tabs defaultActiveKey={1} id="attendance-table-tabs" className="nav-tabs-custom">
             <Tab eventKey={1} title={formatMessage(messages.attending)}>
-              {this.getUsersTable(attending, event)}
+              {this.getUsersTable(attending, event, 'attending')}
             </Tab>
             <Tab eventKey={2} title={formatMessage(messages.notAttending)}>
-              {this.getUsersTable(notAttending, event)}
+              {this.getUsersTable(notAttending, event, 'notAttending')}
             </Tab>
             <Tab eventKey={3} title={formatMessage(messages.undecided)}>
-              {this.getUsersTable(undecided, event)}
+              {this.getUsersTable(undecided, event, 'undecided')}
             </Tab>
           </Tabs>
         </Body>

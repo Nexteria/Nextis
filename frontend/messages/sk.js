@@ -1100,4 +1100,8 @@ export default [
     defaultMessage: 'Prihlasovanie bolo možné do:',
     id: 'event.users.signInExpired',
   },
+  {
+    defaultMessage: 'Dôvod',
+    id: 'event.hosted.attendance.reason',
+  },
 ];

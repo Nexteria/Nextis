@@ -1091,5 +1091,9 @@ export default [
   {
     "id": "users.manage.userName",
     "defaultMessage": "User name"
-  }
+  },
+  {
+    defaultMessage: 'Reason',
+    id: 'event.hosted.attendance.reason',
+  },
 ];

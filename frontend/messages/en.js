@@ -1124,4 +1124,8 @@ export default [
     defaultMessage: 'Sign in deadline was:',
     id: 'event.users.signInExpired',
   },
+  {
+    defaultMessage: 'Reason',
+    id: 'event.hosted.attendance.reason',
+  },
 ];
