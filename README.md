@@ -8,7 +8,7 @@
 
 use node >= 6
 
-     cp frontend/src/common/config.js.example frontend/src/config.js
+     cp frontend/src/common/config.js.example frontend/src/common/config.js
      cd frontend
      npm install
 
