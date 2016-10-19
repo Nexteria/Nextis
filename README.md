@@ -4,6 +4,10 @@
      composer install
      php artisan key:generate
      php artisan migrate
+
+     sudo chmod -R 777 storage/
+     sudo chmod -R 777 bootstrap/cache/
+
 # React
 
 use node >= 6
