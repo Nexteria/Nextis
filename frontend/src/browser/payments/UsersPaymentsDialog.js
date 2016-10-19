@@ -98,7 +98,10 @@ export class UsersPaymentsDialog extends Component {
                 </tr>
                 {userPayments.size > 0 ?
                   userPayments.map(payment =>
-                    <tr key={payment.id}>
+                    <tr
+                      key={payment.id}
+                      style={{ color: payment.transactionType === 'kredit' ? 'green' : 'red' }}
+                    >
                       <td>{payment.amount / 100}</td>
                       <td>{payment.transactionType}</td>
                       <td>{payment.variableSymbol}</td>
@@ -108,11 +111,11 @@ export class UsersPaymentsDialog extends Component {
                     </tr>
                   )
                 :
-                <tr>
-                  <td colSpan="6" style={{ textAlign: 'center' }}>
-                    <FormattedMessage {...messages.noPayments} />
-                  </td>
-                </tr>
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                      <FormattedMessage {...messages.noPayments} />
+                    </td>
+                  </tr>
                 }
               </tbody>
             </table>

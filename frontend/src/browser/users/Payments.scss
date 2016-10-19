@@ -1,0 +1,21 @@
+.green-text {
+	color: green;
+}
+
+.red-text {
+	color: red;
+}
+
+#payments-transaction-table {
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+#account-balance-span {
+	font-size: 2em;
+}
+
+#payments > div {
+	background: white;
+	padding-top: 24px;
+}

@@ -57,4 +57,4 @@ export class DetailsDialog extends Component {
   }
 }
 
-export default connect(null, eventActions)(DetailsDialog);
+export default connect(() => ({}), eventActions)(DetailsDialog);

@@ -22,8 +22,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getConstants()
     {
-        return view('home');
+        return response()->json(\Config::get('constants'));
     }
 }

@@ -9,6 +9,7 @@ import moment from 'moment';
 import 'react-progress-bar-plus/lib/progress-bar.css';
 import ProgressBar from 'react-progress-bar-plus';
 
+import * as appActions from '../../common/app/actions';
 import * as usersActions from '../../common/users/actions';
 import * as eventsActions from '../../common/events/actions';
 import * as locationsActions from '../../common/nxLocations/actions';
@@ -46,14 +47,25 @@ class App extends Component {
     loadStudentLevelsList: PropTypes.func.isRequired,
     loadEventList: PropTypes.func.isRequired,
     loadLocationsList: PropTypes.func.isRequired,
+    loadConstants: PropTypes.func.isRequired,
     loading: PropTypes.number.isRequired,
     events: PropTypes.object,
     hasPermission: PropTypes.func.isRequired,
     rolesList: PropTypes.object,
+    isMobileSidebarOpen: PropTypes.bool.isRequired,
   };
 
   componentWillMount() {
-    const { loadUsers, currentLocale, loadLocationsList, loadEventList, loadRolesList, loadStudentLevelsList, loadUserGroups } = this.props;
+    const {
+      loadUsers,
+      currentLocale,
+      loadLocationsList,
+      loadEventList,
+      loadRolesList,
+      loadStudentLevelsList,
+      loadUserGroups,
+      loadConstants,
+    } = this.props;
 
     loadUsers();
     loadUserGroups();
@@ -61,11 +73,23 @@ class App extends Component {
     loadEventList();
     loadStudentLevelsList();
     loadLocationsList();
+    loadConstants();
     moment.locale(currentLocale);
   }
 
   render() {
-    const { children, isMobileSidebarOpen, loading, hasPermission, currentLocale, rolesList, location, events, viewer, users } = this.props;
+    const {
+      children,
+      isMobileSidebarOpen,
+      loading,
+      hasPermission,
+      currentLocale,
+      rolesList,
+      location,
+      events,
+      viewer,
+      users,
+    } = this.props;
 
     if (!viewer || users === null || events === null || !rolesList) {
       return <div></div>;
@@ -75,7 +99,7 @@ class App extends Component {
       <div className={`${isMobileSidebarOpen ? 'sidebar-open' : ''} wrapper`}>
         {loading > 0 ?
           <ProgressBar className="loading-bar" percent={0} />
-          :''
+          : ''
         }
         <Helmet
           htmlAttributes={{ lang: currentLocale }}
@@ -121,4 +145,4 @@ export default connect(state => ({
   isMobileSidebarOpen: state.app.isMobileSidebarOpen,
   rolesList: state.users.rolesList,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), { ...usersActions, ...eventsActions, ...locationsActions })(App);
+}), { ...appActions, ...usersActions, ...eventsActions, ...locationsActions })(App);

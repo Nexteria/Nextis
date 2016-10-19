@@ -10,6 +10,7 @@ import CreateEventPage from './events/CreateEventPage';
 import EditUserGroup from './users/EditUserGroup';
 import CreateLocationDialog from './nxLocations/CreateLocationDialog';
 import ContactList from './users/ContactList';
+import Payments from './users/Payments';
 import UserGroupsPage from './users/UserGroupsPage';
 import EditUser from './users/EditUser';
 import UsersPage from './users/UsersPage';
@@ -41,6 +42,7 @@ export default function createRoutes() {
       </Route>
       <Route component={ActivityPointsPage} path="/points" />
       <Route component={ContactList} path="contacts" />
+      <Route component={Payments} path="payments" />
       <Route component={Settings} path="/users/me/settings" />
       <Route component={HostedEventsPage} path="host/events" />
       <Route component={EventAttendanceDialog} path="host/events/:eventId" />

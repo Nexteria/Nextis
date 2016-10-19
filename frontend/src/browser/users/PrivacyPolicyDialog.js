@@ -1,9 +1,10 @@
+/* eslint-disable max-len */
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
-import { browserHistory } from 'react-router';
+
 
 import * as actions from '../../common/users/actions';
 
@@ -21,6 +22,7 @@ const messages = defineMessages({
 export class PrivacyPolicyDialog extends Component {
 
   static propTypes = {
+    confirmPrivacyPolicy: PropTypes.func.isRequired,
   }
 
   render() {
@@ -30,7 +32,7 @@ export class PrivacyPolicyDialog extends Component {
         show
         bsSize="large"
         dialogClassName="event-details-dialog"
-        onHide={() => window.location = '/logout'}
+        onHide={() => { window.location = '/logout'; }}
       >
         <Header closeButton>
           <Title>Súhlas so spracúvaním osobných údajov</Title>
@@ -46,7 +48,7 @@ export class PrivacyPolicyDialog extends Component {
         </Body>
 
         <Footer>
-          <button className="btn btn-danger" onClick={() => window.location = '/logout'}>
+          <button className="btn btn-danger" onClick={() => { window.location = '/logout'; }}>
             <FormattedMessage {...messages.decline} />
           </button>
           <button className="btn btn-success" onClick={confirmPrivacyPolicy}>
@@ -58,4 +60,4 @@ export class PrivacyPolicyDialog extends Component {
   }
 }
 
-export default connect(null, actions)(PrivacyPolicyDialog);
+export default connect(() => ({}), actions)(PrivacyPolicyDialog);

@@ -17,6 +17,8 @@ Route::post('/payments', 'PaymentsController@processPayment');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
+        Route::get('/app/constants', 'HomeController@getConstants');
+
         Route::post('/usernames', 'UsersController@checkUsernameAvailability');
         Route::post('/emails', 'UsersController@checkEmailAvailability');
 

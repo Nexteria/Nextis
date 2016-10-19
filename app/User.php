@@ -7,6 +7,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Role;
+use App\Payment;
 use App\StudentLevel;
 use Carbon\Carbon;
 
@@ -40,6 +41,8 @@ class User extends Authenticatable
         'nexteriaTeamRole',
         'minimumSemesterActivityPoints',
         'activityPointsBaseNumber',
+        'nexteriaTeamRole',
+        'monthlySchoolFee',
     ];
 
     protected $dates = ['deleted_at'];
@@ -65,7 +68,7 @@ class User extends Authenticatable
         $user->variableSymbol = Carbon::now()->format("Ym").$user->id;
 
         if ($attributes['newPassword'] === $attributes['confirmationPassword']) {
-          $user->password = \Hash::make($attributes['newPassword']);
+            $user->password = \Hash::make($attributes['newPassword']);
         }
         
         if ($attributes['profilePicture']) {
@@ -73,7 +76,7 @@ class User extends Authenticatable
         }
         
         if ($attributes['studentLevelId']) {
-          $user->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
+            $user->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
         }
 
         $user->roles()->sync(Role::whereIn('id', $attributes['roles'])->lists('id')->toArray());
@@ -91,7 +94,7 @@ class User extends Authenticatable
         }
 
         if ($attributes['studentLevelId']) {
-          $this->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
+            $this->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
         }
 
         if (isset($attributes['personalDescription'])) {
@@ -142,7 +145,7 @@ class User extends Authenticatable
 
     public function payments()
     {
-        return $this->hasMany('App\Payment', 'userId');
+        return $this->hasMany('App\Payment', 'userId')->orderBy('created_at');
     }
 
     public function hostedEvents()
@@ -172,5 +175,37 @@ class User extends Authenticatable
             }
         }
         return ['sumGainedPoints' => $sumGainedPoints, 'sumPotentialPoints' => $sumPotentialPoints];
+    }
+
+    public function generateMonthlySchoolFee($month, $year, $adminUserId, $createdAt = null)
+    {
+        $newPayment = new Payment();
+        $newPayment->message = "Skolne za ".$month.'.'.$year;
+        $newPayment->transactionType = 'debet';
+        $newPayment->userId = $this->id;
+        $newPayment->addedByUserId = $adminUserId;
+        $newPayment->amount = $this->monthlySchoolFee;
+        $newPayment->description = 'Automaticky vygenerovane';
+
+        if ($createdAt) {
+            $newPayment->save();
+            $newPayment->created_at = $createdAt;
+        }
+
+        $this->payments()->save($newPayment);
+    }
+
+    public function getAccountBalance()
+    {
+        $accountBalance = 0;
+        foreach ($this->payments as $payment) {
+            if ($payment->transactionType == 'kredit') {
+                $accountBalance += $payment->amount;
+            } else {
+                $accountBalance -= $payment->amount;
+            }
+        }
+
+        return $accountBalance;
     }
 }

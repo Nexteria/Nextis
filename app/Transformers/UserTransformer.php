@@ -1,5 +1,7 @@
-<?php namespace App\Transformers;
+<?php
+namespace App\Transformers;
 
+use Auth;
 use App\Transformers\RoleTransformer;
 
 class UserTransformer extends Transformer
@@ -10,7 +12,7 @@ class UserTransformer extends Transformer
         $roles = $transformer->transformCollection($user->roles);
         $activityPoints = $user->computeActivityPoints();
 
-        return [
+        $result = [
             'id' => (int) $user->id,
             'firstName' => $user->firstName,
             'username' => $user->username,
@@ -44,6 +46,13 @@ class UserTransformer extends Transformer
             'potentialActivityPoints' => $activityPoints['sumPotentialPoints'],
             'minimumSemesterActivityPoints' => $user->minimumSemesterActivityPoints,
             'activityPointsBaseNumber' => $user->activityPointsBaseNumber,
+            'monthlySchoolFee' => (int) $user->monthlySchoolFee,
          ];
+
+        if (Auth::user()->id == $user->id || Auth::user()->hasRole('ADMIN')) {
+            $result['accountBalance'] = (int) $user->getAccountBalance();
+        }
+
+        return $result;
     }
 }

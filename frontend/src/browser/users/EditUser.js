@@ -191,6 +191,18 @@ const messages = defineMessages({
     defaultMessage: 'Activity points base for student',
     id: 'user.edit.activityPointsBaseNumber',
   },
+  monthlySchoolFee: {
+    defaultMessage: 'Monthly school fee',
+    id: 'user.edit.monthlySchoolFee',
+  },
+  monthlySchoolFeeInCents: {
+    defaultMessage: 'Monthly school fee in cents!',
+    id: 'user.edit.monthlySchoolFeeInCents',
+  },
+  requiredNumber: {
+    defaultMessage: 'Must by a number.',
+    id: 'user.edit.requiredNumber',
+  },
 });
 
 const validate = (values, props) => {
@@ -243,6 +255,12 @@ const validate = (values, props) => {
     }
   }
 
+  if (!values.monthlySchoolFee) {
+    errors.monthlySchoolFee = formatMessage(messages.requiredField);
+  } else if (isNaN(Number(values.monthlySchoolFee))) {
+    errors.monthlySchoolFee = formatMessage(messages.requiredNumber);
+  }
+
   if (props.mode === 'profile') {
     if (!values.iban) {
       errors.iban = formatMessage(messages.requiredField);
@@ -284,10 +302,8 @@ const validate = (values, props) => {
       values.personalDescription.getEditorState().getCurrentContent().getPlainText().length
       : 0;
     if (descriptionLength < 100) {
-      errors.personalDescription = formatMessage(
-        messages.requiredLengthField,
-        { characters: 100 - descriptionLength }
-      );
+      errors.personalDescription =
+        formatMessage(messages.requiredLengthField, { characters: 100 - descriptionLength });
     }
   }
 
@@ -296,26 +312,28 @@ const validate = (values, props) => {
 
 const asyncValidate = (values, dispatch, props) => {
   const { formatMessage } = props.intl;
-  // need to create new Promise here instead of just assigning null,
-  // because validations on role 'LECTOR' can run with empty values.username and values.email,
-  // which means that 'validation' at the end of this function will be null,
-  // but we need to return a promise
-  let validation = Promise.resolve();
+
+  let validation = null;
   const errors = {};
   if (values.username) {
     validation = dispatch(actions.verifyUsernameAvailable(values.username, values.id))
-      .then(() => {}, () => { errors.username = formatMessage(messages.usernameIsTaken); });
+    .then(() => {}, () => {
+      errors.username = formatMessage(messages.usernameIsTaken);
+    });
   }
 
   if (values.email) {
     if (validation) {
-      validation = validation
-        .then(() => dispatch(actions.verifyEmailAvailable(values.email, values.id)));
+      validation = validation.then(() =>
+        dispatch(actions.verifyEmailAvailable(values.email, values.id))
+      );
     } else {
       validation = dispatch(actions.verifyEmailAvailable(values.email, values.id));
     }
 
-    validation.then(() => {}, () => { errors.email = formatMessage(messages.emailIsTaken); });
+    validation.then(() => {}, () => {
+      errors.email = formatMessage(messages.emailIsTaken);
+    });
   }
 
   return validation.then(() => errors, () => errors);
@@ -343,6 +361,8 @@ export class EditUser extends Component {
     submitting: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
+    roles: PropTypes.object,
+    userStates: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
@@ -372,8 +392,10 @@ export class EditUser extends Component {
   renderInput(data) {
     const { input, label, type, meta: { asyncValidating, touched, error, pristine } } = data;
 
+    const errorClass = touched && error && (!pristine || !input.value) ? 'has-error' : '';
+
     return (
-      <div className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}>
+      <div className={`form-group ${errorClass}`}>
         <label className="col-sm-2 control-label">
           {label}
         </label>
@@ -397,7 +419,7 @@ export class EditUser extends Component {
   }
 
   renderEditor(data) {
-    const { input, label, name, children, meta: { touched, error } } = data;
+    const { input, label, meta: { error } } = data;
 
     return (
       <div className={`form-group ${error ? 'has-error' : ''}`}>
@@ -440,7 +462,8 @@ export class EditUser extends Component {
   }
 
   renderRoles(data, rolesList) {
-    const { input, label, children, meta: { touched, error } } = data;
+    const { input, label } = data;
+
     return (
       <div className="form-group text-left">
         <label>{label}</label>
@@ -465,8 +488,19 @@ export class EditUser extends Component {
   }
 
   render() {
-    const { fields, mode, roles, pristine, submitting, title, rolesList, studentLevels } = this.props;
-    const { saveUser, touch, handleSubmit, updateUserRole, hasPermission } = this.props;
+    const {
+      fields,
+      mode,
+      roles,
+      pristine,
+      submitting,
+      title,
+      rolesList,
+      studentLevels,
+      userStates,
+    } = this.props;
+
+    const { saveUser, handleSubmit, hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
     if (!roles || !rolesList) {
@@ -513,7 +547,10 @@ export class EditUser extends Component {
             <div className="col-md-9">
               <Tabs defaultActiveKey={1} id="users-info-tabs" className="nav-tabs-custom">
                 <Tab eventKey={1} title={formatMessage(messages.info)}>
-                  <form className="form-horizontal" onSubmit={handleSubmit((data) => saveUser(data))}>
+                  <form
+                    className="form-horizontal"
+                    onSubmit={handleSubmit((data) => saveUser(data))}
+                  >
                     <Field
                       name="firstName"
                       type="text"
@@ -557,7 +594,9 @@ export class EditUser extends Component {
                         component={this.renderSelect}
                         label={`${formatMessage(messages.studentLevel)}*`}
                       >
-                        <option value="" readOnly>{formatMessage(messages.chooseStudentLevel)}</option>
+                        <option value="" readOnly>
+                          {formatMessage(messages.chooseStudentLevel)}
+                        </option>
                         {studentLevels.valueSeq().map(level =>
                           <option key={level.id} value={level.id}>{level.name}</option>
                         )}
@@ -597,7 +636,10 @@ export class EditUser extends Component {
                     <Field
                       name="personalDescription"
                       component={this.renderEditor}
-                      label={`${formatMessage(messages.personalDescription)}${mode === 'profile' ? '*' : ''}`}
+                      label={
+                        `${formatMessage(messages.personalDescription)}
+                        ${mode === 'profile' ? '*' : ''}`
+                      }
                     />
 
                     {roles.includes(rolesList.get('GUIDE').id) ?
@@ -633,7 +675,9 @@ export class EditUser extends Component {
                       name="actualJobInfo"
                       type="text"
                       component={this.renderInput}
-                      label={`${formatMessage(messages.actualJobInfo)}${mode === 'profile' ? '*' : ''}`}
+                      label={
+                        `${formatMessage(messages.actualJobInfo)}${mode === 'profile' ? '*' : ''}`
+                      }
                     />
 
                     <Field
@@ -654,7 +698,9 @@ export class EditUser extends Component {
                       name="studyProgram"
                       type="text"
                       component={this.renderInput}
-                      label={`${formatMessage(messages.studyProgram)}${mode === 'profile' ? '*' : ''}`}
+                      label={
+                        `${formatMessage(messages.studyProgram)}${mode === 'profile' ? '*' : ''}`
+                      }
                     />
 
                     <Field
@@ -671,21 +717,11 @@ export class EditUser extends Component {
                           component={this.renderSelect}
                           label={`${formatMessage(messages.userState)}`}
                         >
-                          <option value={'active'}>
-                            {formatMessage(messages.activeUserState)}
-                          </option>
-                          <option value={'inactive'}>
-                            {formatMessage(messages.inactiveUserState)}
-                          </option>
-                          <option value={'temporarySuspended'}>
-                            {formatMessage(messages.temporarySuspendedUserState)}
-                          </option>
-                          <option value={'expelled'}>
-                            {formatMessage(messages.expelledUserState)}
-                          </option>
-                          <option value={'ended'}>
-                            {formatMessage(messages.endedUserState)}
-                          </option>
+                          {userStates ? Object.keys(userStates).map((key) =>
+                            <option value={userStates[key]} key="key">
+                              {formatMessage(messages[`${userStates[key]}UserState`])}
+                            </option>
+                          ) : ''}
                         </Field>
                         {roles.includes(rolesList.get('STUDENT').id) ?
                           <div>
@@ -703,6 +739,13 @@ export class EditUser extends Component {
                             />
                           </div>
                         : ''}
+
+                        <Field
+                          name="monthlySchoolFee"
+                          type="text"
+                          component={this.renderInput}
+                          label={`${formatMessage(messages.monthlySchoolFeeInCents)}`}
+                        />
                       </div>
                       : ''
                     }
@@ -736,10 +779,16 @@ export class EditUser extends Component {
                       : ''
                     }
 
-                    {(fields.id.value && hasPermission('update_users')) || (!fields.id.value && hasPermission('create_users')) || mode === 'profile' ?
+                    {(fields.id.value && hasPermission('update_users')) ||
+                     (!fields.id.value && hasPermission('create_users')) ||
+                      mode === 'profile' ?
                       <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                          <button type="submit" disabled={pristine || submitting} className="btn btn-success">
+                          <button
+                            type="submit"
+                            disabled={pristine || submitting}
+                            className="btn btn-success"
+                          >
                             <FormattedMessage {...messages.save} />
                           </button>
                         </div>
@@ -795,6 +844,7 @@ EditUser = fields(EditUser, {
     'confirmationPassword',
     'activityPointsBaseNumber',
     'minimumSemesterActivityPoints',
+    'monthlySchoolFee',
   ],
 });
 
@@ -809,10 +859,10 @@ EditUser = injectIntl(EditUser);
 const selector = formValueSelector('editUser');
 
 export default connect((state) => ({
+  userStates: state.app.constants.states,
   rolesList: state.users.rolesList,
   roles: selector(state, 'roles'),
   users: state.users.users,
   studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-  initialValues: state.fields.get('editUser') ? state.fields.get('editUser').toObject() : state.fields.get('editUser'),
 }), { ...fieldsActions, ...actions })(EditUser);

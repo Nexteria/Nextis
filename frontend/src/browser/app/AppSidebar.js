@@ -48,7 +48,7 @@ const messages = defineMessages({
     id: 'app.sidebar.links.roles',
   },
   payments: {
-    defaultMessage: 'Payments',
+    defaultMessage: 'Study payments',
     id: 'app.sidebar.links.payments',
   },
   hostedEvents: {
@@ -62,6 +62,10 @@ const messages = defineMessages({
   activityPoints: {
     defaultMessage: 'Aktivity body',
     id: 'app.sidebar.links.activityPoints',
+  },
+  other: {
+    defaultMessage: 'Other',
+    id: 'app.sidebar.links.other',
   },
 });
 
@@ -87,8 +91,9 @@ export default class AppSideBar extends Component {
               </Link>
             </li>
             <li>
-              <Link to="/points">
-                <span><FormattedMessage {...messages.activityPoints} /></span>
+              <Link to="/payments">
+                <i className="fa fa-eur text-green"></i>
+                <span><FormattedMessage {...messages.payments} /></span>
               </Link>
             </li>
             {viewer.hostedEvents.size > 0 ?
@@ -102,16 +107,13 @@ export default class AppSideBar extends Component {
               </li>
               : ''
             }
-            
-            <li className="header">
-              <FormattedMessage {...messages.network} /></li>
+            <li className="header"><FormattedMessage {...messages.network} /></li>
             <li>
               <Link to="/contacts">
                 <i className="fa fa-users text-green"></i>
                 <span><FormattedMessage {...messages.contacts} /></span>
               </Link>
             </li>
-
             {hasPermission('view_admin_section') ?
               <div className="admin-section">
                 <li className="admin-header"><FormattedMessage {...messages.adminSection} /></li>

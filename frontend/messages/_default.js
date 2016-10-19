@@ -49,8 +49,12 @@ export default [
     "defaultMessage": "Network"
   },
   {
+    "id": "app.sidebar.links.other",
+    "defaultMessage": "Other"
+  },
+  {
     "id": "app.sidebar.links.payments",
-    "defaultMessage": "Payments"
+    "defaultMessage": "Study payments"
   },
   {
     "id": "app.sidebar.links.roles",
@@ -1045,6 +1049,10 @@ export default [
     "defaultMessage": "LinkedIn link"
   },
   {
+    "id": "user.edit.monthlySchoolFeeInCents",
+    "defaultMessage": "Monthly school fee in cents!"
+  },
+  {
     "id": "user.edit.newPassword",
     "defaultMessage": "New password"
   },
@@ -1097,8 +1105,16 @@ export default [
     "defaultMessage": "This field is required"
   },
   {
+    "id": "user.edit.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
     "id": "user.edit.requiredLengthField",
     "defaultMessage": "This field is required, please type {characters} more."
+  },
+  {
+    "id": "user.edit.requiredNumber",
+    "defaultMessage": "Must by a number."
   },
   {
     "id": "user.edit.save",
@@ -1185,6 +1201,10 @@ export default [
     "defaultMessage": "Users permissions"
   },
   {
+    "id": "users.manage.accountBalance",
+    "defaultMessage": "Account balance"
+  },
+  {
     "id": "users.manage.actions",
     "defaultMessage": "Actions"
   },
@@ -1199,14 +1219,14 @@ export default [
   {
     "id": "users.manage.noUsers",
     "defaultMessage": "No users here"
-  },
-  {
-    "id": "users.manage.table.title",
-    "defaultMessage": "Users - payments"
   },
   {
     "id": "users.manage.table.title",
     "defaultMessage": "Users - managment"
+  },
+  {
+    "id": "users.manage.table.title",
+    "defaultMessage": "Users - payments"
   },
   {
     "id": "users.manage.title",
@@ -1227,5 +1247,53 @@ export default [
   {
     "id": "users.manage.userName",
     "defaultMessage": "User name"
+  },
+  {
+    "id": "viewerPayments.accountBalance",
+    "defaultMessage": "Account balance"
+  },
+  {
+    "id": "viewerPayments.amount",
+    "defaultMessage": "Amount"
+  },
+  {
+    "id": "viewerPayments.date",
+    "defaultMessage": "Date"
+  },
+  {
+    "id": "viewerPayments.iban",
+    "defaultMessage": "IBAN"
+  },
+  {
+    "id": "viewerPayments.loadingPayments",
+    "defaultMessage": "Loading payments"
+  },
+  {
+    "id": "viewerPayments.message",
+    "defaultMessage": "Message"
+  },
+  {
+    "id": "viewerPayments.monthlySchoolFee",
+    "defaultMessage": "Monthly school fee"
+  },
+  {
+    "id": "viewerPayments.paymentInstruction",
+    "defaultMessage": "Payment instruction"
+  },
+  {
+    "id": "viewerPayments.recieverMessage",
+    "defaultMessage": "Message for reciever"
+  },
+  {
+    "id": "viewerPayments.title",
+    "defaultMessage": "Transaction"
+  },
+  {
+    "id": "viewerPayments.transactions",
+    "defaultMessage": "Transactions"
+  },
+  {
+    "id": "viewerPayments.vs",
+    "defaultMessage": "VS"
   }
 ];

@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Carbon\Carbon;
+use App\User;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +26,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function () {
+            $month = Carbon::now()->month;
+            $year = Carbon::now()->year;
+            foreach (User::all() as $user) {
+                if ($user->state == \Config::get('constants.states.ACTIVE')) {
+                    $user->generateMonthlySchoolFee($month, $year, 1);
+                }
+            }
+        })->monthlyOn(env('GENERATE_MONTHLY_SCHOOL_FEE_DAY_IN_MONTH'),
+            env('GENERATE_MONTHLY_SCHOOL_FEE_HOUR'));
     }
 }

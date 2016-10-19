@@ -7,6 +7,7 @@ const InitialState = Record({
   isUserMenuOpen: false,
   isMobileSidebarOpen: false,
   loading: 0,
+  constants: null,
 }, 'app');
 
 export default function appReducer(state = new InitialState, action) {
@@ -29,6 +30,11 @@ export default function appReducer(state = new InitialState, action) {
 
     case actions.TOGGLE_SIDEBAR:
       return state.update('isMobileSidebarOpen', isMobileSidebarOpen => !isMobileSidebarOpen);
+
+    case actions.LOAD_CONSTANTS_SUCCESS: {
+      return state.set('constants', action.payload)
+        .update('loading', loading => loading - 1);
+    }
   }
 
   if (/.*_START$/.test(action.type)) {

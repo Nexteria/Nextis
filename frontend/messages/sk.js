@@ -50,7 +50,7 @@ export default [
   },
   {
     "id": "app.sidebar.links.payments",
-    "defaultMessage": "Platby"
+    "defaultMessage": "Študijné poplatky"
   },
   {
     "id": "app.sidebar.links.roles",
@@ -1259,5 +1259,69 @@ export default [
   {
     defaultMessage: 'Nevyplnené',
     id: 'app.users.userProfileDialog.school_empty',
+  },
+  {
+    "id": "app.sidebar.links.other",
+    "defaultMessage": "Iné"
+  },
+  {
+    "id": "user.edit.monthlySchoolFeeInCents",
+    "defaultMessage": "Mesačné školné v CENTOCH"
+  },
+  {
+    "id": "users.manage.accountBalance",
+    "defaultMessage": "Stav účtu",
+  },
+  {
+    "id": "viewerPayments.accountBalance",
+    "defaultMessage": "Stav účtu",
+  },
+  {
+    "id": "viewerPayments.amount",
+    "defaultMessage": "Suma",
+  },
+  {
+    "id": "viewerPayments.date",
+    "defaultMessage": "Dátum",
+  },
+  {
+    "id": "viewerPayments.loadingPayments",
+    "defaultMessage": "Načítavam platby",
+  },
+  {
+    "id": "viewerPayments.message",
+    "defaultMessage": "Správa",
+  },
+  {
+    "id": "viewerPayments.monthlySchoolFee",
+    "defaultMessage": "Mesačné školné",
+  },
+  {
+    "id": "viewerPayments.title",
+    "defaultMessage": "Transakcie",
+  },
+  {
+    "id": "viewerPayments.transactions",
+    "defaultMessage": "Transakcie"
+  },
+  {
+    "id": "viewerPayments.vs",
+    "defaultMessage": "VS"
+  },
+  {
+    "id": "user.edit.requiredNumber",
+    "defaultMessage": "Políčko musí byť číslo"
+  },
+  {
+    "id": "viewerPayments.iban",
+    "defaultMessage": "IBAN"
+  },
+  {
+    "id": "viewerPayments.paymentInstruction",
+    "defaultMessage": "Inštrukcie k platbe"
+  },
+  {
+    "id": "viewerPayments.recieverMessage",
+    "defaultMessage": "Správa pre príjemcu"
   },
 ];

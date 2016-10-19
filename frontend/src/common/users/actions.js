@@ -108,8 +108,8 @@ export function verifyUsernameAvailable(username, id) {
           username,
           id,
         }),
-      }).catch(e => {
-        throw {username: 'That username is taken'};
+      }).catch(() => {
+        throw new Error({ username: 'That username is taken' });
       }),
     }
   });
@@ -129,8 +129,8 @@ export function verifyEmailAvailable(email, id) {
           email,
           id,
         }),
-      }).catch(e => {
-        throw {email: 'That email is taken'};
+      }).catch(() => {
+        throw new Error({ email: 'That email is taken' });
       }),
     }
   });
@@ -146,14 +146,7 @@ export function saveUser(values) {
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
         body: JSON.stringify({
-          id: values.id,
-          username: values.username,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phone: values.phone,
-          facebookLink: values.facebookLink,
-          linkedinLink: values.linkedinLink,
+          ...values,
           personalDescription: values.personalDescription.toString('html'),
           buddyDescription: values.buddyDescription.toString('html'),
           guideDescription: values.guideDescription.toString('html'),
@@ -249,7 +242,8 @@ export function updateUserGroup(group, groupMembers) {
           id: group.id,
           users: groupMembers.map(user => user.id),
         }),
-      }).then(response => response.json()).then(response => {browserHistory.goBack(); return response;}),
+      }).then(response => response.json())
+      .then(response => { browserHistory.goBack(); return response; }),
     }
   });
 }

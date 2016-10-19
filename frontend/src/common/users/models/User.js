@@ -41,6 +41,8 @@ const User = Record({
   minimumSemesterActivityPoints: 0,
   activityPointsBaseNumber: 0,
   potentialActivityPoints: 0,
+  monthlySchoolFee: 0,
+  accountBalance: 0,
 });
 
 export default User;

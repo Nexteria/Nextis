@@ -1,3 +1,4 @@
+import './PaymentsPage.scss';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
@@ -34,6 +35,10 @@ const messages = defineMessages({
     defaultMessage: 'Unassociated Payments',
     id: 'users.manage.unassociatedPayments'
   },
+  accountBalance: {
+    defaultMessage: 'Account balance',
+    id: 'users.manage.accountBalance'
+  },
 });
 
 class PaymentsPage extends Component {
@@ -41,8 +46,6 @@ class PaymentsPage extends Component {
   static propTypes = {
     users: PropTypes.object,
     fields: PropTypes.object.isRequired,
-    removeUser: PropTypes.func.isRequired,
-    hasPermission: PropTypes.func.isRequired,
   };
 
   editUser(userId) {
@@ -51,7 +54,6 @@ class PaymentsPage extends Component {
 
   render() {
     const { users, fields } = this.props;
-    const { removeUser, hasPermission } = this.props;
 
     if (!users) {
       return <div></div>;
@@ -74,8 +76,11 @@ class PaymentsPage extends Component {
         </section>
         <section className="content">
           <div className="row">
-            <div className="col-md-12" style={{ marginBottom: '1em', textAlign: 'center' }}>
-              <button className="btn btn-primary" onClick={() => browserHistory.push('/admin/payments/unassociated')}>
+            <div className="col-md-12" id="unassociated-payments-div">
+              <button
+                className="btn btn-primary"
+                onClick={() => browserHistory.push('/admin/payments/unassociated')}
+              >
                 <FormattedMessage {...messages.unassociatedPayments} />
               </button>
             </div>
@@ -84,7 +89,7 @@ class PaymentsPage extends Component {
                 <div className="box-header">
                   <h3 className="box-title"><FormattedMessage {...messages.tableTitle} /></h3>
                   <div className="box-tools">
-                    <div className="input-group input-group-sm" style={{ width: '150px' }}>
+                    <div className="input-group input-group-sm search-panel">
                       <input
                         type="text"
                         name="table_search"
@@ -106,12 +111,19 @@ class PaymentsPage extends Component {
                     <tbody>
                       <tr>
                         <th><FormattedMessage {...messages.userName} /></th>
+                        <th><FormattedMessage {...messages.accountBalance} /></th>
                         <th><FormattedMessage {...messages.actions} /></th>
                       </tr>
                       {filteredUsers ?
                         filteredUsers.map(user =>
-                          <tr key={user.id} onClick={() => browserHistory.push(`/admin/users/${user.id}/payments`)}>
+                          <tr
+                            key={user.id}
+                            onClick={() => browserHistory.push(`/admin/users/${user.id}/payments`)}
+                          >
                             <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
+                            <td
+                              className={user.accountBalance > 0 ? 'green-text' : 'red-text'}
+                            >{user.accountBalance / 100} &euro;</td>
                             <td className="action-buttons">
                               <i
                                 className="fa fa-pencil"
@@ -121,7 +133,7 @@ class PaymentsPage extends Component {
                         )
                         :
                         <tr>
-                          <td colSpan="2" style={{ textAlign: 'center' }}>
+                          <td colSpan="2" id="no-user-div">
                             <FormattedMessage {...messages.noUsers} />
                           </td>
                         </tr>
