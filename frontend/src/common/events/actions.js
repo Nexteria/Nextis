@@ -80,7 +80,8 @@ export function saveEvent(fields) {
     minCapacity: fields.minCapacity,
     feedbackLink: fields.feedbackLink,
     status: fields.status,
-    followingEvents: fields.followingEvents,
+    exclusionaryEvents: fields.exclusionaryEvents,
+    groupedEvents: fields.groupedEvents,
     maxCapacity: fields.maxCapacity,
     description: fields.description.toString('html'),
     shortDescription: fields.shortDescription.toString('html'),
@@ -172,7 +173,7 @@ export function attendeeWontGo(event, viewer, groupId) {
   });
 }
 
-export function attendeeSignIn(event, viewer, groupId) {
+export function attendeeSignIn(event, viewer, groupId, choosedEvents) {
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_IN,
     payload: {
@@ -181,7 +182,10 @@ export function attendeeSignIn(event, viewer, groupId) {
         credentials: 'same-origin',
         notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ signIn: true }),
+        body: JSON.stringify({
+          signIn: true,
+          choosedEvents: choosedEvents ? choosedEvents.filter(e => e).keySeq().map(e => e) : null,
+        }),
       }).then(response => response.json())
         .then(response => ({
           ...response,

@@ -67,6 +67,7 @@ class EventsPage extends Component {
       params,
       eventDetailsId,
       visiblePastEvents,
+      children,
       visibleFutureEvents,
     } = this.props;
 
@@ -89,7 +90,7 @@ class EventsPage extends Component {
       return <div></div>;
     }
 
-    const sortedEvents = events.valueSeq().filter(event => event.status === 'published')
+    const sortedEvents = events.valueSeq().filter(event => event.status === 'published' && !event.parentEventId)
       .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime));
 
     return (
@@ -110,6 +111,7 @@ class EventsPage extends Component {
                         key={event.id}
                         users={users}
                         event={event}
+                        events={events}
                         viewer={viewer}
                         nxLocation={nxLocations.get(event.nxLocationId)}
                         openEventDetailsDialog={openEventDetailsDialog}
@@ -140,6 +142,7 @@ class EventsPage extends Component {
               <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
               : ''
             }
+            {children}
           </div>
         :
         <div className="user-events-page">
@@ -165,6 +168,7 @@ class EventsPage extends Component {
                           key={event.id}
                           users={users}
                           event={event}
+                          events={events}
                           viewer={viewer}
                           nxLocation={nxLocations.get(event.nxLocationId)}
                           openEventDetailsDialog={openEventDetailsDialog}
@@ -193,6 +197,7 @@ class EventsPage extends Component {
                         key={event.id}
                         users={users}
                         event={event}
+                        events={events}
                         viewer={viewer}
                         nxLocation={nxLocations.get(event.nxLocationId)}
                         openEventDetailsDialog={openEventDetailsDialog}
@@ -220,6 +225,7 @@ class EventsPage extends Component {
                         key={event.id}
                         users={users}
                         event={event}
+                        events={events}
                         viewer={viewer}
                         nxLocation={nxLocations.get(event.nxLocationId)}
                         openEventDetailsDialog={openEventDetailsDialog}
@@ -245,6 +251,7 @@ class EventsPage extends Component {
                           key={event.id}
                           users={users}
                           event={event}
+                          events={events}
                           viewer={viewer}
                           nxLocation={nxLocations.get(event.nxLocationId)}
                           openEventDetailsDialog={openEventDetailsDialog}
@@ -284,6 +291,7 @@ class EventsPage extends Component {
                           key={event.id}
                           users={users}
                           event={event}
+                          events={events}
                           viewer={viewer}
                           nxLocation={nxLocations.get(event.nxLocationId)}
                           openEventDetailsDialog={openEventDetailsDialog}
@@ -322,6 +330,8 @@ class EventsPage extends Component {
             <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
             : ''
           }
+
+          {children}
         </div>
     );
   }

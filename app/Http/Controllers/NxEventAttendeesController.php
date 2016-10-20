@@ -33,27 +33,90 @@ class NxEventAttendeesController extends Controller
         $attendee->fill(\Input::all());
 
         if (\Input::has('signIn') && \Input::get('signIn')) {
-            $attendee->signedIn = Carbon::now();
-            $attendee->signedOut = null;
-            $attendee->wontGo = null;
-            $attendee->signedOutReason = '';
+            $attendeesToSignIn = [$attendee];
+            if (\Input::has('choosedEvents')) {
+                foreach (\Input::get('choosedEvents') as $eId) {
+                    $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
+                      ->whereHas('attendeesGroup', function ($query) use ($eId) {
+                          $query->where('eventId', '=', $eId);
+                      })->first();
+
+                    if (!$eventAttendee) {
+                        abort(401);
+                    }
+
+                    $attendeesToSignIn[] = $eventAttendee;
+                }
+            }
+
+            foreach ($attendeesToSignIn as $eventAttendee) {
+                $eventAttendee->signedIn = Carbon::now();
+                $eventAttendee->signedOut = null;
+                $eventAttendee->wontGo = null;
+                $eventAttendee->signedOutReason = '';
+                $eventAttendee->save();
+            }
         }
 
         if (\Input::has('signOut') && \Input::get('signOut')) {
             if (!\Input::has('reason')) {
-              return response()->json([
-                'error' => 'Please provide reason why are you canceling your attendance',
-              ], 400);
+                return response()->json([
+                  'error' => 'Please provide reason why are you canceling your attendance',
+                ], 400);
             }
 
-            $attendee->signedOut = Carbon::now();
-            $attendee->signedOutReason = clean(\Input::get('reason'));
-            $attendee->wontGo = null;
-            $attendee->signedIn = null;
+            $event = \App\NxEvent::find($eventId);
+            $attendeesToSignOut = [$attendee];
+            if ($event->groupedEvents->count() > 0) {
+                foreach ($event->groupedEvents as $gEvent) {
+                    $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
+                      ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
+                          $query->where('eventId', '=', $gEvent->id);
+                      })->first();
+
+                    if (!$eventAttendee) {
+                        abort(401);
+                    }
+
+                    if ($eventAttendee->signedIn === null) {
+                        continue;
+                    }
+
+                    $attendeesToSignOut[] = $eventAttendee;
+                }
+            }
+
+            foreach ($attendeesToSignOut as $eventAttendee) {
+                $eventAttendee->signedOut = Carbon::now();
+                $eventAttendee->signedOutReason = clean(\Input::get('reason'));
+                $eventAttendee->wontGo = null;
+                $eventAttendee->signedIn = null;
+                $eventAttendee->save();
+            }
         }
 
         if (\Input::has('wontGoFlag') && \Input::get('wontGoFlag')) {
-            $attendee->wontGo = Carbon::now();
+            $event = \App\NxEvent::find($eventId);
+            $attendeesWontGo = [$attendee];
+            if ($event->groupedEvents->count() > 0) {
+                foreach ($event->groupedEvents as $gEvent) {
+                    $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
+                      ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
+                          $query->where('eventId', '=', $gEvent->id);
+                      })->first();
+
+                    if (!$eventAttendee) {
+                        abort(401);
+                    }
+
+                    $attendeesWontGo[] = $eventAttendee;
+                }
+            }
+
+            foreach ($attendeesWontGo as $eventAttendee) {
+                $eventAttendee->wontGo = Carbon::now();
+                $eventAttendee->save();
+            }
         }
 
         $attendee->save();

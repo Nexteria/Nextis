@@ -43,7 +43,8 @@ export default function eventsReducer(state = new InitialState, action) {
       const event = new Event({
         ...action.payload,
         lectors: new List(action.payload.lectors),
-        followingEvents: new List(action.payload.followingEvents),
+        groupedEvents: new List(action.payload.groupedEvents),
+        exclusionaryEvents: new List(action.payload.exclusionaryEvents),
         eventStartDateTime: moment.utc(action.payload.eventStartDateTime),
         eventEndDateTime: moment.utc(action.payload.eventEndDateTime),
         description: RichTextEditor.createValueFromString(action.payload.description, 'html'),
@@ -71,7 +72,8 @@ export default function eventsReducer(state = new InitialState, action) {
         [event.id, new Event({
           ...event,
           lectors: new List(event.lectors),
-          followingEvents: new List(event.followingEvents),
+          groupedEvents: new List(event.groupedEvents),
+          exclusionaryEvents: new List(event.exclusionaryEvents),
           eventStartDateTime: moment.utc(event.eventStartDateTime),
           eventEndDateTime: moment.utc(event.eventEndDateTime),
           description: RichTextEditor.createValueFromString(event.description, 'html'),

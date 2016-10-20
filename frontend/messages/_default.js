@@ -69,6 +69,14 @@ export default [
     "defaultMessage": "Users"
   },
   {
+    "id": "app.users.privacyPolicy.aggree",
+    "defaultMessage": "Agree"
+  },
+  {
+    "id": "app.users.privacyPolicy.decline",
+    "defaultMessage": "Decline"
+  },
+  {
     "id": "contacts.list.contactStudentsTitile",
     "defaultMessage": "Contacts - students"
   },
@@ -103,10 +111,6 @@ export default [
   {
     "id": "event.edit.activityPoints",
     "defaultMessage": "Activity points"
-  },
-  {
-    "id": "event.edit.addFollowingEvents",
-    "defaultMessage": "Add events"
   },
   {
     "id": "event.edit.addHost",
@@ -213,8 +217,16 @@ export default [
     "defaultMessage": "This date must be in future"
   },
   {
+    "id": "event.edit.dependencies",
+    "defaultMessage": "Dependencies"
+  },
+  {
     "id": "event.edit.description",
     "defaultMessage": "Description"
+  },
+  {
+    "id": "event.edit.details",
+    "defaultMessage": "Details"
   },
   {
     "id": "event.edit.emptyGroup",
@@ -265,12 +277,16 @@ export default [
     "defaultMessage": "Other"
   },
   {
+    "id": "event.edit.exclusionaryEvents",
+    "defaultMessage": "The exclusionary the events"
+  },
+  {
     "id": "event.edit.feedbackLink",
     "defaultMessage": "Feedback link"
   },
   {
-    "id": "event.edit.followingEvents",
-    "defaultMessage": "Following events"
+    "id": "event.edit.groupedEvents",
+    "defaultMessage": "Grouped events"
   },
   {
     "id": "event.edit.groupMembers",
@@ -361,6 +377,10 @@ export default [
     "defaultMessage": "Close"
   },
   {
+    "id": "event.emails.attendance.eventLink",
+    "defaultMessage": "Event link"
+  },
+  {
     "id": "event.emails.attendance.notAttending",
     "defaultMessage": "Not attending"
   },
@@ -389,6 +409,10 @@ export default [
     "defaultMessage": "Not attending"
   },
   {
+    "id": "event.hosted.attendance.reason",
+    "defaultMessage": "Reason"
+  },
+  {
     "id": "event.hosted.attendance.title",
     "defaultMessage": "Event attendance"
   },
@@ -403,6 +427,38 @@ export default [
   {
     "id": "event.hosted.attendance.wasPresent",
     "defaultMessage": "Was present"
+  },
+  {
+    "id": "event.login.capacity",
+    "defaultMessage": "Capacity"
+  },
+  {
+    "id": "event.login.chooseAllEvents",
+    "defaultMessage": "Choose all events"
+  },
+  {
+    "id": "event.login.chooseEvents",
+    "defaultMessage": "Please choose events"
+  },
+  {
+    "id": "event.login.closeButton",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "event.login.exclusionaryEvents",
+    "defaultMessage": "The exclusionary the events"
+  },
+  {
+    "id": "event.login.signIn",
+    "defaultMessage": "Sign in"
+  },
+  {
+    "id": "event.login.signInButton",
+    "defaultMessage": "Sign in"
+  },
+  {
+    "id": "event.login.title",
+    "defaultMessage": "Event login"
   },
   {
     "id": "event.users.actionPoints",
@@ -433,6 +489,10 @@ export default [
     "defaultMessage": "Details"
   },
   {
+    "id": "event.users.eventIsFull",
+    "defaultMessage": "Event is full"
+  },
+  {
     "id": "event.users.eventType_dbk",
     "defaultMessage": "DBK"
   },
@@ -447,6 +507,10 @@ export default [
   {
     "id": "event.users.fillFeedback",
     "defaultMessage": "Fill feedback"
+  },
+  {
+    "id": "event.users.insideEvents",
+    "defaultMessage": "Inside events"
   },
   {
     "id": "event.users.invited",
@@ -497,12 +561,24 @@ export default [
     "defaultMessage": "Sign in"
   },
   {
+    "id": "event.users.signInExpired",
+    "defaultMessage": "Sign in deadline was:"
+  },
+  {
     "id": "event.users.signInNoteTitle",
     "defaultMessage": "Sign in deadline:"
   },
   {
+    "id": "event.users.signInOpenTitle",
+    "defaultMessage": "Sign in will be open:"
+  },
+  {
     "id": "event.users.signOut",
     "defaultMessage": "Sign out"
+  },
+  {
+    "id": "event.users.unavailableEvent",
+    "defaultMessage": "This event is not available for you"
   },
   {
     "id": "event.users.wontGo",
@@ -877,6 +953,10 @@ export default [
     "defaultMessage": "Buddy description"
   },
   {
+    "id": "user.edit.changePassword",
+    "defaultMessage": "Change password"
+  },
+  {
     "id": "user.edit.chooseStudentLevel",
     "defaultMessage": "Choose student level"
   },
@@ -925,6 +1005,10 @@ export default [
     "defaultMessage": "Inactive"
   },
   {
+    "id": "user.edit.info",
+    "defaultMessage": "Info"
+  },
+  {
     "id": "user.edit.lastName",
     "defaultMessage": "Last name"
   },
@@ -941,12 +1025,32 @@ export default [
     "defaultMessage": "New password"
   },
   {
+    "id": "user.edit.newPassword",
+    "defaultMessage": "New password"
+  },
+  {
+    "id": "user.edit.newPasswordConfirmation",
+    "defaultMessage": "New password confirmation"
+  },
+  {
     "id": "user.edit.nexteriaTeamRole",
     "defaultMessage": "Nexteria team role"
   },
   {
     "id": "user.edit.oldPassword",
     "defaultMessage": "Old password"
+  },
+  {
+    "id": "user.edit.oldPassword",
+    "defaultMessage": "Old password"
+  },
+  {
+    "id": "user.edit.password",
+    "defaultMessage": "Password"
+  },
+  {
+    "id": "user.edit.passwordsDoNotMatch",
+    "defaultMessage": "New password and password confirmation must match!"
   },
   {
     "id": "user.edit.personalDescription",
@@ -963,6 +1067,10 @@ export default [
   {
     "id": "user.edit.requiredField",
     "defaultMessage": "This field is required"
+  },
+  {
+    "id": "user.edit.requiredField",
+    "defaultMessage": "This field is required!"
   },
   {
     "id": "user.edit.requiredLengthField",
@@ -983,6 +1091,10 @@ export default [
   {
     "id": "user.edit.studyProgram",
     "defaultMessage": "Study program"
+  },
+  {
+    "id": "user.edit.studyYear",
+    "defaultMessage": "Study year"
   },
   {
     "id": "user.edit.temporarySuspendedUserState",
@@ -1066,19 +1178,19 @@ export default [
   },
   {
     "id": "users.manage.table.title",
-    "defaultMessage": "Users - payments"
-  },
-  {
-    "id": "users.manage.table.title",
     "defaultMessage": "Users - managment"
   },
   {
-    "id": "users.manage.title",
-    "defaultMessage": "Users"
+    "id": "users.manage.table.title",
+    "defaultMessage": "Users - payments"
   },
   {
     "id": "users.manage.title",
     "defaultMessage": "Payments"
+  },
+  {
+    "id": "users.manage.title",
+    "defaultMessage": "Users"
   },
   {
     "id": "users.manage.unassociatedPayments",
@@ -1091,9 +1203,5 @@ export default [
   {
     "id": "users.manage.userName",
     "defaultMessage": "User name"
-  },
-  {
-    defaultMessage: 'Reason',
-    id: 'event.hosted.attendance.reason',
-  },
+  }
 ];

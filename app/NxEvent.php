@@ -49,9 +49,15 @@ class NxEvent extends Model
             $event->curriculumLevelId = $curriculumLevel->id;
         }
 
-        if (isset($attributes['followingEvents'])) {
-            foreach ($attributes['followingEvents'] as $eventId) {
-                $event->followingEvents()->save(NxEvent::findOrFail($eventId));
+        if (isset($attributes['groupedEvents'])) {
+            foreach ($attributes['groupedEvents'] as $eventId) {
+                $event->groupedEvents()->save(NxEvent::findOrFail($eventId));
+            }
+        }
+
+        if (isset($attributes['exclusionaryEvents'])) {
+            foreach ($attributes['exclusionaryEvents'] as $eventId) {
+                $event->exclusionaryEvents()->save(NxEvent::findOrFail($eventId));
             }
         }
 
@@ -86,8 +92,12 @@ class NxEvent extends Model
             $this->curriculumLevelId = $curriculumLevel->id;
         }
 
-        if (isset($attributes['followingEvents'])) {
-            $this->followingEvents()->sync(NxEvent::whereIn('id', $attributes['followingEvents'])->lists('id')->toArray());
+        if (isset($attributes['groupedEvents'])) {
+            $this->groupedEvents()->sync(NxEvent::whereIn('id', $attributes['groupedEvents'])->lists('id')->toArray());
+        }
+
+        if (isset($attributes['exclusionaryEvents'])) {
+            $this->exclusionaryEvents()->sync(NxEvent::whereIn('id', $attributes['exclusionaryEvents'])->lists('id')->toArray());
         }
 
         if (isset($attributes['lectors'])) {
@@ -128,14 +138,19 @@ class NxEvent extends Model
         return $this->belongsToMany('App\User');
     }
 
-    public function followingEvents()
+    public function groupedEvents()
     {
-        return $this->belongsToMany('App\NxEvent', 'nx_event_nx_event', 'nx_event_parent_id', 'nx_event_id');
+        return $this->belongsToMany('App\NxEvent', 'nx_grouped_events', 'nx_event_parent_id', 'nx_event_id');
+    }
+
+    public function exclusionaryEvents()
+    {
+        return $this->belongsToMany('App\NxEvent', 'nx_exclusionary_events', 'nx_event_parent_id', 'nx_event_id');
     }
 
     public function getParentEvent()
     {
-        return $this->belongsToMany('App\NxEvent', 'nx_event_nx_event', 'nx_event_id', 'nx_event_parent_id')->first();
+        return $this->belongsToMany('App\NxEvent', 'nx_grouped_events', 'nx_event_id', 'nx_event_parent_id')->first();
     }
 
     public function host()

@@ -18,11 +18,12 @@ const Event = Record({
   status: 'draft',
   feedbackLink: '',
   parentEventId: null,
-  followingEvents: new List(),
+  groupedEvents: new List(),
   curriculumLevelId: '',
   shortDescription: RichTextEditor.createEmptyValue(),
   description: RichTextEditor.createEmptyValue(),
   visibleDetails: false,
+  exclusionaryEvents: new List(),
 });
 
 export default Event;

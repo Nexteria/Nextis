@@ -1,6 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { Map } from 'immutable';
+import { browserHistory } from 'react-router';
 import { FormattedMessage, FormattedDate, defineMessages } from 'react-intl';
 import './Event.scss';
 import moment from 'moment';
@@ -95,12 +96,17 @@ const messages = defineMessages({
     defaultMessage: 'Sign in deadline was:',
     id: 'event.users.signInExpired',
   },
+  insideEvents: {
+    defaultMessage: 'Inside events',
+    id: 'event.users.insideEvents',
+  }
 });
 
 export default class Event extends Component {
 
   static propTypes = {
     event: PropTypes.object.isRequired,
+    events: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     toggleEventDetails: PropTypes.func.isRequired,
@@ -115,7 +121,7 @@ export default class Event extends Component {
   };
 
   render() {
-    const { event, viewer, hide, datailsOpen, nxLocation, users } = this.props;
+    const { event, events, viewer, hide, datailsOpen, nxLocation, users } = this.props;
     const { toggleEventDetails, openLocationDetailsDialog, openEventDetailsDialog, openSignOutDialog, attendeeWontGo, attendeeSignIn } = this.props;
 
     const oldEvent = event.eventStartDateTime.isBefore(moment.utc());
@@ -146,6 +152,9 @@ export default class Event extends Component {
     }
 
     const undecided = attendee && !attendee.get('signedIn') && !attendee.get('wontGo') && !attendee.get('signedOut');
+
+    const groupedEvents = event.groupedEvents.map(eventId => events.filter(e => e.id === eventId).first());
+
 
     return (
       <li className="users-event" style={{display: hide ? 'none' : ''}}>
@@ -207,7 +216,10 @@ export default class Event extends Component {
                     </div>
                       {undecided && isSignInOpen && isFreeCapacity ?
                         <div className="event-actions col-md-6 col-sm-6 col-xs-12">
-                          <button className="btn btn-success btn-xs" onClick={() => attendeeSignIn(event, viewer, group.id)}>
+                          <button
+                            className="btn btn-success btn-xs"
+                            onClick={() => groupedEvents.size ? browserHistory.push(`/events/${event.id}/login`) : attendeeSignIn(event, viewer, group.id)}
+                          >
                             <FormattedMessage {...messages.signIn} />
                           </button>
                           <button className="btn btn-danger btn-xs" onClick={() => attendeeWontGo(event, viewer, group.id)}>
@@ -223,7 +235,10 @@ export default class Event extends Component {
                             </button>
                             :
                               isSignInOpen && isFreeCapacity ?
-                                <button className="btn btn-success btn-xs" onClick={() => attendeeSignIn(event, viewer, group.id)}>
+                                <button
+                                  className="btn btn-success btn-xs"
+                                  onClick={() => groupedEvents.size ? browserHistory.push(`/events/${event.id}/login`) : attendeeSignIn(event, viewer, group.id)}
+                                >
                                   <FormattedMessage {...messages.signIn} />
                                 </button>
                                 : ''
@@ -302,6 +317,19 @@ export default class Event extends Component {
             <div className="col-md-8 col-sm-12 col-xs-12">
               <div><strong><FormattedMessage {...messages.shortDescription} />:</strong></div>
               <div dangerouslySetInnerHTML={{ __html: event.shortDescription.toString('html') }}></div>
+              <div><strong><FormattedMessage {...messages.insideEvents} />:</strong></div>
+              <ul>
+              {groupedEvents.map(gEvent =>
+                <li>
+                  <label>{gEvent.name}</label>
+                  <div>
+                    <i className="fa fa-clock-o"></i>
+                    <span> {event.eventStartDateTime.format('D.M.YYYY, H:mm')} - {event.eventEndDateTime.format('D.M.YYYY, H:mm')}</span>,
+                  </div>
+                  <div dangerouslySetInnerHTML={{ __html: gEvent.shortDescription.toString('html') }}></div>
+                </li>
+              )}
+              </ul>
               <span className="pull-right" onClick={() => openEventDetailsDialog(event.id)}>
                 <a><FormattedMessage {...messages.showMoreInfo} /></a>
               </span>

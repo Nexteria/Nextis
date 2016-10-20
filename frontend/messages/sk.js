@@ -105,10 +105,6 @@ export default [
     "defaultMessage": "Aktivity body"
   },
   {
-    "id": "event.edit.addFollowingEvents",
-    "defaultMessage": "Pridať event"
-  },
-  {
     "id": "event.edit.addHost",
     "defaultMessage": "Pridať hosta ..."
   },
@@ -255,10 +251,6 @@ export default [
   {
     "id": "event.edit.feedbackLink",
     "defaultMessage": "Odkaz na feedback"
-  },
-  {
-    "id": "event.edit.followingEvents",
-    "defaultMessage": "Nadväzujúce eventy"
   },
   {
     "id": "event.edit.groupMembers",
@@ -1104,4 +1096,65 @@ export default [
     defaultMessage: 'Dôvod',
     id: 'event.hosted.attendance.reason',
   },
+  {
+    defaultMessage: 'Závislosti',
+    id: 'event.edit.dependencies',
+  },
+  {
+    defaultMessage: 'Detaily',
+    id: 'event.edit.details',
+  },
+  {
+    defaultMessage: 'Vylučujúce sa eventy',
+    id: 'event.edit.exclusionaryEvents',
+  },
+  {
+    defaultMessage: 'Zaskupenie eventov',
+    id: 'event.edit.groupedEvents',
+  },
+  {
+    defaultMessage: 'Odkaz na event',
+    id: 'event.emails.attendance.eventLink',
+  },
+  {
+    defaultMessage: 'Kapacita',
+    id: 'event.login.capacity',
+  },
+  {
+    defaultMessage: 'Musíš si zvoliť všetky eventy',
+    id: 'event.login.chooseAllEvents',
+  },
+  {
+    defaultMessage: 'Vyber si eventy',
+    id: 'event.login.chooseEvents',
+  },
+  {
+    defaultMessage: 'Zavrieť',
+    id: 'event.login.closeButton',
+  },
+  {
+    defaultMessage: 'Vylučujúce sa eventy',
+    id: 'event.login.exclusionaryEvents',
+  },
+  {
+    defaultMessage: 'Prihlásiť',
+    id: 'event.login.signIn',
+  },
+  {
+    defaultMessage: 'Prihlásiť',
+    id: 'event.login.signInButton',
+  },
+  {
+    defaultMessage: 'Prihlasovanie na event',
+    id: 'event.login.title',
+  },
+  {
+    defaultMessage: 'Obsahujúce eventy',
+    id: 'event.users.insideEvents',
+  },
+  {
+    defaultMessage: 'Informácie',
+    id: 'user.edit.info',
+  },
+
 ];

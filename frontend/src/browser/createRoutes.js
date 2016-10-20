@@ -15,6 +15,7 @@ import EditUser from './users/EditUser';
 import UsersPage from './users/UsersPage';
 import EditEvent from './events/EditEvent';
 import EventsPage from './events/EventsPage';
+import EventLoginDialog from './events/EventLoginDialog';
 import AdminApp from './app/AdminApp';
 import UserEventsPage from './events/usersSection/EventsPage';
 import LocationsPage from './nxLocations/LocationsPage';
@@ -31,7 +32,9 @@ export default function createRoutes() {
   return (
     <Route component={App} path="/">
       <Route component={UserEventsPage} path="/events" />
-      <Route component={UserEventsPage} path="/events/:eventId" />
+      <Route component={UserEventsPage} path="/events/:eventId">
+        <Route component={EventLoginDialog} path="login" />
+      </Route>
       <Route component={ContactList} path="contacts" />
       <Route component={Settings} path="/users/me/settings" />
       <Route component={HostedEventsPage} path="host/events" />
@@ -50,6 +53,7 @@ export default function createRoutes() {
 
         <Route component={EventsPage} path="events" />
         <Route component={EditEvent} path="events/:eventId" />
+
         <Route component={EventEmailsDialog} path="events/:eventId/emails" />
         <Route component={CreateEventPage} path="events/create" />
 

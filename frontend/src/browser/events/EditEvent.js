@@ -7,6 +7,8 @@ import Datetime from 'react-datetime';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import validator from 'validator';
 import moment from 'moment';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 
 
 import { fields } from '../../common/lib/redux-fields/index';
@@ -22,6 +24,10 @@ const messages = defineMessages({
   eventName: {
     defaultMessage: 'Event name',
     id: 'event.edit.eventName',
+  },
+  exclusionaryEvents: {
+    defaultMessage: 'The exclusionary the events',
+    id: 'event.edit.exclusionaryEvents',
   },
   save: {
     defaultMessage: 'Save',
@@ -111,14 +117,6 @@ const messages = defineMessages({
     defaultMessage: 'Event status',
     id: 'event.edit.eventStatus',
   },
-  followingEvents: {
-    defaultMessage: 'Following events',
-    id: 'event.edit.followingEvents',
-  },
-  addFollowingEvents: {
-    defaultMessage: 'Add events',
-    id: 'event.edit.addFollowingEvents',
-  },
   curriculumLevel: {
     defaultMessage: 'Curriculum level',
     id: 'event.edit.curriculumLevel',
@@ -170,6 +168,18 @@ const messages = defineMessages({
   feedbackLink: {
     defaultMessage: 'Feedback link',
     id: 'event.edit.feedbackLink',
+  },
+  details: {
+    defaultMessage: 'Details',
+    id: 'event.edit.details',
+  },
+  dependencies: {
+    defaultMessage: 'Dependencies',
+    id: 'event.edit.dependencies',
+  },
+  groupedEvents: {
+    defaultMessage: 'Grouped events',
+    id: 'event.edit.groupedEvents',
   },
 });
 
@@ -392,10 +402,10 @@ export class EditEvent extends Component {
     )
   }
 
-  renderFollowingEvents(data) {
+  renderEventsTagSelector(data) {
     const { input, label, events, actualEventId, meta: { touched, error } } = data;
 
-    const followingEvents = input.value.map(eventId => {
+    const selectedEvents = input.value.map(eventId => {
       const event = events.filter(e => e.id === eventId).first();
       return {
         id: event.id,
@@ -413,9 +423,9 @@ export class EditEvent extends Component {
           <ReactTags
             id={input.name}
             placeholder={label}
-            tags={followingEvents.toArray()}
+            tags={selectedEvents.toArray()}
             suggestions={events.filter(event => event.id !== actualEventId && !input.value.includes(event.id)).map(event => event.name).toArray()}
-            handleDelete={(i) => input.onChange(input.value.delete(i).map(event => event.id))}
+            handleDelete={(i) => input.onChange(input.value.delete(i))}
             handleAddition={(tag) => input.onChange(input.value.push(events.find(event => event.name === tag).id))}
           />
         </div>
@@ -542,7 +552,7 @@ export class EditEvent extends Component {
   }
 
   render() {
-    const { fields, actualEvent, pristine, submitting, events, locations, actualEventId, eventTypes, studentLevels, eventsStatuses, rolesList, title, users, locale } = this.props;
+    const { fields, groupedEvents, actualEvent, pristine, submitting, events, locations, actualEventId, eventTypes, studentLevels, eventsStatuses, rolesList, title, users, locale } = this.props;
     const {
       saveEvent,
       setField,
@@ -560,9 +570,6 @@ export class EditEvent extends Component {
     const lectors = users.filter(user => fields.lectors.value.includes(user.id))
       .map(user => ({ id: user.id, text: `${user.firstName} ${user.lastName}` }));
 
-    const followingEvents = events.filter(event => fields.followingEvents.value.includes(event.id))
-      .map(event => ({ id: event.id, text: event.name }));
-
     let host = users.get(fields.hostId.value);
     if (host) {
       host = [{ id: host.id, text: `${host.firstName} ${host.lastName}` }];
@@ -577,163 +584,181 @@ export class EditEvent extends Component {
         </section>
 
         <section className="content">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="nav-tabs-custom">
-                <div className="tab-content">
-                  <div className="tab-pane active" id="settings">
-                    <form className="form-horizontal" onSubmit={handleSubmit((data) => saveEvent(data))}>
-                      <Field
-                        name="name"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.eventName)}*`}
-                      />
+          <form className="form-horizontal" onSubmit={handleSubmit((data) => saveEvent(data))}>
+            <div className="row">
+              <div className="col-md-12">
+                <Tabs defaultActiveKey={1} id="event-dependencies" className="nav-tabs-custom">
+                  <Tab eventKey={1} title={formatMessage(messages.details)}>
+                    <div className="nav-tabs-custom">
+                      <div className="tab-content">
+                        <div className="tab-pane active" id="settings">
+                          <Field
+                            name="name"
+                            type="text"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.eventName)}*`}
+                          />
 
-                      <Field
-                        name="activityPoints"
-                        type="text"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.activityPoints)}*`}
-                      />
+                          <Field
+                            name="activityPoints"
+                            type="text"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.activityPoints)}*`}
+                          />
 
-                      <Field
-                        name="eventType"
-                        component={this.renderSelect}
-                        label={`${formatMessage(messages.eventType)}*`}
-                      >
-                        <option readOnly>{formatMessage(messages.chooseEventType)}</option>
-                        {eventTypes.valueSeq().map(type =>
-                          <option key={type} value={type}>{formatMessage(messages[`eventType_${type}`])}</option>
-                        )}
-                      </Field>
+                          <Field
+                            name="eventType"
+                            component={this.renderSelect}
+                            label={`${formatMessage(messages.eventType)}*`}
+                          >
+                            <option readOnly>{formatMessage(messages.chooseEventType)}</option>
+                            {eventTypes.valueSeq().map(type =>
+                              <option key={type} value={type}>{formatMessage(messages[`eventType_${type}`])}</option>
+                            )}
+                          </Field>
 
-                      <Field
-                        name="nxLocationId"
-                        component={this.renderSelect}
-                        label={`${formatMessage(messages.eventLocation)}*`}
-                      >
-                        <option readOnly>{formatMessage(messages.chooseEventLocation)}</option>
-                        {locations.valueSeq().map(location =>
-                          <option key={location.id} value={location.id}>
-                          {`${location.name} (${location.addressLine1}`}
-                          {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
-                          {`, ${location.city}, ${location.zipCode}, ${location.countryCode})`}
-                          </option>
-                        )}
-                      </Field>
+                          <Field
+                            name="nxLocationId"
+                            component={this.renderSelect}
+                            label={`${formatMessage(messages.eventLocation)}*`}
+                          >
+                            <option readOnly>{formatMessage(messages.chooseEventLocation)}</option>
+                            {locations.valueSeq().map(location =>
+                              <option key={location.id} value={location.id}>
+                              {`${location.name} (${location.addressLine1}`}
+                              {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
+                              {`, ${location.city}, ${location.zipCode}, ${location.countryCode})`}
+                              </option>
+                            )}
+                          </Field>
 
-                      <Field
-                        name="hostId"
-                        component={this.renderHost}
-                        label={`${formatMessage(messages.host)}*`}
-                        users={users}
-                      />
+                          <Field
+                            name="hostId"
+                            component={this.renderHost}
+                            label={`${formatMessage(messages.host)}*`}
+                            users={users}
+                          />
 
-                      <Field
-                        name="lectors"
-                        component={this.renderLectors}
-                        label={`${formatMessage(messages.lectors)}`}
-                        users={users}
-                        rolesList={rolesList}
-                      />
+                          <Field
+                            name="lectors"
+                            component={this.renderLectors}
+                            label={`${formatMessage(messages.lectors)}`}
+                            users={users}
+                            rolesList={rolesList}
+                          />
 
-                      <Field
-                        name="followingEvents"
-                        component={this.renderFollowingEvents}
-                        label={`${formatMessage(messages.followingEvents)}`}
-                        events={events}
-                        actualEventId={actualEventId}
-                      />
+                          <Field
+                            name="eventStartDateTime"
+                            component={this.renderDate}
+                            label={`${formatMessage(messages.eventStartDateTime)}*`}
+                            locale={locale}
+                          />
 
-                      <Field
-                        name="eventStartDateTime"
-                        component={this.renderDate}
-                        label={`${formatMessage(messages.eventStartDateTime)}*`}
-                        locale={locale}
-                      />
+                          <Field
+                            name="eventEndDateTime"
+                            component={this.renderDate}
+                            label={`${formatMessage(messages.eventEndDateTime)}*`}
+                            locale={locale}
+                          />
 
-                      <Field
-                        name="eventEndDateTime"
-                        component={this.renderDate}
-                        label={`${formatMessage(messages.eventEndDateTime)}*`}
-                        locale={locale}
-                      />
+                          <Field
+                            name="minCapacity"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.minCapacity)}*`}
+                          />
 
-                      <Field
-                        name="minCapacity"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.minCapacity)}*`}
-                      />
+                          <Field
+                            name="maxCapacity"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.maxCapacity)}*`}
+                          />
 
-                      <Field
-                        name="maxCapacity"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.maxCapacity)}*`}
-                      />
+                          <Field
+                            name="curriculumLevel"
+                            component={this.renderSelect}
+                            label={`${formatMessage(messages.curriculumLevel)}`}
+                          >
+                            <option value="">{formatMessage(messages.noCurriculumLevel)}</option>
+                            {studentLevels.valueSeq().map(level =>
+                              <option key={level.id} value={level.id}>{level.name}</option>
+                            )}
+                          </Field>
 
-                      <Field
-                        name="curriculumLevel"
-                        component={this.renderSelect}
-                        label={`${formatMessage(messages.curriculumLevel)}`}
-                      >
-                        <option value="">{formatMessage(messages.noCurriculumLevel)}</option>
-                        {studentLevels.valueSeq().map(level =>
-                          <option key={level.id} value={level.id}>{level.name}</option>
-                        )}
-                      </Field>
+                          <Field
+                            name="attendeesGroups"
+                            component={this.renderAttendeesGroups}
+                            label={`${formatMessage(messages.attendeesGroups)}*`}
+                            addAttendeesGroup={addAttendeesGroup}
+                            editAttendeesGroup={editAttendeesGroup}
+                            emptyLabel={`${formatMessage(messages.noAttendeesGroups)}`}
+                            actualEvent={actualEvent}
+                          />
 
-                      <Field
-                        name="attendeesGroups"
-                        component={this.renderAttendeesGroups}
-                        label={`${formatMessage(messages.attendeesGroups)}*`}
-                        addAttendeesGroup={addAttendeesGroup}
-                        editAttendeesGroup={editAttendeesGroup}
-                        emptyLabel={`${formatMessage(messages.noAttendeesGroups)}`}
-                        actualEvent={actualEvent}
-                      />
+                          <Field
+                            name="feedbackLink"
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.feedbackLink)}*`}
+                          />
 
-                      <Field
-                        name="feedbackLink"
-                        component={this.renderInput}
-                        label={`${formatMessage(messages.feedbackLink)}*`}
-                      />
+                          <Field
+                            name="shortDescription"
+                            component={this.renderEditor}
+                            label={`${formatMessage(messages.shortDescription)}*`}
+                          />
 
-                      <Field
-                        name="shortDescription"
-                        component={this.renderEditor}
-                        label={`${formatMessage(messages.shortDescription)}*`}
-                      />
+                          <Field
+                            name="description"
+                            component={this.renderEditor}
+                            label={formatMessage(messages.description)}
+                          />
 
-                      <Field
-                        name="description"
-                        component={this.renderEditor}
-                        label={formatMessage(messages.description)}
-                      />
+                          <Field
+                            name="status"
+                            component={this.renderSelect}
+                            label={`${formatMessage(messages.eventStatus)}`}
+                          >
+                            {eventsStatuses.map(status =>
+                              <option key={status} value={status}>{status}</option>
+                            )}
+                          </Field>
 
-                      <Field
-                        name="status"
-                        component={this.renderSelect}
-                        label={`${formatMessage(messages.eventStatus)}`}
-                      >
-                        {eventsStatuses.map(status =>
-                          <option key={status} value={status}>{status}</option>
-                        )}
-                      </Field>
-
-                      <div className="form-group">
-                        <div className="col-sm-offset-2 col-sm-10">
-                          <button type="submit" disabled={pristine || submitting} className="btn btn-success">
-                              <FormattedMessage {...messages.save} />
-                            </button>
+                          <div className="form-group">
+                            <div className="col-sm-offset-2 col-sm-10">
+                              <button type="submit" disabled={pristine || submitting} className="btn btn-success">
+                                  <FormattedMessage {...messages.save} />
+                                </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </form>
-                  </div>
-                </div>
+                    </div>
+                  </Tab>
+                  <Tab eventKey={2} title={formatMessage(messages.dependencies)}>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <Field
+                          name="groupedEvents"
+                          component={this.renderEventsTagSelector}
+                          label={`${formatMessage(messages.groupedEvents)}`}
+                          events={events}
+                          actualEventId={actualEventId}
+                        />
+                      </div>
+                      <div className="col-md-12">
+                        <Field
+                          name="exclusionaryEvents"
+                          component={this.renderEventsTagSelector}
+                          label={`${formatMessage(messages.exclusionaryEvents)}`}
+                          events={events}
+                          actualEventId={actualEventId}
+                        />
+                      </div>
+                    </div>
+                  </Tab>
+                </Tabs>
               </div>
             </div>
-          </div>
+          </form>
         </section>
       </div>
     );
@@ -758,9 +783,10 @@ EditEvent = fields(EditEvent, {
     'eventType',
     'status',
     'curriculumLevelId',
-    'followingEvents',
+    'groupedEvents',
     'feedbackLink',
     'nxLocationId',
+    'exclusionaryEvents',
   ],
 });
 
@@ -777,7 +803,7 @@ export default connect((state) => ({
   users: state.users.users,
   actualEvent: {
     minCapacity: selector(state, 'minCapacity'),
-    minCapacity: selector(state, 'maxCapacity'),
+    maxCapacity: selector(state, 'maxCapacity'),
     eventStartDateTime: selector(state, 'eventStartDateTime'),
     eventEndDateTime: selector(state, 'eventEndDateTime'),
     attendeesGroups: selector(state, 'attendeesGroups'),

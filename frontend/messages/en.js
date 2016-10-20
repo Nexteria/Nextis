@@ -117,10 +117,6 @@ export default [
     "defaultMessage": "Activity points"
   },
   {
-    "id": "event.edit.addFollowingEvents",
-    "defaultMessage": "Add events"
-  },
-  {
     "id": "event.edit.addHost",
     "defaultMessage": "Add host ..."
   },
@@ -295,10 +291,6 @@ export default [
   {
     "id": "event.edit.feedbackLink",
     "defaultMessage": "Feedback link"
-  },
-  {
-    "id": "event.edit.followingEvents",
-    "defaultMessage": "Following events"
   },
   {
     "id": "event.edit.groupMembers",
@@ -1127,5 +1119,105 @@ export default [
   {
     defaultMessage: 'Reason',
     id: 'event.hosted.attendance.reason',
+  },
+  {
+    defaultMessage: 'Aggree',
+    id: 'app.users.privacyPolicy.aggree',
+  },
+  {
+    defaultMessage: 'Decline',
+    id: 'app.users.privacyPolicy.decline',
+  },
+  {
+    defaultMessage: 'Dependencies',
+    id: 'event.edit.dependencies',
+  },
+  {
+    defaultMessage: 'Details',
+    id: 'event.edit.details',
+  },
+  {
+    defaultMessage: 'Exclusionary events',
+    id: 'event.edit.exclusionaryEvents',
+  },
+  {
+    defaultMessage: 'Grouped events',
+    id: 'event.edit.groupedEvents',
+  },
+  {
+    defaultMessage: 'Event link',
+    id: 'event.emails.attendance.eventLink',
+  },
+  {
+    defaultMessage: 'Capacity',
+    id: 'event.login.capacity',
+  },
+  {
+    defaultMessage: 'Choose all events',
+    id: 'event.login.chooseAllEvents',
+  },
+  {
+    defaultMessage: 'Choose event',
+    id: 'event.login.chooseEvents',
+  },
+  {
+    defaultMessage: 'Close',
+    id: 'event.login.closeButton',
+  },
+  {
+    defaultMessage: 'Exclusionary events',
+    id: 'event.login.exclusionaryEvents',
+  },
+  {
+    defaultMessage: 'Sign in',
+    id: 'event.login.signIn',
+  },
+  {
+    defaultMessage: 'Sign in',
+    id: 'event.login.signInButton',
+  },
+  {
+    defaultMessage: 'Event login',
+    id: 'event.login.title',
+  },
+  {
+    defaultMessage: 'Event is full',
+    id: 'event.users.eventIsFull',
+  },
+  {
+    defaultMessage: 'Inside events',
+    id: 'event.users.insideEvents',
+  },
+  {
+    defaultMessage: 'Sign opening date',
+    id: 'event.users.signInOpenTitle',
+  },
+  {
+    defaultMessage: 'This event is not available for you',
+    id: 'event.users.unavailableEvent',
+  },
+  {
+    defaultMessage: 'Change password',
+    id: 'user.edit.changePassword',
+  },
+  {
+    defaultMessage: 'Info',
+    id: 'user.edit.info',
+  },
+  {
+    defaultMessage: 'New password confirmation',
+    id: 'user.edit.newPasswordConfirmation',
+  },
+  {
+    defaultMessage: 'Password',
+    id: 'user.edit.password',
+  },
+  {
+    defaultMessage: 'Passwords do not match',
+    id: 'user.edit.passwordsDoNotMatch',
+  },
+  {
+    defaultMessage: 'Study year',
+    id: 'user.edit.studyYear',
   },
 ];
