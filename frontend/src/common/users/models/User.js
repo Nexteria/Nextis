@@ -37,6 +37,9 @@ const User = Record({
   confirmationPassword: '',
   confirmedPrivacyPolicy: false,
   confirmedMarketingUse: false,
+  gainedActivityPoints: 0,
+  minimumSemesterActivityPoints: 0,
+  potentialActivityPoints: 0,
 });
 
 export default User;

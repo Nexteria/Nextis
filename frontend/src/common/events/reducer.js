@@ -27,6 +27,7 @@ const InitialState = Record({
     eventId: null,
     groupId: null,
   })(),
+  attendees: null,
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -223,6 +224,11 @@ export default function eventsReducer(state = new InitialState, action) {
 
     case actions.CLOSE_LOCATION_DETAILS_DIALOG: {
       return state.set('locationDetailsId', null);
+    }
+
+    case actions.GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS: {
+      const attendees = action.payload;
+      return state.set('attendees', attendees);
     }
 
   }

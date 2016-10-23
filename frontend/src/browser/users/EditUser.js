@@ -163,6 +163,10 @@ const messages = defineMessages({
     defaultMessage: 'Must be valid phone number (+xxxxxxxxxxxx)',
     id: 'user.edit.validPhoneError',
   },
+  requiredNumber: {
+    defaultMessage: 'Must be positive number',
+    id: 'user.edit.requiredNumber',
+  },
   usernameIsTaken: {
     defaultMessage: 'That username is taken',
     id: 'user.edit.usernameIsTaken',
@@ -178,6 +182,10 @@ const messages = defineMessages({
   studyYear: {
     defaultMessage: 'Study year',
     id: 'user.edit.studyYear',
+  },
+  minimumSemesterActivityPoints: {
+    defaultMessage: 'Minimum activity points for semester',
+    id: 'user.edit.minimumSemesterActivityPoints',
   },
 });
 
@@ -249,6 +257,14 @@ const validate = (values, props) => {
     if (!values.actualJobInfo) {
       errors.actualJobInfo = formatMessage(messages.requiredField);
     }
+
+    if (!values.minimumSemesterActivityPoints) {
+      errors.minimumSemesterActivityPoints = formatMessage(messages.requiredField);
+    } else if (isNaN(values.minimumSemesterActivityPoints)) {
+      errors.minimumSemesterActivityPoints = formatMessage(messages.requiredNumber);
+    }
+
+    
 
     const descriptionLength = values.personalDescription ?
       values.personalDescription.getEditorState().getCurrentContent().getPlainText().length
@@ -626,27 +642,37 @@ export class EditUser extends Component {
                     />
 
                     {mode !== 'profile' ?
-                      <Field
-                        name="userState"
-                        component={this.renderSelect}
-                        label={`${formatMessage(messages.userState)}`}
-                      >
-                        <option value={'active'}>
-                          {formatMessage(messages.activeUserState)}
-                        </option>
-                        <option value={'inactive'}>
-                          {formatMessage(messages.inactiveUserState)}
-                        </option>
-                        <option value={'temporarySuspended'}>
-                          {formatMessage(messages.temporarySuspendedUserState)}
-                        </option>
-                        <option value={'temporarySuspended'}>
-                          {formatMessage(messages.expelledUserState)}
-                        </option>
-                        <option value={'temporarySuspended'}>
-                          {formatMessage(messages.endedUserState)}
-                        </option>
-                      </Field>
+                      <div>
+                        <Field
+                          name="userState"
+                          component={this.renderSelect}
+                          label={`${formatMessage(messages.userState)}`}
+                        >
+                          <option value={'active'}>
+                            {formatMessage(messages.activeUserState)}
+                          </option>
+                          <option value={'inactive'}>
+                            {formatMessage(messages.inactiveUserState)}
+                          </option>
+                          <option value={'temporarySuspended'}>
+                            {formatMessage(messages.temporarySuspendedUserState)}
+                          </option>
+                          <option value={'temporarySuspended'}>
+                            {formatMessage(messages.expelledUserState)}
+                          </option>
+                          <option value={'temporarySuspended'}>
+                            {formatMessage(messages.endedUserState)}
+                          </option>
+                        </Field>
+                        {roles.includes(rolesList.get('STUDENT').id) ?
+                          <Field
+                            name="minimumSemesterActivityPoints"
+                            type="number"
+                            component={this.renderInput}
+                            label={formatMessage(messages.minimumSemesterActivityPoints)}
+                          />
+                        : ''}
+                      </div>
                       : ''
                     }
 

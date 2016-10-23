@@ -168,6 +168,7 @@ export function saveUser(values) {
           iban: values.iban,
           newPassword: values.newPassword,
           confirmationPassword: values.confirmationPassword,
+          minimumSemesterActivityPoints: values.minimumSemesterActivityPoints,
         }),
       }).then(response => response.json())
       .then(response => { browserHistory.goBack(); return response; }),

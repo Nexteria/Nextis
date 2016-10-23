@@ -16,13 +16,16 @@ class UsersController extends Controller
      */
     protected $userTransformer;
     protected $paymentTransformer;
+    protected $nxEventAttendeeTransformer;
 
     public function __construct(
         \App\Transformers\UserTransformer $userTransformer,
-        \App\Transformers\PaymentTransformer $paymentTransformer
+        \App\Transformers\PaymentTransformer $paymentTransformer,
+        \App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer
     ) {
         $this->userTransformer = $userTransformer;
         $this->paymentTransformer = $paymentTransformer;
+        $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
     }
 
     public function checkUsernameAvailability()
@@ -160,5 +163,11 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($userId);
         return response()->json($this->paymentTransformer->transformCollection($user->payments));
+    }
+
+    public function getEventsAttendeesForUser($userId)
+    {
+        $user = User::findOrFail($userId);
+        return response()->json($this->nxEventAttendeeTransformer->transformCollection($user->eventAttendees));
     }
 }

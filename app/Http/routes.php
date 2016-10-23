@@ -57,6 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/users/me/password', 'UsersController@changePassword');
         Route::put('/users/me/privacyPolicy', 'UsersController@confirmPrivacyPolicy');
         
+        Route::get('/users/{userId}/attendees', 'UsersController@getEventsAttendeesForUser');
+
         Route::delete('/users/{userId}', 'UsersController@deleteUser')
           ->where(array('userId' => '[0-9]+'));
         

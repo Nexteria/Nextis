@@ -8,6 +8,7 @@ class UserTransformer extends Transformer
     {
         $transformer = new RoleTransformer();
         $roles = $transformer->transformCollection($user->roles);
+        $activityPoints = $user->computeActivityPoints();
 
         return [
             'id' => (int) $user->id,
@@ -27,7 +28,6 @@ class UserTransformer extends Transformer
             'studyProgram' => $user->studyProgram,
             'studyYear' => $user->studyYear,
             'roles' => $roles,
-            'activityPoints' => $user->activityPoints,
             'guideDescription' => $user->guideDescription ? $user->guideDescription : '',
             'lectorDescription' => $user->lectorDescription ? $user->lectorDescription : '',
             'buddyDescription' => $user->buddyDescription ? $user->buddyDescription : '',
@@ -40,6 +40,10 @@ class UserTransformer extends Transformer
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
             'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,
             'confirmedMarketingUse' => $user->confirmedMarketingUse,
+            'gainedActivityPoints' => $activityPoints['sumGainedPoints'],
+            'potentialActivityPoints' => $activityPoints['sumPotentialPoints'],
+            'minimumSemesterActivityPoints' => $user->minimumSemesterActivityPoints,
+
          ];
     }
 }

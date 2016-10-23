@@ -73,6 +73,6 @@ class AttendeesGroup extends Model
 
     public function nxEvent()
     {
-        return $this->hasOne('App\NxEvent', 'eventId');
+        return $this->belongsTo('App\NxEvent', 'eventId');
     }
 }

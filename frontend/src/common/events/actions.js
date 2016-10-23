@@ -39,6 +39,11 @@ export const CLOSE_LOCATION_DETAILS_DIALOG = 'CLOSE_LOCATION_DETAILS_DIALOG';
 export const TOGGLE_PAST_EVENTS = 'TOGGLE_PAST_EVENTS';
 export const TOGGLE_FUTURE_EVENTS = 'TOGGLE_FUTURE_EVENTS';
 
+export const GET_EVENTS_ATTENDEES_FOR_USER = 'GET_EVENTS_ATTENDEES_FOR_USER';
+export const GET_EVENTS_ATTENDEES_FOR_USER_START = 'GET_EVENTS_ATTENDEES_FOR_USER_START';
+export const GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS = 'GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS';
+export const GET_EVENTS_ATTENDEES_FOR_USER_ERROR = 'GET_EVENTS_ATTENDEES_FOR_USER_ERROR';
+
 export function togglePastEvents() {
   return {
     type: TOGGLE_PAST_EVENTS,
@@ -296,4 +301,17 @@ export function closeLocationDetailsDialog() {
   return {
     type: CLOSE_LOCATION_DETAILS_DIALOG,
   };
+}
+
+export function getEventsAttendeesForUser(userId) {
+  return ({ fetch }) => ({
+    type: GET_EVENTS_ATTENDEES_FOR_USER,
+    payload: {
+      promise: fetch(`/users/${userId}/attendees`, {
+        credentials: 'same-origin',
+        method: 'get',
+        headers: { 'Content-Type': 'application/json' },
+      }).then((response) => response.json()),
+    },
+  });
 }

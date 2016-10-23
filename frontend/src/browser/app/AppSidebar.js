@@ -59,6 +59,10 @@ const messages = defineMessages({
     defaultMessage: 'Important',
     id: 'app.sidebar.links.important',
   },
+  activityPoints: {
+    defaultMessage: 'Aktivity body',
+    id: 'app.sidebar.links.activityPoints',
+  },
 });
 
 
@@ -82,17 +86,25 @@ export default class AppSideBar extends Component {
                 <span><FormattedMessage {...messages.events} /></span>
               </Link>
             </li>
+            <li>
+              <Link to="/points">
+                <span><FormattedMessage {...messages.activityPoints} /></span>
+              </Link>
+            </li>
             {viewer.hostedEvents.size > 0 ?
               <li>
                 <Link to="/host/events">
                   <span><FormattedMessage {...messages.hostedEvents} /></span>
-                  <small className="label pull-right bg-red"><FormattedMessage {...messages.important} /></small>
+                  <small className="label pull-right bg-red">
+                    <FormattedMessage {...messages.important} />
+                  </small>
                 </Link>
               </li>
               : ''
             }
             
-            <li className="header"><FormattedMessage {...messages.network} /></li>
+            <li className="header">
+              <FormattedMessage {...messages.network} /></li>
             <li>
               <Link to="/contacts">
                 <i className="fa fa-users text-green"></i>

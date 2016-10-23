@@ -38,6 +38,7 @@ class User extends Authenticatable
         'state',
         'iban',
         'nexteriaTeamRole',
+        'minimumSemesterActivityPoints',
     ];
 
     protected $dates = ['deleted_at'];
@@ -146,5 +147,32 @@ class User extends Authenticatable
     public function hostedEvents()
     {
         return $this->hasMany('App\NxEvent', 'hostId');
+    }
+
+    public function eventAttendees()
+    {
+        return $this->hasMany('App\NxEventAttendee', 'userId');
+    }
+
+    public function computeActivityPoints()
+    {
+        $sumGainedPoints = 0;
+        $sumPotentialPoints = 0;
+        $eventAttendees = $this->eventAttendees()->get();
+        foreach ($eventAttendees as $attendee) {
+            $event = $attendee->event();
+            if($event != null)
+            {
+                if($attendee->filledFeedback && $attendee->wasPresent)
+                {
+                   $sumGainedPoints += $event->activityPoints;
+                }
+                if($event->eventStartDateTime < Carbon::now())
+                {
+                    $sumPotentialPoints += $event->activityPoints;
+                }
+            }
+        }
+        return ['sumGainedPoints' => $sumGainedPoints, 'sumPotentialPoints' => $sumPotentialPoints];
     }
 }

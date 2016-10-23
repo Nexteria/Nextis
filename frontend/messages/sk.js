@@ -1156,5 +1156,12 @@ export default [
     defaultMessage: 'Informácie',
     id: 'user.edit.info',
   },
-
+  {
+    defaultMessage: 'Bodov (% / možných)',
+    id: 'users.manage.points',
+  },
+  {
+    defaultMessage: 'Minimum bodov za semester',
+    id: 'user.edit.minimumSemesterActivityPoints',
+  },
 ];

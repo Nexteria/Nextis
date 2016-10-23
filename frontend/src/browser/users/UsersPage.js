@@ -30,6 +30,14 @@ const messages = defineMessages({
     defaultMessage: 'Actions',
     id: 'users.manage.actions'
   },
+  points: {
+    defaultMessage: 'Aktivity body',
+    id: 'users.manage.points'
+  },
+  possiblePoints: {
+    defaultMessage: 'Možných bodov',
+    id: 'users.manage.possiblePoints'
+  },
 });
 
 class UsersPage extends Component {
@@ -105,12 +113,21 @@ class UsersPage extends Component {
                     <tbody>
                       <tr>
                         <th><FormattedMessage {...messages.userName} /></th>
+                        <th><FormattedMessage {...messages.points} /></th>
+                        <th><FormattedMessage {...messages.possiblePoints} /></th>
                         <th><FormattedMessage {...messages.actions} /></th>
                       </tr>
                       {filteredUsers ?
                         filteredUsers.map(user =>
                           <tr key={user.id}>
                             <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
+                            <td>
+                              {user.gainedActivityPoints}&nbsp;
+                            </td>
+                            <td>
+                              {user.gainedActivityPoints === 0 ? 0 :
+                                Math.round(user.gainedActivityPoints / user.potentialActivityPoints * 100)} %
+                            </td>
                             <td className="action-buttons">
                               {hasPermission('delete_users') ?
                                 <i

@@ -63,4 +63,21 @@ class NxEventAttendee extends Authenticatable
     {
         return $this->belongsTo('App\AttendeesGroup', 'attendeesGroupId');
     }
+
+    public function event()
+    {
+        $result = [];
+        $eventGroup = $this->attendeesGroup()->first();
+        if($eventGroup !== null)
+        {
+            $eventId = $this->attendeesGroup()->first()->eventId;
+            $event = NxEvent::find($eventId);
+            if($event !== null)
+            {
+                return $event;
+            }
+        }
+
+        return null;
+    }
 }
