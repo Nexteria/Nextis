@@ -141,8 +141,12 @@ export class EventLoginDialog extends Component {
                       const inExclusion = event.exclusionaryEvents.includes(gEvent.id);
                       let canBeSelected = true;
                       if (inExclusion) {
-                        canBeSelected = !groupedEvents.filter(e => fields.choosedEvents.value.get(e.id)).some(e => event.exclusionaryEvents.includes(e.id) && e.id !== gEvent.id);
+                        canBeSelected = !groupedEvents.filter(e => fields.choosedEvents.value.get(e.id)).some(e => event.exclusionaryEvents.includes(e.id) && e.id !== gEvent.id) && gEvent.maxCapacity;
                       }
+
+                      const maxCapacity = groupedEventsNumbers.get(gEvent.id).maxCapacity;
+                      const attending = groupedEventsNumbers.get(gEvent.id).attending;
+                      canBeSelected = canBeSelected && (maxCapacity > attending);
 
                       return (
                         <tr key={gEvent.get('id')} className={`${canBeSelected ? null : 'strikeout'}`}>
