@@ -13,6 +13,10 @@ gulp.task('codestyle', () => {
   if (args.php || noOption) {
     let files = ['../app/**/*.php'];
 
+    if (args.files) {
+      files = args.files.split(',');
+    }
+
     if (args.lastCommit) {
       files = proc.execSync('git log -m -n 1 --name-only --pretty=format:"" | grep ".php$" | sed -e :a -e N -e \'s/\\n/,..\\//\' -e ta | sed -e \'s/^/..\\//\'').toString(); // eslint-disable-line max-len
       files = files.split(',');
