@@ -105,6 +105,30 @@ export default [
     "defaultMessage": "Contact list"
   },
   {
+    "id": "event.attendees.dialog.closeButton",
+    "defaultMessage": "Close"
+  },
+  {
+    "id": "event.attendees.dialog.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "event.attendees.dialog.noUsers",
+    "defaultMessage": "There are no signed in users yet"
+  },
+  {
+    "id": "event.attendees.dialog.phone",
+    "defaultMessage": "Phone"
+  },
+  {
+    "id": "event.attendees.dialog.title",
+    "defaultMessage": "List of signed in users"
+  },
+  {
+    "id": "event.attendees.dialog.userName",
+    "defaultMessage": "Username"
+  },
+  {
     "id": "event.edit..attendeesGroup.confirmedAttendance",
     "defaultMessage": "Group is empty"
   },
@@ -1066,11 +1090,11 @@ export default [
   },
   {
     "id": "user.edit.requiredField",
-    "defaultMessage": "This field is required"
+    "defaultMessage": "This field is required!"
   },
   {
     "id": "user.edit.requiredField",
-    "defaultMessage": "This field is required!"
+    "defaultMessage": "This field is required"
   },
   {
     "id": "user.edit.requiredLengthField",
@@ -1178,19 +1202,19 @@ export default [
   },
   {
     "id": "users.manage.table.title",
-    "defaultMessage": "Users - managment"
-  },
-  {
-    "id": "users.manage.table.title",
     "defaultMessage": "Users - payments"
   },
   {
-    "id": "users.manage.title",
-    "defaultMessage": "Payments"
+    "id": "users.manage.table.title",
+    "defaultMessage": "Users - managment"
   },
   {
     "id": "users.manage.title",
     "defaultMessage": "Users"
+  },
+  {
+    "id": "users.manage.title",
+    "defaultMessage": "Payments"
   },
   {
     "id": "users.manage.unassociatedPayments",

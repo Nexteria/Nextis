@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { Map } from 'immutable';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import { FormattedMessage, FormattedDate, defineMessages } from 'react-intl';
 import './Event.scss';
 import moment from 'moment';
@@ -122,7 +122,14 @@ export default class Event extends Component {
 
   render() {
     const { event, events, viewer, hide, datailsOpen, nxLocation, users } = this.props;
-    const { toggleEventDetails, openLocationDetailsDialog, openEventDetailsDialog, openSignOutDialog, attendeeWontGo, attendeeSignIn } = this.props;
+    const {
+      toggleEventDetails,
+      openLocationDetailsDialog,
+      openEventDetailsDialog,
+      openSignOutDialog,
+      attendeeWontGo,
+      attendeeSignIn
+    } = this.props;
 
     const oldEvent = event.eventStartDateTime.isBefore(moment.utc());
     const attendees = event.attendeesGroups.reduce((reduction, group) =>
@@ -137,8 +144,9 @@ export default class Event extends Component {
 
     // TODO what if user will be in multiple groups?
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
+    const now = moment().utc();
     const isSignInOpen = group ?
-      moment().utc().isAfter(group.signUpOpenDateTime) && moment().utc().isBefore(group.signUpDeadlineDateTime)
+      now.isAfter(group.signUpOpenDateTime) && now.isBefore(group.signUpDeadlineDateTime)
     : false;
 
     const signInExpired = group ?
@@ -151,13 +159,15 @@ export default class Event extends Component {
       isFreeCapacity = false;
     }
 
-    const undecided = attendee && !attendee.get('signedIn') && !attendee.get('wontGo') && !attendee.get('signedOut');
+    const undecided = attendee && !attendee.get('signedIn') &&
+      !attendee.get('wontGo') && !attendee.get('signedOut');
 
-    const groupedEvents = event.groupedEvents.map(eventId => events.filter(e => e.id === eventId).first());
+    const groupedEvents = event.groupedEvents.map(eventId =>
+      events.filter(e => e.id === eventId).first());
 
 
     return (
-      <li className="users-event" style={{display: hide ? 'none' : ''}}>
+      <li className="users-event" style={{ display: hide ? 'none' : '' }}>
         <div className="fa bg-green event-type">
           <FormattedMessage {...messages[`eventType_${event.eventType}`]} />
         </div>
@@ -170,7 +180,11 @@ export default class Event extends Component {
             </div>
             <h3 className="col-md-5 col-sm-4 col-xs-12">{event.name}</h3>
             {attendee ?
-              <div className={`col-md-6 col-sm-${undecided && isSignInOpen && isFreeCapacity ? 12 : 6} col-xs-12 attendance-container`}>
+              <div
+                className={'col-md-6 ' +
+                  `col-sm-${undecided && isSignInOpen && isFreeCapacity ? 12 : 6}` +
+                  ' col-xs-12 attendance-container'}
+              >
                 {oldEvent ?
                   <div>
                     <div className="col-md-6 col-sm-6 col-xs-6"></div>
@@ -179,7 +193,11 @@ export default class Event extends Component {
                         attendee.get('filledFeedback') ?
                           <i className="fa fa-check was-here"></i>
                         :
-                          <a className="btn btn-info btn-xs" target="_blank" href={event.feedbackLink}>
+                          <a
+                            className="btn btn-info btn-xs"
+                            target="_blank"
+                            href={event.feedbackLink}
+                          >
                             <FormattedMessage {...messages.fillFeedback} />
                           </a>
                       :
@@ -218,26 +236,39 @@ export default class Event extends Component {
                         <div className="event-actions col-md-6 col-sm-6 col-xs-12">
                           <button
                             className="btn btn-success btn-xs"
-                            onClick={() => groupedEvents.size ? browserHistory.push(`/events/${event.id}/login`) : attendeeSignIn(event, viewer, group.id)}
+                            onClick={() =>
+                              groupedEvents.size ?
+                                browserHistory.push(`/events/${event.id}/login`)
+                              : attendeeSignIn(event, viewer, group.id)}
                           >
                             <FormattedMessage {...messages.signIn} />
                           </button>
-                          <button className="btn btn-danger btn-xs" onClick={() => attendeeWontGo(event, viewer, group.id)}>
+                          <button
+                            className="btn btn-danger btn-xs"
+                            onClick={() => attendeeWontGo(event, viewer, group.id)}
+                          >
                             <FormattedMessage {...messages.wontGo} />
                           </button>
                           <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
                         </div>
                       :
                         <div className="event-actions col-md-6 col-sm-6 col-xs-12">
-                          {!attendee.get('wontGo') && !attendee.get('signedOut') && attendee.get('signedIn') ?
-                            <button className="btn btn-danger btn-xs" onClick={() => openSignOutDialog(event, viewer, group.id)}>
+                          {!attendee.get('wontGo') && !attendee.get('signedOut')
+                            && attendee.get('signedIn') ?
+                            <button
+                              className="btn btn-danger btn-xs"
+                              onClick={() => openSignOutDialog(event, viewer, group.id)}
+                            >
                               <FormattedMessage {...messages.signOut} />
                             </button>
                             :
                               isSignInOpen && isFreeCapacity ?
                                 <button
                                   className="btn btn-success btn-xs"
-                                  onClick={() => groupedEvents.size ? browserHistory.push(`/events/${event.id}/login`) : attendeeSignIn(event, viewer, group.id)}
+                                  onClick={() =>
+                                    groupedEvents.size ?
+                                      browserHistory.push(`/events/${event.id}/login`)
+                                    : attendeeSignIn(event, viewer, group.id)}
                                 >
                                   <FormattedMessage {...messages.signIn} />
                                 </button>
@@ -263,7 +294,10 @@ export default class Event extends Component {
               </div>
             }
           </div>
-          <div className="col-md-12" style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}>
+          <div
+            className="col-md-12"
+            style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}
+          >
             <div className="col-md-4 col-sm-12 col-xs-12 event-details">
               <div className="col-md-12 col-sm-12 col-xs-12">
                 <strong><FormattedMessage {...messages.details} />:</strong>
@@ -273,7 +307,9 @@ export default class Event extends Component {
                   <i className="fa fa-clock-o"></i>
                 </div>
                 <div className="col-md-10 col-sm-10 col-xs-10">
-                  {event.eventStartDateTime.format('D.M.YYYY, H:mm')} - {event.eventEndDateTime.format('D.M.YYYY, H:mm')}
+                  {event.eventStartDateTime.format('D.M.YYYY, H:mm')}
+                  <span> - </span>
+                  {event.eventEndDateTime.format('D.M.YYYY, H:mm')}
                 </div>
               </div>
               <div className="col-md-12 col-sm-12 col-xs-12">
@@ -301,7 +337,9 @@ export default class Event extends Component {
                     {attending.size} ({event.minCapacity} - {event.maxCapacity})
                   </div>
                   <div>
-                    <FormattedMessage {...messages.signedIn} />
+                    <Link to={`/events/${event.id}/attendees`}>
+                      <FormattedMessage {...messages.signedIn} />
+                    </Link>
                   </div>
                 </div>
                 <div className="col-md-5 col-sm-5 col-xs-5">
@@ -316,7 +354,10 @@ export default class Event extends Component {
             </div>
             <div className="col-md-8 col-sm-12 col-xs-12">
               <div><strong><FormattedMessage {...messages.shortDescription} />:</strong></div>
-              <div dangerouslySetInnerHTML={{ __html: event.shortDescription.toString('html') }}></div>
+              <div
+                dangerouslySetInnerHTML={{ __html: event.shortDescription.toString('html') }}
+              >
+              </div>
               <div><strong><FormattedMessage {...messages.insideEvents} />:</strong></div>
               <ul>
               {groupedEvents.map(gEvent =>
@@ -324,9 +365,16 @@ export default class Event extends Component {
                   <label>{gEvent.name}</label>
                   <div>
                     <i className="fa fa-clock-o"></i>
-                    <span> {event.eventStartDateTime.format('D.M.YYYY, H:mm')} - {event.eventEndDateTime.format('D.M.YYYY, H:mm')}</span>,
+                    <span> </span>
+                    {event.eventStartDateTime.format('D.M.YYYY, H:mm')}
+                    <span> - </span>
+                    {event.eventEndDateTime.format('D.M.YYYY, H:mm')}
+                    <span>,</span>
                   </div>
-                  <div dangerouslySetInnerHTML={{ __html: gEvent.shortDescription.toString('html') }}></div>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: gEvent.shortDescription.toString('html') }}
+                  >
+                  </div>
                 </li>
               )}
               </ul>
@@ -344,12 +392,20 @@ export default class Event extends Component {
                     <div key={lector}>
                       <div className="col-md-2 col-sm-2 col-xs-2">
                         <img
+                          alt="lector"
                           className="lector-picture"
-                          src={users.get(lector).photo ? users.get(lector).photo : '/img/avatar.png'}
+                          src={users.get(lector).photo ?
+                            users.get(lector).photo
+                            : '/img/avatar.png'}
                         />
                         <div>{users.get(lector).firstName} {users.get(lector).lastName}</div>
                       </div>
-                      <div className="col-md-10 col-sm-10 col-xs-10" dangerouslySetInnerHTML={{ __html: users.get(lector).lectorDescription.toString('html') }}>
+                      <div
+                        className="col-md-10 col-sm-10 col-xs-10"
+                        dangerouslySetInnerHTML={{
+                          __html: users.get(lector).lectorDescription.toString('html')
+                        }}
+                      >
                       </div>
                     </div>
                   )

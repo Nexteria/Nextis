@@ -1220,4 +1220,28 @@ export default [
     defaultMessage: 'Study year',
     id: 'user.edit.studyYear',
   },
+  {
+    defaultMessage: 'Close',
+    id: 'event.attendees.dialog.closeButton',
+  },
+  {
+    defaultMessage: 'Email',
+    id: 'event.attendees.dialog.email',
+  },
+  {
+    defaultMessage: 'There are no signed in users yet',
+    id: 'event.attendees.dialog.noUsers',
+  },
+  {
+    defaultMessage: 'Phone',
+    id: 'event.attendees.dialog.phone',
+  },
+  {
+    defaultMessage: 'List of signed in users',
+    id: 'event.attendees.dialog.title',
+  },
+  {
+    defaultMessage: 'User name',
+    id: 'event.attendees.dialog.userName',
+  },
 ];

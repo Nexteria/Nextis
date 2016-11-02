@@ -1164,4 +1164,28 @@ export default [
     defaultMessage: 'Minimum bodov za semester',
     id: 'user.edit.minimumSemesterActivityPoints',
   },
+  {
+    defaultMessage: 'Zavrieť',
+    id: 'event.attendees.dialog.closeButton',
+  },
+  {
+    defaultMessage: 'Email',
+    id: 'event.attendees.dialog.email',
+  },
+  {
+    defaultMessage: 'Zatiaľ sa nikto neprihlásil',
+    id: 'event.attendees.dialog.noUsers',
+  },
+  {
+    defaultMessage: 'Telefón',
+    id: 'event.attendees.dialog.phone',
+  },
+  {
+    defaultMessage: 'Zoznam prihlásených na event',
+    id: 'event.attendees.dialog.title',
+  },
+  {
+    defaultMessage: 'Meno a priezvisko',
+    id: 'event.attendees.dialog.userName',
+  },
 ];
