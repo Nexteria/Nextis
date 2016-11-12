@@ -193,6 +193,8 @@ const validate = (values, props) => {
   const { formatMessage } = props.intl;
 
   const errors = {};
+  const isLector = props.roles && props.rolesList && props.roles.includes(
+    props.rolesList.get('LECTOR').id);
   if (!values.firstName) {
     errors.firstName = formatMessage(messages.requiredField);
   }
@@ -214,13 +216,17 @@ const validate = (values, props) => {
   }
 
   if (!values.email) {
-    errors.email = formatMessage(messages.requiredField);
+    if (!isLector) {
+      errors.email = formatMessage(messages.requiredField);
+    }
   } else if (!validator.isEmail(values.email)) {
     errors.email = formatMessage(messages.validEmailError);
   }
 
   if (!values.phone) {
-    errors.phone = formatMessage(messages.requiredField);
+    if (!isLector) {
+      errors.phone = formatMessage(messages.requiredField);
+    }
   } else {
     try {
       const phoneUtil = PhoneNumberUtil.getInstance();
@@ -270,7 +276,10 @@ const validate = (values, props) => {
       values.personalDescription.getEditorState().getCurrentContent().getPlainText().length
       : 0;
     if (descriptionLength < 100) {
-      errors.personalDescription = formatMessage(messages.requiredLengthField, {characters: 100 - descriptionLength});
+      errors.personalDescription = formatMessage(
+        messages.requiredLengthField,
+        { characters: 100 - descriptionLength }
+      );
     }
   }
 
@@ -279,26 +288,30 @@ const validate = (values, props) => {
 
 const asyncValidate = (values, dispatch, props) => {
   const { formatMessage } = props.intl;
-  let validation = null;
-  let errors = {};
+  // need to create new Promise here instead of just assigning null,
+  // because validations on role 'LECTOR' can run with empty values.username and values.email,
+  // which means that 'validation' at the end of this function will be null,
+  // but we need to return a promise
+  let validation = Promise.resolve();
+  const errors = {};
   if (values.username) {
-    validation = dispatch(actions.verifyUsernameAvailable(values.username,  values.id)).then(() => {}, () => {
-      errors.username = formatMessage(messages.usernameIsTaken);
-    });
+    validation = dispatch(actions.verifyUsernameAvailable(values.username, values.id))
+      .then(() => {}, () => { errors.username = formatMessage(messages.usernameIsTaken); });
   }
 
   if (values.email) {
     if (validation) {
-      validation = validation.then(() => dispatch(actions.verifyEmailAvailable(values.email, values.id)));
+      validation = validation
+        .then(() => dispatch(actions.verifyEmailAvailable(values.email, values.id)));
     } else {
       validation = dispatch(actions.verifyEmailAvailable(values.email, values.id));
     }
 
-    validation.then(() => {}, () => errors.email = formatMessage(messages.emailIsTaken));
+    validation.then(() => {}, () => { errors.email = formatMessage(messages.emailIsTaken); });
   }
 
   return validation.then(() => errors, () => errors);
-}
+};
 
 export class EditUser extends Component {
 
@@ -419,7 +432,6 @@ export class EditUser extends Component {
 
   renderRoles(data, rolesList) {
     const { input, label, children, meta: { touched, error } } = data;
-
     return (
       <div className="form-group text-left">
         <label>{label}</label>
@@ -428,7 +440,7 @@ export class EditUser extends Component {
               <label>
                 <input
                   type="checkbox"
-                  onChange={() => input.onChange(input.value.includes(role.id) ? 
+                  onChange={() => input.onChange(input.value.includes(role.id) ?
                     input.value.delete(input.value.findIndex((value) => value === role.id))
                     :
                     input.value.push(role.id))
@@ -447,6 +459,7 @@ export class EditUser extends Component {
     const { fields, mode, roles, pristine, submitting, title, rolesList, studentLevels } = this.props;
     const { saveUser, touch, handleSubmit, updateUserRole, hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
+    const isLector = roles.includes(rolesList.get('LECTOR').id);
 
     if (!roles || !rolesList) {
       return <div></div>;
@@ -516,7 +529,7 @@ export class EditUser extends Component {
                       name="email"
                       type="email"
                       component={this.renderInput}
-                      label={`${formatMessage(messages.email)}*`}
+                      label={`${formatMessage(messages.email)}${isLector ? '' : '*'}`}
                     />
 
                     <Field
@@ -524,7 +537,7 @@ export class EditUser extends Component {
                       type="text"
                       parse={this.parsePhone}
                       component={this.renderInput}
-                      label={`${formatMessage(messages.phone)}*`}
+                      label={`${formatMessage(messages.phone)}${isLector ? '' : '*'}`}
                     />
 
                     {roles.includes(rolesList.get('STUDENT').id) ?
@@ -694,7 +707,7 @@ export class EditUser extends Component {
                           component={this.renderInput}
                           label={`${formatMessage(messages.newPassword)}`}
                         />
-                        
+
                         <Field
                           name="confirmationPassword"
                           type="password"

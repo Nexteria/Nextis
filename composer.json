@@ -11,7 +11,8 @@
         "zizaco/entrust": "5.2.x-dev",
         "mews/purifier": "^2.0",
         "guzzlehttp/guzzle": "~6.0.0",
-        "sentry/sentry-laravel": "^0.3.0"
+        "sentry/sentry-laravel": "^0.3.0",
+        "doctrine/dbal": "v2.5.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
