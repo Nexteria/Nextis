@@ -17,12 +17,12 @@ const runEslint = (args) => {
 
 
   if (args.lastCommit) {
-    files = proc.execSync('git log -m -n 1 --name-only --pretty=format:"" | grep ".js$" | sed -e :a -e N -e \'s/\\n/,/\' -e \'s/frontend\\///\' -e ta').toString(); // eslint-disable-line max-len
+    files = proc.execSync('git log -m -n 1 --name-only --pretty=format:"" | grep ".js$" | tr \'\\n\' \',\' | sed -e \'s/,$//\' | sed -e \'s/frontend\\///g\'').toString(); // eslint-disable-line max-len
     files = files.split(',');
   }
 
   if (args.masterDiff) {
-    files = proc.execSync('git diff --name-only master..$(git rev-parse --abbrev-ref HEAD) | grep ".js$" | sed -e :a -e N -e \'s/\\n/,/\' -e \'s/frontend\\///\' -e ta').toString(); // eslint-disable-line max-len
+    files = proc.execSync('git diff --name-only origin/master..$(git rev-parse --abbrev-ref HEAD) | grep ".js$" | tr \'\\n\' \',\' | sed -e \'s/,$//\' | sed -e \'s/frontend\\///g\'').toString(); // eslint-disable-line max-len
     files = files.split(',');
   }
 

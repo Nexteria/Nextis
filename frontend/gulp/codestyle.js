@@ -18,14 +18,17 @@ gulp.task('codestyle', () => {
     }
 
     if (args.lastCommit) {
-      files = proc.execSync('git log -m -n 1 --name-only --pretty=format:"" | grep ".php$" | sed -e :a -e N -e \'s/\\n/,..\\//\' -e ta | sed -e \'s/^/..\\//\'').toString(); // eslint-disable-line max-len
+      files = proc.execSync('git log -m -n 1 --name-only --pretty=format:"" | grep ".php$" | tr \'\\n\' \',\' | sed -e \'s/,$//\'').toString(); // eslint-disable-line max-len
       files = files.split(',');
+      files = files.map(file => `../${file}`);
     }
 
     if (args.masterDiff) {
-      files = proc.execSync('git diff --name-only master..$(git rev-parse --abbrev-ref HEAD) | grep ".php$" | sed -e :a -e N -e \'s/\\n/,..\\//\' -e ta | sed -e \'s/^/..\\//\'').toString(); // eslint-disable-line max-len
+      files = proc.execSync('git diff --name-only origin/master..$(git rev-parse --abbrev-ref HEAD) | grep ".php$" | tr \'\\n\' \',\' | sed -e \'s/,$//\'').toString(); // eslint-disable-line max-len
       files = files.split(',');
+      files = files.map(file => `../${file}`);
     }
+
 
     return gulp.src(files)
       .pipe(phpcs({
