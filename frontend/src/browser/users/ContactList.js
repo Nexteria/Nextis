@@ -42,20 +42,23 @@ class ContactList extends Component {
   static propTypes = {
     users: PropTypes.object,
     rolesList: PropTypes.object,
+    studentLevels: PropTypes.object,
+    fields: PropTypes.object,
+
   };
 
   render() {
     const { users, rolesList, studentLevels, fields } = this.props;
     let students = [];
-
     if (users) {
       students = users.filter(user => user.roles.includes(rolesList.get('STUDENT').id))
         .valueSeq().sort((a, b) => {
-          if (studentLevels.get(a.studentLevelId).name === studentLevels.get(b.studentLevelId).name) {
-            return a.lastName > b.lastName;
+          if (studentLevels.get(a.studentLevelId).name ===
+            studentLevels.get(b.studentLevelId).name) {
+            return ((a.lastName > b.lastName) ? 1 : -1);
           }
-          
-          return studentLevels.get(a.studentLevelId).name > studentLevels.get(b.studentLevelId).name;
+          return ((studentLevels.get(a.studentLevelId).name >
+            studentLevels.get(b.studentLevelId).name) ? 1 : -1);
         });
 
       if (fields.filter.value) {
@@ -78,7 +81,9 @@ class ContactList extends Component {
             <div className="col-xs-12">
               <div className="box">
                 <div className="box-header">
-                  <h3 className="box-title"><FormattedMessage {...messages.contactStudentsTitile} /></h3>
+                  <h3 className="box-title">
+                    <FormattedMessage{...messages.contactStudentsTitile} />
+                  </h3>
 
                   <div className="box-tools">
                     <div className="input-group input-group-sm" style={{ width: '150px' }}>
@@ -118,7 +123,8 @@ class ContactList extends Component {
                         )
                         :
                         <tr>
-                          <td colSpan="4" style={{ textAlign: 'center' }}><FormattedMessage {...messages.no_contacts} /></td>
+                          <td colSpan="4" style={{ textAlign: 'center' }}>
+                            <FormattedMessage {...messages.no_contacts} /></td>
                         </tr>
                       }
                     </tbody>

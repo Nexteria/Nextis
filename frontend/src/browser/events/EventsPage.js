@@ -110,14 +110,14 @@ class EventsPage extends Component {
 
   render() {
     const { events, fields } = this.props;
-    const { removeEvent, hasPermission } = this.props;
+    const { hasPermission } = this.props;
 
     if (!events) {
       return <div></div>;
     }
 
     let filteredEvents = events.valueSeq()
-      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime))
+      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1)
       .map(event => event);
 
     if (fields.filter.value) {
