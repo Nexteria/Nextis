@@ -238,7 +238,7 @@ class EventsPage extends Component {
                       />
                   )}
 
-                  {(11 - moment().month() > 1) ?
+                  {(12 - moment().month() > 1) ?
                     <ul className="timeline">
                       <li className="time-label">
                         <span className="bg-yellow">
@@ -278,7 +278,7 @@ class EventsPage extends Component {
                   </li>
                 </ul>
                 {visibleFutureEvents ?
-                  Array(11 - moment().month()).fill().map((_, index) =>
+                  Array(12 - moment().month()).fill().map((_, index) =>
                     <ul key={index} className="timeline">
                       <li className="time-label">
                         <span className="bg-yellow">
