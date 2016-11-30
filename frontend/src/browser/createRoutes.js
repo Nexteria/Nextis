@@ -48,6 +48,7 @@ export default function createRoutes() {
         <Route component={UsersPage} path="users" />
         <Route component={CreateUserPage} path="users/create" />
         <Route component={EditUser} path="users/:userId" />
+        <Route component={ActivityPointsPage} path="users/:userId/points" />
         <Route component={UsersPaymentsDialog} path="users/:userId/payments" />
 
         <Route component={EditUserGroup} path="users/groups/create" />

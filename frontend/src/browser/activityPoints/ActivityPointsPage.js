@@ -52,6 +52,7 @@ class ActivityPointsPage extends Component {
     users: PropTypes.object,
     studentLevels: PropTypes.object,
     fields: PropTypes.object,
+    params: PropTypes.object,
     loadUsersPayments: PropTypes.func,
     getEventsAttendeesForUser: PropTypes.func,
   };
@@ -59,9 +60,16 @@ class ActivityPointsPage extends Component {
   componentDidMount() {
     const {
       viewer,
+      params,
       getEventsAttendeesForUser,
     } = this.props;
-    getEventsAttendeesForUser(viewer.id);
+    let userId = viewer.id;
+
+    if (params && params.userId) {
+      userId = parseInt(params.userId, 10);
+    }
+
+    getEventsAttendeesForUser(userId);
   }
 
 
@@ -72,10 +80,17 @@ class ActivityPointsPage extends Component {
       users,
       studentLevels,
       fields,
+      params,
     } = this.props;
 
     if (!users || !attendees) {
       return <div></div>;
+    }
+
+    let activeUser = viewer;
+
+    if (params && params.userId) {
+      activeUser = users.get(parseInt(params.userId, 10));
     }
 
     return (
@@ -96,13 +111,13 @@ class ActivityPointsPage extends Component {
                   <span
                     style={{ fontSize: '2em' }}
                   >
-                    {viewer.gainedActivityPoints}&nbsp;
+                    {activeUser.gainedActivityPoints}&nbsp;
                     <FormattedMessage {...messages.from} />&nbsp;
-                    {viewer.potentialActivityPoints}&nbsp;
+                    {activeUser.potentialActivityPoints}&nbsp;
                     <FormattedMessage {...messages.points} />
                   </span>
                 </div>
-                <OverviewTable {...{ viewer }} />
+                <OverviewTable viewer={activeUser} />
               </div>
             </div>
           </div>
@@ -173,7 +188,7 @@ class ActivityPointsPage extends Component {
                     {!users ?
                       <div></div>
                     :
-                      <UsersActivityPointsTable {...{ studentLevels, users, viewer }} />
+                      <UsersActivityPointsTable {...{ studentLevels, users }} viewer={activeUser} />
                     }
                   </div>
                 </div>

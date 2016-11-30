@@ -1157,7 +1157,7 @@ export default [
     id: 'user.edit.info',
   },
   {
-    defaultMessage: 'Bodov (% / možných)',
+    defaultMessage: 'Získané body',
     id: 'users.manage.points',
   },
   {

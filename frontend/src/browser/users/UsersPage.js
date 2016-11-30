@@ -122,11 +122,17 @@ class UsersPage extends Component {
                           <tr key={user.id}>
                             <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
                             <td>
-                              {user.gainedActivityPoints}&nbsp;
+                              {user.gainedActivityPoints}
+                              <span> (</span>
+                              {user.gainedActivityPoints === 0 ? 0 :
+                                Math.round(
+                                  user.gainedActivityPoints / user.potentialActivityPoints * 100
+                                )
+                              }
+                              <span>%)</span>
                             </td>
                             <td>
-                              {user.gainedActivityPoints === 0 ? 0 :
-                                Math.round(user.gainedActivityPoints / user.potentialActivityPoints * 100)} %
+                              {user.potentialActivityPoints}
                             </td>
                             <td className="action-buttons">
                               {hasPermission('delete_users') ?
@@ -136,11 +142,19 @@ class UsersPage extends Component {
                                 ></i>
                                 : ''
                               }
-                              
+
                               <i
                                 className="fa fa-pencil"
                                 onClick={() => this.editUser(user.id)}
                               ></i>
+
+                              <i
+                                className="fa fa-file-text-o"
+                                onClick={() =>
+                                  browserHistory.push(`/admin/users/${user.id}/points`)
+                                }
+                              ></i>
+
                             </td>
                           </tr>
                         )
