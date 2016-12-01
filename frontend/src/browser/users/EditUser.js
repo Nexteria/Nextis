@@ -459,11 +459,12 @@ export class EditUser extends Component {
     const { fields, mode, roles, pristine, submitting, title, rolesList, studentLevels } = this.props;
     const { saveUser, touch, handleSubmit, updateUserRole, hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
-    const isLector = roles.includes(rolesList.get('LECTOR').id);
 
     if (!roles || !rolesList) {
       return <div></div>;
     }
+
+    const isLector = roles.includes(rolesList.get('LECTOR').id);
 
     return (
       <div>
@@ -670,10 +671,10 @@ export class EditUser extends Component {
                           <option value={'temporarySuspended'}>
                             {formatMessage(messages.temporarySuspendedUserState)}
                           </option>
-                          <option value={'temporarySuspended'}>
+                          <option value={'expelled'}>
                             {formatMessage(messages.expelledUserState)}
                           </option>
-                          <option value={'temporarySuspended'}>
+                          <option value={'ended'}>
                             {formatMessage(messages.endedUserState)}
                           </option>
                         </Field>
