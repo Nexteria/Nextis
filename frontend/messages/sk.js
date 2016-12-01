@@ -1188,4 +1188,28 @@ export default [
     defaultMessage: 'Meno a priezvisko',
     id: 'event.attendees.dialog.userName',
   },
+  {
+    defaultMessage: 'Level študenta',
+    id: 'users.manage.studentLevel',
+  },
+  {
+    defaultMessage: 'Prizvisko',
+    id: 'users.manage.lastName'
+  },
+  {
+    defaultMessage: 'Utriediť podľa',
+    id: 'users.manage.sortBy'
+  },
+  {
+    defaultMessage: 'Všetky',
+    id: 'users.manage.all'
+  },
+  {
+    defaultMessage: 'Zobraziť level',
+    id: 'users.manage.levelFilter'
+  },
+  {
+    defaultMessage: 'Študentovo minimum',
+    id: 'users.manage.minimumSemesterActivityPoints'
+  },
 ];

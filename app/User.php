@@ -161,14 +161,11 @@ class User extends Authenticatable
         $eventAttendees = $this->eventAttendees()->get();
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
-            if($event != null)
-            {
-                if($attendee->filledFeedback && $attendee->wasPresent)
-                {
-                   $sumGainedPoints += $event->activityPoints;
+            if ($event != null) {
+                if ($attendee->filledFeedback && $attendee->wasPresent) {
+                    $sumGainedPoints += $event->activityPoints;
                 }
-                if($event->eventStartDateTime < Carbon::now())
-                {
+                if ($event->eventStartDateTime < Carbon::now() && $event->eventEndDateTime < Carbon::now()) {
                     $sumPotentialPoints += $event->activityPoints;
                 }
             }

@@ -1,6 +1,6 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
@@ -34,9 +34,29 @@ const messages = defineMessages({
     defaultMessage: 'Aktivity body',
     id: 'users.manage.points'
   },
-  possiblePoints: {
-    defaultMessage: 'Možných bodov',
-    id: 'users.manage.possiblePoints'
+  minimumSemesterActivityPoints: {
+    defaultMessage: 'Študentovo minimum',
+    id: 'users.manage.minimumSemesterActivityPoints'
+  },
+  studentLevel: {
+    defaultMessage: 'Level študenta',
+    id: 'users.manage.studentLevel'
+  },
+  lastName: {
+    defaultMessage: 'Prizvisko',
+    id: 'users.manage.lastName'
+  },
+  sortBy: {
+    defaultMessage: 'Utriediť podľa',
+    id: 'users.manage.sortBy'
+  },
+  all: {
+    defaultMessage: 'Všetky',
+    id: 'users.manage.all'
+  },
+  levelFilter: {
+    defaultMessage: 'Zobraziť level',
+    id: 'users.manage.levelFilter'
   },
 });
 
@@ -47,23 +67,71 @@ class UsersPage extends Component {
     fields: PropTypes.object.isRequired,
     removeUser: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    studentLevels: PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   editUser(userId) {
     browserHistory.push(`/admin/users/${userId}`);
   }
 
+  calculateUserPointsColor(user) {
+    let color = '#ff0000';
+    const percentage = Math.round(
+      user.gainedActivityPoints / user.minimumSemesterActivityPoints * 100);
+
+    if (percentage >= 50) {
+      color = '#ecb200';
+    }
+
+    if (percentage > 75) {
+      color = '#11ea05';
+    }
+
+    return color;
+  }
+
   render() {
-    const { users, fields } = this.props;
+    const { users, fields, studentLevels } = this.props;
     const { removeUser, hasPermission } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (!users) {
       return <div></div>;
     }
 
-    let filteredUsers = users.valueSeq().map(user => user);
+    let filteredUsers = users.valueSeq().map(user => user).sort((a, b) => {
+      if (!fields.sortBy.value || fields.sortBy.value === 'LAST_NAME') {
+        return a.lastName.toLowerCase() < b.lastName.toLowerCase() ? -1 : 1;
+      }
+
+      if (fields.sortBy.value === 'STUDENT_LEVEL') {
+        if (!a.studentLevelId) {
+          return 1;
+        }
+
+        if (!b.studentLevelId) {
+          return -1;
+        }
+
+        return a.studentLevelId < b.studentLevelId ? -1 : 1;
+      }
+
+      if (fields.sortBy.value === 'POINTS') {
+        return a.gainedActivityPoints < b.gainedActivityPoints ? -1 : 1;
+      }
+
+      return 0;
+    });
+
+    if (fields.levelFilter.value) {
+      filteredUsers = filteredUsers.valueSeq().filter(user =>
+        user.studentLevelId === parseInt(fields.levelFilter.value, 10)
+      );
+    }
+
     if (fields.filter.value) {
-      filteredUsers = users.valueSeq().filter(user =>
+      filteredUsers = filteredUsers.valueSeq().filter(user =>
         diacritics.remove(`${user.firstName} ${user.lastName} (${user.username})`).toLowerCase()
           .indexOf(diacritics.remove(fields.filter.value).toLowerCase()) !== -1
       );
@@ -91,6 +159,39 @@ class UsersPage extends Component {
                 <div className="box-header">
                   <h3 className="box-title"><FormattedMessage {...messages.tableTitle} /></h3>
                   <div className="box-tools">
+                    <div className="input-group input-group-sm pull-right" style={{ width: '150px' }}>
+                      <label style={{ position: 'absolute', top: '-25px' }}>
+                        <FormattedMessage {...messages.sortBy} />:
+                      </label>
+                      <select
+                        name="sortBy"
+                        className="form-control"
+                        {...fields.sortBy}
+                      >
+                        <option value="LAST_NAME">{formatMessage(messages.lastName)}</option>
+                        <option value="STUDENT_LEVEL">{formatMessage(messages.studentLevel)}</option>
+                        <option value="POINTS">{formatMessage(messages.points)}</option>
+                      </select>
+
+                    </div>
+
+                    <div className="input-group input-group-sm pull-right" style={{ width: '150px' }}>
+                      <label style={{ position: 'absolute', top: '-25px' }}>
+                        <FormattedMessage {...messages.levelFilter} />:
+                      </label>
+                      <select
+                        name="sortBy"
+                        className="form-control"
+                        {...fields.levelFilter}
+                      >
+                        <option value="">{formatMessage(messages.all)}</option>
+                        {studentLevels.valueSeq().map(level =>
+                          <option key={level.id} value={level.id}>{level.name}</option>
+                        )}
+                      </select>
+
+                    </div>
+
                     <div className="input-group input-group-sm" style={{ width: '150px' }}>
                       <input
                         type="text"
@@ -113,8 +214,9 @@ class UsersPage extends Component {
                     <tbody>
                       <tr>
                         <th><FormattedMessage {...messages.userName} /></th>
+                        <th><FormattedMessage {...messages.studentLevel} /></th>
                         <th><FormattedMessage {...messages.points} /></th>
-                        <th><FormattedMessage {...messages.possiblePoints} /></th>
+                        <th><FormattedMessage {...messages.minimumSemesterActivityPoints} /></th>
                         <th><FormattedMessage {...messages.actions} /></th>
                       </tr>
                       {filteredUsers ?
@@ -122,17 +224,24 @@ class UsersPage extends Component {
                           <tr key={user.id}>
                             <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
                             <td>
+                              {user.studentLevelId ?
+                                studentLevels.get(user.studentLevelId).name
+                                :
+                                '-'
+                              }
+                            </td>
+                            <td style={{ color: this.calculateUserPointsColor(user) }}>
                               {user.gainedActivityPoints}
                               <span> (</span>
                               {user.gainedActivityPoints === 0 ? 0 :
                                 Math.round(
-                                  user.gainedActivityPoints / user.potentialActivityPoints * 100
+                                  user.gainedActivityPoints / user.minimumSemesterActivityPoints * 100
                                 )
                               }
                               <span>%)</span>
                             </td>
                             <td>
-                              {user.potentialActivityPoints}
+                              {user.minimumSemesterActivityPoints}
                             </td>
                             <td className="action-buttons">
                               {hasPermission('delete_users') ?
@@ -181,10 +290,15 @@ UsersPage = fields(UsersPage, {
   path: 'users',
   fields: [
     'filter',
+    'levelFilter',
+    'sortBy',
   ],
 });
 
+UsersPage = injectIntl(UsersPage);
+
 export default connect(state => ({
   users: state.users.users,
+  studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(UsersPage);

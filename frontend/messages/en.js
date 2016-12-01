@@ -1244,4 +1244,28 @@ export default [
     defaultMessage: 'User name',
     id: 'event.attendees.dialog.userName',
   },
+  {
+    defaultMessage: 'Student level',
+    id: 'users.manage.studentLevel',
+  },
+  {
+    defaultMessage: 'Last name',
+    id: 'users.manage.lastName'
+  },
+  {
+    defaultMessage: 'Sort by',
+    id: 'users.manage.sortBy'
+  },
+  {
+    defaultMessage: 'All',
+    id: 'users.manage.all'
+  },
+  {
+    defaultMessage: 'Only level',
+    id: 'users.manage.levelFilter'
+  },
+  {
+    defaultMessage: 'Student`s minimum',
+    id: 'users.manage.minimumSemesterActivityPoints'
+  },
 ];
