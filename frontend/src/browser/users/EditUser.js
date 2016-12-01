@@ -658,7 +658,7 @@ export class EditUser extends Component {
                     {mode !== 'profile' ?
                       <div>
                         <Field
-                          name="userState"
+                          name="state"
                           component={this.renderSelect}
                           label={`${formatMessage(messages.userState)}`}
                         >
