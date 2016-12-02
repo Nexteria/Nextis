@@ -169,6 +169,7 @@ export function saveUser(values) {
           newPassword: values.newPassword,
           confirmationPassword: values.confirmationPassword,
           minimumSemesterActivityPoints: values.minimumSemesterActivityPoints,
+          activityPointsBaseNumber: values.activityPointsBaseNumber,
         }),
       }).then(response => response.json())
       .then(response => { browserHistory.goBack(); return response; }),

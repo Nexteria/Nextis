@@ -113,7 +113,7 @@ class ActivityPointsPage extends Component {
                   >
                     {activeUser.gainedActivityPoints}&nbsp;
                     <FormattedMessage {...messages.from} />&nbsp;
-                    {activeUser.potentialActivityPoints}&nbsp;
+                    {activeUser.activityPointsBaseNumber}&nbsp;
                     <FormattedMessage {...messages.points} />
                   </span>
                 </div>
@@ -151,44 +151,6 @@ class ActivityPointsPage extends Component {
                       <div><FormattedMessage {...messages.loadingAttendees} /></div>
                     :
                       <AttendeesTable {...{ attendees }} />
-                    }
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="box">
-              <div className="box-header">
-                <h3 className="box-title"><FormattedMessage {...messages.attendees} />:</h3>
-                <div className="box-tools">
-                  <div className="input-group input-group-sm" style={{ width: '150px' }}>
-                    <input
-                      type="text"
-                      name="table_search"
-                      className="form-control pull-right"
-                      placeholder="Search"
-                      {...fields.usersFilter}
-                    />
-                    <div className="input-group-btn">
-                      <button type="submit" className="btn btn-default">
-                        <i className="fa fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="box-body table-responsive no-padding">
-                <div className="col-md-12" style={{ margin: '22px 0' }}>
-                  <div><strong><FormattedMessage {...messages.otherStudents} />:</strong></div>
-                  <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                    {!users ?
-                      <div></div>
-                    :
-                      <UsersActivityPointsTable {...{ studentLevels, users }} viewer={activeUser} />
                     }
                   </div>
                 </div>

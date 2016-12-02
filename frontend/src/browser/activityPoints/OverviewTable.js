@@ -7,9 +7,9 @@ const messages = defineMessages({
     defaultMessage: 'Body so všetkých získateľných',
     id: 'viewer.activityPoints.gaindePointsFromAll'
   },
-  minimumSemesterActivityPoints: {
-    defaultMessage: 'Minimum bodov za semester',
-    id: 'viewer.activityPoints.minimumSemesterActivityPoints'
+  studetsMinimumPortionOfBasePoints: {
+    defaultMessage: '75% z Tvojho bodového základu',
+    id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
   },
 });
 
@@ -27,12 +27,7 @@ export default class OverviewTable extends Component {
       <table className="table table-bordered">
         <tbody>
           <tr>
-            <th><FormattedMessage {...messages.gaindePointsFromAll} />:</th>
-            <th>{viewer.potentialActivityPoints === 0 ? 0 :
-              Math.round(viewer.gainedActivityPoints / viewer.potentialActivityPoints * 100)} %</th>
-          </tr>
-          <tr>
-            <td><FormattedMessage {...messages.minimumSemesterActivityPoints} />:</td>
+            <td><FormattedMessage {...messages.studetsMinimumPortionOfBasePoints} />:</td>
             <td>{viewer.minimumSemesterActivityPoints}</td>
           </tr>
         </tbody>

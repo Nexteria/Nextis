@@ -39,6 +39,7 @@ class User extends Authenticatable
         'iban',
         'nexteriaTeamRole',
         'minimumSemesterActivityPoints',
+        'activityPointsBaseNumber',
     ];
 
     protected $dates = ['deleted_at'];

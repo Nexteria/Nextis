@@ -43,7 +43,7 @@ class UserTransformer extends Transformer
             'gainedActivityPoints' => $activityPoints['sumGainedPoints'],
             'potentialActivityPoints' => $activityPoints['sumPotentialPoints'],
             'minimumSemesterActivityPoints' => $user->minimumSemesterActivityPoints,
-
+            'activityPointsBaseNumber' => $user->activityPointsBaseNumber,
          ];
     }
 }

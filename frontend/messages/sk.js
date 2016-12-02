@@ -1212,4 +1212,8 @@ export default [
     defaultMessage: 'Študentovo minimum',
     id: 'users.manage.minimumSemesterActivityPoints'
   },
+  {
+    defaultMessage: '75% z Tvojho bodového základu',
+    id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
+  },
 ];

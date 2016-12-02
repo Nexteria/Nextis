@@ -1268,4 +1268,8 @@ export default [
     defaultMessage: 'Student`s minimum',
     id: 'users.manage.minimumSemesterActivityPoints'
   },
+  {
+    defaultMessage: '75% of your activity points base',
+    id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
+  },
 ];

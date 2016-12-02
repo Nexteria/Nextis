@@ -187,6 +187,10 @@ const messages = defineMessages({
     defaultMessage: 'Minimum activity points for semester',
     id: 'user.edit.minimumSemesterActivityPoints',
   },
+  activityPointsBaseNumber: {
+    defaultMessage: 'Activity points base for student',
+    id: 'user.edit.activityPointsBaseNumber',
+  },
 });
 
 const validate = (values, props) => {
@@ -270,7 +274,11 @@ const validate = (values, props) => {
       errors.minimumSemesterActivityPoints = formatMessage(messages.requiredNumber);
     }
 
-    
+    if (!values.activityPointsBaseNumber) {
+      errors.activityPointsBaseNumber = formatMessage(messages.requiredField);
+    } else if (isNaN(values.activityPointsBaseNumber)) {
+      errors.activityPointsBaseNumber = formatMessage(messages.requiredNumber);
+    }
 
     const descriptionLength = values.personalDescription ?
       values.personalDescription.getEditorState().getCurrentContent().getPlainText().length
@@ -334,6 +342,7 @@ export class EditUser extends Component {
     pristine: PropTypes.bool,
     submitting: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
+    initialize: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -346,7 +355,7 @@ export class EditUser extends Component {
       activeUser = users.get(parseInt(userId, 10));
     }
 
-    setField(['editUser'], activeUser ? activeUser : new User());
+    setField(['editUser'], activeUser || new User());
     initialize(activeUser ? activeUser.toObject() : new User().toObject());
   }
 
@@ -679,12 +688,20 @@ export class EditUser extends Component {
                           </option>
                         </Field>
                         {roles.includes(rolesList.get('STUDENT').id) ?
-                          <Field
-                            name="minimumSemesterActivityPoints"
-                            type="number"
-                            component={this.renderInput}
-                            label={formatMessage(messages.minimumSemesterActivityPoints)}
-                          />
+                          <div>
+                            <Field
+                              name="minimumSemesterActivityPoints"
+                              type="number"
+                              component={this.renderInput}
+                              label={formatMessage(messages.minimumSemesterActivityPoints)}
+                            />
+                            <Field
+                              name="activityPointsBaseNumber"
+                              type="number"
+                              component={this.renderInput}
+                              label={formatMessage(messages.activityPointsBaseNumber)}
+                            />
+                          </div>
                         : ''}
                       </div>
                       : ''
@@ -776,6 +793,8 @@ EditUser = fields(EditUser, {
     'newPassword',
     'oldPassword',
     'confirmationPassword',
+    'activityPointsBaseNumber',
+    'minimumSemesterActivityPoints',
   ],
 });
 
