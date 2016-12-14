@@ -1209,8 +1209,8 @@ export default [
     id: 'users.manage.levelFilter'
   },
   {
-    defaultMessage: 'Študentovo minimum',
-    id: 'users.manage.minimumSemesterActivityPoints'
+    defaultMessage: 'Študentov bodový základ',
+    id: 'users.manage.userBaseSemesterActivityPoints'
   },
   {
     defaultMessage: '75% z Tvojho bodového základu',

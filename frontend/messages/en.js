@@ -1265,8 +1265,8 @@ export default [
     id: 'users.manage.levelFilter'
   },
   {
-    defaultMessage: 'Student`s minimum',
-    id: 'users.manage.minimumSemesterActivityPoints'
+    defaultMessage: 'Student`s base points',
+    id: 'users.manage.userBaseSemesterActivityPoints'
   },
   {
     defaultMessage: '75% of your activity points base',

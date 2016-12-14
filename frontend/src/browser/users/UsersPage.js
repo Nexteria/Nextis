@@ -34,9 +34,9 @@ const messages = defineMessages({
     defaultMessage: 'Aktivity body',
     id: 'users.manage.points'
   },
-  minimumSemesterActivityPoints: {
-    defaultMessage: 'Študentovo minimum',
-    id: 'users.manage.minimumSemesterActivityPoints'
+  userBaseSemesterActivityPoints: {
+    defaultMessage: 'Študentov bodový základ',
+    id: 'users.manage.userBaseSemesterActivityPoints'
   },
   studentLevel: {
     defaultMessage: 'Level študenta',
@@ -78,7 +78,7 @@ class UsersPage extends Component {
   calculateUserPointsColor(user) {
     let color = '#ff0000';
     const percentage = Math.round(
-      user.gainedActivityPoints / user.minimumSemesterActivityPoints * 100);
+      user.gainedActivityPoints / user.activityPointsBaseNumber * 100);
 
     if (percentage >= 50) {
       color = '#ecb200';
@@ -216,7 +216,7 @@ class UsersPage extends Component {
                         <th><FormattedMessage {...messages.userName} /></th>
                         <th><FormattedMessage {...messages.studentLevel} /></th>
                         <th><FormattedMessage {...messages.points} /></th>
-                        <th><FormattedMessage {...messages.minimumSemesterActivityPoints} /></th>
+                        <th><FormattedMessage {...messages.userBaseSemesterActivityPoints} /></th>
                         <th><FormattedMessage {...messages.actions} /></th>
                       </tr>
                       {filteredUsers ?
@@ -232,16 +232,21 @@ class UsersPage extends Component {
                             </td>
                             <td style={{ color: this.calculateUserPointsColor(user) }}>
                               {user.gainedActivityPoints}
-                              <span> (</span>
-                              {user.gainedActivityPoints === 0 ? 0 :
-                                Math.round(
-                                  user.gainedActivityPoints / user.minimumSemesterActivityPoints * 100
-                                )
+                              {user.activityPointsBaseNumber ?
+                                <span>
+                                  <span> (</span>
+                                  {user.gainedActivityPoints === 0 ? 0 :
+                                    Math.round(
+                                      user.gainedActivityPoints / user.activityPointsBaseNumber * 100
+                                    )
+                                  }
+                                  <span>%)</span>
+                                </span>
+                                : null
                               }
-                              <span>%)</span>
                             </td>
                             <td>
-                              {user.minimumSemesterActivityPoints}
+                              {user.activityPointsBaseNumber}
                             </td>
                             <td className="action-buttons">
                               {hasPermission('delete_users') ?
