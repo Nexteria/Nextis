@@ -249,7 +249,7 @@ class EventsPage extends Component {
                         />
                     )}
 
-                    {(12 - moment().month() > 1) ?
+                    {(12 - moment().month() > 0) ?
                       <ul className="timeline">
                         <li className="time-label">
                           <span className="bg-yellow">
