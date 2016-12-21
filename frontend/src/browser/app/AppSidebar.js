@@ -91,6 +91,11 @@ export default class AppSideBar extends Component {
               </Link>
             </li>
             <li>
+              <Link to="/points">
+                <span><FormattedMessage {...messages.activityPoints} /></span>
+              </Link>
+            </li>
+            <li>
               <Link to="/payments">
                 <i className="fa fa-eur text-green"></i>
                 <span><FormattedMessage {...messages.payments} /></span>
