@@ -4,10 +4,9 @@
 class NxEventAttendeeTransformer extends Transformer
 {
 
-    public function transform($attendee)
+    public function transform($attendee, $fields = [])
     {
-
-        return [
+        $result = [
             'attendeeTableId' => (int) $attendee->id,
             'id' => (int) $attendee->user->id,
             'attendeesGroupId' => (int) $attendee->attendeesGroupId,
@@ -17,7 +16,12 @@ class NxEventAttendeeTransformer extends Transformer
             'signedOutReason' => $attendee->signedOutReason,
             'wasPresent' => (boolean) $attendee->wasPresent,
             'filledFeedback' => (boolean) $attendee->filledFeedback,
-            'event' => $attendee->event(),
          ];
+
+        if (in_array('event', $fields)) {
+            $result['event'] = $attendee->event();
+        }
+
+        return $result;
     }
 }

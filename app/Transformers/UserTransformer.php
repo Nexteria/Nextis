@@ -6,11 +6,10 @@ use App\Transformers\RoleTransformer;
 
 class UserTransformer extends Transformer
 {
-    public function transform($user)
+    public function transform($user, $fields = [])
     {
         $transformer = new RoleTransformer();
         $roles = $transformer->transformCollection($user->roles);
-        $activityPoints = $user->computeActivityPoints();
 
         $result = [
             'id' => (int) $user->id,
@@ -42,12 +41,22 @@ class UserTransformer extends Transformer
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
             'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,
             'confirmedMarketingUse' => $user->confirmedMarketingUse,
-            'gainedActivityPoints' => $activityPoints['sumGainedPoints'],
-            'potentialActivityPoints' => $activityPoints['sumPotentialPoints'],
             'minimumSemesterActivityPoints' => $user->minimumSemesterActivityPoints,
             'activityPointsBaseNumber' => $user->activityPointsBaseNumber,
             'monthlySchoolFee' => (int) $user->monthlySchoolFee,
          ];
+
+        if (in_array('gainedActivityPoints', $fields) || in_array('potentialActivityPoints', $fields)) {
+            $activityPoints = $user->computeActivityPoints();
+        }
+
+        if (in_array('gainedActivityPoints', $fields)) {
+            $result['gainedActivityPoints'] = $activityPoints['sumGainedPoints'];
+        }
+
+        if (in_array('potentialActivityPoints', $fields)) {
+            $result['potentialActivityPoints'] = $activityPoints['sumPotentialPoints'];
+        }
 
         if (Auth::user()->id == $user->id || Auth::user()->hasRole('ADMIN')) {
             $result['accountBalance'] = (int) $user->getAccountBalance();

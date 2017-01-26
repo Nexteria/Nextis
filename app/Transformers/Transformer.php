@@ -8,10 +8,10 @@ abstract class Transformer {
      * @param $items
      * @return array
      */
-    public function transformCollection($items)
+    public function transformCollection($items, $fields = [])
     {
-        return $items->map(function($item) {
-          return $this->transform($item);
+        return $items->map(function($item) use ($fields) {
+          return $this->transform($item, $fields);
         });
     }
 

@@ -144,14 +144,19 @@ class UsersController extends Controller
     {
         if ($userId) {
             if ($userId === 'me') {
-                return response()->json($this->userTransformer->transform(\Auth::user()->fresh(['roles'])));
+                return response()->json($this->userTransformer->transform(\Auth::user()->fresh(['roles']), ['gainedActivityPoints', 'potentialActivityPoints']));
             }
 
-            return response()->json($this->userTransformer->transform(User::findOrFail($userId)->fresh(['roles'])));
+            return response()->json($this->userTransformer->transform(User::findOrFail($userId)->fresh(['roles']), ['gainedActivityPoints', 'potentialActivityPoints']));
+        }
+
+        $fields = [];
+        if (\Auth::user()->hasRole('ADMIN')) {
+            $fields = ['gainedActivityPoints', 'potentialActivityPoints'];
         }
 
         $users = User::with(['roles'])->get();
-        return response()->json($this->userTransformer->transformCollection($users));
+        return response()->json($this->userTransformer->transformCollection($users, $fields));
     }
 
     public function deleteUser($userId)
@@ -168,6 +173,6 @@ class UsersController extends Controller
     public function getEventsAttendeesForUser($userId)
     {
         $user = User::findOrFail($userId);
-        return response()->json($this->nxEventAttendeeTransformer->transformCollection($user->eventAttendees));
+        return response()->json($this->nxEventAttendeeTransformer->transformCollection($user->eventAttendees, ['event']));
     }
 }

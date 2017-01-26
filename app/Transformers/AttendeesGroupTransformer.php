@@ -9,7 +9,7 @@ class AttendeesGroupTransformer extends Transformer
         $transformer = new NxEventAttendeeTransformer();
         $users = [];
         foreach ($group->attendees as $attendee) {
-            $users[] = $transformer->transform($attendee);
+            $users[] = $transformer->transform($attendee, []);
         }
 
         return [

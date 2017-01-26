@@ -162,7 +162,7 @@ class User extends Authenticatable
     {
         $sumGainedPoints = 0;
         $sumPotentialPoints = 0;
-        $eventAttendees = $this->eventAttendees()->get();
+        $eventAttendees = $this->eventAttendees;
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
             if ($event != null) {
