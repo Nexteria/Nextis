@@ -122,7 +122,7 @@ class PaymentsPage extends Component {
                           >
                             <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
                             <td
-                              className={user.accountBalance > 0 ? 'green-text' : 'red-text'}
+                              className={user.accountBalance >= 0 ? 'green-text' : 'red-text'}
                             >{user.accountBalance / 100} &euro;</td>
                             <td className="action-buttons">
                               <i

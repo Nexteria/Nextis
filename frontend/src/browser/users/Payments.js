@@ -99,7 +99,7 @@ class Payments extends Component {
                   <div className="text-center">
                     <span
                       id="account-balance-span"
-                      className={viewer.accountBalance > 0 ? 'green-text' : 'red-text'}
+                      className={viewer.accountBalance >= 0 ? 'green-text' : 'red-text'}
                     >{viewer.accountBalance / 100} &euro;</span>
                   </div>
                   <table className="table table-bordered">
