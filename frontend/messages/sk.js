@@ -466,7 +466,7 @@ export default [
   },
   {
     "id": "event.users.signedIn",
-    "defaultMessage": "Prihlásený"
+    "defaultMessage": "Prihlásení"
   },
   {
     "id": "event.users.signIn",
