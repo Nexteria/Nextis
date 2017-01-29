@@ -51,7 +51,7 @@ class AttendeesGroup extends Model
             $idsMap[$attendee->id] = true;
         }
 
-        $ids = $this->attendees()->lists('id');
+        $ids = $this->attendees()->pluck('id');
         foreach ($ids as $id) {
             if (!isset($idsMap[$id])) {
                 NxEventAttendee::find($id)->delete();

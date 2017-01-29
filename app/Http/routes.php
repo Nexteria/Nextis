@@ -11,8 +11,9 @@
 |
 */
 
-Route::auth();
+Auth::routes();
 
+Route::get('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');
 
 Route::group(['middleware' => 'auth'], function () {

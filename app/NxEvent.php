@@ -93,15 +93,15 @@ class NxEvent extends Model
         }
 
         if (isset($attributes['groupedEvents'])) {
-            $this->groupedEvents()->sync(NxEvent::whereIn('id', $attributes['groupedEvents'])->lists('id')->toArray());
+            $this->groupedEvents()->sync(NxEvent::whereIn('id', $attributes['groupedEvents'])->pluck('id')->toArray());
         }
 
         if (isset($attributes['exclusionaryEvents'])) {
-            $this->exclusionaryEvents()->sync(NxEvent::whereIn('id', $attributes['exclusionaryEvents'])->lists('id')->toArray());
+            $this->exclusionaryEvents()->sync(NxEvent::whereIn('id', $attributes['exclusionaryEvents'])->pluck('id')->toArray());
         }
 
         if (isset($attributes['lectors'])) {
-            $this->lectors()->sync(User::whereIn('id', $attributes['lectors'])->lists('id')->toArray());
+            $this->lectors()->sync(User::whereIn('id', $attributes['lectors'])->pluck('id')->toArray());
         }
 
         if (isset($attributes['attendeesGroups'])) {
@@ -117,7 +117,7 @@ class NxEvent extends Model
                 $idsMap[$groupModel->id] = true;
             }
 
-            $ids = $this->attendeesGroups()->lists('id');
+            $ids = $this->attendeesGroups()->pluck('id');
             foreach ($ids as $id) {
                 if (!isset($idsMap[$id])) {
                     AttendeesGroup::find($id)->delete();

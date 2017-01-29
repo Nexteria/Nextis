@@ -18,7 +18,7 @@ class Role extends EntrustRole
         $role = Role::create($attributes);
         $role->save();
 
-        $role->perms()->sync(Permission::whereIn('id', $attributes['permissions'])->lists('id')->toArray());
+        $role->perms()->sync(Permission::whereIn('id', $attributes['permissions'])->pluck('id')->toArray());
 
         $role->save();
         return $role;
@@ -29,7 +29,7 @@ class Role extends EntrustRole
         $this->fill($attributes);
 
         if (isset($attributes['permissions'])) {
-            $this->perms()->sync(Permission::whereIn('id', $attributes['permissions'])->lists('id')->toArray());
+            $this->perms()->sync(Permission::whereIn('id', $attributes['permissions'])->pluck('id')->toArray());
         }
 
         $this->save();

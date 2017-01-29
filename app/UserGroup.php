@@ -28,7 +28,7 @@ class UserGroup extends Authenticatable
     {
         $group = UserGroup::create($attributes);
         $group->ownerId = \Auth::user()->id;
-        $group->users()->sync(User::whereIn('id', $attributes['users'])->lists('id')->toArray());
+        $group->users()->sync(User::whereIn('id', $attributes['users'])->pluck('id')->toArray());
 
         $group->save();
         return $group;

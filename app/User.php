@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 use App\Role;
 use App\Payment;
@@ -13,7 +14,7 @@ use Carbon\Carbon;
 
 class User extends Authenticatable
 {
-    use SoftDeletes, EntrustUserTrait {
+    use SoftDeletes, Notifiable, EntrustUserTrait {
         SoftDeletes::restore insteadof EntrustUserTrait;
         EntrustUserTrait::restore insteadof SoftDeletes;
     }
@@ -79,7 +80,7 @@ class User extends Authenticatable
             $user->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
         }
 
-        $user->roles()->sync(Role::whereIn('id', $attributes['roles'])->lists('id')->toArray());
+        $user->roles()->sync(Role::whereIn('id', $attributes['roles'])->pluck('id')->toArray());
 
         $user->save();
         return $user;
@@ -90,7 +91,7 @@ class User extends Authenticatable
         $this->fill($attributes);
 
         if (isset($attributes['roles'])) {
-            $this->roles()->sync(Role::whereIn('id', $attributes['roles'])->lists('id')->toArray());
+            $this->roles()->sync(Role::whereIn('id', $attributes['roles'])->pluck('id')->toArray());
         }
 
         if ($attributes['studentLevelId']) {

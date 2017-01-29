@@ -7,7 +7,7 @@ class UserGroupTransformer extends Transformer {
        return [
           'id' => (int) $userGroup->id,
           'name' => $userGroup->name,
-          'users' => $userGroup->users->lists('id'),
+          'users' => $userGroup->users->pluck('id'),
        ];
     }
 }

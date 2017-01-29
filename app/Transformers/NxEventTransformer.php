@@ -25,11 +25,11 @@ class NxEventTransformer extends Transformer
             'hostId' => (int) $event->hostId,
             'nxLocationId' => (int) $event->nxLocationId,
             'attendeesGroups' => $attendees,
-            'lectors' => array_map('intval', $event->lectors()->lists('id')->toArray()),
+            'lectors' => array_map('intval', $event->lectors()->pluck('id')->toArray()),
             'parentEventId' => $event->getParentEvent() ? (int) $event->getParentEvent()->id : null,
             'status' => $event->status,
-            'groupedEvents' => array_map('intval', $event->groupedEvents()->lists('id')->toArray()),
-            'exclusionaryEvents' => array_map('intval', $event->exclusionaryEvents()->lists('id')->toArray()),
+            'groupedEvents' => array_map('intval', $event->groupedEvents()->pluck('id')->toArray()),
+            'exclusionaryEvents' => array_map('intval', $event->exclusionaryEvents()->pluck('id')->toArray()),
             'curriculumLevelId' => (int) $event->curriculumLevelId,
          ];
     }

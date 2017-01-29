@@ -30,7 +30,7 @@ class NxLocation extends Model
         $location->save();
 
         if ($attributes['pictures']) {
-            $location->pictures()->sync(Image::whereIn('id', $attributes['pictures'])->lists('id')->toArray());
+            $location->pictures()->sync(Image::whereIn('id', $attributes['pictures'])->pluck('id')->toArray());
         }
 
         $location->save();
@@ -52,7 +52,7 @@ class NxLocation extends Model
         }
 
         if ($attributes['pictures']) {
-            $this->pictures()->sync(Image::whereIn('id', $attributes['pictures'])->lists('id')->toArray());
+            $this->pictures()->sync(Image::whereIn('id', $attributes['pictures'])->pluck('id')->toArray());
         }
 
         $this->save();

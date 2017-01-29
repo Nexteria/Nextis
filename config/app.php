@@ -2,6 +2,8 @@
 
 return [
 
+    'name' => 'Nexteria Space',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -147,6 +149,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -156,6 +159,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ReactServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
 
         Mews\Purifier\PurifierServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
@@ -213,6 +217,7 @@ return [
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
         'Input' => Illuminate\Support\Facades\Input::class,
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
+        'Notification' => Illuminate\Support\Facades\Notification::class,
 
     ],
 
