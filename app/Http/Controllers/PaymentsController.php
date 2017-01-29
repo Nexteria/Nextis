@@ -22,6 +22,11 @@ class PaymentsController extends Controller
     public function processPayment()
     {
         $payment = Payment::parse(\Input::get('body-plain'));
+
+        if ($payment->user) {
+            $email = new \App\Mail\ReceivedPaymentConfirmation($payment);
+            \Mail::send($email);
+        }
     }
 
     public function getUnassociatedPayments()
