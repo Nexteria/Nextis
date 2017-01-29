@@ -8,7 +8,7 @@ const User = Record({
   lastName: '',
   email: '',
   phone: '',
-  variableSymbol: '',
+  tuitionFeeVariableSymbol: '',
   iban: '',
   facebookLink: '',
   linkedinLink: '',

@@ -977,8 +977,8 @@ export default [
     "defaultMessage": "Toto musí byť valídne telefónne číslo (+xxxxxxxxxxxx)"
   },
   {
-    "id": "user.edit.variableSymbol",
-    "defaultMessage": "Variabilný symbol"
+    "id": "user.edit.tuitionFeeVariableSymbol",
+    "defaultMessage": "Variabilný symbol na platbu školného"
   },
   {
     "id": "user.groups.manage.actions",

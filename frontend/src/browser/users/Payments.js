@@ -123,7 +123,7 @@ class Payments extends Component {
                       </tr>
                       <tr>
                         <td><FormattedMessage {...messages.vs} />:</td>
-                        <td>{viewer.variableSymbol}</td>
+                        <td>{viewer.tuitionFeeVariableSymbol}</td>
                       </tr>
                       <tr>
                         <td><FormattedMessage {...messages.recieverMessage} />:</td>

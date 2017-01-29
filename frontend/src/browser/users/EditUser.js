@@ -43,9 +43,9 @@ const messages = defineMessages({
     defaultMessage: 'Iban',
     id: 'user.edit.iban',
   },
-  variableSymbol: {
-    defaultMessage: 'Variable symbol',
-    id: 'user.edit.variableSymbol',
+  tuitionFeeVariableSymbol: {
+    defaultMessage: 'Tuition fee variable symbol',
+    id: 'user.edit.tuitionFeeVariableSymbol',
   },
   save: {
     defaultMessage: 'Save',
@@ -622,11 +622,11 @@ export class EditUser extends Component {
                     />
 
                     <Field
-                      name="variableSymbol"
+                      name="tuitionFeeVariableSymbol"
                       type="text"
                       readOnly
                       component={this.renderInput}
-                      label={`${formatMessage(messages.variableSymbol)}`}
+                      label={`${formatMessage(messages.tuitionFeeVariableSymbol)}`}
                     />
 
                     <Field
@@ -828,7 +828,7 @@ EditUser = fields(EditUser, {
     'personalDescription',
     'roles',
     'iban',
-    'variableSymbol',
+    'tuitionFeeVariableSymbol',
     'lectorDescription',
     'guideDescription',
     'buddyDescription',

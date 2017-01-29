@@ -164,7 +164,7 @@ class Payment extends Model
         $payment->payerIban = $payment->parseOwnerIban();
 
         if ($payment->variableSymbol) {
-            $user = User::where('variableSymbol', '=', $payment->variableSymbol);
+            $user = User::where('tuitionFeeVariableSymbol', '=', $payment->variableSymbol);
             if ($user->count() === 1) {
                 $user = $user->first();
                 $payment->userId = $user->id;

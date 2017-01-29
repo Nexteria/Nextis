@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Carbon\Carbon;
 use App\User;
+use App\Role;
 
 class Kernel extends ConsoleKernel
 {
@@ -29,12 +30,19 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $month = Carbon::now()->month;
             $year = Carbon::now()->year;
-            foreach (User::all() as $user) {
-                if ($user->state == \Config::get('constants.states.ACTIVE')) {
-                    $user->generateMonthlySchoolFee($month, $year, 1);
-                }
+
+            $activeStudents = Role::where('name', 'STUDENT')
+                                  ->first()
+                                  ->users()
+                                  ->where('state', \Config::get('constants.states.ACTIVE'))
+                                  ->get();
+
+            foreach ($activeStudents as $user) {
+                $user->generateMonthlySchoolFee($month, $year, 1);
             }
-        })->monthlyOn(env('GENERATE_MONTHLY_SCHOOL_FEE_DAY_IN_MONTH'),
-            env('GENERATE_MONTHLY_SCHOOL_FEE_HOUR'));
+        })->monthlyOn(
+            env('GENERATE_MONTHLY_SCHOOL_FEE_DAY_IN_MONTH'),
+            env('GENERATE_MONTHLY_SCHOOL_FEE_HOUR')
+        );
     }
 }

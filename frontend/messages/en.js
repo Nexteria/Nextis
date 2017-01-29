@@ -1029,8 +1029,8 @@ export default [
     "defaultMessage": "Must be valid phone number (+xxxxxxxxxxxx)"
   },
   {
-    "id": "user.edit.variableSymbol",
-    "defaultMessage": "Variable symbol"
+    "id": "user.edit.tuitionFeeVariableSymbol",
+    "defaultMessage": "Tuition fee variable symbol"
   },
   {
     "id": "user.groups.manage.actions",

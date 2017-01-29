@@ -66,7 +66,7 @@ class User extends Authenticatable
         $user->buddyDescription = clean($attributes['buddyDescription']);
         $user->guideDescription = clean($attributes['guideDescription']);
         $user->lectorDescription = clean($attributes['lectorDescription']);
-        $user->variableSymbol = Carbon::now()->format("Ym").$user->id;
+        $user->tuitionFeeVariableSymbol = Carbon::now()->format("Ym").$user->id;
 
         if ($attributes['newPassword'] === $attributes['confirmationPassword']) {
             $user->password = \Hash::make($attributes['newPassword']);
@@ -186,6 +186,7 @@ class User extends Authenticatable
         $newPayment->userId = $this->id;
         $newPayment->addedByUserId = $adminUserId;
         $newPayment->amount = $this->monthlySchoolFee;
+        $newPayment->variableSymbol = $this->tuitionFeeVariableSymbol;
         $newPayment->description = 'Automaticky vygenerovane';
 
         if ($createdAt) {
