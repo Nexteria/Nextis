@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Role as Role;
 use App\Image as Image;
 use App\User as User;
+use App\Payment as Payment;
+use App\UserPaymentsSettings as UserPaymentsSettings;
 
 class UsersController extends Controller
 {
@@ -17,14 +19,17 @@ class UsersController extends Controller
     protected $userTransformer;
     protected $paymentTransformer;
     protected $nxEventAttendeeTransformer;
+    protected $userPaymentSettingsTransformer;
 
     public function __construct(
         \App\Transformers\UserTransformer $userTransformer,
         \App\Transformers\PaymentTransformer $paymentTransformer,
-        \App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer
+        \App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer,
+        \App\Transformers\UserPaymentSettingsTransformer $userPaymentSettingsTransformer
     ) {
         $this->userTransformer = $userTransformer;
         $this->paymentTransformer = $paymentTransformer;
+        $this->userPaymentSettingsTransformer = $userPaymentSettingsTransformer;
         $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
     }
 
@@ -174,5 +179,67 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($userId);
         return response()->json($this->nxEventAttendeeTransformer->transformCollection($user->eventAttendees, ['event']));
+    }
+
+    public function deletePayments(Request $request, $userId)
+    {
+        $paymentsIds = $request->input('payments');
+        $payments = Payment::whereIn('id', $paymentsIds)->get();
+        
+        foreach ($payments as $payment) {
+            if ($payment->userId != $userId) {
+                return response()->json([
+                  "error" => "All payments must belong to specified user!",
+                  "code" => 400,
+                ], 400);
+            }
+        }
+
+        foreach ($payments as $payment) {
+            $payment->delete();
+        }
+
+        return $this->getUserPayments($userId);
+    }
+
+    public function getUserPaymentsSettings($userId)
+    {
+        $user = User::findOrFail($userId);
+
+        if (!$user->paymentSettings) {
+            abort(404);
+        }
+
+        return response()->json($this->userPaymentSettingsTransformer->transform($user->paymentSettings));
+    }
+
+    public function updateUserPaymentsSettings(Request $request, $userId)
+    {
+        $validator = \Validator::make($request->all(), [
+          'schoolFeePaymentsDeadlineDay' => 'required|numeric|min:1|max:31',
+          'checkingSchoolFeePaymentsDay' => 'required|numeric|min:1|max:31',
+          'generationSchoolFeeDay' => 'required|numeric|min:1|max:31',
+          'disableEmailNotifications' => 'required|boolean',
+          'disableSchoolFeePayments' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $user = User::findOrFail($userId);
+
+        if (!$user->paymentSettings) {
+            $user->paymentSettings()->save(new UserPaymentsSettings($request->all()));
+        } else {
+            $user->paymentSettings->update($request->all());
+        }
+
+        return response()->json([], 200);
     }
 }

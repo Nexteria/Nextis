@@ -72,5 +72,5 @@ export default function fetch(input, init) {
   }
 
   input = ensureAbsoluteUrl(apiUrl, input);
-  return isomorphicFetch(input, init).then(response => checkAuth(response, notifications)).then(customStatusCheck);
+  return isomorphicFetch(input, init).then(response => checkAuth(response, notifications)).then(customStatusCheck, customStatusCheck);
 }

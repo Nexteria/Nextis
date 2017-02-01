@@ -1,4 +1,5 @@
 import * as actions from './actions';
+import * as paymentsActions from '../payments/actions';
 import { Record, Map, List } from 'immutable';
 import RichTextEditor from 'react-rte';
 
@@ -28,6 +29,10 @@ const InitialState = Record({
   permissionsList: null,
   user: null,
   hasPermission,
+  paymentsSettings: new Map({
+    dataLoaded: false,
+    data: null,
+  }),
 }, 'users');
 
 export default function usersReducer(state = new InitialState, action) {
@@ -202,6 +207,33 @@ export default function usersReducer(state = new InitialState, action) {
 
     case actions.CLOSE_USER_DETAIL_DIALOG: {
       return state.set('user', null);
+    }
+
+    case paymentsActions.CLOSE_USER_PAYMENTS_SETTINGS: {
+      return state.setIn(['paymentsSettings', 'dataLoaded'], false)
+          .setIn(['paymentsSettings', 'data'], null);
+    }
+
+    case paymentsActions.LOAD_USER_PAYMENTS_SETTINGS_SUCCESS: {
+      const data = action.payload;
+
+      if ('error' in data && data.code === 404) {
+        return state.setIn(['paymentsSettings', 'dataLoaded'], true)
+          .setIn(['paymentsSettings', 'data'], null);
+      }
+
+      return state.setIn(['paymentsSettings', 'dataLoaded'], true)
+          .setIn(['paymentsSettings', 'data'], new Map(action.payload));
+    }
+
+    case paymentsActions.CREATE_USER_PAYMENTS_SETTINGS: {
+      return state.setIn(['paymentsSettings', 'data'], new Map({
+        schoolFeePaymentsDeadlineDay: 2,
+        checkingSchoolFeePaymentsDay: 2,
+        generationSchoolFeeDay: 1,
+        disableEmailNotifications: false,
+        disableSchoolFeePayments: false,
+      }));
     }
 
     default:

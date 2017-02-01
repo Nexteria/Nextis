@@ -1552,4 +1552,184 @@ export default [
     defaultMessage: 'Feedback',
     id: 'app.navigation.feedbackButton',
   },
+  {
+    "id": "users.manage.addPayments",
+    "defaultMessage": "Add payments",
+  },
+  {
+    defaultMessage: 'Date and time of checking school fee payments',
+    id: 'payments.manage.settings.checkingSchoolFeePaymentsDay',
+  },
+  {
+    defaultMessage: 'Date of the month of generation school fee',
+    id: 'payments.manage.settings.generationSchoolFeeDay',
+  },
+  {
+    defaultMessage: 'Save',
+    id: 'payments.manage.settings.save',
+  },
+  {
+    defaultMessage: 'Generate school fee in months',
+    id: 'payments.manage.settings.schoolFeeApplicableMonths',
+  },
+  {
+    defaultMessage: 'Payments',
+    id: 'payments.manage.title'
+  },
+  {
+    defaultMessage: 'Users',
+    id: 'payments.manage.users.tabtitle'
+  },
+  {
+    defaultMessage: 'Import / export',
+    id: 'payments.manage.importExport.tabtitle'
+  },
+  {
+    defaultMessage: 'Settings',
+    id: 'payments.manage.settings.tabtitle'
+  },
+  {
+    defaultMessage: 'Tuition fees summary export',
+    id: 'payments.manage.export.tuitionFeesSummary.title',
+  },
+  {
+    defaultMessage: 'Show download link',
+    id: 'payments.manage.export.tuitionFeesSummary.showDownloadLink',
+  },
+  {
+    defaultMessage: 'Start date',
+    id: 'payments.manage.export.tuitionFeesSummary.exportStartDate',
+  },
+  {
+    defaultMessage: 'End date',
+    id: 'payments.manage.export.tuitionFeesSummary.exportEndDate',
+  },
+  {
+    defaultMessage: 'Start date must be before end date!',
+    id: 'payments.manage.export.tuitionFeesSummary.startDateMustBeBeforeEndDate',
+  },
+  {
+    defaultMessage: 'End date must be after start date!',
+    id: 'payments.manage.export.tuitionFeesSummary.endDateMustBeAfterStartDate',
+  },
+  {
+    defaultMessage: 'This field is required',
+    id: 'payments.manage.export.requiredField',
+  },
+  {
+    defaultMessage: 'Download link',
+    id: 'payments.manage.export.downloadLink',
+  },
+  {
+    defaultMessage: 'Import payments',
+    id: 'payments.manage.import.payments.title',
+  },
+  {
+    defaultMessage: 'Download template document',
+    id: 'payments.manage.import.downloadPaymentsTemplate',
+  },
+  {
+    defaultMessage: 'Choose payments file',
+    id: 'payments.manage.import.choosePaymentsFile',
+  },
+  {
+    defaultMessage: 'Import',
+    id: 'payments.manage.importExport.importTitle'
+  },
+  {
+    defaultMessage: 'Export',
+    id: 'payments.manage.importExport.exportTitle'
+  },
+  {
+    defaultMessage: 'Tuition fees summary',
+    id: 'payments.manage.importExport.tuitionFeesSummaryButton',
+  },
+  {
+    defaultMessage: 'Payments',
+    id: 'payments.manage.importExport.paymentsButton',
+  },
+  {
+    defaultMessage: 'This field is required',
+    id: 'payments.manage.settings.requiredField',
+  },
+  {
+    defaultMessage: 'This field must be valid positive number',
+    id: 'payments.manage.settings.mustBeValidNumber',
+  },
+  {
+    defaultMessage: 'Disable email notifications',
+    id: 'payments.manage.settings.disableEmailNotifications',
+  },
+  {
+    defaultMessage: 'Disable school fee payments generation, checks',
+    id: 'payments.manage.settings.disableSchoolFeePayments',
+  },
+  {
+    defaultMessage: 'All payments',
+    id: 'payments.users.allPayments',
+  },
+  {
+    defaultMessage: 'Settings',
+    id: 'payments.users.settings',
+  },
+  {
+    defaultMessage: 'User has not any specific payments settings',
+    id: 'payments.users.noUserSettings',
+  },
+  {
+    defaultMessage: 'Create',
+    id: 'payments.users.createSettings',
+  },
+  {
+    defaultMessage: 'Add payment',
+    id: 'user.manage.payments.addPayment',
+  },
+  {
+    defaultMessage: 'Valid from',
+    id: 'user.manage.payments.validFrom',
+  },
+  {
+    defaultMessage: 'Deadline at',
+    id: 'user.manage.payments.deadlineAt',
+  },
+  {
+    defaultMessage: 'Amount',
+    id: 'user.manage.payments.amount',
+  },
+  {
+    defaultMessage: 'Variable symbol',
+    id: 'user.manage.payments.variableSymbol',
+  },
+  {
+    defaultMessage: 'Transaction type',
+    id: 'user.manage.payments.transactionType',
+  },
+  {
+    defaultMessage: 'Description',
+    id: 'user.manage.payments.description',
+  },
+  {
+    defaultMessage: 'Add new payments',
+    id: 'user.manage.payments.newPaymentTitle',
+  },
+  {
+    defaultMessage: 'This field is required',
+    id: 'user.payments.addNew.requiredField',
+  },
+  {
+    defaultMessage: 'This field must be valid number',
+    id: 'user.payments.addNew.mustBeValidNumber',
+  },
+  {
+    defaultMessage: 'Valid from date must be before deadline date!',
+    id: 'user.payments.addNew.validFromDateMustBeBeforeDeadlineDate',
+  },
+  {
+    defaultMessage: 'Select at least one user!',
+    id: 'user.payments.addNew.selectAtLeastOneUser',
+  },
+  {
+    defaultMessage: 'Deadline of school fee payments',
+    id: 'payments.manage.settings.schoolFeePaymentsDeadlineDay',
+  },
 ];

@@ -30,7 +30,10 @@ import UsersPaymentsDialog from './payments/UsersPaymentsDialog';
 import HostedEventsPage from './events/HostedEventsPage';
 import EventAttendanceDialog from './events/EventAttendanceDialog';
 import EventEmailsDialog from './events/EventEmailsDialog';
-import UserProfileDialog from './users/UserProfileDialog'
+import UserProfileDialog from './users/UserProfileDialog';
+import TuitionFeesSummaryExportDialog from './payments/Exports/TuitionFeesSummaryExportDialog';
+import ImportPaymentsDialog from './payments/Imports/ImportPaymentsDialog';
+import AddPaymentsDialog from './payments/AddPaymentsDialog';
 
 export default function createRoutes() {
   return (
@@ -69,9 +72,13 @@ export default function createRoutes() {
         <Route component={RolesPage} path="roles" />
         <Route component={EditRole} path="roles/create" />
         <Route component={EditRole} path="roles/:roleId" />
-
+        
         <Route component={UnassociatedPaymentsDialog} path="payments/unassociated" />
+        <Route component={TuitionFeesSummaryExportDialog} path="payments/exports/tuitionFeesSummary" />
+        <Route component={ImportPaymentsDialog} path="payments/imports/payments" />
+        <Route component={AddPaymentsDialog} path="payments/new" />
         <Route component={PaymentsPage} path="payments" />
+        
 
         <Route component={LocationsPage} path="nxLocations" />
         <Route component={CreateLocationDialog} path="nxLocations/create" />

@@ -17,6 +17,10 @@ export default [
     "defaultMessage": "Logout"
   },
   {
+    "id": "app.navigation.feedbackButton",
+    "defaultMessage": "Feedback"
+  },
+  {
     "id": "app.sidebar.links.activityPoints",
     "defaultMessage": "Activity points"
   },
@@ -278,11 +282,11 @@ export default [
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Attendees"
+    "defaultMessage": "Invited"
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Invited"
+    "defaultMessage": "Attendees"
   },
   {
     "id": "event.edit.chooseEventLocation",
@@ -479,6 +483,10 @@ export default [
   {
     "id": "event.edit.userGroup.saveButton",
     "defaultMessage": "Save"
+  },
+  {
+    "id": "event.edit.userGroup.usersPool",
+    "defaultMessage": "Users pool"
   },
   {
     "id": "event.edit.userGroup.usersPool",
@@ -977,6 +985,146 @@ export default [
     "defaultMessage": "Choose user"
   },
   {
+    "id": "payments.manage.export.downloadLink",
+    "defaultMessage": "Download link"
+  },
+  {
+    "id": "payments.manage.export.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
+    "id": "payments.manage.export.tuitionFeesSummary.endDateMustBeAfterStartDate",
+    "defaultMessage": "End date must be after start date!"
+  },
+  {
+    "id": "payments.manage.export.tuitionFeesSummary.exportEndDate",
+    "defaultMessage": "End date"
+  },
+  {
+    "id": "payments.manage.export.tuitionFeesSummary.exportStartDate",
+    "defaultMessage": "Start date"
+  },
+  {
+    "id": "payments.manage.export.tuitionFeesSummary.showDownloadLink",
+    "defaultMessage": "Show download link"
+  },
+  {
+    "id": "payments.manage.export.tuitionFeesSummary.startDateMustBeBeforeEndDate",
+    "defaultMessage": "Start date must be before end date!"
+  },
+  {
+    "id": "payments.manage.export.tuitionFeesSummary.title",
+    "defaultMessage": "Tuition fees summary export"
+  },
+  {
+    "id": "payments.manage.import.choosePaymentsFile",
+    "defaultMessage": "Choose payments file"
+  },
+  {
+    "id": "payments.manage.import.downloadPaymentsTemplate",
+    "defaultMessage": "Download template document"
+  },
+  {
+    "id": "payments.manage.import.payments.title",
+    "defaultMessage": "Import payments"
+  },
+  {
+    "id": "payments.manage.importExport.exportTitle",
+    "defaultMessage": "Export"
+  },
+  {
+    "id": "payments.manage.importExport.importTitle",
+    "defaultMessage": "Import"
+  },
+  {
+    "id": "payments.manage.importExport.paymentsButton",
+    "defaultMessage": "Payments"
+  },
+  {
+    "id": "payments.manage.importExport.tabtitle",
+    "defaultMessage": "Import / export"
+  },
+  {
+    "id": "payments.manage.importExport.tuitionFeesSummaryButton",
+    "defaultMessage": "Tuition fees summary"
+  },
+  {
+    "id": "payments.manage.settings.checkingSchoolFeePaymentsDay",
+    "defaultMessage": "Date and time of checking school fee payments"
+  },
+  {
+    "id": "payments.manage.settings.checkingSchoolFeePaymentsDay",
+    "defaultMessage": "Date and time of checking school fee payments"
+  },
+  {
+    "id": "payments.manage.settings.disableEmailNotifications",
+    "defaultMessage": "Disable email notifications"
+  },
+  {
+    "id": "payments.manage.settings.disableSchoolFeePayments",
+    "defaultMessage": "Disable school fee payments generation, checks"
+  },
+  {
+    "id": "payments.manage.settings.generationSchoolFeeDay",
+    "defaultMessage": "Date and time of generation school fee"
+  },
+  {
+    "id": "payments.manage.settings.generationSchoolFeeDay",
+    "defaultMessage": "Date and time of generation school fee"
+  },
+  {
+    "id": "payments.manage.settings.mustBeValidNumber",
+    "defaultMessage": "This field must be valid positive number"
+  },
+  {
+    "id": "payments.manage.settings.mustBeValidNumber",
+    "defaultMessage": "This field must be valid positive number"
+  },
+  {
+    "id": "payments.manage.settings.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
+    "id": "payments.manage.settings.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
+    "id": "payments.manage.settings.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "payments.manage.settings.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "payments.manage.settings.schoolFeeApplicableMonths",
+    "defaultMessage": "Generate school fee in months"
+  },
+  {
+    "id": "payments.manage.settings.schoolFeeApplicableMonths",
+    "defaultMessage": "Generate school fee in months"
+  },
+  {
+    "id": "payments.manage.settings.schoolFeePaymentsDeadlineDay",
+    "defaultMessage": "Deadline of school fee payments"
+  },
+  {
+    "id": "payments.manage.settings.schoolFeePaymentsDeadlineDay",
+    "defaultMessage": "Deadline of school fee payments"
+  },
+  {
+    "id": "payments.manage.settings.tabtitle",
+    "defaultMessage": "Settings"
+  },
+  {
+    "id": "payments.manage.title",
+    "defaultMessage": "Payments"
+  },
+  {
+    "id": "payments.manage.users.tabtitle",
+    "defaultMessage": "Users"
+  },
+  {
     "id": "payments.unassociated.amount",
     "defaultMessage": "Amount"
   },
@@ -1017,8 +1165,28 @@ export default [
     "defaultMessage": "Variable symbol"
   },
   {
+    "id": "payments.users.allPayments",
+    "defaultMessage": "All payments"
+  },
+  {
     "id": "payments.users.amount",
     "defaultMessage": "Amount"
+  },
+  {
+    "id": "payments.users.amount",
+    "defaultMessage": "Amount"
+  },
+  {
+    "id": "payments.users.closeButton",
+    "defaultMessage": "Close"
+  },
+  {
+    "id": "payments.users.closeButton",
+    "defaultMessage": "Close"
+  },
+  {
+    "id": "payments.users.closeButton",
+    "defaultMessage": "Close"
   },
   {
     "id": "payments.users.closeButton",
@@ -1029,8 +1197,24 @@ export default [
     "defaultMessage": "Constant symbol"
   },
   {
+    "id": "payments.users.constantSymbol",
+    "defaultMessage": "Constant symbol"
+  },
+  {
     "id": "payments.users.createdAt",
     "defaultMessage": "Acceptation date"
+  },
+  {
+    "id": "payments.users.createdAt",
+    "defaultMessage": "Acceptation date"
+  },
+  {
+    "id": "payments.users.createSettings",
+    "defaultMessage": "Create"
+  },
+  {
+    "id": "payments.users.message",
+    "defaultMessage": "Message"
   },
   {
     "id": "payments.users.message",
@@ -1041,6 +1225,22 @@ export default [
     "defaultMessage": "There are no payments"
   },
   {
+    "id": "payments.users.noPayments",
+    "defaultMessage": "There are no payments"
+  },
+  {
+    "id": "payments.users.noUserSettings",
+    "defaultMessage": "User has not any specific payments settings"
+  },
+  {
+    "id": "payments.users.settings",
+    "defaultMessage": "Settings"
+  },
+  {
+    "id": "payments.users.specificSymbol",
+    "defaultMessage": "Specific symbol"
+  },
+  {
     "id": "payments.users.specificSymbol",
     "defaultMessage": "Specific symbol"
   },
@@ -1049,8 +1249,20 @@ export default [
     "defaultMessage": "Transaction type"
   },
   {
+    "id": "payments.users.transactionType",
+    "defaultMessage": "Transaction type"
+  },
+  {
     "id": "payments.users.userPayments",
     "defaultMessage": "User payments"
+  },
+  {
+    "id": "payments.users.userPayments",
+    "defaultMessage": "User payments"
+  },
+  {
+    "id": "payments.users.variableSymbol",
+    "defaultMessage": "Variable symbol"
   },
   {
     "id": "payments.users.variableSymbol",
@@ -1269,6 +1481,10 @@ export default [
     "defaultMessage": "Temporary suspended"
   },
   {
+    "id": "user.edit.tuitionFeeVariableSymbol",
+    "defaultMessage": "Tuition fee variable symbol"
+  },
+  {
     "id": "user.edit.username",
     "defaultMessage": "Username"
   },
@@ -1287,10 +1503,6 @@ export default [
   {
     "id": "user.edit.validPhoneError",
     "defaultMessage": "Must be valid phone number (+xxxxxxxxxxxx)"
-  },
-  {
-    "id": "user.edit.tuitionFeeVariableSymbol",
-    "defaultMessage": "Tuition fee variable symbol"
   },
   {
     "id": "user.groups.manage.actions",
@@ -1317,6 +1529,54 @@ export default [
     "defaultMessage": "User groups"
   },
   {
+    "id": "user.manage.payments.addPayment",
+    "defaultMessage": "Add payment"
+  },
+  {
+    "id": "user.manage.payments.amount",
+    "defaultMessage": "Amount"
+  },
+  {
+    "id": "user.manage.payments.deadlineAt",
+    "defaultMessage": "Deadline at"
+  },
+  {
+    "id": "user.manage.payments.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "user.manage.payments.newPaymentTitle",
+    "defaultMessage": "Add new payments"
+  },
+  {
+    "id": "user.manage.payments.transactionType",
+    "defaultMessage": "Transaction type"
+  },
+  {
+    "id": "user.manage.payments.validFrom",
+    "defaultMessage": "Valid from"
+  },
+  {
+    "id": "user.manage.payments.variableSymbol",
+    "defaultMessage": "Variable symbol"
+  },
+  {
+    "id": "user.payments.addNew.mustBeValidNumber",
+    "defaultMessage": "This field must be valid number"
+  },
+  {
+    "id": "user.payments.addNew.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
+    "id": "user.payments.addNew.selectAtLeastOneUser",
+    "defaultMessage": "Select at least one user!"
+  },
+  {
+    "id": "user.payments.addNew.validFromDateMustBeBeforeDeadlineDate",
+    "defaultMessage": "Valid from date must be before deadline date!"
+  },
+  {
     "id": "users.create.title",
     "defaultMessage": "Create user"
   },
@@ -1339,6 +1599,10 @@ export default [
   {
     "id": "users.manage.actions",
     "defaultMessage": "Actions"
+  },
+  {
+    "id": "users.manage.addPayments",
+    "defaultMessage": "Add payments"
   },
   {
     "id": "users.manage.all",
@@ -1374,19 +1638,19 @@ export default [
   },
   {
     "id": "users.manage.table.title",
-    "defaultMessage": "Users - payments"
-  },
-  {
-    "id": "users.manage.table.title",
     "defaultMessage": "Users - managment"
   },
   {
-    "id": "users.manage.title",
-    "defaultMessage": "Users"
+    "id": "users.manage.table.title",
+    "defaultMessage": "Users - payments"
   },
   {
     "id": "users.manage.title",
     "defaultMessage": "Payments"
+  },
+  {
+    "id": "users.manage.title",
+    "defaultMessage": "Users"
   },
   {
     "id": "users.manage.unassociatedPayments",

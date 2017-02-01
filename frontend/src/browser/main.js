@@ -9,6 +9,10 @@ import { Provider } from 'react-redux';
 import { Router, applyRouterMiddleware, browserHistory } from 'react-router';
 import createInitialState from '../common/createInitialState';
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+injectTapEventPlugin();
 
 const initialState = createInitialState();
 const reportingMiddleware = configureReporting({
@@ -26,12 +30,14 @@ const routes = createRoutes(store.getState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router
-      history={history}
-      render={applyRouterMiddleware(useScroll())}
-    >
-      {routes}
-    </Router>
+    <MuiThemeProvider>
+      <Router
+        history={history}
+        render={applyRouterMiddleware(useScroll())}
+      >
+        {routes}
+      </Router>
+    </MuiThemeProvider>
   </Provider>
   , document.getElementById('app-container')
 );

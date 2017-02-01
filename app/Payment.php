@@ -40,13 +40,13 @@ class Payment extends Model
     private function parsePayerIban()
     {
         $matches = [];
-        $email = preg_replace("/[\s>]/", '', $this->email);
+        $email = $this->parseDescription();
         $success = preg_match_all("/[A-Z][A-Z][0-9][0-9][0-9A-Z]{0,30}/", $email, $matches);
-        if (!$success || !isset($matches[1])) {
+        if (!$success) {
             return '';
         }
 
-        return $matches[1][0];
+        return $matches[0][0];
     }
   
     /**
@@ -160,18 +160,19 @@ class Payment extends Model
         $payment->amount = $amount['amount'];
         $payment->transactionType = $amount['type'];
 
-        $payment->ownerIban = $payment->parsePayerIban();
-        $payment->payerIban = $payment->parseOwnerIban();
+        $payment->ownerIban = $payment->parseOwnerIban();
+        $payment->payerIban = $payment->parsePayerIban();
 
         if ($payment->variableSymbol) {
-            $user = User::where('tuitionFeeVariableSymbol', '=', $payment->variableSymbol);
-            if ($user->count() === 1) {
-                $user = $user->first();
+            $vsPayment = Payment::where('transactionType', '=', 'debet')
+                                ->where('variableSymbol', '=', $payment->variableSymbol)->first();
+            if ($vsPayment) {
+                $user = $vsPayment->user;
                 $payment->userId = $user->id;
             }
         }
 
-        if ($payment->payerIban) {
+        if ($payment->payerIban && !$payment->userId) {
             $user = User::where('iban', '=', $payment->payerIban);
             if ($user->count() === 1) {
                 $user = $user->first();

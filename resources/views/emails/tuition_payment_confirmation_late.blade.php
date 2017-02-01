@@ -5,13 +5,13 @@
 @endsection
 
 @section('content')
+
 <strong>Ahoj {{ $user->firstName }}.</strong>
 
 <br>
 <br>
-Vďaka nesprávne zadanému variabilnému symbolu sa nám nepodarilo priradiť k tvojej platbe účel. Tvoja platba vo výške € {{ $payment->amount / 100 }} však prebehla úspešne.
-<br>
-Kontaktuj, prosím, Janku na čísle +421 911 257 919.
+Tvoja platba školného v NLA vo výške € {{ $payment->amount / 100 }} prišla o {{ $daysAfter }}.
+Aby sa situácia s meškajúcim školným v budúcnosti neopakovala, prosím, nastav si v banke trvalý príkaz alebo upozornenie v kalendári.
 
 <br>
 <br>

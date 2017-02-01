@@ -285,8 +285,6 @@ class AddDefaultRoles extends Migration
           'permission_id' => 19,
           'role_id' => 1,
         ]);
-
-
     }
 
     /**

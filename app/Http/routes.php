@@ -20,6 +20,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
         Route::get('/app/constants', 'HomeController@getConstants');
 
+        Route::get('/paymentsSettings', 'PaymentsController@getGlobalPaymentsSettings');
+        Route::post('/paymentsSettings', ['middleware' => ['permission:change_payments_settings'], 'uses' => 'PaymentsController@updateGlobalPaymentsSettings']);
+
+        Route::get('/users/{userId}/paymentsSettings', 'UsersController@getUserPaymentsSettings');
+        Route::post('/users/{userId}/paymentsSettings', ['middleware' => ['permission:change_payments_settings'], 'uses' => 'UsersController@updateUserPaymentsSettings']);
+
         Route::post('/usernames', 'UsersController@checkUsernameAvailability');
         Route::post('/emails', 'UsersController@checkEmailAvailability');
 
@@ -27,7 +33,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/permissions', 'PermissionsController@getPermissions');
 
         Route::get('payments/unassociated', 'PaymentsController@getUnassociatedPayments');
+
+        Route::post('/payments', ['middleware' => ['permission:add_payments'], 'uses' => 'PaymentsController@createPayments']);
+
         Route::put('payments/{paymentId}', 'PaymentsController@updatePayment');
+        Route::delete('/users/{userId}/payments', ['middleware' => ['permission:delete_payments'], 'uses' => 'UsersController@deletePayments']);
 
         Route::get('/roles', 'RolesController@getRoles');
         Route::post('/roles', ['middleware' => ['permission:create_roles'], 'uses' => 'RolesController@createRole']);
@@ -40,6 +50,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/nxEvents/{eventId}', ['middleware' => ['permission:update_events'], 'uses' => 'NxEventsController@updateNxEvent']);
         Route::delete('/nxEvents/{eventId}', ['middleware' => ['permission:delete_events'], 'uses' => 'NxEventsController@deleteNxEvent'])
           ->where(array('groupId' => '[0-9]+'));
+
+        Route::get('/payments/tuitionFeesSummary/download', 'PaymentsController@exportTuitionSumary');
+        Route::post('/payments/import', 'PaymentsController@importPayments');
 
         Route::get('/nxLocations', 'NxLocationsController@getNxLocations');
         Route::post('/nxLocations', 'NxLocationsController@createNxLocation');

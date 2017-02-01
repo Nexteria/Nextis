@@ -1488,4 +1488,186 @@ export default [
     defaultMessage: 'Feedback',
     id: 'app.navigation.feedbackButton',
   },
+  {
+    "id": "users.manage.addPayments",
+    "defaultMessage": "Pridať platby",
+  },
+  {
+    defaultMessage: 'Deň kontroly zaplatenia školného v mesiaci',
+    id: 'payments.manage.settings.checkingSchoolFeePaymentsDay',
+  },
+  {
+    defaultMessage: 'Deň generovania požiadavku na platbu v mesiaci',
+    id: 'payments.manage.settings.generationSchoolFeeDay',
+  },
+  {
+    defaultMessage: 'Uložiť',
+    id: 'payments.manage.settings.save',
+  },
+  {
+    defaultMessage: 'Deadline deň pre prijatie platby školného',
+    id: 'payments.manage.settings.schoolFeePaymentsDeadlineDay',
+  },
+  {
+    defaultMessage: 'Generovať platby školného v mesiacoch',
+    id: 'payments.manage.settings.schoolFeeApplicableMonths',
+  },
+  {
+    defaultMessage: 'Platby',
+    id: 'payments.manage.title'
+  },
+  {
+    defaultMessage: 'Uživatelia',
+    id: 'payments.manage.users.tabtitle'
+  },
+  {
+    defaultMessage: 'Import / export',
+    id: 'payments.manage.importExport.tabtitle'
+  },
+  {
+    defaultMessage: 'Nastavenia',
+    id: 'payments.manage.settings.tabtitle'
+  },
+
+  {
+    defaultMessage: 'Report prehľad školného',
+    id: 'payments.manage.export.tuitionFeesSummary.title',
+  },
+  {
+    defaultMessage: 'Zobraziť link na sťahovanie',
+    id: 'payments.manage.export.tuitionFeesSummary.showDownloadLink',
+  },
+  {
+    defaultMessage: 'Začiatočný dátum',
+    id: 'payments.manage.export.tuitionFeesSummary.exportStartDate',
+  },
+  {
+    defaultMessage: 'Koncový dátum',
+    id: 'payments.manage.export.tuitionFeesSummary.exportEndDate',
+  },
+  {
+    defaultMessage: 'Začiatočný dátum musí byť pred koncovým!',
+    id: 'payments.manage.export.tuitionFeesSummary.startDateMustBeBeforeEndDate',
+  },
+  {
+    defaultMessage: 'Koncový dátum musí byť po začiatočnom!',
+    id: 'payments.manage.export.tuitionFeesSummary.endDateMustBeAfterStartDate',
+  },
+  {
+    defaultMessage: 'Toto pole je povinné',
+    id: 'payments.manage.export.requiredField',
+  },
+  {
+    defaultMessage: 'Link na stiahnutie',
+    id: 'payments.manage.export.downloadLink',
+  },
+  {
+    defaultMessage: 'Importovať platby',
+    id: 'payments.manage.import.payments.title',
+  },
+  {
+    defaultMessage: 'Stiahnuť vzorový dokument',
+    id: 'payments.manage.import.downloadPaymentsTemplate',
+  },
+  {
+    defaultMessage: 'Vyberte súbor s platbamy',
+    id: 'payments.manage.import.choosePaymentsFile',
+  },
+  {
+    defaultMessage: 'Import',
+    id: 'payments.manage.importExport.importTitle'
+  },
+  {
+    defaultMessage: 'Export',
+    id: 'payments.manage.importExport.exportTitle'
+  },
+  {
+    defaultMessage: 'Prehľad platby školného',
+    id: 'payments.manage.importExport.tuitionFeesSummaryButton',
+  },
+  {
+    defaultMessage: 'Platby',
+    id: 'payments.manage.importExport.paymentsButton',
+  },
+  {
+    defaultMessage: 'Toto pole je povinné',
+    id: 'payments.manage.settings.requiredField',
+  },
+  {
+    defaultMessage: 'Toto pole musí obsahovať kladné číslo',
+    id: 'payments.manage.settings.mustBeValidNumber',
+  },
+  {
+    defaultMessage: 'Vypnúť emailové notifikácie',
+    id: 'payments.manage.settings.disableEmailNotifications',
+  },
+  {
+    defaultMessage: 'Vypnúť generovanie a kontrolu platby školného',
+    id: 'payments.manage.settings.disableSchoolFeePayments',
+  },
+  {
+    defaultMessage: 'Všetky platby',
+    id: 'payments.users.allPayments',
+  },
+  {
+    defaultMessage: 'Nastavenia',
+    id: 'payments.users.settings',
+  },
+  {
+    defaultMessage: 'Uživateľ nemá žiadne špecifické nastavenia',
+    id: 'payments.users.noUserSettings',
+  },
+  {
+    defaultMessage: 'Vytvoriť',
+    id: 'payments.users.createSettings',
+  },
+
+  {
+    defaultMessage: 'Pridať platbu',
+    id: 'user.manage.payments.addPayment',
+  },
+  {
+    defaultMessage: 'Platná od',
+    id: 'user.manage.payments.validFrom',
+  },
+  {
+    defaultMessage: 'Dátum splatnosti',
+    id: 'user.manage.payments.deadlineAt',
+  },
+  {
+    defaultMessage: 'Suma',
+    id: 'user.manage.payments.amount',
+  },
+  {
+    defaultMessage: 'Variabilný symbol',
+    id: 'user.manage.payments.variableSymbol',
+  },
+  {
+    defaultMessage: 'Typ platby',
+    id: 'user.manage.payments.transactionType',
+  },
+  {
+    defaultMessage: 'Popis',
+    id: 'user.manage.payments.description',
+  },
+  {
+    defaultMessage: 'Pridať nové platby',
+    id: 'user.manage.payments.newPaymentTitle',
+  },
+  {
+    defaultMessage: 'Toto pole je povinné',
+    id: 'user.payments.addNew.requiredField',
+  },
+  {
+    defaultMessage: 'Toto pole musí byť číslo',
+    id: 'user.payments.addNew.mustBeValidNumber',
+  },
+  {
+    defaultMessage: 'Začiatok platnosti musí byť pred dátumom splatnosti!',
+    id: 'user.payments.addNew.validFromDateMustBeBeforeDeadlineDate',
+  },
+  {
+    defaultMessage: 'Vyberte aspoň jedného uživateľa!',
+    id: 'user.payments.addNew.selectAtLeastOneUser',
+  },
 ];

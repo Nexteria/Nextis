@@ -4,10 +4,14 @@ import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 
 
 import * as paymentsActions from '../../common/payments/actions';
 import AssociatePaymentDialog from './AssociatePaymentDialog';
+import UserPaymentsTable from './UserPaymentsTable';
+import UserPaymentsSettings from './UserPaymentsSettings';
 
 const messages = defineMessages({
   closeButton: {
@@ -50,6 +54,22 @@ const messages = defineMessages({
     defaultMessage: 'There are no payments',
     id: 'payments.users.noPayments',
   },
+  allPayments: {
+    defaultMessage: 'All payments',
+    id: 'payments.users.allPayments',
+  },
+  settings: {
+    defaultMessage: 'Settings',
+    id: 'payments.users.settings',
+  },
+  noUserSettings: {
+    defaultMessage: 'User has not any specific payments settings',
+    id: 'payments.users.noUserSettings',
+  },
+  createSettings: {
+    defaultMessage: 'Create',
+    id: 'payments.users.createSettings',
+  },
 });
 
 export class UsersPaymentsDialog extends Component {
@@ -59,15 +79,19 @@ export class UsersPaymentsDialog extends Component {
     params: PropTypes.object.isRequired,
     userPayments: PropTypes.object,
     loadUsersPayments: PropTypes.func.isRequired,
+    loadUserPaymentsSettings: PropTypes.func.isRequired,
+    userPaymentsSettings: PropTypes.object,
+    createUserPaymentsSettings: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
-    const { loadUsersPayments, params } = this.props;
+    const { loadUsersPayments, loadUserPaymentsSettings, params } = this.props;
     loadUsersPayments(params.userId);
+    loadUserPaymentsSettings(params.userId);
   }
 
   render() {
-    const { userPayments } = this.props;
+    const { userPayments, userPaymentsSettings, createUserPaymentsSettings, params } = this.props;
 
     if (userPayments === null) {
       return <div></div>;
@@ -86,39 +110,37 @@ export class UsersPaymentsDialog extends Component {
 
         <Body>
           <div className="box-body table-responsive no-padding">
-            <table className="table table-hover">
-              <tbody>
-                <tr>
-                  <th><FormattedMessage {...messages.amount} /></th>
-                  <th><FormattedMessage {...messages.transactionType} /></th>
-                  <th><FormattedMessage {...messages.variableSymbol} /></th>
-                  <th><FormattedMessage {...messages.specificSymbol} /></th>
-                  <th><FormattedMessage {...messages.message} /></th>
-                  <th><FormattedMessage {...messages.createdAt} /></th>
-                </tr>
-                {userPayments.size > 0 ?
-                  userPayments.map(payment =>
-                    <tr
-                      key={payment.id}
-                      style={{ color: payment.transactionType === 'kredit' ? 'green' : 'red' }}
-                    >
-                      <td>{payment.amount / 100}</td>
-                      <td>{payment.transactionType}</td>
-                      <td>{payment.variableSymbol}</td>
-                      <td>{payment.specificSymbol}</td>
-                      <td>{payment.message}</td>
-                      <td>{payment.createdAt}</td>
-                    </tr>
-                  )
-                :
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: 'center' }}>
-                      <FormattedMessage {...messages.noPayments} />
-                    </td>
-                  </tr>
+            <Tabs defaultActiveKey={1} id="user-payment-overview-tabs" className="nav-tabs-custom">
+              <Tab
+                eventKey={1}
+                title={<i className="fa fa-users"> <FormattedMessage {...messages.allPayments} /></i>}
+              >
+                <UserPaymentsTable params={params} />
+              </Tab>
+              <Tab
+                eventKey={2}
+                title={<i className="fa fa-file-excel-o"> <FormattedMessage {...messages.settings} /></i>}
+              >
+                {userPaymentsSettings.get('dataLoaded') ?
+                  userPaymentsSettings.get('data') !== null ?
+                    <UserPaymentsSettings userId={params.userId} />
+                    :
+                    <div className={'form-group'} style={{ textAlign: 'center' }}>
+                      <div>
+                        <label className="control-label">
+                          <FormattedMessage {...messages.noUserSettings} />
+                        </label>
+                      </div>
+                      <div>
+                        <button className="btn btn-info" onClick={createUserPaymentsSettings}>
+                          <FormattedMessage {...messages.createSettings} />
+                        </button>
+                      </div>
+                    </div>
+                  : null
                 }
-              </tbody>
-            </table>
+              </Tab>
+            </Tabs>
           </div>
         </Body>
 
@@ -140,5 +162,6 @@ export class UsersPaymentsDialog extends Component {
 
 export default connect(state => ({
   users: state.users.users,
+  userPaymentsSettings: state.users.paymentsSettings,
   userPayments: state.payments.userPayments,
 }), paymentsActions)(UsersPaymentsDialog);

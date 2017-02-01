@@ -1,4 +1,4 @@
-import { Record, List } from 'immutable';
+import { Record, List, Map } from 'immutable';
 
 import * as actions from './actions';
 import Payment from './models/Payment';
@@ -9,6 +9,7 @@ const InitialState = Record({
   associateUserId: null,
   associationPaymentId: null,
   userPayments: null,
+  paymentsSettings: null,
 }, 'payments');
 
 export default function nxLocationsReducer(state = new InitialState, action) {
@@ -47,6 +48,19 @@ export default function nxLocationsReducer(state = new InitialState, action) {
       return state.set('userPayments',
         new List(action.payload.map(payment => new Payment(payment)))
       );
+    }
+
+    case actions.DELETE_PAYMENTS_SUCCESS: {
+      return state.set('userPayments',
+        new List(action.payload.map(payment => new Payment(payment)))
+      );
+    }
+
+    case actions.FETCH_GLOBAL_PAYMENTS_SETTINGS_SUCCESS: {
+      return state.set('paymentsSettings', new Map({
+        ...action.payload,
+        schoolFeeApplicableMonths: new Map(action.payload.schoolFeeApplicableMonths.map(month => [month, true])),
+      }));
     }
 
     default: {

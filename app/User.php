@@ -180,10 +180,18 @@ class User extends Authenticatable
 
     public function generateMonthlySchoolFee($month, $year, $adminUserId, $createdAt = null)
     {
+        $tuitionSettings = \App\TuitionDefaultSettings::first();
+
+        $paymentSettings = $this->paymentSettings;
+        if (!$paymentSettings) {
+            $paymentSettings = $tuitionSettings;
+        }
+
         $newPayment = new Payment();
         $newPayment->message = "Skolne za ".$month.'.'.$year;
         $newPayment->transactionType = 'debet';
         $newPayment->userId = $this->id;
+        $newPayment->deadline_at = Carbon::createFromDate($year, $month, $paymentSettings->schoolFeePaymentsDeadlineDay);
         $newPayment->addedByUserId = $adminUserId;
         $newPayment->amount = $this->monthlySchoolFee;
         $newPayment->variableSymbol = $this->tuitionFeeVariableSymbol;
@@ -209,5 +217,10 @@ class User extends Authenticatable
         }
 
         return $accountBalance;
+    }
+
+    public function paymentSettings()
+    {
+        return $this->hasOne('App\UserPaymentsSettings', 'userId');
     }
 }
