@@ -93,7 +93,7 @@ export class EventEmailsDialog extends Component {
                   users.get(user.get('id')).email
                 ).toList()
                 .toArray()
-                .join()}
+                .join(' ')}
               </textarea>
             </Tab>
             <Tab eventKey={2} title={formatMessage(messages.notAttending)}>
@@ -102,7 +102,7 @@ export class EventEmailsDialog extends Component {
                   users.get(user.get('id')).email
                 ).toList()
                 .toArray()
-                .join()}
+                .join(' ')}
               </textarea>
             </Tab>
             <Tab eventKey={3} title={formatMessage(messages.undecided)}>
@@ -111,7 +111,7 @@ export class EventEmailsDialog extends Component {
                   users.get(user.get('id')).email
                 ).toList()
                 .toArray()
-                .join()}
+                .join(' ')}
               </textarea>
             </Tab>
           </Tabs>
