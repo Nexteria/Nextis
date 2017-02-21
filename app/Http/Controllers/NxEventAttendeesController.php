@@ -49,6 +49,32 @@ class NxEventAttendeesController extends Controller
                 }
             }
 
+            // check if max group capacity was reached
+            foreach ($attendeesToSignIn as $eventAttendee) {
+                $group = $eventAttendee->attendeesGroup;
+                $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
+                if ($signedIn >= $group->maxCapacity) {
+                    return response()->json([
+                      'error' => trans('events.groupSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
+                    ], 400);
+                }
+            }
+
+            // check if event max capacity was reached
+            foreach ($attendeesToSignIn as $eventAttendee) {
+                $event = $eventAttendee->attendeesGroup->nxEvent;
+                $signedIn = 0;
+                foreach ($event->attendeesGroups as $group) {
+                    $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
+                }
+
+                if ($signedIn >= $event->maxCapacity) {
+                    return response()->json([
+                      'error' => trans('events.eventSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
+                    ], 400);
+                }
+            }
+
             foreach ($attendeesToSignIn as $eventAttendee) {
                 $eventAttendee->signedIn = Carbon::now();
                 $eventAttendee->signedOut = null;
