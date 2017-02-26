@@ -1324,4 +1324,164 @@ export default [
     "id": "viewerPayments.recieverMessage",
     "defaultMessage": "Správa pre príjemcu"
   },
+  {
+    defaultMessage: 'Povinná účasť',
+    id: 'event.edit.mandatoryParticipation',
+  },
+  {
+    defaultMessage: 'Si si istý, že na event "{eventName}" neprídeš?',
+    id: 'event.users.detail.signOutQuestionWonGo',
+  },
+  {
+    defaultMessage: 'Nezúčastním sa',
+    id: 'event.users.detail.wontGoButton',
+  },
+  {
+    defaultMessage: 'Aktivity body',
+    id: 'viewer.activityPoints.title'
+  },
+  {
+    defaultMessage: 'Počet bodov',
+    id: 'viewer.activityPoints.amountOfPoints'
+  },
+  {
+    defaultMessage: 'Všetky eventy, na ktoré si bol pozvaný',
+    id: 'viewer.activityPoints.attendees',
+  },
+  {
+    defaultMessage: 'Načítavam',
+    id: 'viewer.activityPoints.loadingAttendees',
+  },
+  {
+    defaultMessage: 'Ostatní študenti',
+    id: 'viewer.activityPoints.otherStudents'
+  },
+  {
+    defaultMessage: 'bodov',
+    id: 'viewer.activityPoints.points'
+  },
+  {
+    defaultMessage: 'z',
+    id: 'viewer.activityPoints.from'
+  },
+  {
+    defaultMessage: 'Názov udalosti',
+    id: 'viewer.activityPoints.eventName'
+  },
+  {
+    defaultMessage: 'Dátum',
+    id: 'viewer.activityPoints.date',
+  },
+  {
+    defaultMessage: 'Odhlásený',
+    id: 'viewer.activityPoints.signedOut',
+  },
+  {
+    defaultMessage: 'Prihlásený',
+    id: 'viewer.activityPoints.signedIn',
+  },
+  {
+    defaultMessage: 'Odmietnutý',
+    id: 'viewer.activityPoints.wontGo',
+  },
+  {
+    defaultMessage: 'Zúčastnený',
+    id: 'viewer.activityPoints.wasPresent',
+  },
+  {
+    defaultMessage: 'Vyplnený feedback',
+    id: 'viewer.activityPoints.filledFeedback',
+  },
+  {
+    defaultMessage: 'Typ',
+    id: 'viewer.activityPoints.eventType',
+  },
+  {
+    defaultMessage: 'Získané body',
+    id: 'viewer.activityPoints.gainedPoints'
+  },
+  {
+    defaultMessage: 'Meno',
+    id: 'viewer.activityPoints.name',
+  },
+  {
+    defaultMessage: 'Počet bodov',
+    id: 'viewer.activityPoints.amountOfPoints'
+  },
+  {
+    defaultMessage: 'Body so všetkých získateľných',
+    id: 'viewer.activityPoints.gaindePointsFromAll'
+  },
+  {
+    defaultMessage: '75% z Tvojho bodového základu',
+    id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
+  },
+  {
+    defaultMessage: 'Poradie',
+    id: 'viewer.activityPoints.order',
+  },
+  {
+    defaultMessage: 'Meno',
+    id: 'viewer.activityPoints.name',
+  },
+  {
+    defaultMessage: 'Level',
+    id: 'viewer.activityPoints.level',
+  },
+  {
+    defaultMessage: 'Získaných bodov',
+    id: 'viewer.activityPoints.percentageGainedPoints',
+  },
+  {
+    defaultMessage: 'Získané body',
+    id: 'viewer.activityPoints.gainedPoints',
+  },
+  {
+    defaultMessage: 'Základ aktivity bodov pre študenta',
+    id: 'user.edit.activityPointsBaseNumber',
+  },
+  {
+    defaultMessage: 'Mesačná výška školného',
+    id: 'user.edit.monthlySchoolFee',
+  },
+  {
+    defaultMessage: 'Aktivity body',
+    id: 'app.sidebar.links.activityPoints',
+  },
+  {
+    defaultMessage: 'Pozvaný',
+    id: 'event.edit.attendeesTab',
+  },
+  {
+    defaultMessage: 'Meno',
+    id: 'event.edit.invited.firstName',
+  },
+  {
+    defaultMessage: 'Priezvisko',
+    id: 'event.edit.invited.lastName',
+  },
+  {
+    defaultMessage: 'Prihlásený',
+    id: 'event.edit.invited.signedIn',
+  },
+  {
+    defaultMessage: 'Odhlásený',
+    id: 'event.edit.invited.signedOut',
+  },
+  {
+    defaultMessage: 'Nezúčastní sa',
+    id: 'event.edit.invited.wontGo',
+  },
+  {
+    defaultMessage: 'Dôvod',
+    id: 'event.edit.invited.signedOutReason',
+  },
+  {
+    defaultMessage: 'Bol prítomný',
+    id: 'event.edit.invited.wasPresent',
+  },
+  {
+    defaultMessage: 'Vyplnil feedback',
+    id: 'event.edit.invited.filledFeedback',
+  },
 ];

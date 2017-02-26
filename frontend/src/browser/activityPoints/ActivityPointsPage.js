@@ -12,31 +12,31 @@ import UsersActivityPointsTable from './UsersActivityPointsTable';
 
 const messages = defineMessages({
   title: {
-    defaultMessage: 'Aktivity body',
+    defaultMessage: 'Activity points',
     id: 'viewer.activityPoints.title'
   },
   amountOfPoints: {
-    defaultMessage: 'Počet bodov',
+    defaultMessage: 'Amount of points',
     id: 'viewer.activityPoints.amountOfPoints'
   },
   attendees: {
-    defaultMessage: 'Všetky eventy, na ktoré si bol pozvaný',
+    defaultMessage: 'All events where you were invited',
     id: 'viewer.activityPoints.attendees',
   },
   loadingAttendees: {
-    defaultMessage: 'Načítavam',
+    defaultMessage: 'Loading',
     id: 'viewer.activityPoints.loadingAttendees',
   },
   otherStudents: {
-    defaultMessage: 'Ostatní študenti',
+    defaultMessage: 'Other students',
     id: 'viewer.activityPoints.otherStudents'
   },
   points: {
-    defaultMessage: 'bodov',
+    defaultMessage: 'points',
     id: 'viewer.activityPoints.points'
   },
   from: {
-    defaultMessage: 'z',
+    defaultMessage: 'of',
     id: 'viewer.activityPoints.from'
   },
 });

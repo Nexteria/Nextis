@@ -1272,4 +1272,280 @@ export default [
     defaultMessage: '75% of your activity points base',
     id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
   },
+  {
+    defaultMessage: 'Mandatory participation',
+    id: 'event.edit.mandatoryParticipation',
+  },
+  {
+    defaultMessage: 'Are you sure that you wont attend event: {eventName} ?',
+    id: 'event.users.detail.signOutQuestionWonGo',
+  },
+  {
+    defaultMessage: 'Wont attend',
+    id: 'event.users.detail.wontGoButton',
+  },
+  {
+    defaultMessage: 'Activity points',
+    id: 'viewer.activityPoints.title'
+  },
+  {
+    defaultMessage: 'Amount of points',
+    id: 'viewer.activityPoints.amountOfPoints'
+  },
+  {
+    defaultMessage: 'All events where you were invited',
+    id: 'viewer.activityPoints.attendees',
+  },
+  {
+    defaultMessage: 'Loading',
+    id: 'viewer.activityPoints.loadingAttendees',
+  },
+  {
+    defaultMessage: 'Other students',
+    id: 'viewer.activityPoints.otherStudents'
+  },
+  {
+    defaultMessage: 'points',
+    id: 'viewer.activityPoints.points'
+  },
+  {
+    defaultMessage: 'of',
+    id: 'viewer.activityPoints.from'
+  },
+  {
+    defaultMessage: 'Event name',
+    id: 'viewer.activityPoints.eventName'
+  },
+  {
+    defaultMessage: 'Date',
+    id: 'viewer.activityPoints.date',
+  },
+  {
+    defaultMessage: 'Signed out',
+    id: 'viewer.activityPoints.signedOut',
+  },
+  {
+    defaultMessage: 'Signed in',
+    id: 'viewer.activityPoints.signedIn',
+  },
+  {
+    defaultMessage: 'Wont go',
+    id: 'viewer.activityPoints.wontGo',
+  },
+  {
+    defaultMessage: 'Was present',
+    id: 'viewer.activityPoints.wasPresent',
+  },
+  {
+    defaultMessage: 'Filled feedback',
+    id: 'viewer.activityPoints.filledFeedback',
+  },
+  {
+    defaultMessage: 'Event type',
+    id: 'viewer.activityPoints.eventType',
+  },
+  {
+    defaultMessage: 'Gained points',
+    id: 'viewer.activityPoints.gainedPoints'
+  },
+  {
+    defaultMessage: 'Name',
+    id: 'viewer.activityPoints.name',
+  },
+  {
+    defaultMessage: 'Amount of point',
+    id: 'viewer.activityPoints.amountOfPoints'
+  },
+  {
+    defaultMessage: 'Goined points from all possible',
+    id: 'viewer.activityPoints.gaindePointsFromAll'
+  },
+  {
+    defaultMessage: '75% of your base points amount',
+    id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
+  },
+  {
+    defaultMessage: 'Order',
+    id: 'viewer.activityPoints.order',
+  },
+  {
+    defaultMessage: 'Name',
+    id: 'viewer.activityPoints.name',
+  },
+  {
+    defaultMessage: 'Level',
+    id: 'viewer.activityPoints.level',
+  },
+  {
+    defaultMessage: 'Gained points',
+    id: 'viewer.activityPoints.percentageGainedPoints',
+  },
+  {
+    defaultMessage: 'Gained points',
+    id: 'viewer.activityPoints.gainedPoints',
+  },
+  {
+    defaultMessage: 'Activity points',
+    id: 'app.sidebar.links.activityPoints',
+  },
+  {
+    defaultMessage: 'Transaction',
+    id: 'viewerPayments.title'
+  },
+  {
+    defaultMessage: 'Account balance',
+    id: 'viewerPayments.accountBalance'
+  },
+  {
+    defaultMessage: 'Monthly school fee',
+    id: 'viewerPayments.monthlySchoolFee'
+  },
+  {
+    defaultMessage: 'Transactions',
+    id: 'viewerPayments.transactions',
+  },
+  {
+    defaultMessage: 'Date',
+    id: 'viewerPayments.date',
+  },
+  {
+    defaultMessage: 'Amount',
+    id: 'viewerPayments.amount',
+  },
+  {
+    defaultMessage: 'Message',
+    id: 'viewerPayments.message',
+  },
+  {
+    defaultMessage: 'Loading payments',
+    id: 'viewerPayments.loadingPayments',
+  },
+  {
+    defaultMessage: 'IBAN',
+    id: 'viewerPayments.iban',
+  },
+  {
+    defaultMessage: 'VS',
+    id: 'viewerPayments.vs',
+  },
+  {
+    defaultMessage: 'Payment instruction',
+    id: 'viewerPayments.paymentInstruction'
+  },
+  {
+    defaultMessage: 'Message for reciever',
+    id: 'viewerPayments.recieverMessage'
+  },
+  {
+    defaultMessage: 'Profile',
+    id: 'app.users.userProfileDialog.title',
+  },
+  {
+    defaultMessage: 'About me',
+    id: 'app.users.userProfileDialog.personalDescription',
+  },
+  {
+    defaultMessage: 'Bazingaa.',
+    id: 'app.users.userProfileDialog.personalDescription_empty',
+  },
+  {
+    defaultMessage: 'Email',
+    id: 'app.users.userProfileDialog.email',
+  },
+  {
+    defaultMessage: 'I don\'t have a mail :-O',
+    id: 'app.users.userProfileDialog.email_empty',
+  },
+  {
+    defaultMessage: 'Telephone',
+    id: 'app.users.userProfileDialog.phone',
+  },
+  {
+    defaultMessage: 'No phone :-(',
+    id: 'app.users.userProfileDialog.phone_empty',
+  },
+  {
+    defaultMessage: 'Actual Job',
+    id: 'app.users.userProfileDialog.job',
+  },
+  {
+    defaultMessage: 'Unemployed :-)',
+    id: 'app.users.userProfileDialog.job_empty',
+  },
+  {
+    defaultMessage: 'School',
+    id: 'app.users.userProfileDialog.school',
+  },
+  {
+    defaultMessage: 'Not filled',
+    id: 'app.users.userProfileDialog.school_empty',
+  },
+  {
+    defaultMessage: 'Minimum activity points for semester',
+    id: 'user.edit.minimumSemesterActivityPoints',
+  },
+  {
+    defaultMessage: 'Activity points base for student',
+    id: 'user.edit.activityPointsBaseNumber',
+  },
+  {
+    defaultMessage: 'Monthly school fee',
+    id: 'user.edit.monthlySchoolFee',
+  },
+  {
+    defaultMessage: 'Monthly school fee in cents!',
+    id: 'user.edit.monthlySchoolFeeInCents',
+  },
+  {
+    defaultMessage: 'Other',
+    id: 'app.sidebar.links.other',
+  },
+  {
+    defaultMessage: 'Must be positive number',
+    id: 'user.edit.requiredNumber',
+  },
+  {
+    defaultMessage: 'Account balance',
+    id: 'users.manage.accountBalance'
+  },
+  {
+    defaultMessage: 'Activity points',
+    id: 'users.manage.points'
+  },
+  {
+    defaultMessage: 'Invited',
+    id: 'event.edit.attendeesTab',
+  },
+  {
+    defaultMessage: 'First name',
+    id: 'event.edit.invited.firstName',
+  },
+  {
+    defaultMessage: 'Last name',
+    id: 'event.edit.invited.lastName',
+  },
+  {
+    defaultMessage: 'Signed In',
+    id: 'event.edit.invited.signedIn',
+  },
+  {
+    defaultMessage: 'Signed Out',
+    id: 'event.edit.invited.signedOut',
+  },
+  {
+    defaultMessage: 'Wont go',
+    id: 'event.edit.invited.wontGo',
+  },
+  {
+    defaultMessage: 'Signed out reason',
+    id: 'event.edit.invited.signedOutReason',
+  },
+  {
+    defaultMessage: 'Was present',
+    id: 'event.edit.invited.wasPresent',
+  },
+  {
+    defaultMessage: 'Filled feedback',
+    id: 'event.edit.invited.filledFeedback',
+  },
 ];

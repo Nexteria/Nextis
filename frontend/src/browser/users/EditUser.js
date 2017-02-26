@@ -199,10 +199,6 @@ const messages = defineMessages({
     defaultMessage: 'Monthly school fee in cents!',
     id: 'user.edit.monthlySchoolFeeInCents',
   },
-  requiredNumber: {
-    defaultMessage: 'Must by a number.',
-    id: 'user.edit.requiredNumber',
-  },
 });
 
 const validate = (values, props) => {

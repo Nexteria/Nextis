@@ -123,6 +123,13 @@ class NxEventAttendeesController extends Controller
 
         if (\Input::has('wontGoFlag') && \Input::get('wontGoFlag')) {
             $event = \App\NxEvent::find($eventId);
+
+            if (!\Input::has('reason') && $event->mandatoryParticipation) {
+                return response()->json([
+                  'error' => 'Please provide reason why you wont be able to attend this event.',
+                ], 400);
+            }
+
             $attendeesWontGo = [$attendee];
             if ($event->groupedEvents->count() > 0) {
                 foreach ($event->groupedEvents as $gEvent) {
@@ -141,6 +148,10 @@ class NxEventAttendeesController extends Controller
 
             foreach ($attendeesWontGo as $eventAttendee) {
                 $eventAttendee->wontGo = Carbon::now();
+                if (\Input::has('reason')) {
+                    $eventAttendee->signedOutReason = clean(\Input::get('reason'));
+                }
+
                 $eventAttendee->save();
             }
         }

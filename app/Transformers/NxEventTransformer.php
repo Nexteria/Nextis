@@ -22,6 +22,7 @@ class NxEventTransformer extends Transformer
             'eventEndDateTime' => $event->eventEndDateTime ? $event->eventEndDateTime->__toString() : null,
             'minCapacity' => (int) $event->minCapacity,
             'maxCapacity' => (int) $event->maxCapacity,
+            'mandatoryParticipation' => $event->mandatoryParticipation,
             'hostId' => (int) $event->hostId,
             'nxLocationId' => (int) $event->nxLocationId,
             'attendeesGroups' => $attendees,

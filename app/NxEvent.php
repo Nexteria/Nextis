@@ -18,6 +18,7 @@ class NxEvent extends Model
         'eventEndDateTime',
         'minCapacity',
         'maxCapacity',
+        'mandatoryParticipation',
         'eventType',
         'feedbackLink',
         'status',

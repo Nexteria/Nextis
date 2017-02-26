@@ -4,11 +4,11 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
   gaindePointsFromAll: {
-    defaultMessage: 'Body so všetkých získateľných',
+    defaultMessage: 'Goined points from all possible',
     id: 'viewer.activityPoints.gaindePointsFromAll'
   },
   studetsMinimumPortionOfBasePoints: {
-    defaultMessage: '75% z Tvojho bodového základu',
+    defaultMessage: '75% of your base points amount',
     id: 'viewer.activityPoints.studetsMinimumPortionOfBasePoints'
   },
 });

@@ -23,6 +23,7 @@ const InitialState = Record({
   locationDetailsId: null,
   signOut: new Record({
     userId: null,
+    type: '',
     reason: '',
     eventId: null,
     groupId: null,
@@ -128,7 +129,12 @@ export default function eventsReducer(state = new InitialState, action) {
         response.id,
       ], user => user.set('wontGo', moment.utc(response.wontGo))
         .set('signedIn', null)
-        .set('signedOut', null));
+        .set('signedOut', null))
+        .setIn(['signOut', 'userId'], null)
+        .setIn(['signOut', 'eventId'], null)
+        .setIn(['signOut', 'reason'], '')
+        .setIn(['signOut', 'type'], '')
+        .setIn(['signOut', 'groupId'], null);
     }
 
     case actions.ATTENDEE_SIGN_IN_SUCCESS: {
@@ -167,6 +173,7 @@ export default function eventsReducer(state = new InitialState, action) {
         .setIn(['signOut', 'userId'], null)
         .setIn(['signOut', 'eventId'], null)
         .setIn(['signOut', 'reason'], '')
+        .setIn(['signOut', 'type'], '')
         .setIn(['signOut', 'groupId'], null);
     }
 
@@ -201,9 +208,10 @@ export default function eventsReducer(state = new InitialState, action) {
     }
 
     case actions.OPEN_SIGN_OUT_DIALOG: {
-      const { userId, eventId, groupId } = action.payload;
+      const { userId, eventId, groupId, type } = action.payload;
       return state.setIn(['signOut', 'userId'], userId)
                   .setIn(['signOut', 'eventId'], eventId)
+                  .setIn(['signOut', 'type'], type)
                   .setIn(['signOut', 'groupId'], groupId);
     }
 
@@ -215,6 +223,7 @@ export default function eventsReducer(state = new InitialState, action) {
       return state.setIn(['signOut', 'userId'], null)
                   .setIn(['signOut', 'eventId'], null)
                   .setIn(['signOut', 'reason'], '')
+                  .setIn(['signOut', 'type'], '')
                   .setIn(['signOut', 'groupId'], null);
     }
 

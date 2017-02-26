@@ -58,13 +58,7 @@ export function toggleFutureEvents() {
 
 export function saveEvent(fields) {
   let data = {
-    id: fields.id,
-    name: fields.name,
-    eventType: fields.eventType,
-    activityPoints: fields.activityPoints,
-    hostId: fields.hostId,
-    lectors: fields.lectors,
-    nxLocationId: fields.nxLocationId,
+    ...fields,
     eventStartDateTime: fields.eventStartDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
     eventEndDateTime: fields.eventEndDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
     attendeesGroups: fields.attendeesGroups.map(group => ({
@@ -82,18 +76,14 @@ export function saveEvent(fields) {
         signedOutReason: user.get('signedOutReason').toString('html'),
       })),
     })),
-    minCapacity: fields.minCapacity,
-    feedbackLink: fields.feedbackLink,
-    status: fields.status,
-    exclusionaryEvents: fields.exclusionaryEvents,
-    groupedEvents: fields.groupedEvents,
-    maxCapacity: fields.maxCapacity,
     description: fields.description.toString('html'),
     shortDescription: fields.shortDescription.toString('html'),
   };
 
   if (fields.curriculumLevelId) {
     data.curriculumLevelId = fields.curriculumLevelId;
+  } else {
+    delete data['curriculumLevelId'];
   }
 
   return ({ fetch }) => ({
@@ -158,21 +148,26 @@ export function openEventDetailsDialog(eventId) {
   };
 }
 
-export function attendeeWontGo(event, viewer, groupId) {
+export function attendeeWontGo(eventId, userId, groupId, reason) {
+  const data = { wontGoFlag: true };
+  if (reason) {
+    data.reason = reason;
+  }
+
   return ({ fetch }) => ({
     type: ATTENDEE_WONT_GO,
     payload: {
-      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
+      promise: fetch(`/nxEvents/${eventId}/users/${userId}`, {
         method: 'put',
         credentials: 'same-origin',
         notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wontGoFlag: true }),
+        body: JSON.stringify(data),
       }).then(response => response.json())
         .then(response => ({
           ...response,
           groupId,
-          eventId: event.id,
+          eventId: eventId,
         })),
     },
   });
@@ -266,12 +261,13 @@ export function changeAttendeeFeedbackStatus(eventId, user, groupId) {
   });
 }
 
-export function openSignOutDialog(event, viewer, groupId) {
+export function openSignOutDialog(event, viewer, groupId, type) {
   return {
     type: OPEN_SIGN_OUT_DIALOG,
     payload: {
       eventId: event.id,
       userId: viewer.id,
+      type,
       groupId,
     },
   };

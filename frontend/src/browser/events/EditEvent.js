@@ -19,8 +19,13 @@ import * as eventActions from '../../common/events/actions';
 import './EditEvent.scss';
 import Event from '../../common/events/models/Event';
 import AttendeesGroupsDialog from './attendeesGroups/AttendeesGroupsDialog';
+import InvitedTab from './InvitedTab';
 
 const messages = defineMessages({
+  invited: {
+    defaultMessage: 'Attendees',
+    id: 'event.edit.attendeesTab',
+  },
   eventName: {
     defaultMessage: 'Event name',
     id: 'event.edit.eventName',
@@ -181,6 +186,10 @@ const messages = defineMessages({
     defaultMessage: 'Grouped events',
     id: 'event.edit.groupedEvents',
   },
+  mandatoryParticipation: {
+    defaultMessage: 'Mandatory participation',
+    id: 'event.edit.mandatoryParticipation',
+  },
 });
 
 const validate = (values, props) => {
@@ -296,7 +305,10 @@ export class EditEvent extends Component {
     const { input, label, type, meta: { asyncValidating, touched, error, pristine } } = data;
 
     return (
-      <div className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}>
+      <div
+        className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
         <label className="col-sm-2 control-label">
           {label}
         </label>
@@ -304,8 +316,9 @@ export class EditEvent extends Component {
           <input
             {...input}
             readOnly={data.readOnly}
-            placeholder={label} type={type}
-            className="form-control"
+            placeholder={label}
+            type={type}
+            className={type !== 'checkbox' ? 'form-control' : 'checkbox'}
             id={input.name}
           />
           {pristine && input.value ?
@@ -674,6 +687,13 @@ export class EditEvent extends Component {
                           />
 
                           <Field
+                            name="mandatoryParticipation"
+                            component={this.renderInput}
+                            type="checkbox"
+                            label={`${formatMessage(messages.mandatoryParticipation)}`}
+                          />
+
+                          <Field
                             name="curriculumLevel"
                             component={this.renderSelect}
                             label={`${formatMessage(messages.curriculumLevel)}`}
@@ -755,6 +775,9 @@ export class EditEvent extends Component {
                       </div>
                     </div>
                   </Tab>
+                  <Tab eventKey={3} title={formatMessage(messages.invited)}>
+                    <InvitedTab intl={this.props.intl} users={users} attendeesGroups={actualEvent.attendeesGroups} />
+                  </Tab>
                 </Tabs>
               </div>
             </div>
@@ -778,6 +801,7 @@ EditEvent = fields(EditEvent, {
     'attendeesGroups',
     'minCapacity',
     'maxCapacity',
+    'mandatoryParticipation',
     'description',
     'shortDescription',
     'eventType',

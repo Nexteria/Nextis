@@ -15,6 +15,7 @@ const Event = Record({
   attendeesGroups: new List(),
   minCapacity: '',
   maxCapacity: '',
+  mandatoryParticipation: false,
   status: 'draft',
   feedbackLink: '',
   parentEventId: null,

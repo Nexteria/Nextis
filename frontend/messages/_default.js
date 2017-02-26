@@ -17,6 +17,10 @@ export default [
     "defaultMessage": "Logout"
   },
   {
+    "id": "app.sidebar.links.activityPoints",
+    "defaultMessage": "Activity points"
+  },
+  {
     "id": "app.sidebar.links.adminSection",
     "defaultMessage": "Admin section"
   },
@@ -79,6 +83,50 @@ export default [
   {
     "id": "app.users.privacyPolicy.decline",
     "defaultMessage": "Decline"
+  },
+  {
+    "id": "app.users.userProfileDialog.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "app.users.userProfileDialog.email_empty",
+    "defaultMessage": "I don't have a mail :-O"
+  },
+  {
+    "id": "app.users.userProfileDialog.job",
+    "defaultMessage": "Actual Job"
+  },
+  {
+    "id": "app.users.userProfileDialog.job_empty",
+    "defaultMessage": "Unemployed :-)"
+  },
+  {
+    "id": "app.users.userProfileDialog.personalDescription",
+    "defaultMessage": "About me"
+  },
+  {
+    "id": "app.users.userProfileDialog.personalDescription_empty",
+    "defaultMessage": "Bazingaa."
+  },
+  {
+    "id": "app.users.userProfileDialog.phone",
+    "defaultMessage": "Telephone"
+  },
+  {
+    "id": "app.users.userProfileDialog.phone_empty",
+    "defaultMessage": "No phone :-("
+  },
+  {
+    "id": "app.users.userProfileDialog.school",
+    "defaultMessage": "School"
+  },
+  {
+    "id": "app.users.userProfileDialog.school_empty",
+    "defaultMessage": "Not filled"
+  },
+  {
+    "id": "app.users.userProfileDialog.title",
+    "defaultMessage": "Profile"
   },
   {
     "id": "contacts.list.contactStudentsTitile",
@@ -229,6 +277,14 @@ export default [
     "defaultMessage": "Attendees groups"
   },
   {
+    "id": "event.edit.attendeesTab",
+    "defaultMessage": "Attendees"
+  },
+  {
+    "id": "event.edit.attendeesTab",
+    "defaultMessage": "Invited"
+  },
+  {
     "id": "event.edit.chooseEventLocation",
     "defaultMessage": "Choose event location"
   },
@@ -325,8 +381,44 @@ export default [
     "defaultMessage": "Host"
   },
   {
+    "id": "event.edit.invited.filledFeedback",
+    "defaultMessage": "Filled feedback"
+  },
+  {
+    "id": "event.edit.invited.firstName",
+    "defaultMessage": "First name"
+  },
+  {
+    "id": "event.edit.invited.lastName",
+    "defaultMessage": "Last name"
+  },
+  {
+    "id": "event.edit.invited.signedIn",
+    "defaultMessage": "Signed In"
+  },
+  {
+    "id": "event.edit.invited.signedOut",
+    "defaultMessage": "Signed Out"
+  },
+  {
+    "id": "event.edit.invited.signedOutReason",
+    "defaultMessage": "Signed out reason"
+  },
+  {
+    "id": "event.edit.invited.wasPresent",
+    "defaultMessage": "Was present"
+  },
+  {
+    "id": "event.edit.invited.wontGo",
+    "defaultMessage": "Wont go"
+  },
+  {
     "id": "event.edit.lectors",
     "defaultMessage": "Lectors"
+  },
+  {
+    "id": "event.edit.mandatoryParticipation",
+    "defaultMessage": "Mandatory participation"
   },
   {
     "id": "event.edit.maxCapacity",
@@ -511,6 +603,14 @@ export default [
   {
     "id": "event.users.detail.signOutQuestion",
     "defaultMessage": "Do you want to sign out from: {eventName} ?"
+  },
+  {
+    "id": "event.users.detail.signOutQuestionWonGo",
+    "defaultMessage": "Are you sure that you wont attend event: {eventName} ?"
+  },
+  {
+    "id": "event.users.detail.wontGoButton",
+    "defaultMessage": "Wont attend"
   },
   {
     "id": "event.users.details",
@@ -701,8 +801,20 @@ export default [
     "defaultMessage": "Hide future events"
   },
   {
+    "id": "events.users.hideFutureEvents",
+    "defaultMessage": "Hide future events"
+  },
+  {
     "id": "events.users.hidePastEvents",
     "defaultMessage": "Hide past events"
+  },
+  {
+    "id": "events.users.hidePastEvents",
+    "defaultMessage": "Hide past events"
+  },
+  {
+    "id": "events.users.showFutureEvents",
+    "defaultMessage": "Show future events"
   },
   {
     "id": "events.users.showFutureEvents",
@@ -715,6 +827,14 @@ export default [
   {
     "id": "events.users.showPastEvents",
     "defaultMessage": "Show past events"
+  },
+  {
+    "id": "events.users.showPastEvents",
+    "defaultMessage": "Show past events"
+  },
+  {
+    "id": "events.users.title",
+    "defaultMessage": "Events"
   },
   {
     "id": "events.users.title",
@@ -973,6 +1093,10 @@ export default [
     "defaultMessage": "Active"
   },
   {
+    "id": "user.edit.activityPointsBaseNumber",
+    "defaultMessage": "Activity points base for student"
+  },
+  {
     "id": "user.edit.actualJobInfo",
     "defaultMessage": "Actual job"
   },
@@ -1049,6 +1173,14 @@ export default [
     "defaultMessage": "LinkedIn link"
   },
   {
+    "id": "user.edit.minimumSemesterActivityPoints",
+    "defaultMessage": "Minimum activity points for semester"
+  },
+  {
+    "id": "user.edit.monthlySchoolFee",
+    "defaultMessage": "Monthly school fee"
+  },
+  {
     "id": "user.edit.monthlySchoolFeeInCents",
     "defaultMessage": "Monthly school fee in cents!"
   },
@@ -1105,16 +1237,12 @@ export default [
     "defaultMessage": "This field is required"
   },
   {
-    "id": "user.edit.requiredField",
-    "defaultMessage": "This field is required"
-  },
-  {
     "id": "user.edit.requiredLengthField",
     "defaultMessage": "This field is required, please type {characters} more."
   },
   {
     "id": "user.edit.requiredNumber",
-    "defaultMessage": "Must by a number."
+    "defaultMessage": "Must be positive number"
   },
   {
     "id": "user.edit.save",
@@ -1213,20 +1341,44 @@ export default [
     "defaultMessage": "Actions"
   },
   {
-    "id": "users.manage.noUsers",
-    "defaultMessage": "No users here"
+    "id": "users.manage.all",
+    "defaultMessage": "All"
+  },
+  {
+    "id": "users.manage.lastName",
+    "defaultMessage": "Last name"
+  },
+  {
+    "id": "users.manage.levelFilter",
+    "defaultMessage": "Filter level"
   },
   {
     "id": "users.manage.noUsers",
     "defaultMessage": "No users here"
   },
   {
-    "id": "users.manage.table.title",
-    "defaultMessage": "Users - managment"
+    "id": "users.manage.noUsers",
+    "defaultMessage": "No users here"
+  },
+  {
+    "id": "users.manage.points",
+    "defaultMessage": "Activity points"
+  },
+  {
+    "id": "users.manage.sortBy",
+    "defaultMessage": "Sort by"
+  },
+  {
+    "id": "users.manage.studentLevel",
+    "defaultMessage": "Student level"
   },
   {
     "id": "users.manage.table.title",
     "defaultMessage": "Users - payments"
+  },
+  {
+    "id": "users.manage.table.title",
+    "defaultMessage": "Users - managment"
   },
   {
     "id": "users.manage.title",
@@ -1241,12 +1393,116 @@ export default [
     "defaultMessage": "Unassociated Payments"
   },
   {
+    "id": "users.manage.userBaseSemesterActivityPoints",
+    "defaultMessage": "Students base activity points"
+  },
+  {
     "id": "users.manage.userName",
     "defaultMessage": "User name"
   },
   {
     "id": "users.manage.userName",
     "defaultMessage": "User name"
+  },
+  {
+    "id": "viewer.activityPoints.amountOfPoints",
+    "defaultMessage": "Amount of points"
+  },
+  {
+    "id": "viewer.activityPoints.amountOfPoints",
+    "defaultMessage": "Amount of point"
+  },
+  {
+    "id": "viewer.activityPoints.attendees",
+    "defaultMessage": "All events where you were invited"
+  },
+  {
+    "id": "viewer.activityPoints.date",
+    "defaultMessage": "Date"
+  },
+  {
+    "id": "viewer.activityPoints.eventName",
+    "defaultMessage": "Event name"
+  },
+  {
+    "id": "viewer.activityPoints.eventType",
+    "defaultMessage": "Event type"
+  },
+  {
+    "id": "viewer.activityPoints.filledFeedback",
+    "defaultMessage": "Filled feedback"
+  },
+  {
+    "id": "viewer.activityPoints.from",
+    "defaultMessage": "of"
+  },
+  {
+    "id": "viewer.activityPoints.gaindePointsFromAll",
+    "defaultMessage": "Goined points from all possible"
+  },
+  {
+    "id": "viewer.activityPoints.gainedPoints",
+    "defaultMessage": "Gained points"
+  },
+  {
+    "id": "viewer.activityPoints.gainedPoints",
+    "defaultMessage": "Gained points"
+  },
+  {
+    "id": "viewer.activityPoints.level",
+    "defaultMessage": "Level"
+  },
+  {
+    "id": "viewer.activityPoints.loadingAttendees",
+    "defaultMessage": "Loading"
+  },
+  {
+    "id": "viewer.activityPoints.name",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "viewer.activityPoints.name",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "viewer.activityPoints.order",
+    "defaultMessage": "Order"
+  },
+  {
+    "id": "viewer.activityPoints.otherStudents",
+    "defaultMessage": "Other students"
+  },
+  {
+    "id": "viewer.activityPoints.percentageGainedPoints",
+    "defaultMessage": "Gained points"
+  },
+  {
+    "id": "viewer.activityPoints.points",
+    "defaultMessage": "points"
+  },
+  {
+    "id": "viewer.activityPoints.signedIn",
+    "defaultMessage": "Signed in"
+  },
+  {
+    "id": "viewer.activityPoints.signedOut",
+    "defaultMessage": "Signed out"
+  },
+  {
+    "id": "viewer.activityPoints.studetsMinimumPortionOfBasePoints",
+    "defaultMessage": "75% of your base points amount"
+  },
+  {
+    "id": "viewer.activityPoints.title",
+    "defaultMessage": "Activity points"
+  },
+  {
+    "id": "viewer.activityPoints.wasPresent",
+    "defaultMessage": "Was present"
+  },
+  {
+    "id": "viewer.activityPoints.wontGo",
+    "defaultMessage": "Wont go"
   },
   {
     "id": "viewerPayments.accountBalance",

@@ -245,7 +245,11 @@ export default class Event extends Component {
                           </button>
                           <button
                             className="btn btn-danger btn-xs"
-                            onClick={() => attendeeWontGo(event, viewer, group.id)}
+                            onClick={event.mandatoryParticipation ?
+                              () => openSignOutDialog(event, viewer, group.id, 'WONT_GO')
+                              :
+                              () => attendeeWontGo(event.id, viewer.id, group.id)
+                            }
                           >
                             <FormattedMessage {...messages.wontGo} />
                           </button>
@@ -257,7 +261,7 @@ export default class Event extends Component {
                             && attendee.get('signedIn') ?
                             <button
                               className="btn btn-danger btn-xs"
-                              onClick={() => openSignOutDialog(event, viewer, group.id)}
+                              onClick={() => openSignOutDialog(event, viewer, group.id, 'SIGN_OUT')}
                             >
                               <FormattedMessage {...messages.signOut} />
                             </button>

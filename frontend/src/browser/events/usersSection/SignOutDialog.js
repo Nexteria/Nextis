@@ -21,9 +21,17 @@ const messages = defineMessages({
     defaultMessage: 'Do you want to sign out from: {eventName} ?',
     id: 'event.users.detail.signOutQuestion',
   },
+  signOutQuestionWonGo: {
+    defaultMessage: 'Are you sure that you wont attend event: {eventName} ?',
+    id: 'event.users.detail.signOutQuestionWonGo',
+  },
   reasonDescription: {
     defaultMessage: 'Please state your reason for sign out:',
     id: 'event.users.detail.reasonDescription',
+  },
+  wontGoButton: {
+    defaultMessage: 'Wont attend',
+    id: 'event.users.detail.wontGoButton',
   },
 });
 
@@ -35,6 +43,7 @@ export class SignOutDialog extends Component {
     attendeeSignOut: PropTypes.func.isRequired,
     signOut: PropTypes.object.isRequired,
     changeSignOutReason: PropTypes.func.isRequired,
+    attendeeWontGo: PropTypes.func.isRequired,
   }
 
   render() {
@@ -43,6 +52,7 @@ export class SignOutDialog extends Component {
       cancelSignOut,
       attendeeSignOut,
       changeSignOutReason,
+      attendeeWontGo,
     } = this.props;
 
     return (
@@ -54,10 +64,17 @@ export class SignOutDialog extends Component {
       >
         <Header closeButton>
           <Title>
-            <FormattedMessage
-              {...messages.signOutQuestion}
-              values={{ eventName: events.get(signOut.get('eventId')).name }}
-            />
+            {signOut.type === 'SIGN_OUT' ?
+              <FormattedMessage
+                {...messages.signOutQuestion}
+                values={{ eventName: events.get(signOut.get('eventId')).name }}
+              />
+              :
+              <FormattedMessage
+                {...messages.signOutQuestionWonGo}
+                values={{ eventName: events.get(signOut.get('eventId')).name }}
+              />
+            }
           </Title>
         </Header>
 
@@ -89,9 +106,17 @@ export class SignOutDialog extends Component {
             </button>
             <button
               className="btn btn-danger"
-              onClick={() => attendeeSignOut(signOut)}
+              onClick={signOut.type === 'SIGN_OUT' ?
+                () => attendeeSignOut(signOut)
+                :
+                () => attendeeWontGo(signOut.eventId, signOut.userId, signOut.groupId, signOut.reason)
+              }
             >
-              <FormattedMessage {...messages.signOutButton} />
+              {signOut.type === 'SIGN_OUT' ?
+                <FormattedMessage {...messages.signOutButton} />
+                :
+                <FormattedMessage {...messages.wontGoButton} />
+              }
             </button>
           </div>
         </Footer>

@@ -8,47 +8,47 @@ import Icon from '../components/Icon';
 
 const messages = defineMessages({
   eventName: {
-    defaultMessage: 'Názov udalosti',
+    defaultMessage: 'Event name',
     id: 'viewer.activityPoints.eventName'
   },
   date: {
-    defaultMessage: 'Dátum',
+    defaultMessage: 'Date',
     id: 'viewer.activityPoints.date',
   },
   signedOut: {
-    defaultMessage: 'Odhlásený',
+    defaultMessage: 'Signed out',
     id: 'viewer.activityPoints.signedOut',
   },
   signedIn: {
-    defaultMessage: 'Prihlásený',
+    defaultMessage: 'Signed in',
     id: 'viewer.activityPoints.signedIn',
   },
   wontGo: {
-    defaultMessage: 'Odmietnutý',
+    defaultMessage: 'Wont go',
     id: 'viewer.activityPoints.wontGo',
   },
   wasPresent: {
-    defaultMessage: 'Zúčastnený',
+    defaultMessage: 'Was present',
     id: 'viewer.activityPoints.wasPresent',
   },
   filledFeedback: {
-    defaultMessage: 'Vyplnený feedback',
+    defaultMessage: 'Filled feedback',
     id: 'viewer.activityPoints.filledFeedback',
   },
   eventType: {
-    defaultMessage: 'Typ',
+    defaultMessage: 'Event type',
     id: 'viewer.activityPoints.eventType',
   },
   gainedPoints: {
-    defaultMessage: 'Získané body',
+    defaultMessage: 'Gained points',
     id: 'viewer.activityPoints.gainedPoints'
   },
   name: {
-    defaultMessage: 'Meno',
+    defaultMessage: 'Name',
     id: 'viewer.activityPoints.name',
   },
   amountOfPoints: {
-    defaultMessage: 'Počet bodov',
+    defaultMessage: 'Amount of point',
     id: 'viewer.activityPoints.amountOfPoints'
   },
 });

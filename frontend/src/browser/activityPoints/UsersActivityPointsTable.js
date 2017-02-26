@@ -8,11 +8,11 @@ import { fields } from '../../common/lib/redux-fields/index';
 
 const messages = defineMessages({
   order: {
-    defaultMessage: 'Poradie',
+    defaultMessage: 'Order',
     id: 'viewer.activityPoints.order',
   },
   name: {
-    defaultMessage: 'Meno',
+    defaultMessage: 'Name',
     id: 'viewer.activityPoints.name',
   },
   level: {
@@ -20,11 +20,11 @@ const messages = defineMessages({
     id: 'viewer.activityPoints.level',
   },
   percentageGainedPoints: {
-    defaultMessage: 'Získaných bodov',
+    defaultMessage: 'Gained points',
     id: 'viewer.activityPoints.percentageGainedPoints',
   },
   gainedPoints: {
-    defaultMessage: 'Získané body',
+    defaultMessage: 'Gained points',
     id: 'viewer.activityPoints.gainedPoints',
   },
 });

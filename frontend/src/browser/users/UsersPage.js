@@ -31,31 +31,31 @@ const messages = defineMessages({
     id: 'users.manage.actions'
   },
   points: {
-    defaultMessage: 'Aktivity body',
+    defaultMessage: 'Activity points',
     id: 'users.manage.points'
   },
   userBaseSemesterActivityPoints: {
-    defaultMessage: 'Študentov bodový základ',
+    defaultMessage: 'Students base activity points',
     id: 'users.manage.userBaseSemesterActivityPoints'
   },
   studentLevel: {
-    defaultMessage: 'Level študenta',
+    defaultMessage: 'Student level',
     id: 'users.manage.studentLevel'
   },
   lastName: {
-    defaultMessage: 'Prizvisko',
+    defaultMessage: 'Last name',
     id: 'users.manage.lastName'
   },
   sortBy: {
-    defaultMessage: 'Utriediť podľa',
+    defaultMessage: 'Sort by',
     id: 'users.manage.sortBy'
   },
   all: {
-    defaultMessage: 'Všetky',
+    defaultMessage: 'All',
     id: 'users.manage.all'
   },
   levelFilter: {
-    defaultMessage: 'Zobraziť level',
+    defaultMessage: 'Filter level',
     id: 'users.manage.levelFilter'
   },
 });

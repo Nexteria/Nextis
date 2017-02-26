@@ -60,7 +60,7 @@ const messages = defineMessages({
     id: 'app.sidebar.links.important',
   },
   activityPoints: {
-    defaultMessage: 'Aktivity body',
+    defaultMessage: 'Activity points',
     id: 'app.sidebar.links.activityPoints',
   },
   other: {
