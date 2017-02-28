@@ -1548,4 +1548,8 @@ export default [
     defaultMessage: 'Filled feedback',
     id: 'event.edit.invited.filledFeedback',
   },
+  {
+    defaultMessage: 'Feedback',
+    id: 'app.navigation.feedbackButton',
+  },
 ];

@@ -20,7 +20,7 @@ class Header extends Component {
   };
 
   render() {
-    const { viewer, isUserMenuOpen } = this.props;
+    const { viewer, feedbackUrl, isUserMenuOpen } = this.props;
     const { openUserMenu, toggleSidebar, closeUserMenu } = this.props;
 
     return (
@@ -40,11 +40,21 @@ class Header extends Component {
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
           </a>
+
           <div className="navbar-custom-menu">
             <ul className="nav navbar-nav">
               <HeaderUserMenu {...{ viewer, openUserMenu, closeUserMenu, isUserMenuOpen }} />
             </ul>
           </div>
+
+          <a
+            style={{ float: 'right', position: 'relative', top: '0.5em', right: '5em' }}
+            href={feedbackUrl}
+            className="btn btn-info"
+            target="_blank"
+          >
+            <FormattedMessage {...messages.feedbackButton} />
+          </a>
         </nav>
       </header>
     );
@@ -54,5 +64,6 @@ class Header extends Component {
 
 export default connect(state => ({
   viewer: state.users.viewer,
+  feedbackUrl: state.config.feedbackUrl,
   isUserMenuOpen: state.app.isUserMenuOpen,
 }), actions)(Header);

@@ -1484,4 +1484,8 @@ export default [
     defaultMessage: 'Vyplnil feedback',
     id: 'event.edit.invited.filledFeedback',
   },
+  {
+    defaultMessage: 'Feedback',
+    id: 'app.navigation.feedbackButton',
+  },
 ];

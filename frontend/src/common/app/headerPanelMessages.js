@@ -17,4 +17,8 @@ export default defineMessages({
     defaultMessage: 'Toggle sidebar',
     id: 'app.header.panel.toggle_sidebar',
   },
+  feedbackButton: {
+    defaultMessage: 'Feedback',
+    id: 'app.navigation.feedbackButton',
+  },
 });

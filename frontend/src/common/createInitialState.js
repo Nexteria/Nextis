@@ -24,6 +24,7 @@ export default function createInitialState() {
     config: configReducer(undefined, {})
       .set('appName', config.appName)
       .set('appVersion', config.appVersion)
+      .set('feedbackUrl', config.feedbackUrl)
       .set('sentryUrl', config.sentryUrl),
     intl: intlReducer(undefined, {})
       .set('currentLocale', config.defaultLocale)

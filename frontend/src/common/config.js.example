@@ -12,6 +12,7 @@ const config = {
   // stackoverflow.com/questions/3132105
   remoteHotReload: false,
   sentryUrl: '',
+  feedbackUrl: '',
   APIS: {
     default: 'http://nexteria_space/api',
   },
