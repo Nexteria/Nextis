@@ -1,6 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { Map } from 'immutable';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
@@ -52,7 +53,8 @@ export class EventAttendeesDialog extends Component {
       reduction.merge(group.users)
     , new Map());
 
-    const attending = attendees.filter(user => user.get('signedIn'));
+    const attending = attendees.filter(user => user.get('signedIn'))
+                               .sort((a, b) => moment.utc(a.get('signedIn')).isAfter(moment.utc(b.get('signedIn'))) ? 1 : -1);
 
     return (
       <Modal
