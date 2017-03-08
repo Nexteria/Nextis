@@ -135,4 +135,4 @@ PasswordChange = reduxForm({
 PasswordChange = injectIntl(PasswordChange);
 const selector = formValueSelector('passwordChange');
 
-export default connect(() => null, actions)(PasswordChange);
+export default connect(() => {}, actions)(PasswordChange);

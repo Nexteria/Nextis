@@ -714,7 +714,7 @@ export class EditUser extends Component {
                           label={`${formatMessage(messages.userState)}`}
                         >
                           {userStates ? Object.keys(userStates).map((key) =>
-                            <option value={userStates[key]} key="key">
+                            <option value={userStates[key]} key={key}>
                               {formatMessage(messages[`${userStates[key]}UserState`])}
                             </option>
                           ) : ''}
