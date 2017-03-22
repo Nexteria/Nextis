@@ -151,7 +151,7 @@ class Payment extends Model
         $payment->message = $payment->parseMessage();
         $symbols = $payment->parseSymbols();
         $payment->specificSymbol = $symbols['specificSymbol'];
-        $payment->variableSymbol = $symbols['variableSymbol'];
+        $payment->variableSymbol = (int) $symbols['variableSymbol'];
         $payment->constantSymbol = $symbols['constantSymbol'];
 
         $payment->description = $payment->parseDescription();
