@@ -1732,4 +1732,36 @@ export default [
     defaultMessage: 'Deadline of school fee payments',
     id: 'payments.manage.settings.schoolFeePaymentsDeadlineDay',
   },
+  {
+    defaultMessage: 'Settings',
+    id: 'events.manage.eventsDefaultSettingsTabTitle'
+  },
+  {
+    defaultMessage: 'Events',
+    id: 'events.manage.eventsTabTitle'
+  },
+  {
+    defaultMessage: 'How many days before feedback deadline should be remainder sent',
+    id: 'payments.manage.settings.feedbackRemainderDaysBefore',
+  },
+  {
+    defaultMessage: 'How many days has user to fill feedback',
+    id: 'payments.manage.settings.feedbackDaysToFill',
+  },
+  {
+    defaultMessage: 'Save',
+    id: 'events.manage.settings.save',
+  },
+  {
+    defaultMessage: 'How many days after event should be send feedback email',
+    id: 'events.manage.settings.feedbackEmailDelay',
+  },
+  {
+    defaultMessage: 'This field is required',
+    id: 'events.manage.settings.requiredField',
+  },
+  {
+    defaultMessage: 'This field must be valid positive number',
+    id: 'events.manage.settings.mustBeValidNumber',
+  },
 ];

@@ -1670,4 +1670,36 @@ export default [
     defaultMessage: 'Vyberte aspoň jedného uživateľa!',
     id: 'user.payments.addNew.selectAtLeastOneUser',
   },
+  {
+    defaultMessage: 'Nastavenia',
+    id: 'events.manage.eventsDefaultSettingsTabTitle'
+  },
+  {
+    defaultMessage: 'Eventy',
+    id: 'events.manage.eventsTabTitle'
+  },
+  {
+    defaultMessage: 'Koľko dní pred deadline-om vyplnenia feedbacku má byť odoslaná upomienka?',
+    id: 'payments.manage.settings.feedbackRemainderDaysBefore',
+  },
+  {
+    defaultMessage: 'Koľko dní má uživateľ na vyplnenie feedbacku',
+    id: 'payments.manage.settings.feedbackDaysToFill',
+  },
+  {
+    defaultMessage: 'Uložiť',
+    id: 'events.manage.settings.save',
+  },
+  {
+    defaultMessage: 'Koľko dní po evente by mal byť odoslaný email o feedbacku',
+    id: 'events.manage.settings.feedbackEmailDelay',
+  },
+  {
+    defaultMessage: 'Toto políčko je povinné',
+    id: 'events.manage.settings.requiredField',
+  },
+  {
+    defaultMessage: 'Toto políčko musí byť kladné číslo',
+    id: 'events.manage.settings.mustBeValidNumber',
+  },
 ];

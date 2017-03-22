@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\NxEvent as NxEvent;
 use App\UserGroup as UserGroup;
 use App\User as User;
+use App\DefaultSystemSettings;
 
 class NxEventsController extends Controller
 {
@@ -16,9 +17,13 @@ class NxEventsController extends Controller
      */
     protected $nxEventTransformer;
 
-    function __construct(\App\Transformers\NxEventTransformer $nxEventTransformer)
+    function __construct(
+      \App\Transformers\NxEventTransformer $nxEventTransformer,
+      \App\Transformers\NxEventsSettingsTransformer $defaultSettingsTransformer
+    )
     {
         $this->nxEventTransformer = $nxEventTransformer;
+        $this->defaultSettingsTransformer = $defaultSettingsTransformer;
     }
 
     public function createNxEvent()
@@ -46,5 +51,38 @@ class NxEventsController extends Controller
     public function deleteNxEvent($eventId)
     {
         NxEvent::findOrFail($eventId)->delete();
+    }
+
+    public function getDefaultEventsSettings()
+    {
+        $settings = DefaultSystemSettings::getNxEventsSettings();
+
+        return response()->json($this->defaultSettingsTransformer->transform($settings));
+    }
+
+    public function updateDefaultEventsSettings(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+          'feedbackEmailDelay' => 'required|numeric|min:1|max:31',
+          'feedbackDaysToFill' => 'required|numeric|min:1|max:31',
+          'feedbackRemainderDaysBefore' => 'required|numeric|min:1|max:31',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        foreach ($request->all() as $key => $value) {
+            DefaultSystemSettings::set($key, $value);
+        }
+
+        $settings = DefaultSystemSettings::getNxEventsSettings();
+
+        return response()->json($this->defaultSettingsTransformer->transform($settings));
     }
 }

@@ -17,6 +17,16 @@ export const ATTENDEE_SIGN_IN = 'ATTENDEE_SIGN_IN';
 export const ATTENDEE_SIGN_IN_START = 'ATTENDEE_SIGN_IN_START';
 export const ATTENDEE_SIGN_IN_SUCCESS = 'ATTENDEE_SIGN_IN_SUCCESS';
 
+export const FETCH_DEFAULT_EVENT_SETTINGS = 'FETCH_DEFAULT_EVENT_SETTINGS';
+export const FETCH_DEFAULT_EVENT_SETTINGS_START = 'FETCH_DEFAULT_EVENT_SETTINGS_START';
+export const FETCH_DEFAULT_EVENT_SETTINGS_SUCCESS = 'FETCH_DEFAULT_EVENT_SETTINGS_SUCCESS';
+export const FETCH_DEFAULT_EVENT_SETTINGS_ERROR = 'FETCH_DEFAULT_EVENT_SETTINGS_ERROR';
+
+export const UPDATE_DEFAULT_EVENTS_SETTINGS = 'UPDATE_DEFAULT_EVENTS_SETTINGS';
+export const UPDATE_DEFAULT_EVENTS_SETTINGS_START = 'UPDATE_DEFAULT_EVENTS_SETTINGS_START';
+export const UPDATE_DEFAULT_EVENTS_SETTINGS_SUCCESS = 'UPDATE_DEFAULT_EVENTS_SETTINGS_SUCCESS';
+export const UPDATE_DEFAULT_EVENTS_SETTINGS_ERROR = 'UPDATE_DEFAULT_EVENTS_SETTINGS_ERROR';
+
 export const ATTENDEE_SIGN_OUT = 'ATTENDEE_SIGN_OUT';
 export const ATTENDEE_SIGN_OUT_START = 'ATTENDEE_SIGN_OUT_START';
 export const ATTENDEE_SIGN_OUT_SUCCESS = 'ATTENDEE_SIGN_OUT_SUCCESS';
@@ -308,6 +318,35 @@ export function getEventsAttendeesForUser(userId) {
         method: 'get',
         headers: { 'Content-Type': 'application/json' },
       }).then((response) => response.json()),
+    },
+  });
+}
+
+export function fetchDefaultEventsSettings() {
+  return ({ fetch }) => ({
+    type: FETCH_DEFAULT_EVENT_SETTINGS,
+    payload: {
+      promise: fetch('/nxEvents/settings', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function updateEventsDefaultSettings(data) {
+  return ({ fetch }) => ({
+    type: UPDATE_DEFAULT_EVENTS_SETTINGS,
+    payload: {
+      promise: fetch('/nxEvents/settings', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        credentials: 'same-origin',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+        }),
+      }).then(response => response.json()),
     },
   });
 }

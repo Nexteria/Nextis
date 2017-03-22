@@ -50,6 +50,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/nxEvents/{eventId}', ['middleware' => ['permission:update_events'], 'uses' => 'NxEventsController@updateNxEvent']);
         Route::delete('/nxEvents/{eventId}', ['middleware' => ['permission:delete_events'], 'uses' => 'NxEventsController@deleteNxEvent'])
           ->where(array('groupId' => '[0-9]+'));
+        Route::get('/nxEvents/settings', 'NxEventsController@getDefaultEventsSettings');
+        Route::post('/nxEvents/settings', 'NxEventsController@updateDefaultEventsSettings');
 
         Route::get('/payments/tuitionFeesSummary/download', 'PaymentsController@exportTuitionSumary');
         Route::post('/payments/import', 'PaymentsController@importPayments');

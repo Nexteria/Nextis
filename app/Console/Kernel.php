@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\InviteUser::class,
         Commands\AutogenerateTuitionFeeDebet::class,
         Commands\AutogenerateTuitionPaymentNotification::class,
+        Commands\AutogenerateFeedbackFormNotification::class,
     ];
 
     /**
@@ -31,5 +32,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('autogenerate:tuitionFeeDebet')->dailyAt('1:00');
         $schedule->command('autogenerate:tuitionPaymentNotification')->dailyAt('1:00');
+        $schedule->command('autogenerate:feedbackFormNotification')->dailyAt('1:00');
     }
 }

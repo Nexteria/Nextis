@@ -29,6 +29,7 @@ const InitialState = Record({
     groupId: null,
   })(),
   attendees: null,
+  defaultSettings: null,
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -238,6 +239,11 @@ export default function eventsReducer(state = new InitialState, action) {
     case actions.GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS: {
       const attendees = action.payload;
       return state.set('attendees', attendees);
+    }
+
+    case actions.UPDATE_DEFAULT_EVENTS_SETTINGS_SUCCESS:
+    case actions.FETCH_DEFAULT_EVENT_SETTINGS_SUCCESS: {
+      return state.set('defaultSettings', new Map(action.payload));
     }
 
   }

@@ -62,6 +62,12 @@ class NxEvent extends Model
             }
         }
 
+        $settings = DefaultSystemSettings::getNxEventsSettings();
+
+        $event->emailFeedbackLinkAt = (clone $event->eventEndDateTime)->addDays($settings['feedbackEmailDelay']);
+        $event->feedbackDeadlineAt = (clone $event->emailFeedbackLinkAt)->addDays($settings['feedbackDaysToFill']);
+        $event->feedbackRemainderAt = (clone $event->feedbackDeadlineAt)->subDays($settings['feedbackRemainderDaysBefore']);
+
         $event->save();
         return $event;
     }
@@ -125,6 +131,12 @@ class NxEvent extends Model
                 }
             }
         }
+
+        $settings = DefaultSystemSettings::getNxEventsSettings();
+
+        $this->emailFeedbackLinkAt = (clone $this->eventEndDateTime)->addDays($settings['feedbackEmailDelay']);
+        $this->feedbackDeadlineAt = (clone $this->emailFeedbackLinkAt)->addDays($settings['feedbackDaysToFill']);
+        $this->feedbackRemainderAt = (clone $this->feedbackDeadlineAt)->subDays($settings['feedbackRemainderDaysBefore']);
 
         $this->save();
     }
