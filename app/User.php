@@ -159,19 +159,26 @@ class User extends Authenticatable
         return $this->hasMany('App\NxEventAttendee', 'userId');
     }
 
-    public function computeActivityPoints()
+    public function computeActivityPoints($semesterId = null)
     {
         $sumGainedPoints = 0;
         $sumPotentialPoints = 0;
         $eventAttendees = $this->eventAttendees;
+
+        if (!$semesterId) {
+            $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
+        }
+
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
             if ($event != null) {
-                if ($attendee->filledFeedback && $attendee->wasPresent) {
-                    $sumGainedPoints += $event->activityPoints;
-                }
-                if ($event->eventStartDateTime < Carbon::now() && $event->eventEndDateTime < Carbon::now()) {
-                    $sumPotentialPoints += $event->activityPoints;
+                if ($event->semesters()->where('semester_id', '=', $semesterId)->exists()) {
+                    if ($attendee->filledFeedback && $attendee->wasPresent) {
+                        $sumGainedPoints += $event->activityPoints;
+                    }
+                    if ($event->eventStartDateTime < Carbon::now() && $event->eventEndDateTime < Carbon::now()) {
+                        $sumPotentialPoints += $event->activityPoints;
+                    }
                 }
             }
         }

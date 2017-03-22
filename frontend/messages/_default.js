@@ -282,11 +282,11 @@ export default [
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Invited"
+    "defaultMessage": "Attendees"
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Attendees"
+    "defaultMessage": "Invited"
   },
   {
     "id": "event.edit.chooseEventLocation",
@@ -453,6 +453,10 @@ export default [
     "defaultMessage": "Do no include in curriculum"
   },
   {
+    "id": "event.edit.noSemester",
+    "defaultMessage": "Not in semester"
+  },
+  {
     "id": "event.edit.requiredField",
     "defaultMessage": "This field is required"
   },
@@ -463,6 +467,10 @@ export default [
   {
     "id": "event.edit.save",
     "defaultMessage": "Save"
+  },
+  {
+    "id": "event.edit.semester",
+    "defaultMessage": "Semester"
   },
   {
     "id": "event.edit.shortDescription",

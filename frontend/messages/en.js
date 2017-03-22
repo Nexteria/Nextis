@@ -1764,4 +1764,12 @@ export default [
     defaultMessage: 'This field must be valid positive number',
     id: 'events.manage.settings.mustBeValidNumber',
   },
+  {
+    defaultMessage: 'Semester',
+    id: 'event.edit.semester',
+  },
+  {
+    defaultMessage: 'Not in semester',
+    id: 'event.edit.noSemester',
+  },
 ];

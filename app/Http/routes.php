@@ -18,6 +18,7 @@ Route::post('/payments', 'PaymentsController@processPayment');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
+        
         Route::get('/app/constants', 'HomeController@getConstants');
 
         Route::get('/paymentsSettings', 'PaymentsController@getGlobalPaymentsSettings');
@@ -74,6 +75,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/users', 'UsersController@updateUser');
         Route::put('/users/me/password', 'UsersController@changePassword');
         Route::put('/users/me/privacyPolicy', 'UsersController@confirmPrivacyPolicy');
+
+        Route::get('/semesters', 'SemestersController@getSemesters');
         
         Route::get('/users/{userId}/attendees', 'UsersController@getEventsAttendeesForUser');
 

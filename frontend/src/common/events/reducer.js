@@ -238,7 +238,7 @@ export default function eventsReducer(state = new InitialState, action) {
 
     case actions.GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS: {
       const attendees = action.payload;
-      return state.set('attendees', attendees);
+      return state.set('attendees', new Map(attendees));
     }
 
     case actions.UPDATE_DEFAULT_EVENTS_SETTINGS_SUCCESS:

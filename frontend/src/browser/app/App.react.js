@@ -13,6 +13,7 @@ import * as appActions from '../../common/app/actions';
 import * as usersActions from '../../common/users/actions';
 import * as eventsActions from '../../common/events/actions';
 import * as locationsActions from '../../common/nxLocations/actions';
+import * as semestersActions from '../../common/semesters/actions';
 import favicon from '../../common/app/favicon';
 import start from '../../common/app/start';
 import AppSidebar from './AppSidebar';
@@ -65,6 +66,7 @@ class App extends Component {
       loadStudentLevelsList,
       loadUserGroups,
       loadConstants,
+      fetchSemesters,
     } = this.props;
 
     loadUsers();
@@ -74,6 +76,7 @@ class App extends Component {
     loadStudentLevelsList();
     loadLocationsList();
     loadConstants();
+    fetchSemesters();
     moment.locale(currentLocale);
   }
 
@@ -145,4 +148,4 @@ export default connect(state => ({
   isMobileSidebarOpen: state.app.isMobileSidebarOpen,
   rolesList: state.users.rolesList,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), { ...appActions, ...usersActions, ...eventsActions, ...locationsActions })(App);
+}), { ...appActions, ...usersActions, ...eventsActions, ...locationsActions, ...semestersActions })(App);

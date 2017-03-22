@@ -1702,4 +1702,12 @@ export default [
     defaultMessage: 'Toto políčko musí byť kladné číslo',
     id: 'events.manage.settings.mustBeValidNumber',
   },
+  {
+    defaultMessage: 'Semester',
+    id: 'event.edit.semester',
+  },
+  {
+    defaultMessage: 'Nemá priradený semester',
+    id: 'event.edit.noSemester',
+  },
 ];

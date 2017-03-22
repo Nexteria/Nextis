@@ -190,6 +190,14 @@ const messages = defineMessages({
     defaultMessage: 'Mandatory participation',
     id: 'event.edit.mandatoryParticipation',
   },
+  semester: {
+    defaultMessage: 'Semester',
+    id: 'event.edit.semester',
+  },
+  noSemester: {
+    defaultMessage: 'Not in semester',
+    id: 'event.edit.noSemester',
+  },
 });
 
 const validate = (values, props) => {
@@ -285,10 +293,11 @@ export class EditEvent extends Component {
     eventsStatuses: PropTypes.object.isRequired,
     studentLevels: PropTypes.object.isRequired,
     locations: PropTypes.object.isRequired,
+    activeSemesterId: PropTypes.number,
   }
 
   componentWillMount() {
-    const { setField, initialize, events, event, params } = this.props;
+    const { setField, initialize, activeSemesterId, events, event, params } = this.props;
 
     const eventId = params ? params.eventId : null;
     let activeEvent = event;
@@ -297,8 +306,10 @@ export class EditEvent extends Component {
       activeEvent = events.get(parseInt(eventId, 10));
     }
 
-    setField(['editEvent'], activeEvent ? activeEvent : new Event());
-    initialize(activeEvent ? activeEvent.toObject() : new Event().toObject());
+    const newEvent = new Event().set('semester', activeSemesterId);
+
+    setField(['editEvent'], activeEvent ? activeEvent : newEvent);
+    initialize(activeEvent ? activeEvent.toObject() : newEvent.toObject());
   }
 
   renderInput(data) {
@@ -570,6 +581,7 @@ export class EditEvent extends Component {
       saveEvent,
       setField,
       handleSubmit,
+      semesters,
       addAttendeesGroup,
       editAttendeesGroup,
     } = this.props;
@@ -705,6 +717,17 @@ export class EditEvent extends Component {
                           </Field>
 
                           <Field
+                            name="semester"
+                            component={this.renderSelect}
+                            label={`${formatMessage(messages.semester)}`}
+                          >
+                            <option value="">{formatMessage(messages.noSemester)}</option>
+                            {semesters.valueSeq().map(semester =>
+                              <option key={semester.get('id')} value={semester.get('id')}>{semester.get('name')}</option>
+                            )}
+                          </Field>
+
+                          <Field
                             name="attendeesGroups"
                             component={this.renderAttendeesGroups}
                             label={`${formatMessage(messages.attendeesGroups)}*`}
@@ -825,6 +848,8 @@ const selector = formValueSelector('editEvent');
 export default connect((state) => ({
   rolesList: state.users.rolesList,
   users: state.users.users,
+  semesters: state.semesters.semesters,
+  activeSemesterId: state.semesters.activeSemesterId,
   actualEvent: {
     minCapacity: selector(state, 'minCapacity'),
     maxCapacity: selector(state, 'maxCapacity'),

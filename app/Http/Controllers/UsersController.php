@@ -178,7 +178,18 @@ class UsersController extends Controller
     public function getEventsAttendeesForUser($userId)
     {
         $user = User::findOrFail($userId);
-        return response()->json($this->nxEventAttendeeTransformer->transformCollection($user->eventAttendees, ['event']));
+        $attendees = $user->eventAttendees;
+
+        $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
+        $attendees = $attendees->filter(function ($attendee, $key) use ($semesterId) {
+            if (!$attendee->event()) {
+                return false;
+            }
+
+            return $attendee->event()->semesters()->where('semester_id', '=', $semesterId)->exists();
+        });
+
+        return response()->json($this->nxEventAttendeeTransformer->transformCollection($attendees, ['event']));
     }
 
     public function deletePayments(Request $request, $userId)

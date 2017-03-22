@@ -17,6 +17,7 @@ const Event = Record({
   maxCapacity: '',
   mandatoryParticipation: false,
   status: 'draft',
+  semester: null,
   feedbackLink: '',
   parentEventId: null,
   groupedEvents: new List(),

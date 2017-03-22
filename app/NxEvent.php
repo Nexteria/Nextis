@@ -69,6 +69,12 @@ class NxEvent extends Model
         $event->feedbackRemainderAt = (clone $event->feedbackDeadlineAt)->subDays($settings['feedbackRemainderDaysBefore']);
 
         $event->save();
+
+        if (isset($attributes['semester']) && $attributes['semester']) {
+            $semester = \App\Semester::findOrFail($attributes['semester']);
+            $semester->events()->save($event);
+        }
+
         return $event;
     }
 
@@ -138,6 +144,13 @@ class NxEvent extends Model
         $this->feedbackDeadlineAt = (clone $this->emailFeedbackLinkAt)->addDays($settings['feedbackDaysToFill']);
         $this->feedbackRemainderAt = (clone $this->feedbackDeadlineAt)->subDays($settings['feedbackRemainderDaysBefore']);
 
+        $semesters = [];
+        if (isset($attributes['semester']) && $attributes['semester']) {
+            $semester = \App\Semester::findOrFail($attributes['semester']);
+            $semesters[] = $semester->id;
+        }
+        $this->semesters()->sync($semesters);
+
         $this->save();
     }
 
@@ -179,5 +192,10 @@ class NxEvent extends Model
     public function curriculumLevel()
     {
         return $this->hasOne('App\StudentLevel', 'curriculumLevelId');
+    }
+
+    public function semesters()
+    {
+        return $this->belongsToMany('App\Semester');
     }
 }
