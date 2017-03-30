@@ -29,6 +29,11 @@ class DefaultSystemSettings extends Model
           'feedbackEmailDelay' => (int) DefaultSystemSettings::get('feedbackEmailDelay'),
           'feedbackDaysToFill' => (int) DefaultSystemSettings::get('feedbackDaysToFill'),
           'feedbackRemainderDaysBefore' => (int) DefaultSystemSettings::get('feedbackRemainderDaysBefore'),
+          'hostInstructionEmailDaysBefore' => DefaultSystemSettings::get('hostInstructionEmailDaysBefore'),
+          'eventsManagerUserId' => DefaultSystemSettings::get('eventsManagerUserId'),
+          'eventSignInOpeningManagerNotificationDaysBefore' => DefaultSystemSettings::get('eventSignInOpeningManagerNotificationDaysBefore'),
+          'eventSignInRemainderDaysBefore' => DefaultSystemSettings::get('eventSignInRemainderDaysBefore'),
+          'sentCopyOfAllEventNotificationsToManager' => boolval(DefaultSystemSettings::get('sentCopyOfAllEventNotificationsToManager')),
         ];
 
         return $settings;

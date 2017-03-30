@@ -32,15 +32,25 @@ class AutogenerateFeedbackFormNotification extends Command
     {
         $today = Carbon::now()->format('Y-m-d');
 
-        foreach (NxEvent::all() as $event) {
-            if ($event->emailFeedbackLinkAt === $today) {
+        foreach (NxEvent::where('status', 'published')->get() as $event) {
+            $settings = $event->getSettings();
+            $notificationDate = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('Y-m-d');
+            if ($notificationDate === $today) {
+                $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
+
                 foreach ($event->attendeesGroups as $group) {
                     foreach ($group->attendees as $attendee) {
                         if ($attendee->wasPresent) {
-                            // $email = new \App\Mail\Events\FillFeedbackNotification($event, $attendee->user);
-                            // \Mail::send($email);
+                            $email = new \App\Mail\Events\EventFeedbackMail($event, $attendee->user, $manager);
+                            \Mail::send($email);
                         }
                     }
+                }
+
+                $sendCopyToManager = boolval($settings['sentCopyOfAllEventNotificationsToManager']);
+                if ($sendCopyToManager) {
+                    $email = new \App\Mail\Events\EventFeedbackMail($event, $manager, $manager);
+                    \Mail::send($email);
                 }
             }
         }

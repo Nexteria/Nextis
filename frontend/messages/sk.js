@@ -250,7 +250,7 @@ export default [
   },
   {
     "id": "event.edit.feedbackLink",
-    "defaultMessage": "Odkaz na feedback"
+    "defaultMessage": "Editorský odkaz na feedback"
   },
   {
     "id": "event.edit.groupMembers",
@@ -1709,5 +1709,41 @@ export default [
   {
     defaultMessage: 'Nemá priradený semester',
     id: 'event.edit.noSemester',
+  },
+  {
+    defaultMessage: 'Koľko dní pred začiatkom eventu má Host obdržať email s pokynmi',
+    id: 'events.manage.settings.hostInstructionEmailDaysBefore',
+  },
+  {
+    defaultMessage: 'Účet event manažéra',
+    id: 'events.manage.settings.eventsManagerUserId',
+  },
+  {
+    defaultMessage: 'Koľko dní pred otvorením prvého prihlasovania na event má event manažér obdržať email s prehľadom o evente',
+    id: 'events.manage.settings.eventSignInOpeningManagerNotificationDaysBefore',
+  },
+  {
+    defaultMessage: 'Koľko dní pre deadlinom na prihlasovanie má byť odoslaný remainder o neprihlásení',
+    id: 'events.manage.settings.eventSignInRemainderDaysBefore',
+  },
+  {
+    defaultMessage: 'Nastavenia',
+    id: 'event.edit.settings',
+  },
+  {
+    defaultMessage: 'Vytvoriť osobitné nastavenia',
+    id: 'event.edit.settings.createSettings',
+  },
+  {
+    defaultMessage: 'Žiadne osobitné nastavenia',
+    id: 'event.edit.settings.noCustomEventSettings',
+  },
+  {
+    defaultMessage: 'Verejný link pre účastníkov',
+    id: 'event.edit.publicFeedbackLink',
+  },
+  {
+    defaultMessage: 'Zasielať kópiu každej event notifikácie manažérovi',
+    id: 'events.manage.settings.sentCopyOfAllEventNotificationsToManager',
   },
 ];

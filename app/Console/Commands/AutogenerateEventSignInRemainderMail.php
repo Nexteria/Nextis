@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Carbon\Carbon;
+use App\User;
+use App\NxEvent;
+
+class AutogenerateEventSignInRemainderMail extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'autogenerate:eventSignInRemainderMail';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Sends remainder about event signin';
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+
+        foreach (NxEvent::where('status', 'published')->get() as $event) {
+            $settings = $event->getSettings();
+            
+            $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
+
+            $isRemainderTime = false;
+            $eventSignInDeadline = '';
+            foreach ($event->attendeesGroups as $group) {
+                $notificationTime = $group->signUpDeadlineDateTime->subDays($settings['eventSignInRemainderDaysBefore'])->format('Y-m-d');
+                if ($notificationTime === $today) {
+                    $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y h:i');
+
+                    $attendees = $group->attendees()->whereNull('signedIn')->whereNull('wontGo')->whereNull('signedOut')->get();
+                    foreach ($attendees as $attendee) {
+                        $email = new \App\Mail\Events\EventSignInRemainderMail($event, $attendee->user, $attendee->signInToken, $eventSignInDeadline, $manager);
+                        \Mail::send($email);
+                    }
+                    $isRemainderTime = true;
+                }
+            }
+
+            $sendCopyToManager = boolval($settings['sentCopyOfAllEventNotificationsToManager']);
+            if ($sendCopyToManager && $isRemainderTime) {
+                $email = new \App\Mail\Events\EventSignInRemainderMail($event, $manager, 'invalid-token', $eventSignInDeadline, $manager);
+                \Mail::send($email);
+            }
+        }
+    }
+}

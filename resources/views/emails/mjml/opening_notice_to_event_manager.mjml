@@ -1,0 +1,58 @@
+<mjml>
+  <mj-head>
+    <mj-title>Nexteria Space</mj-title>
+  </mj-head>
+  <mj-body>
+    <mj-container background-color="#d6dde5">
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
+        </mj-column>
+        <mj-column width="90%" vertical-align="top">
+          <mj-text align="center" padding-bottom="0px">
+          <h1>
+            Otvorenie prihlasovania
+          </h1>
+        </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text align="center" padding-bottom="5px">
+            <b>Ahoj Danda,</b>
+            už zajtra sa otvára prihlasovanie na event:
+          </mj-text>
+          <mj-text line-height="12px">
+            <p>
+              <b>Názov:</b> </br>
+              NN: Fondy a ich vývoj - vplyv na biznis a život</br>
+            </p>
+            <p>
+              <b>Začiatok:</b></br>
+              12.10.2016 18:00</br>
+            </p>
+            <p>
+              <b>Lektor:</b></br>
+              -</br>
+            </p>
+            <p>
+              <b>Host:</b></br>
+              Daniela Trnovcová</br>
+            </p>
+            <p>
+              <b>Miesto:</b></br>
+              Maxman consultants (Gajova4, Bratislava, 81109, SK)</br>
+            </p>
+            
+          </mj-text>
+          <mj-text font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
+            Tvoj Nexteria Space
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
+            Copyright © 2017 Nexteria, All rights reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

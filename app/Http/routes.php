@@ -16,6 +16,11 @@ Auth::routes();
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');
 
+// email event signIn
+Route::get('/nxEvents/{signInToken}/signIn', 'NxEventAttendeesController@updateSignInByToken');
+Route::get('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@updateWontGoByToken');
+Route::post('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@updateWontGoByToken');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
         
@@ -45,7 +50,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/roles/{roleId}', ['middleware' => ['permission:update_roles'], 'uses' => 'RolesController@updateRole']);
         Route::delete('/roles/{roleId}', ['middleware' => ['permission:delete_roles'], 'uses' => 'RolesController@deleteRole']);
         
+        Route::post('/nxEvents/feedbackForm/validate', 'NxEventsController@validateFeedbackForm');
+
         Route::put('/nxEvents/{eventId}/users/{userId}', 'NxEventAttendeesController@updateAttendee');
+        Route::get('/nxEvents/{eventId}/settings', 'NxEventsController@getNxEventSettings');
+        Route::post('/nxEvents/{eventId}/settings', 'NxEventsController@updateNxEventSettings');
         Route::get('/nxEvents', 'NxEventsController@getNxEvents');
         Route::post('/nxEvents', ['middleware' => ['permission:create_events'], 'uses' => 'NxEventsController@createNxEvent']);
         Route::put('/nxEvents/{eventId}', ['middleware' => ['permission:update_events'], 'uses' => 'NxEventsController@updateNxEvent']);

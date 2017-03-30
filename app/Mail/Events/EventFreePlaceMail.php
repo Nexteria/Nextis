@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Str;
 
-class FillFeedbackNotification extends Mailable
+class EventFreePlaceMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -41,6 +41,6 @@ class FillFeedbackNotification extends Mailable
     {
         return $this->to($this->user->email)
                     ->subject('[NLA '.$this->eventType.'] FEEDBACK, '.$this->eventName.' deadline do '.$this->feedbackDeadline)
-                    ->view('emails.events.fill_feedback_notification');
+                    ->view('emails.events.event_feedback_email');
     }
 }

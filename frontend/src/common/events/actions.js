@@ -1,4 +1,10 @@
+import { SubmissionError } from 'redux-form';
 import { browserHistory } from 'react-router';
+
+export const CHECK_FEEDBACK_FORM_LINK = 'CHECK_FEEDBACK_FORM_LINK';
+export const CHECK_FEEDBACK_FORM_LINK_START = 'CHECK_FEEDBACK_FORM_LINK_START';
+export const CHECK_FEEDBACK_FORM_LINK_SUCCESS = 'CHECK_FEEDBACK_FORM_LINK_SUCCESS';
+export const CHECK_FEEDBACK_FORM_LINK_ERROR = 'CHECK_FEEDBACK_FORM_LINK_ERROR';
 
 export const SAVE_EVENT = 'SAVE_EVENT';
 export const SAVE_EVENT_SUCCESS = 'SAVE_EVENT_SUCCESS';
@@ -16,6 +22,11 @@ export const ATTENDEE_WONT_GO_SUCCESS = 'ATTENDEE_WONT_GO_SUCCESS';
 export const ATTENDEE_SIGN_IN = 'ATTENDEE_SIGN_IN';
 export const ATTENDEE_SIGN_IN_START = 'ATTENDEE_SIGN_IN_START';
 export const ATTENDEE_SIGN_IN_SUCCESS = 'ATTENDEE_SIGN_IN_SUCCESS';
+
+export const UPDATE_EVENT_CUSTOM_SETTINGS = 'UPDATE_EVENT_CUSTOM_SETTINGS';
+export const UPDATE_EVENT_CUSTOM_SETTINGS_START = 'UPDATE_EVENT_CUSTOM_SETTINGS_START';
+export const UPDATE_EVENT_CUSTOM_SETTINGS_SUCCESS = 'UPDATE_EVENT_CUSTOM_SETTINGS_SUCCESS';
+export const UPDATE_EVENT_CUSTOM_SETTINGS_ERROR = 'UPDATE_EVENT_CUSTOM_SETTINGS_ERROR';
 
 export const FETCH_DEFAULT_EVENT_SETTINGS = 'FETCH_DEFAULT_EVENT_SETTINGS';
 export const FETCH_DEFAULT_EVENT_SETTINGS_START = 'FETCH_DEFAULT_EVENT_SETTINGS_START';
@@ -48,11 +59,18 @@ export const OPEN_LOCATION_DETAILS_DIALOG = 'OPEN_LOCATION_DETAILS_DIALOG';
 export const CLOSE_LOCATION_DETAILS_DIALOG = 'CLOSE_LOCATION_DETAILS_DIALOG';
 export const TOGGLE_PAST_EVENTS = 'TOGGLE_PAST_EVENTS';
 export const TOGGLE_FUTURE_EVENTS = 'TOGGLE_FUTURE_EVENTS';
+export const CREATE_EVENT_CUSTOM_SETTINGS = 'CREATE_EVENT_CUSTOM_SETTINGS';
+export const CLEAR_EVENT_CUSTOM_SETTINGS_SUCCESS = 'CLEAR_EVENT_CUSTOM_SETTINGS_SUCCESS';
 
 export const GET_EVENTS_ATTENDEES_FOR_USER = 'GET_EVENTS_ATTENDEES_FOR_USER';
 export const GET_EVENTS_ATTENDEES_FOR_USER_START = 'GET_EVENTS_ATTENDEES_FOR_USER_START';
 export const GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS = 'GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS';
 export const GET_EVENTS_ATTENDEES_FOR_USER_ERROR = 'GET_EVENTS_ATTENDEES_FOR_USER_ERROR';
+
+export const LOAD_EVENT_CUSTOM_SETTINGS = 'LOAD_EVENT_CUSTOM_SETTINGS';
+export const LOAD_EVENT_CUSTOM_SETTINGS_START = 'LOAD_EVENT_CUSTOM_SETTINGS_START';
+export const LOAD_EVENT_CUSTOM_SETTINGS_SUCCESS = 'LOAD_EVENT_CUSTOM_SETTINGS_SUCCESS';
+export const LOAD_EVENT_CUSTOM_SETTINGS_ERROR = 'LOAD_EVENT_CUSTOM_SETTINGS_ERROR';
 
 export function togglePastEvents() {
   return {
@@ -347,6 +365,83 @@ export function updateEventsDefaultSettings(data) {
           ...data,
         }),
       }).then(response => response.json()),
+    },
+  });
+}
+
+export function createEventCustomSettings() {
+  return {
+    type: CREATE_EVENT_CUSTOM_SETTINGS,
+  };
+}
+
+export function loadEventCustomSettings(eventId) {
+  return ({ fetch }) => ({
+    type: LOAD_EVENT_CUSTOM_SETTINGS,
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/settings`, {
+        headers: { 'Content-Type': 'application/json' },
+        customStatusCheck: (response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          }
+
+          if (response.status === 404) {
+            return response;
+          }
+
+          const error = new Error(response.statusText);
+          error.response = response;
+
+          throw error;
+        },
+        credentials: 'same-origin',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function clearEventCustomSettings() {
+  return {
+    type: CLEAR_EVENT_CUSTOM_SETTINGS_SUCCESS,
+  };
+}
+
+export function updateEventSettings(data, eventId) {
+  return ({ fetch }) => ({
+    type: UPDATE_EVENT_CUSTOM_SETTINGS,
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/settings`, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        credentials: 'same-origin',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function checkFeedbackFormLink(feedbackFormUrl) {
+  return ({ fetch }) => ({
+    type: CHECK_FEEDBACK_FORM_LINK,
+    payload: {
+      promise: fetch('/nxEvents/feedbackForm/validate', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          feedbackFormUrl
+        }),
+      }).then(response => response.json()).then(resp => {
+        if (resp.code != 200) {
+          throw new SubmissionError({ feedbackLink: resp.error });
+        }
+
+        return resp.publicResponseUrl;
+      }),
     },
   });
 }

@@ -196,7 +196,7 @@ export default class Event extends Component {
                           <a
                             className="btn btn-info btn-xs"
                             target="_blank"
-                            href={event.feedbackLink}
+                            href={event.publicFeedbackLink}
                           >
                             <FormattedMessage {...messages.fillFeedback} />
                           </a>

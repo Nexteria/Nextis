@@ -19,6 +19,7 @@ const Event = Record({
   status: 'draft',
   semester: null,
   feedbackLink: '',
+  publicFeedbackLink: '',
   parentEventId: null,
   groupedEvents: new List(),
   curriculumLevelId: '',

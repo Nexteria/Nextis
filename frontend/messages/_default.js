@@ -282,11 +282,11 @@ export default [
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Attendees"
+    "defaultMessage": "Invited"
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Invited"
+    "defaultMessage": "Attendees"
   },
   {
     "id": "event.edit.chooseEventLocation",
@@ -471,6 +471,18 @@ export default [
   {
     "id": "event.edit.semester",
     "defaultMessage": "Semester"
+  },
+  {
+    "id": "event.edit.settings",
+    "defaultMessage": "Settings"
+  },
+  {
+    "id": "event.edit.settings.createSettings",
+    "defaultMessage": "Create custom settings"
+  },
+  {
+    "id": "event.edit.settings.noCustomEventSettings",
+    "defaultMessage": "Event does not have custom settings"
   },
   {
     "id": "event.edit.shortDescription",
@@ -785,6 +797,14 @@ export default [
     "defaultMessage": "Event name"
   },
   {
+    "id": "events.manage.eventsDefaultSettingsTabTitle",
+    "defaultMessage": "Settings"
+  },
+  {
+    "id": "events.manage.eventsTabTitle",
+    "defaultMessage": "Events"
+  },
+  {
     "id": "events.manage.eventStarts",
     "defaultMessage": "Starts"
   },
@@ -797,12 +817,80 @@ export default [
     "defaultMessage": "No events here"
   },
   {
+    "id": "events.manage.settings.eventSignInOpeningManagerNotificationDaysBefore",
+    "defaultMessage": "How many days before first event sign in opening should events manager receive summary email"
+  },
+  {
+    "id": "events.manage.settings.eventSignInOpeningManagerNotificationDaysBefore",
+    "defaultMessage": "How many days before first event sign in opening should events manager receive summary email"
+  },
+  {
+    "id": "events.manage.settings.eventSignInRemainderDaysBefore",
+    "defaultMessage": "How many days before sign in deadline should user get remainer email"
+  },
+  {
+    "id": "events.manage.settings.eventSignInRemainderDaysBefore",
+    "defaultMessage": "How many days before sign in deadline should user get remainer email"
+  },
+  {
+    "id": "events.manage.settings.eventsManagerUserId",
+    "defaultMessage": "Events manager user account"
+  },
+  {
+    "id": "events.manage.settings.eventsManagerUserId",
+    "defaultMessage": "Events manager user account"
+  },
+  {
+    "id": "events.manage.settings.feedbackEmailDelay",
+    "defaultMessage": "How many days after event should be send feedback email"
+  },
+  {
+    "id": "events.manage.settings.feedbackEmailDelay",
+    "defaultMessage": "How many days after event should be send feedback email"
+  },
+  {
+    "id": "events.manage.settings.hostInstructionEmailDaysBefore",
+    "defaultMessage": "How many days before events start should Host get instructions email"
+  },
+  {
+    "id": "events.manage.settings.hostInstructionEmailDaysBefore",
+    "defaultMessage": "How many days before events start should Host get instructions email"
+  },
+  {
+    "id": "events.manage.settings.mustBeValidNumber",
+    "defaultMessage": "This field must be valid positive number"
+  },
+  {
+    "id": "events.manage.settings.mustBeValidNumber",
+    "defaultMessage": "This field must be valid positive number"
+  },
+  {
+    "id": "events.manage.settings.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
+    "id": "events.manage.settings.requiredField",
+    "defaultMessage": "This field is required"
+  },
+  {
+    "id": "events.manage.settings.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "events.manage.settings.save",
+    "defaultMessage": "Save"
+  },
+  {
     "id": "events.manage.signedIn",
     "defaultMessage": "Signed in"
   },
   {
     "id": "events.manage.table.title",
     "defaultMessage": "Events - managment"
+  },
+  {
+    "id": "events.manage.title",
+    "defaultMessage": "Events"
   },
   {
     "id": "events.manage.title",
@@ -1071,6 +1159,22 @@ export default [
   {
     "id": "payments.manage.settings.disableSchoolFeePayments",
     "defaultMessage": "Disable school fee payments generation, checks"
+  },
+  {
+    "id": "payments.manage.settings.feedbackDaysToFill",
+    "defaultMessage": "How many days has user to fill feedback"
+  },
+  {
+    "id": "payments.manage.settings.feedbackDaysToFill",
+    "defaultMessage": "How many days has user to fill feedback"
+  },
+  {
+    "id": "payments.manage.settings.feedbackRemainderDaysBefore",
+    "defaultMessage": "How many days before feedback deadline should be remainder sent"
+  },
+  {
+    "id": "payments.manage.settings.feedbackRemainderDaysBefore",
+    "defaultMessage": "How many days before feedback deadline should be remainder sent"
   },
   {
     "id": "payments.manage.settings.generationSchoolFeeDay",

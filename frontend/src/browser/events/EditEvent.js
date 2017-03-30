@@ -20,11 +20,16 @@ import './EditEvent.scss';
 import Event from '../../common/events/models/Event';
 import AttendeesGroupsDialog from './attendeesGroups/AttendeesGroupsDialog';
 import InvitedTab from './InvitedTab';
+import EventSettingsTab from './EventSettingsTab';
 
 const messages = defineMessages({
   invited: {
     defaultMessage: 'Attendees',
     id: 'event.edit.attendeesTab',
+  },
+  settings: {
+    defaultMessage: 'Settings',
+    id: 'event.edit.settings',
   },
   eventName: {
     defaultMessage: 'Event name',
@@ -198,6 +203,10 @@ const messages = defineMessages({
     defaultMessage: 'Not in semester',
     id: 'event.edit.noSemester',
   },
+  publicFeedbackLink: {
+    defaultMessage: 'Public link for respondents',
+    id: 'event.edit.publicFeedbackLink',
+  },
 });
 
 const validate = (values, props) => {
@@ -294,22 +303,41 @@ export class EditEvent extends Component {
     studentLevels: PropTypes.object.isRequired,
     locations: PropTypes.object.isRequired,
     activeSemesterId: PropTypes.number,
+    eventSettings: PropTypes.object,
+    createEventCustomSettings: PropTypes.func.isRequired,
+    clearEventCustomSettings: PropTypes.func.isRequired,
+    loadEventCustomSettings: PropTypes.func.isRequired,
+    initialize: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
-    const { setField, initialize, activeSemesterId, events, event, params } = this.props;
+    const {
+      setField,
+      initialize,
+      activeSemesterId,
+      events,
+      event,
+      params,
+      loadEventCustomSettings,
+    } = this.props;
 
-    const eventId = params ? params.eventId : null;
+    const eventId = params ? parseInt(params.eventId, 10) : null;
     let activeEvent = event;
 
     if (eventId) {
-      activeEvent = events.get(parseInt(eventId, 10));
+      activeEvent = events.get(eventId);
     }
 
     const newEvent = new Event().set('semester', activeSemesterId);
 
     setField(['editEvent'], activeEvent ? activeEvent : newEvent);
     initialize(activeEvent ? activeEvent.toObject() : newEvent.toObject());
+    loadEventCustomSettings(eventId);
+  }
+
+  componentWillUnmount() {
+    const { clearEventCustomSettings } = this.props;
+    clearEventCustomSettings();
   }
 
   renderInput(data) {
@@ -317,7 +345,7 @@ export class EditEvent extends Component {
 
     return (
       <div
-        className={`form-group ${touched && error && (!pristine || !input.value) ? 'has-error' : ''}`}
+        className={`form-group ${touched && error ? 'has-error' : ''}`}
         style={{ display: 'flex', alignItems: 'center' }}
       >
         <label className="col-sm-2 control-label">
@@ -332,13 +360,9 @@ export class EditEvent extends Component {
             className={type !== 'checkbox' ? 'form-control' : 'checkbox'}
             id={input.name}
           />
-          {pristine && input.value ?
-            ''
-            :
-            <div className="has-error">
-              {touched && error && <label>{error}</label>}
-            </div>
-          }
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
         </div>
       </div>
     );
@@ -584,6 +608,8 @@ export class EditEvent extends Component {
       semesters,
       addAttendeesGroup,
       editAttendeesGroup,
+      eventSettings,
+      createEventCustomSettings,
     } = this.props;
 
     const { formatMessage } = this.props.intl;
@@ -609,11 +635,11 @@ export class EditEvent extends Component {
         </section>
 
         <section className="content">
-          <form className="form-horizontal" onSubmit={handleSubmit((data) => saveEvent(data))}>
-            <div className="row">
-              <div className="col-md-12">
-                <Tabs defaultActiveKey={1} id="event-dependencies" className="nav-tabs-custom">
-                  <Tab eventKey={1} title={formatMessage(messages.details)}>
+          <div className="row">
+            <div className="col-md-12">
+              <Tabs defaultActiveKey={1} id="event-dependencies" className="nav-tabs-custom">
+                <Tab eventKey={1} title={formatMessage(messages.details)}>
+                  <form className="form-horizontal" onSubmit={handleSubmit((data) => saveEvent(data))}>
                     <div className="nav-tabs-custom">
                       <div className="tab-content">
                         <div className="tab-pane active" id="settings">
@@ -706,6 +732,22 @@ export class EditEvent extends Component {
                           />
 
                           <Field
+                            name="groupedEvents"
+                            component={this.renderEventsTagSelector}
+                            label={`${formatMessage(messages.groupedEvents)}`}
+                            events={events}
+                            actualEventId={actualEventId}
+                          />
+
+                          <Field
+                            name="exclusionaryEvents"
+                            component={this.renderEventsTagSelector}
+                            label={`${formatMessage(messages.exclusionaryEvents)}`}
+                            events={events}
+                            actualEventId={actualEventId}
+                          />
+
+                          <Field
                             name="curriculumLevel"
                             component={this.renderSelect}
                             label={`${formatMessage(messages.curriculumLevel)}`}
@@ -744,6 +786,13 @@ export class EditEvent extends Component {
                           />
 
                           <Field
+                            name="publicFeedbackLink"
+                            readOnly
+                            component={this.renderInput}
+                            label={`${formatMessage(messages.publicFeedbackLink)}`}
+                          />
+
+                          <Field
                             name="shortDescription"
                             component={this.renderEditor}
                             label={`${formatMessage(messages.shortDescription)}*`}
@@ -775,36 +824,27 @@ export class EditEvent extends Component {
                         </div>
                       </div>
                     </div>
+                  </form>
+                </Tab>
+                <Tab eventKey={2} title={formatMessage(messages.invited)}>
+                  <InvitedTab intl={this.props.intl} users={users} attendeesGroups={actualEvent.attendeesGroups} />
+                </Tab>
+                {actualEventId ?
+                  <Tab eventKey={3} title={formatMessage(messages.settings)}>
+                    {eventSettings.get('dataLoaded') ?
+                      <EventSettingsTab
+                        eventSettings={eventSettings}
+                        eventId={actualEventId}
+                        createEventCustomSettings={createEventCustomSettings}
+                      />
+                      : null
+                    }
                   </Tab>
-                  <Tab eventKey={2} title={formatMessage(messages.dependencies)}>
-                    <div className="row">
-                      <div className="col-md-12">
-                        <Field
-                          name="groupedEvents"
-                          component={this.renderEventsTagSelector}
-                          label={`${formatMessage(messages.groupedEvents)}`}
-                          events={events}
-                          actualEventId={actualEventId}
-                        />
-                      </div>
-                      <div className="col-md-12">
-                        <Field
-                          name="exclusionaryEvents"
-                          component={this.renderEventsTagSelector}
-                          label={`${formatMessage(messages.exclusionaryEvents)}`}
-                          events={events}
-                          actualEventId={actualEventId}
-                        />
-                      </div>
-                    </div>
-                  </Tab>
-                  <Tab eventKey={3} title={formatMessage(messages.invited)}>
-                    <InvitedTab intl={this.props.intl} users={users} attendeesGroups={actualEvent.attendeesGroups} />
-                  </Tab>
-                </Tabs>
-              </div>
+                  : null
+                }
+              </Tabs>
             </div>
-          </form>
+          </div>
         </section>
       </div>
     );
@@ -840,6 +880,17 @@ EditEvent = fields(EditEvent, {
 EditEvent = reduxForm({
   form: 'editEvent',
   validate,
+  asyncValidate: (values, dispatch, props) =>
+    props.checkFeedbackFormLink(values.feedbackLink).then(
+      resp => {
+        dispatch(props.change('publicFeedbackLink', resp.action.payload));
+        return {};
+      },
+      resp => {
+        dispatch(props.change('publicFeedbackLink', null));
+        return resp.reason.errors;
+      }),
+  asyncBlurFields: ['feedbackLink'],
 })(EditEvent);
 
 EditEvent = injectIntl(EditEvent);
@@ -863,6 +914,7 @@ export default connect((state) => ({
   eventTypes: state.events.eventTypes,
   studentLevels: state.users.studentLevels,
   locations: state.nxLocations.locations,
+  eventSettings: state.events.eventSettings,
   initialValues: state.fields.get('editEvent') ? state.fields.get('editEvent').toObject() : state.fields.get('editEvent'),
   actualEventId: selector(state, 'id'),
 }), { ...fieldsActions, ...attendeesGroupActions, ...eventActions })(EditEvent);

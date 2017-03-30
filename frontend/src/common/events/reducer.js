@@ -1,9 +1,12 @@
-import * as actions from './actions';
-import Event from './models/Event';
-import AttendeesGroup from '../attendeesGroup/models/AttendeesGroup';
 import { Record, List, Map } from 'immutable';
 import moment from 'moment';
 import RichTextEditor from 'react-rte';
+
+
+import EventSettings from './models/EventSettings';
+import * as actions from './actions';
+import Event from './models/Event';
+import AttendeesGroup from '../attendeesGroup/models/AttendeesGroup';
 
 
 const InitialState = Record({
@@ -30,6 +33,10 @@ const InitialState = Record({
   })(),
   attendees: null,
   defaultSettings: null,
+  eventSettings: new Map({
+    dataLoaded: false,
+    data: null,
+  }),
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -244,6 +251,32 @@ export default function eventsReducer(state = new InitialState, action) {
     case actions.UPDATE_DEFAULT_EVENTS_SETTINGS_SUCCESS:
     case actions.FETCH_DEFAULT_EVENT_SETTINGS_SUCCESS: {
       return state.set('defaultSettings', new Map(action.payload));
+    }
+
+    case actions.CREATE_EVENT_CUSTOM_SETTINGS: {
+      return state.setIn(['eventSettings', 'data'], new EventSettings());
+    }
+
+    case actions.LOAD_EVENT_CUSTOM_SETTINGS_SUCCESS: {
+      const data = action.payload;
+
+      if ('error' in data && data.code === 404) {
+        return state.setIn(['eventSettings', 'dataLoaded'], true)
+                    .setIn(['eventSettings', 'data'], null);
+      }
+
+      return state.setIn(['eventSettings', 'dataLoaded'], true)
+                  .setIn(['eventSettings', 'data'], new EventSettings(action.payload));
+    }
+
+    case actions.CLEAR_EVENT_CUSTOM_SETTINGS_SUCCESS: {
+      return state.setIn(['eventSettings', 'dataLoaded'], false)
+                  .setIn(['eventSettings', 'data'], null);
+    }
+
+    case actions.UPDATE_EVENT_CUSTOM_SETTINGS_SUCCESS: {
+      return state.setIn(['eventSettings', 'dataLoaded'], true)
+                  .setIn(['eventSettings', 'data'], new EventSettings(action.payload));
     }
 
   }

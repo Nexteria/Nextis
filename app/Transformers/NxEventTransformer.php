@@ -17,6 +17,7 @@ class NxEventTransformer extends Transformer
             'name' => $event->name,
             'eventType' => $event->eventType,
             'feedbackLink' => $event->feedbackLink,
+            'publicFeedbackLink' => $event->publicFeedbackLink,
             'description' => $event->description,
             'shortDescription' => $event->shortDescription,
             'activityPoints' => (int) $event->activityPoints,

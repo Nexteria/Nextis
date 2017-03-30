@@ -160,6 +160,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ReactServiceProvider::class,
+        App\Providers\FeedbackFormsServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
 
         Mews\Purifier\PurifierServiceProvider::class,
@@ -195,6 +196,7 @@ return [
         'Event' => Illuminate\Support\Facades\Event::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'File' => Illuminate\Support\Facades\File::class,
+        'FeedbackForms' => App\FeedbackForms\Facades\FeedbackForms::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,

@@ -28,6 +28,15 @@ class NxEventAttendee extends Authenticatable
 
     protected $dates = ['deleted_at', 'signedIn', 'signedOut', 'wontGo'];
 
+    public function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+
+        if ($this->signInToken === null) {
+            $this->signInToken = str_random(32);
+        }
+    }
+
     public static function createNew($attributes = [])
     {
         $attendee = new NxEventAttendee($attributes);

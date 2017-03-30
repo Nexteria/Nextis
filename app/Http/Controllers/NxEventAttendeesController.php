@@ -19,6 +19,125 @@ class NxEventAttendeesController extends Controller
         $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
     }
 
+    public function updateSignInByToken($signInToken)
+    {
+        $attendee = NxEventAttendee::where('signInToken', '=', $signInToken)->first();
+        if ($attendee) {
+            $group = $attendee->attendeesGroup;
+            if (!is_null($attendee->signedIn) || !is_null($attendee->signedOut)) {
+                return view('events.sign_in_by_token', [
+                  'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
+                  'attendeeName' => $attendee->user->firstName,
+                  'signInFailed' => true,
+                ]);
+            }
+
+            // check if max group capacity was reached
+            $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
+            if ($signedIn >= $group->maxCapacity) {
+                return view('events.sign_in_by_token', [
+                  'message' => trans('events.groupSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
+                  'attendeeName' => $attendee->user->firstName,
+                  'signInFailed' => true,
+                ]);
+            }
+
+            $event = $attendee->attendeesGroup->nxEvent;
+            $signedIn = 0;
+            foreach ($event->attendeesGroups as $group) {
+                $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
+            }
+
+            if ($signedIn >= $event->maxCapacity) {
+                return view('events.sign_in_by_token', [
+                  'message' => trans('events.eventSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
+                  'attendeeName' => $attendee->user->firstName,
+                  'signInFailed' => true,
+                ]);
+            }
+
+            $attendeesToSignIn = [$attendee];
+            foreach ($attendeesToSignIn as $eventAttendee) {
+                $eventAttendee->signedIn = Carbon::now();
+                $eventAttendee->signedOut = null;
+                $eventAttendee->wontGo = null;
+                $eventAttendee->signedOutReason = '';
+                $eventAttendee->save();
+            }
+
+            return view('events.sign_in_by_token', [
+              'message' => trans('events.signInByTokenSuccess', ['eventName' => $group->nxEvent->name]),
+              'attendeeName' => $attendee->user->firstName,
+              'signInFailed' => false,
+            ]);
+        }
+
+        return view('events.sign_in_by_token', [
+          'message' => trans('events.sorryCanNotDoIt'),
+          'attendeeName' => '',
+          'signInFailed' => true,
+        ]);
+    }
+
+    public function updateWontGoByToken($signInToken)
+    {
+        $attendee = NxEventAttendee::where('signInToken', '=', $signInToken)->first();
+        if ($attendee) {
+            $event = $attendee->event();
+            $group = $attendee->attendeesGroup;
+
+            if (!is_null($attendee->signedIn) || !is_null($attendee->signedOut)) {
+                return view('events.sign_in_by_token', [
+                  'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
+                  'attendeeName' => $attendee->user->firstName,
+                  'signInFailed' => true,
+                ]);
+            }
+
+            if ((!\Input::has('reason') || strlen(\Input::get('reason')) < 100) && $event->mandatoryParticipation) {
+                return view('events.sign_in_by_token', [
+                  'message' => trans('events.reasonIsRequiredForWontGo', ['eventName' => $group->nxEvent->name]),
+                  'attendeeName' => $attendee->user->firstName,
+                  'wontGo' => true,
+                  'signInFailed' => true,
+                ]);
+            }
+
+            $attendeesWontGo = [$attendee];
+            if ($event->groupedEvents->count() > 0) {
+                foreach ($event->groupedEvents as $gEvent) {
+                    $eventAttendee = NxEventAttendee::where('userId', '=', $attendee->user->id)
+                      ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
+                          $query->where('eventId', '=', $gEvent->id);
+                      })->first();
+
+                    $attendeesWontGo[] = $eventAttendee;
+                }
+            }
+
+            foreach ($attendeesWontGo as $eventAttendee) {
+                $eventAttendee->wontGo = Carbon::now();
+                if (\Input::has('reason')) {
+                    $eventAttendee->signedOutReason = clean(\Input::get('reason'));
+                }
+
+                $eventAttendee->save();
+            }
+
+            return view('events.sign_in_by_token', [
+              'message' => trans('events.wontGoByTokenSuccess', ['eventName' => $group->nxEvent->name]),
+              'attendeeName' => $attendee->user->firstName,
+              'signInFailed' => false,
+            ]);
+        }
+
+        return view('events.sign_in_by_token', [
+              'message' => trans('events.sorryCanNotDoIt'),
+              'attendeeName' => '',
+              'signInFailed' => true,
+            ]);
+    }
+
     public function updateAttendee($eventId, $userId)
     {
         $attendee = NxEventAttendee::where('userId', '=', $userId)

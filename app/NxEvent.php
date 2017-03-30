@@ -62,11 +62,18 @@ class NxEvent extends Model
             }
         }
 
-        $settings = DefaultSystemSettings::getNxEventsSettings();
+        if (isset($attributes['feedbackLink'])) {
+            $response = \FeedbackForms::validate($attributes['feedbackLink']);
 
-        $event->emailFeedbackLinkAt = (clone $event->eventEndDateTime)->addDays($settings['feedbackEmailDelay']);
-        $event->feedbackDeadlineAt = (clone $event->emailFeedbackLinkAt)->addDays($settings['feedbackDaysToFill']);
-        $event->feedbackRemainderAt = (clone $event->feedbackDeadlineAt)->subDays($settings['feedbackRemainderDaysBefore']);
+            if ($response['code'] != 200) {
+                return response()->json([
+                  'code' => 500,
+                  'error' => $response['error'],
+                ]);
+            }
+
+            $event->publicFeedbackLink = $response['publicResponseUrl'];
+        }
 
         $event->save();
 
@@ -138,11 +145,18 @@ class NxEvent extends Model
             }
         }
 
-        $settings = DefaultSystemSettings::getNxEventsSettings();
+        if (isset($attributes['feedbackLink'])) {
+            $response = \FeedbackForms::validate($attributes['feedbackLink']);
 
-        $this->emailFeedbackLinkAt = (clone $this->eventEndDateTime)->addDays($settings['feedbackEmailDelay']);
-        $this->feedbackDeadlineAt = (clone $this->emailFeedbackLinkAt)->addDays($settings['feedbackDaysToFill']);
-        $this->feedbackRemainderAt = (clone $this->feedbackDeadlineAt)->subDays($settings['feedbackRemainderDaysBefore']);
+            if ($response['code'] != 200) {
+                return response()->json([
+                  'code' => 500,
+                  'error' => $response['error'],
+                ]);
+            }
+
+            $this->publicFeedbackLink = $response['publicResponseUrl'];
+        }
 
         $semesters = [];
         if (isset($attributes['semester']) && $attributes['semester']) {
@@ -152,6 +166,16 @@ class NxEvent extends Model
         $this->semesters()->sync($semesters);
 
         $this->save();
+    }
+
+    public function getSettings()
+    {
+        $settings = $this->settings;
+        if (!$settings) {
+            $settings = \App\DefaultSystemSettings::getNxEventsSettings();
+        }
+
+        return $settings;
     }
 
     public function attendeesGroups()
@@ -181,12 +205,12 @@ class NxEvent extends Model
 
     public function host()
     {
-        return $this->hasOne('App\User', 'hostId');
+        return $this->belongsTo('App\User', 'hostId');
     }
 
     public function location()
     {
-        return $this->hasOne('App\NxLocation', 'nxLocationId');
+        return $this->belongsTo('App\NxLocation', 'nxLocationId');
     }
 
     public function curriculumLevel()
@@ -197,5 +221,10 @@ class NxEvent extends Model
     public function semesters()
     {
         return $this->belongsToMany('App\Semester');
+    }
+
+    public function settings()
+    {
+        return $this->hasOne('App\NxEventsSettings', 'eventId');
     }
 }

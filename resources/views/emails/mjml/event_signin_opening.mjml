@@ -1,0 +1,75 @@
+<mjml>
+  <mj-head>
+    <mj-title>Nexteria Space</mj-title>
+  </mj-head>
+  <mj-body>
+    <mj-container background-color="#d6dde5">
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
+        </mj-column>
+        <mj-column width="90%" vertical-align="top">
+          <mj-text align="center" padding-bottom="0px">
+          <h1>
+            Otvorenie prihlasovania
+          </h1>
+        </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text align="center" padding-bottom="5px">
+            <b>Ahoj FirstName,</b>
+          </mj-text>
+          <mj-text line-height="16px">
+            <p>
+              Dnes sa otvorilo prihlasovanie na <b>DBK NN: Fondy a ich vývoj - vplyv na biznis a život</b>. Daj nám prosím vedieť do <b>25.11.2017</b>, či sa ho zúčastníš.
+            </p>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top">
+          <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://nextis.sk">
+            Zúčastním sa
+          </mj-button>
+          <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="https://nextis.sk">
+            Nezúčastním sa
+          </mj-button>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top">
+          <mj-text line-height="14px">
+              <b>Termín konania:</b> 12.10.2016, 18:00</br>
+              <b>Lektor:</b> -</br>
+              <b>Miesto:</b> <a href="">Maxman consultants (Gajova4, Bratislava, 81109, SK)</a></br>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top">
+          <mj-text line-height="14px">
+            <b>Popis kurzu:</b></br>
+            Investicný manažér Braňo Tuš vám objasní ako fondy a ich vývoj vplývajú na biznis, ale aj na život nás smrteľníkov.
+          </mj-text>
+          <mj-text>Viac informácií nájdeš na <a href="https://space.nexteria.sk/events/5" target="_blank">https://space.nexteria.sk/events/5</a></mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top">
+          <mj-text>Prajem pekný zvyšok dňa.</mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top">
+          <mj-text padding-bottom="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" padding-top="0px">
+            Za tím NLA
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
+            Danda
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
+            Projektový manažér Nexteria Leadership Academy
+          </mj-text>
+          <mj-text padding-bottom="10px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
+            +421 908 116 504
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
+            Copyright © 2017 Nexteria, All rights reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

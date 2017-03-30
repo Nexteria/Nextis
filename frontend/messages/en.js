@@ -290,7 +290,7 @@ export default [
   },
   {
     "id": "event.edit.feedbackLink",
-    "defaultMessage": "Feedback link"
+    "defaultMessage": "Editor`s feedback link"
   },
   {
     "id": "event.edit.groupMembers",
@@ -1771,5 +1771,41 @@ export default [
   {
     defaultMessage: 'Not in semester',
     id: 'event.edit.noSemester',
+  },
+  {
+    defaultMessage: 'How many days before events start should Host get instructions email',
+    id: 'events.manage.settings.hostInstructionEmailDaysBefore',
+  },
+  {
+    defaultMessage: 'Events manager user account',
+    id: 'events.manage.settings.eventsManagerUserId',
+  },
+  {
+    defaultMessage: 'How many days before first event sign in opening should events manager receive summary email',
+    id: 'events.manage.settings.eventSignInOpeningManagerNotificationDaysBefore',
+  },
+  {
+    defaultMessage: 'How many days before sign in deadline should user get remainer email',
+    id: 'events.manage.settings.eventSignInRemainderDaysBefore',
+  },
+  {
+    defaultMessage: 'Settings',
+    id: 'event.edit.settings',
+  },
+  {
+    defaultMessage: 'Create custom settings',
+    id: 'event.edit.settings.createSettings',
+  },
+  {
+    defaultMessage: 'Event does not have custom settings',
+    id: 'event.edit.settings.noCustomEventSettings',
+  },
+  {
+    defaultMessage: 'Public link for respondents',
+    id: 'event.edit.publicFeedbackLink',
+  },
+  {
+    defaultMessage: 'Sent copy of all event notifications to manager',
+    id: 'events.manage.settings.sentCopyOfAllEventNotificationsToManager',
   },
 ];

@@ -1,0 +1,24 @@
+.signin-container {
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.signin {
+  margin: auto;
+  text-align: center;
+  color: #fff;
+}
+
+.signin .fa.fa-ban {
+  font-size: 3em;
+  color: #f00;
+}
+
+.signin .fa.fa-check-circle-o {
+  font-size: 3em;
+  color: #0f0;
+}
