@@ -62,6 +62,8 @@ class EventsPage extends Component {
     visibleFutureEvents: PropTypes.bool.isRequired,
     togglePastEvents: PropTypes.func.isRequired,
     toggleFutureEvents: PropTypes.func.isRequired,
+    signAsStandIn: PropTypes.func.isRequired,
+    signOutAsStandIn: PropTypes.func.isRequired,
   };
 
   render() {
@@ -91,6 +93,8 @@ class EventsPage extends Component {
       openSignOutDialog,
       togglePastEvents,
       toggleFutureEvents,
+      signAsStandIn,
+      signOutAsStandIn,
     } = this.props;
 
     if (!events || !nxLocations) {
@@ -133,6 +137,8 @@ class EventsPage extends Component {
                         openSignOutDialog={openSignOutDialog}
                         attendeeWontGo={attendeeWontGo}
                         toggleEventDetails={toggleEventDetails}
+                        signAsStandIn={signAsStandIn}
+                        signOutAsStandIn={signOutAsStandIn}
                         datailsOpen
                       />
                     )}
@@ -178,6 +184,7 @@ class EventsPage extends Component {
                         closeLocationDetailsDialog,
                         openSignOutDialog,
                         pastMonthCount,
+                        signAsStandIn,
                       }}
                     />
                     : ''
@@ -196,6 +203,7 @@ class EventsPage extends Component {
                       togglePastEvents,
                       visibleFutureEvents,
                       visiblePastEvents,
+                      signAsStandIn,
                     }}
                   />
                   {visibleFutureEvents ?
@@ -208,6 +216,7 @@ class EventsPage extends Component {
                         openLocationDetailsDialog,
                         closeLocationDetailsDialog,
                         openSignOutDialog,
+                        signAsStandIn,
                         futureMonthCount,
                         presentMonthCount,
                       }}

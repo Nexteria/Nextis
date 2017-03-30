@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\NxEventAttendee as NxEventAttendee;
 use Carbon\Carbon;
+use App\Events\EventAttendeePlaceReleased;
 
 class NxEventAttendeesController extends Controller
 {
@@ -24,7 +25,7 @@ class NxEventAttendeesController extends Controller
         $attendee = NxEventAttendee::where('signInToken', '=', $signInToken)->first();
         if ($attendee) {
             $group = $attendee->attendeesGroup;
-            if (!is_null($attendee->signedIn) || !is_null($attendee->signedOut)) {
+            if (!is_null($attendee->signedIn)) {
                 return view('events.sign_in_by_token', [
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
                   'attendeeName' => $attendee->user->firstName,
@@ -60,6 +61,7 @@ class NxEventAttendeesController extends Controller
             foreach ($attendeesToSignIn as $eventAttendee) {
                 $eventAttendee->signedIn = Carbon::now();
                 $eventAttendee->signedOut = null;
+                $eventAttendee->standIn = null;
                 $eventAttendee->wontGo = null;
                 $eventAttendee->signedOutReason = '';
                 $eventAttendee->save();
@@ -151,6 +153,22 @@ class NxEventAttendeesController extends Controller
 
         $attendee->fill(\Input::all());
 
+        if (\Input::has('standIn')) {
+            if (\Input::get('standIn')) {
+                $attendeesToSign = [$attendee];
+                foreach ($attendeesToSign as $eventAttendee) {
+                    $eventAttendee->standIn = Carbon::now();
+                    $eventAttendee->save();
+                }
+            } else {
+                $attendeesToSign = [$attendee];
+                foreach ($attendeesToSign as $eventAttendee) {
+                    $eventAttendee->standIn = null;
+                    $eventAttendee->save();
+                }
+            }
+        }
+
         if (\Input::has('signIn') && \Input::get('signIn')) {
             $attendeesToSignIn = [$attendee];
             if (\Input::has('choosedEvents')) {
@@ -198,6 +216,7 @@ class NxEventAttendeesController extends Controller
                 $eventAttendee->signedIn = Carbon::now();
                 $eventAttendee->signedOut = null;
                 $eventAttendee->wontGo = null;
+                $eventAttendee->standIn = null;
                 $eventAttendee->signedOutReason = '';
                 $eventAttendee->save();
             }
@@ -231,12 +250,28 @@ class NxEventAttendeesController extends Controller
                 }
             }
 
+            // check if event is full
+            $signedIn = 0;
+            foreach ($event->attendeesGroups as $group) {
+                $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
+            }
+
+            $wasFull = false;
+            if ($signedIn >= $event->maxCapacity) {
+                $wasFull = true;
+            }
+
             foreach ($attendeesToSignOut as $eventAttendee) {
                 $eventAttendee->signedOut = Carbon::now();
                 $eventAttendee->signedOutReason = clean(\Input::get('reason'));
                 $eventAttendee->wontGo = null;
                 $eventAttendee->signedIn = null;
+                $eventAttendee->standIn = null;
                 $eventAttendee->save();
+            }
+
+            if ($wasFull) {
+                event(new EventAttendeePlaceReleased($event));
             }
         }
 
@@ -267,6 +302,9 @@ class NxEventAttendeesController extends Controller
 
             foreach ($attendeesWontGo as $eventAttendee) {
                 $eventAttendee->wontGo = Carbon::now();
+                $eventAttendee->standIn = null;
+                $eventAttendee->signedIn = null;
+                $eventAttendee->signedOut = null;
                 if (\Input::has('reason')) {
                     $eventAttendee->signedOutReason = clean(\Input::get('reason'));
                 }

@@ -26,7 +26,7 @@ class NxEventAttendee extends Authenticatable
         'filledFeedback',
     ];
 
-    protected $dates = ['deleted_at', 'signedIn', 'signedOut', 'wontGo'];
+    protected $dates = ['deleted_at', 'signedIn', 'signedOut', 'wontGo', 'standIn'];
 
     public function __construct(array $attributes = array())
     {

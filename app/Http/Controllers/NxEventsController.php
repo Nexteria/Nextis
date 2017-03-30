@@ -153,6 +153,9 @@ class NxEventsController extends Controller
             $event->settings->update($request->all());
         }
 
+        $defaultSettings = DefaultSystemSettings::getNxEventsSettings();
+        $event->settings->update(['eventsManagerUserId' => $defaultSettings['eventsManagerUserId']]);
+
         return response()->json([], 200);
     }
 }

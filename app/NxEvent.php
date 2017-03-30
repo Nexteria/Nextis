@@ -178,6 +178,32 @@ class NxEvent extends Model
         return $settings;
     }
 
+    public function canSignInAttendee($attendee)
+    {
+        $event = $attendee->attendeesGroup->nxEvent;
+        if ($this->id !== $event->id) {
+            throw new Exception("Attendee: ".$attendee->id." does not belong to the event", 1);
+        }
+
+        // check if attendee group max capacity was reached
+        $group = $attendee->attendeesGroup;
+        $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
+        if ($signedIn >= $group->maxCapacity) {
+            return false;
+        }
+
+        $signedIn = 0;
+        foreach ($this->attendeesGroups as $group) {
+            $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
+        }
+
+        if ($signedIn >= $this->maxCapacity) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function attendeesGroups()
     {
         return $this->hasMany('App\AttendeesGroup', 'eventId');

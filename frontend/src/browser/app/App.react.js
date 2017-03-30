@@ -54,6 +54,7 @@ class App extends Component {
     hasPermission: PropTypes.func.isRequired,
     rolesList: PropTypes.object,
     isMobileSidebarOpen: PropTypes.bool.isRequired,
+    fetchSemesters: PropTypes.func.isRequired,
   };
 
   componentWillMount() {

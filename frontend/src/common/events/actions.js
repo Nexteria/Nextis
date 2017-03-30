@@ -62,6 +62,16 @@ export const TOGGLE_FUTURE_EVENTS = 'TOGGLE_FUTURE_EVENTS';
 export const CREATE_EVENT_CUSTOM_SETTINGS = 'CREATE_EVENT_CUSTOM_SETTINGS';
 export const CLEAR_EVENT_CUSTOM_SETTINGS_SUCCESS = 'CLEAR_EVENT_CUSTOM_SETTINGS_SUCCESS';
 
+export const ATTENDEE_SIGN_IN_AS_STANDIN = 'ATTENDEE_SIGN_IN_AS_STANDIN';
+export const ATTENDEE_SIGN_IN_AS_STANDIN_SUCCESS = 'ATTENDEE_SIGN_IN_AS_STANDIN_SUCCESS';
+export const ATTENDEE_SIGN_IN_AS_STANDIN_START = 'ATTENDEE_SIGN_IN_AS_STANDIN_START';
+export const ATTENDEE_SIGN_IN_AS_STANDIN_ERROR = 'ATTENDEE_SIGN_IN_AS_STANDIN_ERROR';
+
+export const ATTENDEE_SIGN_OUT_AS_STANDIN = 'ATTENDEE_SIGN_OUT_AS_STANDIN';
+export const ATTENDEE_SIGN_OUT_AS_STANDIN_SUCCESS = 'ATTENDEE_SIGN_OUT_AS_STANDIN_SUCCESS';
+export const ATTENDEE_SIGN_OUT_AS_STANDIN_START = 'ATTENDEE_SIGN_OUT_AS_STANDIN_START';
+export const ATTENDEE_SIGN_OUT_AS_STANDIN_ERROR = 'ATTENDEE_SIGN_OUT_AS_STANDIN_ERROR';
+
 export const GET_EVENTS_ATTENDEES_FOR_USER = 'GET_EVENTS_ATTENDEES_FOR_USER';
 export const GET_EVENTS_ATTENDEES_FOR_USER_START = 'GET_EVENTS_ATTENDEES_FOR_USER_START';
 export const GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS = 'GET_EVENTS_ATTENDEES_FOR_USER_SUCCESS';
@@ -442,6 +452,50 @@ export function checkFeedbackFormLink(feedbackFormUrl) {
 
         return resp.publicResponseUrl;
       }),
+    }
+  });
+}
+
+export function signAsStandIn(event, viewer, groupId) {
+  return ({ fetch }) => ({
+    type: ATTENDEE_SIGN_IN_AS_STANDIN,
+    payload: {
+      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
+        method: 'put',
+        credentials: 'same-origin',
+        notifications: 'both',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          standIn: true,
+        }),
+      }).then(response => response.json())
+        .then(response => ({
+          ...response,
+          groupId,
+          eventId: event.id,
+        })),
+    },
+  });
+}
+
+export function signOutAsStandIn(event, viewer, groupId) {
+  return ({ fetch }) => ({
+    type: ATTENDEE_SIGN_OUT_AS_STANDIN,
+    payload: {
+      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
+        method: 'put',
+        credentials: 'same-origin',
+        notifications: 'both',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          standIn: false,
+        }),
+      }).then(response => response.json())
+        .then(response => ({
+          ...response,
+          groupId,
+          eventId: event.id,
+        })),
     },
   });
 }

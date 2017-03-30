@@ -32,9 +32,6 @@
           <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://nextis.sk">
             Prihlásiť sa
           </mj-button>
-          <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="https://nextis.sk">
-            Vyradiť z náhradníkov
-          </mj-button>
         </mj-column>
         <mj-column width="100%" vertical-align="top">
           <mj-text>Prajem pekný zvyšok dňa.</mj-text>

@@ -1808,4 +1808,16 @@ export default [
     defaultMessage: 'Sent copy of all event notifications to manager',
     id: 'events.manage.settings.sentCopyOfAllEventNotificationsToManager',
   },
+  {
+    defaultMessage: 'Sign in as Stand in',
+    id: 'event.users.signInAsStandIn',
+  },
+  {
+    defaultMessage: 'Sign out as Stand in',
+    id: 'event.users.signOutAsStandIn',
+  },
+  {
+    defaultMessage: 'Stand in people',
+    id: 'event.users.standInPeople',
+  },
 ];

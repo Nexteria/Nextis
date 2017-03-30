@@ -26,6 +26,8 @@ class FutureEvents extends Component {
     closeLocationDetailsDialog: PropTypes.func.isRequired,
     futureMonthCount: PropTypes.number.isRequired,
     presentMonthCount: PropTypes.number.isRequired,
+    signAsStandIn: PropTypes.func.isRequired,
+    signOutAsStandIn: PropTypes.func.isRequired,
   };
 
   render() {
@@ -45,7 +47,9 @@ class FutureEvents extends Component {
       closeLocationDetailsDialog,
       openSignOutDialog,
       futureMonthCount,
+      signAsStandIn,
       presentMonthCount,
+      signOutAsStandIn,
     } = this.props;
 
     if (!events || !nxLocations) {
@@ -90,6 +94,8 @@ class FutureEvents extends Component {
                 openSignOutDialog={openSignOutDialog}
                 attendeeWontGo={attendeeWontGo}
                 toggleEventDetails={toggleEventDetails}
+                signAsStandIn={signAsStandIn}
+                signOutAsStandIn={signOutAsStandIn}
               />
             )}
           </ul>

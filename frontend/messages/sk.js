@@ -1746,4 +1746,16 @@ export default [
     defaultMessage: 'Zasielať kópiu každej event notifikácie manažérovi',
     id: 'events.manage.settings.sentCopyOfAllEventNotificationsToManager',
   },
+  {
+    defaultMessage: 'Prihásiť ako náhradník',
+    id: 'event.users.signInAsStandIn',
+  },
+  {
+    defaultMessage: 'Odhlásiť z náhradníkov',
+    id: 'event.users.signOutAsStandIn',
+  },
+  {
+    defaultMessage: 'Náhradníci',
+    id: 'event.users.standInPeople',
+  },
 ];

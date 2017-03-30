@@ -3,6 +3,20 @@
     cursor: pointer;
   }
 
+  .event-details-button {
+    text-align: right;
+    padding: 1em;
+
+    i {
+      cursor: pointer;
+    }
+  }
+
+  .event-actions-notes {
+    text-align: center;
+    padding: 0.5em;
+  }
+
   @media only screen and (max-device-width: 480px) {
     .event-details {
       padding:0;
@@ -65,11 +79,12 @@
   }
 
   div.event-actions {
-    margin-top: -2px;
+    text-align: center;
+    padding: 0.5em;
 
     button {
       margin-left: 0.4em;
-      font-size: 0.6em;
+      font-size: 1em;
     }
 
     .fa-bars {
@@ -86,6 +101,10 @@
 
   .lectors-container {
     margin: 0.5em 0;
+  }
+
+  .event-details-container {
+    padding-top: 1em;
   }
 
   .event-details {

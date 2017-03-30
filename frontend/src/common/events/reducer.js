@@ -162,6 +162,36 @@ export default function eventsReducer(state = new InitialState, action) {
         .set('wontGo', null));
     }
 
+    case actions.ATTENDEE_SIGN_OUT_AS_STANDIN_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('standIn', null));
+    }
+
+    case actions.ATTENDEE_SIGN_IN_AS_STANDIN_SUCCESS: {
+      const response = action.payload;
+      const groupIndex = state.events.get(response.eventId).attendeesGroups
+        .findIndex(group => group.id === response.groupId);
+
+      return state.updateIn([
+        'events',
+        response.eventId,
+        'attendeesGroups',
+        groupIndex,
+        'users',
+        response.id,
+      ], user => user.set('standIn', moment.utc(response.standIn)));
+    }
+
     case actions.ATTENDEE_SIGN_OUT_SUCCESS: {
       const response = action.payload;
       const groupIndex = state.events.get(response.eventId).attendeesGroups

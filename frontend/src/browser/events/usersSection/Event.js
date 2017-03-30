@@ -99,7 +99,19 @@ const messages = defineMessages({
   insideEvents: {
     defaultMessage: 'Inside events',
     id: 'event.users.insideEvents',
-  }
+  },
+  signInAsStandIn: {
+    defaultMessage: 'Sign in as Stand in',
+    id: 'event.users.signInAsStandIn',
+  },
+  signOutAsStandIn: {
+    defaultMessage: 'Sign out as Stand in',
+    id: 'event.users.signOutAsStandIn',
+  },
+  standInPeople: {
+    defaultMessage: 'Stand in people',
+    id: 'event.users.standInPeople',
+  },
 });
 
 export default class Event extends Component {
@@ -118,6 +130,8 @@ export default class Event extends Component {
     nxLocation: PropTypes.object.isRequired,
     datailsOpen: PropTypes.bool,
     hide: PropTypes.bool.isRequired,
+    signAsStandIn: PropTypes.func.isRequired,
+    signOutAsStandIn: PropTypes.func.isRequired,
   };
 
   render() {
@@ -128,7 +142,9 @@ export default class Event extends Component {
       openEventDetailsDialog,
       openSignOutDialog,
       attendeeWontGo,
-      attendeeSignIn
+      attendeeSignIn,
+      signAsStandIn,
+      signOutAsStandIn,
     } = this.props;
 
     const oldEvent = event.eventStartDateTime.isBefore(moment.utc());
@@ -141,6 +157,8 @@ export default class Event extends Component {
     if (attending.size >= event.maxCapacity) {
       isFreeCapacity = false;
     }
+
+    const standInPeople = attendees.filter(user => user.get('standIn'));
 
     // TODO what if user will be in multiple groups?
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
@@ -178,13 +196,12 @@ export default class Event extends Component {
                 <FormattedDate value={event.eventStartDateTime} />
               </span>
             </div>
-            <h3 className="col-md-5 col-sm-4 col-xs-12">{event.name}</h3>
+            <h3 className="col-md-10 col-sm-8 col-xs-12">{event.name}</h3>
+            <div className="col-md-1 col-sm-2 col-xs-12 event-details-button">
+              <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
+            </div>
             {attendee ?
-              <div
-                className={'col-md-6 ' +
-                  `col-sm-${undecided && isSignInOpen && isFreeCapacity ? 12 : 6}` +
-                  ' col-xs-12 attendance-container'}
-              >
+              <div>
                 {oldEvent ?
                   <div>
                     <div className="col-md-6 col-sm-6 col-xs-6"></div>
@@ -203,37 +220,37 @@ export default class Event extends Component {
                       :
                         <i className="fa fa-times wasnt-here"></i>
                       }
-                      <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
                     </div>
                   </div>
                   :
                   <div>
-                    <div className="signIn-date-notes col-md-6 col-sm-6 col-xs-12">
-                      <div>
-                        <div>
-                          {isSignInOpen ?
-                            <FormattedMessage {...messages.signInNoteTitle} />
+                    <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
+                      {isSignInOpen ?
+                        <FormattedMessage {...messages.signInNoteTitle} />
+                        :
+                          signInExpired ?
+                            <FormattedMessage {...messages.signInExpired} />
                             :
-                              signInExpired ?
-                                <FormattedMessage {...messages.signInExpired} />
-                                :
-                                <FormattedMessage {...messages.signInOpenTitle} />
-                          }
-                        </div>
-                        <div>
-                          {isSignInOpen ?
-                            <FormattedDate value={group.signUpDeadlineDateTime} />
-                            :
-                              signInExpired ?
-                                <FormattedDate value={group.signUpDeadlineDateTime} />
-                                :
-                                <FormattedDate value={group.signUpOpenDateTime} />
-                          }
-                        </div>
-                      </div>
+                            <FormattedMessage {...messages.signInOpenTitle} />
+                      }
+                      <span> </span>
+                      {isSignInOpen ?
+                        <FormattedDate value={group.signUpDeadlineDateTime} />
+                        :
+                        signInExpired ?
+                          <FormattedDate value={group.signUpDeadlineDateTime} />
+                          :
+                          <FormattedDate value={group.signUpOpenDateTime} />
+                      }
+                      {!isFreeCapacity ?
+                        <span>
+                          , <FormattedMessage {...messages.eventIsFull} />
+                        </span>
+                        : null
+                      }
                     </div>
                       {undecided && isSignInOpen && isFreeCapacity ?
-                        <div className="event-actions col-md-6 col-sm-6 col-xs-12">
+                        <div className="event-actions col-md-12 col-sm-12 col-xs-12">
                           <button
                             className="btn btn-success btn-xs"
                             onClick={() =>
@@ -253,10 +270,18 @@ export default class Event extends Component {
                           >
                             <FormattedMessage {...messages.wontGo} />
                           </button>
-                          <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
+                          {attendee.get('standIn') ?
+                            <button
+                              className="btn btn-warning btn-xs"
+                              onClick={() => signOutAsStandIn(event, viewer)}
+                            >
+                              <FormattedMessage {...messages.signOutAsStandIn} />
+                            </button>
+                            : null
+                          }
                         </div>
                       :
-                        <div className="event-actions col-md-6 col-sm-6 col-xs-12">
+                        <div className="event-actions col-md-12 col-sm-12 col-xs-12">
                           {!attendee.get('wontGo') && !attendee.get('signedOut')
                             && attendee.get('signedIn') ?
                             <button
@@ -278,28 +303,37 @@ export default class Event extends Component {
                                 </button>
                                 : ''
                           }
-                          {!isFreeCapacity ? <FormattedMessage {...messages.eventIsFull} /> : ''}
-                          <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
+                          {attendee.get('standIn') ?
+                            <button
+                              className="btn btn-warning btn-xs"
+                              onClick={() => signOutAsStandIn(event, viewer)}
+                            >
+                              <FormattedMessage {...messages.signOutAsStandIn} />
+                            </button>
+                            : null
+                          }
+                          {!isFreeCapacity && !attendee.get('signedIn') && !attendee.get('standIn') ?
+                            <button
+                              className="btn btn-info btn-xs"
+                              onClick={() => signAsStandIn(event, viewer)}
+                            >
+                              <FormattedMessage {...messages.signInAsStandIn} />
+                            </button>
+                            : null
+                          }
                         </div>
                       }
                   </div>
                 }
               </div>
               :
-              <div className="col-md-6 col-sm-6 col-xs-12 attendance-container">
-                <div className="signIn-date-notes col-md-6 col-sm-6 col-xs-12">
-                  <div className="pull-right">
-                    <FormattedMessage {...messages.unavailableEvent} />
-                  </div>
-                </div>
-                <div className="event-actions col-md-6 col-sm-12 col-xs-12">
-                  <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
-                </div>
+              <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
+                <FormattedMessage {...messages.unavailableEvent} />
               </div>
             }
           </div>
           <div
-            className="col-md-12"
+            className="col-md-12 event-details-container"
             style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}
           >
             <div className="col-md-4 col-sm-12 col-xs-12 event-details">
@@ -352,6 +386,14 @@ export default class Event extends Component {
                   </div>
                   <div>
                     <FormattedMessage {...messages.invited} />
+                  </div>
+                </div>
+                <div className="col-md-offset-2 col-sm-offset-2 col-md-5 col-sm-5 col-xs-5">
+                  <div>
+                    {standInPeople.size}
+                  </div>
+                  <div>
+                    <FormattedMessage {...messages.standInPeople} />
                   </div>
                 </div>
               </div>

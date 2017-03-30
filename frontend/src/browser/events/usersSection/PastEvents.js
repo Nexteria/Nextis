@@ -25,6 +25,8 @@ class PastEvents extends Component {
     openLocationDetailsDialog: PropTypes.func.isRequired,
     closeLocationDetailsDialog: PropTypes.func.isRequired,
     pastMonthCount: PropTypes.number.isRequired,
+    signAsStandIn: PropTypes.func.isRequired,
+    signOutAsStandIn: PropTypes.func.isRequired,
   };
 
   render() {
@@ -43,7 +45,9 @@ class PastEvents extends Component {
       openLocationDetailsDialog,
       closeLocationDetailsDialog,
       openSignOutDialog,
+      signAsStandIn,
       pastMonthCount,
+      signOutAsStandIn,
     } = this.props;
 
     if (!events || !nxLocations) {
@@ -88,6 +92,8 @@ class PastEvents extends Component {
                 openSignOutDialog={openSignOutDialog}
                 attendeeWontGo={attendeeWontGo}
                 toggleEventDetails={toggleEventDetails}
+                signAsStandIn={signAsStandIn}
+                signOutAsStandIn={signOutAsStandIn}
               />
             )}
           </ul>

@@ -49,6 +49,8 @@ class PresentEvents extends Component {
     openLocationDetailsDialog: PropTypes.func.isRequired,
     closeLocationDetailsDialog: PropTypes.func.isRequired,
     presentMonthCount: PropTypes.number.isRequired,
+    signAsStandIn: PropTypes.func.isRequired,
+    signOutAsStandIn: PropTypes.func.isRequired,
   };
 
   render() {
@@ -72,6 +74,8 @@ class PresentEvents extends Component {
       toggleFutureEvents,
       visiblePastEvents,
       visibleFutureEvents,
+      signAsStandIn,
+      signOutAsStandIn,
     } = this.props;
 
     if (!events || !nxLocations) {
@@ -112,6 +116,8 @@ class PresentEvents extends Component {
             openSignOutDialog={openSignOutDialog}
             attendeeWontGo={attendeeWontGo}
             toggleEventDetails={toggleEventDetails}
+            signAsStandIn={signAsStandIn}
+            signOutAsStandIn={signOutAsStandIn}
           />
         )}
         <li className="time-label" id="show-prev-events-button">
@@ -145,6 +151,8 @@ class PresentEvents extends Component {
             openSignOutDialog={openSignOutDialog}
             attendeeWontGo={attendeeWontGo}
             toggleEventDetails={toggleEventDetails}
+            signAsStandIn={signAsStandIn}
+            signOutAsStandIn={signOutAsStandIn}
           />
         )}
 
@@ -181,6 +189,8 @@ class PresentEvents extends Component {
                   openSignOutDialog={openSignOutDialog}
                   attendeeWontGo={attendeeWontGo}
                   toggleEventDetails={toggleEventDetails}
+                  signAsStandIn={signAsStandIn}
+                  signOutAsStandIn={signOutAsStandIn}
                 />
               )}
             </ul>
