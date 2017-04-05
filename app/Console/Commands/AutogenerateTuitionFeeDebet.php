@@ -63,7 +63,7 @@ class AutogenerateTuitionFeeDebet extends Command
                 continue;
             }
 
-            $user->generateMonthlySchoolFee($month - 1, $year, 1);
+            $user->generateMonthlySchoolFee($month, $year, 1);
         }
     }
 }
