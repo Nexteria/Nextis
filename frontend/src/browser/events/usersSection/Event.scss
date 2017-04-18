@@ -1,3 +1,36 @@
+.users-event .events-filter-all.timeline-item,
+.events-filter-all {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.users-event .events-filter-only-for-me.timeline-item,
+.events-filter-only-for-me {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.users-event .events-filter-signed-in.timeline-item,
+.events-filter-signed-in {
+  background-color: rgba(127, 255, 0, 0.55);
+}
+
+.users-event .events-filter-signed-out.timeline-item,
+.events-filter-signed-out {
+  background-color: rgba(255, 93, 93, 0.55);
+}
+
+.users-event .events-filter-stand-in.timeline-item,
+.events-filter-stand-in {
+  background-color: rgba(153, 203, 255, 0.55);
+}
+
+.events-filter-button {
+  margin: 5px;
+  
+  &.active {
+    border: 2px solid #0f40f5;
+  }
+}
+
 .users-event {
   a {
     cursor: pointer;
@@ -59,12 +92,7 @@
     }
   }
 
-  .attendance-container {
-    font-size: 1.5em;
-    text-align: right;
-    float: right;
-    padding-top: 0.4em;
-
+  .event-actions {
     .wasnt-here {
       color: red;
     }

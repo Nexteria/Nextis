@@ -2,6 +2,7 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+import { reduxForm, formValueSelector } from 'redux-form';
 
 
 import './EventsPage.scss';
@@ -36,6 +37,26 @@ const messages = defineMessages({
     defaultMessage: 'Hide future events',
     id: 'events.users.hideFutureEvents',
   },
+  allEvents: {
+    defaultMessage: 'All',
+    id: 'events.users.filter.allEvents',
+  },
+  onlyForMeEvents: {
+    defaultMessage: 'Only for me',
+    id: 'events.users.filter.onlyForMeEvents',
+  },
+  standInEvents: {
+    defaultMessage: 'Stand in',
+    id: 'events.users.filter.standInEvents',
+  },
+  signedInEvents: {
+    defaultMessage: 'Signed in',
+    id: 'events.users.filter.signedInEvents',
+  },
+  signedOutEvents: {
+    defaultMessage: 'Signed Out',
+    id: 'events.users.filter.signedOutEvents',
+  },
 });
 
 class EventsPage extends Component {
@@ -64,6 +85,8 @@ class EventsPage extends Component {
     toggleFutureEvents: PropTypes.func.isRequired,
     signAsStandIn: PropTypes.func.isRequired,
     signOutAsStandIn: PropTypes.func.isRequired,
+    eventsFilter: PropTypes.string,
+    change: PropTypes.func.isRequired,
   };
 
   render() {
@@ -95,6 +118,8 @@ class EventsPage extends Component {
       toggleFutureEvents,
       signAsStandIn,
       signOutAsStandIn,
+      eventsFilter,
+      change,
     } = this.props;
 
     if (!events || !nxLocations) {
@@ -107,6 +132,41 @@ class EventsPage extends Component {
 
     const sortedEvents = events.valueSeq()
       .filter(event => event.status === 'published' && !event.parentEventId)
+      .filter(event => {
+        if (eventsFilter === 'all') {
+          return true;
+        }
+
+        const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
+        const attendee = group ? group.users.get(viewer.id) : null;
+        if (eventsFilter === 'onlyForMe') {
+          if (attendee) {
+            return true;
+          }
+          return false;
+        }
+
+        if (eventsFilter === 'signedIn') {
+          if (attendee && attendee.get('signedIn')) {
+            return true;
+          }
+          return false;
+        }
+
+        if (eventsFilter === 'signedOut') {
+          if (attendee && (attendee.get('signedOut') || attendee.get('wontGo')) && !attendee.get('standIn')) {
+            return true;
+          }
+          return false;
+        }
+
+        if (eventsFilter === 'standIn') {
+          if (attendee && attendee.get('standIn')) {
+            return true;
+          }
+          return false;
+        }
+      })
       .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1);
 
     return (
@@ -168,6 +228,38 @@ class EventsPage extends Component {
               <h1>
                 <FormattedMessage {...messages.title} />
               </h1>
+              <div className="col-md-12" style={{ textAlign: 'center' }}>
+                <button
+                  className={`btn btn-xs events-filter-button ${eventsFilter === 'all' ? 'active' : ''} events-filter-all`}
+                  onClick={() => change('eventsFilter', 'all')}
+                >
+                  <FormattedMessage {...messages.allEvents} />
+                </button>
+                <button
+                  className={`btn btn-xs events-filter-button ${eventsFilter === 'onlyForMe' ? 'active' : ''} events-filter-only-for-me`}
+                  onClick={() => change('eventsFilter', 'onlyForMe')}
+                >
+                  <FormattedMessage {...messages.onlyForMeEvents} />
+                </button>
+                <button
+                  className={`btn btn-xs events-filter-button ${eventsFilter === 'signedIn' ? 'active' : ''} events-filter-signed-in`}
+                  onClick={() => change('eventsFilter', 'signedIn')}
+                >
+                  <FormattedMessage {...messages.signedInEvents} />
+                </button>
+                <button
+                  className={`btn btn-xs events-filter-button ${eventsFilter === 'signedOut' ? 'active' : ''} events-filter-signed-out`}
+                  onClick={() => change('eventsFilter', 'signedOut')}
+                >
+                  <FormattedMessage {...messages.signedOutEvents} />
+                </button>
+                <button
+                  className={`btn btn-xs events-filter-button ${eventsFilter === 'standIn' ? 'active' : ''} events-filter-stand-in`}
+                  onClick={() => change('eventsFilter', 'standIn')}
+                >
+                  <FormattedMessage {...messages.standInEvents} />
+                </button>
+              </div>
             </section>
             <section className="content">
               <div className="row">
@@ -185,6 +277,7 @@ class EventsPage extends Component {
                         openSignOutDialog,
                         pastMonthCount,
                         signAsStandIn,
+                        signOutAsStandIn,
                       }}
                     />
                     : ''
@@ -203,7 +296,6 @@ class EventsPage extends Component {
                       togglePastEvents,
                       visibleFutureEvents,
                       visiblePastEvents,
-                      signAsStandIn,
                     }}
                   />
                   {visibleFutureEvents ?
@@ -219,6 +311,7 @@ class EventsPage extends Component {
                         signAsStandIn,
                         futureMonthCount,
                         presentMonthCount,
+                        signOutAsStandIn,
                       }}
                     />
                     : ''
@@ -254,8 +347,15 @@ class EventsPage extends Component {
   }
 }
 
+EventsPage = reduxForm({
+  form: 'userEventsPage',
+})(EventsPage);
+
+const selector = formValueSelector('userEventsPage');
+
 export default connect(state => ({
   events: state.events.events,
+  eventsFilter: selector(state, 'eventsFilter'),
   visiblePastEvents: state.events.visiblePastEvents,
   visibleFutureEvents: state.events.visibleFutureEvents,
   eventDetailsId: state.events.eventDetailsId,
@@ -264,4 +364,5 @@ export default connect(state => ({
   users: state.users.users,
   locationDetailsId: state.events.locationDetailsId,
   nxLocations: state.nxLocations.locations,
+  initialValues: { eventsFilter: 'onlyForMe' },
 }), eventsActions)(EventsPage);

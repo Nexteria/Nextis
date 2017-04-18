@@ -1820,4 +1820,24 @@ export default [
     defaultMessage: 'Stand in people',
     id: 'event.users.standInPeople',
   },
+  {
+    defaultMessage: 'All',
+    id: 'events.users.filter.allEvents',
+  },
+  {
+    defaultMessage: 'Only for me',
+    id: 'events.users.filter.onlyForMeEvents',
+  },
+  {
+    defaultMessage: 'Stand in',
+    id: 'events.users.filter.standInEvents',
+  },
+  {
+    defaultMessage: 'Signed in',
+    id: 'events.users.filter.signedInEvents',
+  },
+  {
+    defaultMessage: 'Signed Out',
+    id: 'events.users.filter.signedOutEvents',
+  },
 ];

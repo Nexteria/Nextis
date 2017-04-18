@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { FormattedMessage, defineMessages } from 'react-intl';
+import { formValueSelector } from 'redux-form';
 
 
 import Event from './Event';
@@ -51,6 +52,7 @@ class PresentEvents extends Component {
     presentMonthCount: PropTypes.number.isRequired,
     signAsStandIn: PropTypes.func.isRequired,
     signOutAsStandIn: PropTypes.func.isRequired,
+    eventsFilter: PropTypes.string,
   };
 
   render() {
@@ -76,6 +78,7 @@ class PresentEvents extends Component {
       visibleFutureEvents,
       signAsStandIn,
       signOutAsStandIn,
+      eventsFilter,
     } = this.props;
 
     if (!events || !nxLocations) {
@@ -86,6 +89,43 @@ class PresentEvents extends Component {
 
     const sortedEvents = events.valueSeq()
       .filter(event => event.status === 'published' && !event.parentEventId)
+      .filter(event => {
+        if (eventsFilter === 'all') {
+          return true;
+        }
+
+        const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
+        const attendee = group ? group.users.get(viewer.id) : null;
+        if (eventsFilter === 'onlyForMe') {
+          if (attendee) {
+            return true;
+          }
+          return false;
+        }
+
+        if (eventsFilter === 'signedIn') {
+          if (attendee && attendee.get('signedIn')) {
+            return true;
+          }
+          return false;
+        }
+
+        if (eventsFilter === 'signedOut') {
+          if (attendee && (attendee.get('signedOut') || attendee.get('wontGo')) && !attendee.get('standIn')) {
+            return true;
+          }
+          return false;
+        }
+
+        if (eventsFilter === 'standIn') {
+          if (attendee && attendee.get('standIn')) {
+            return true;
+          }
+          return false;
+        }
+        
+        return true;
+      })
       .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1);
 
     return (
@@ -212,10 +252,13 @@ class PresentEvents extends Component {
   }
 }
 
+const selector = formValueSelector('userEventsPage');
+
 export default connect(state => ({
   events: state.events.events,
   viewer: state.users.viewer,
   signOut: state.events.signOut,
+  eventsFilter: selector(state, 'eventsFilter'),
   users: state.users.users,
   nxLocations: state.nxLocations.locations,
 }), eventsActions)(PresentEvents);

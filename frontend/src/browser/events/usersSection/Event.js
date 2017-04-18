@@ -183,13 +183,27 @@ export default class Event extends Component {
     const groupedEvents = event.groupedEvents.map(eventId =>
       events.filter(e => e.id === eventId).first());
 
+    let eventColorClass = '';
+    if (attendee) {
+      if (attendee.get('signedIn')) {
+        eventColorClass = 'events-filter-signed-in';
+      }
+
+      if (attendee.get('wontGo') || attendee.get('signedOut')) {
+        eventColorClass = 'events-filter-signed-out';
+      }
+
+      if (attendee.get('standIn')) {
+        eventColorClass = 'events-filter-stand-in';
+      }
+    }
 
     return (
       <li className="users-event" style={{ display: hide ? 'none' : '' }}>
         <div className="fa bg-green event-type">
           <FormattedMessage {...messages[`eventType_${event.eventType}`]} />
         </div>
-        <div className="timeline-item col-md-11 col-sm-11 col-xs-9">
+        <div className={`timeline-item col-md-11 col-sm-11 col-xs-9 ${eventColorClass}`}>
           <div className="timeline-header">
             <div className="col-md-1 col-sm-2 col-xs-12 event-date">
               <span className="label label-primary">
@@ -204,8 +218,7 @@ export default class Event extends Component {
               <div>
                 {oldEvent ?
                   <div>
-                    <div className="col-md-6 col-sm-6 col-xs-6"></div>
-                    <div className="event-actions col-md-6 col-sm-12 col-xs-12">
+                    <div className="event-actions col-md-12 col-sm-12 col-xs-12">
                       {attending.has(viewer.id) ?
                         attendee.get('filledFeedback') ?
                           <i className="fa fa-check was-here"></i>

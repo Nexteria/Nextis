@@ -1758,4 +1758,24 @@ export default [
     defaultMessage: 'Náhradníci',
     id: 'event.users.standInPeople',
   },
+  {
+    defaultMessage: 'Všetky',
+    id: 'events.users.filter.allEvents',
+  },
+  {
+    defaultMessage: 'Pre mňa',
+    id: 'events.users.filter.onlyForMeEvents',
+  },
+  {
+    defaultMessage: 'Náhradník',
+    id: 'events.users.filter.standInEvents',
+  },
+  {
+    defaultMessage: 'Prihlásený',
+    id: 'events.users.filter.signedInEvents',
+  },
+  {
+    defaultMessage: 'Odhlásený',
+    id: 'events.users.filter.signedOutEvents',
+  },
 ];
