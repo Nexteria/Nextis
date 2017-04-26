@@ -1,9 +1,10 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import './UserGroupsPage.scss';
 import { fields } from '../../common/lib/redux-fields/index';
@@ -44,18 +45,44 @@ class UserGroupsPage extends Component {
     children: PropTypes.object,
     fields: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    intl: PropTypes.object.isRequired,
   };
+
+  getGroupActions(group) {
+    const { removeUserGroup } = this.props;
+
+    return (
+      <span className="action-buttons">
+        <i
+          className="fa fa-trash-o trash-group"
+          onClick={() => removeUserGroup(group.id)}
+        ></i>
+        <i
+          className="fa fa-pencil"
+          onClick={() => this.editUserGroup(group.id)}
+        ></i>
+      </span>
+    );
+  }
 
   editUserGroup(groupId) {
     browserHistory.push(`/admin/userGroups/${groupId}`);
   }
 
+  usersCountSortFunc(a, b, order) {   // order is desc or asc
+    if (order === 'desc') {
+      return a.usersCount - b.usersCount;
+    }
+
+    return b.usersCount - a.usersCount;
+  }
+
   render() {
     const { groups, fields, children } = this.props;
     const {
-      removeUserGroup,
       hasPermission,
     } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (!groups) {
       return <div></div>;
@@ -64,9 +91,20 @@ class UserGroupsPage extends Component {
     let filteredGroups = groups.valueSeq().map(group => group);
     if (fields.filter.value) {
       filteredGroups = groups.valueSeq().filter(group =>
-        diacritics.remove(group.name).toLowerCase().indexOf(diacritics.remove(fields.filter.value).toLowerCase()) !== -1
+        diacritics.remove(group.name)
+                  .toLowerCase()
+                  .indexOf(diacritics.remove(fields.filter.value)
+                  .toLowerCase()) !== -1
       );
     }
+
+    const groupsData = filteredGroups.map(group => ({
+      id: group.id,
+      groupName: group.name,
+      numberOfUsers: <span className="label">{group.users.count()}</span>,
+      usersCount: group.users.count(),
+      actions: this.getGroupActions(group),
+    })).toArray();
 
     return (
       <div className="group-managment-page">
@@ -108,41 +146,33 @@ class UserGroupsPage extends Component {
                   </div>
                 </div>
                 <div className="box-body table-responsive no-padding">
-                  <table className="table table-hover">
-                    <tbody>
-                      <tr>
-                        <th><FormattedMessage {...messages.groupName} /></th>
-                        <th><FormattedMessage {...messages.numberOfUsers} /></th>
-                        <th><FormattedMessage {...messages.actions} /></th>
-                      </tr>
-                      {filteredGroups ?
-                        filteredGroups.map(group =>
-                          <tr key={group.id}>
-                            <td>{group.name}</td>
-                            <td>
-                              <span className="label">{group.users.count()}</span>
-                            </td>
-                            <td className="action-buttons">
-                              <i
-                                className="fa fa-trash-o trash-group"
-                                onClick={() => removeUserGroup(group.id)}
-                              ></i>
-                              <i
-                                className="fa fa-pencil"
-                                onClick={() => this.editUserGroup(group.id)}
-                              ></i>
-                            </td>
-                          </tr>
-                        )
-                        :
-                        <tr>
-                          <td colSpan="3" style={{ textAlign: 'center' }}>
-                            <FormattedMessage {...messages.noGroups} />
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
+                  <BootstrapTable
+                    data={groupsData}
+                    striped
+                    hover
+                    height="300px"
+                    containerStyle={{ height: '320px' }}
+                  >
+                    <TableHeaderColumn isKey hidden dataField="id" />
+
+                    <TableHeaderColumn dataField="groupName" dataSort>
+                      {formatMessage(messages.groupName)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn
+                      dataField="numberOfUsers"
+                      sortFunc={this.usersCountSortFunc}
+                      dataSort
+                      dataFormat={x => x}
+                    >
+                      {formatMessage(messages.numberOfUsers)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="actions" dataFormat={x => x}>
+                      {formatMessage(messages.actions)}
+                    </TableHeaderColumn>
+                  </BootstrapTable>
+                  <div className="clearfix"></div>
                 </div>
               </div>
             </div>
@@ -160,6 +190,8 @@ UserGroupsPage = fields(UserGroupsPage, {
     'filter',
   ],
 });
+
+UserGroupsPage = injectIntl(UserGroupsPage);
 
 export default connect(state => ({
   groups: state.users.groups,

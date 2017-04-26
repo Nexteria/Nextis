@@ -8,7 +8,6 @@ import * as attendeesGroupActions from '../../common/attendeesGroup/actions';
 import { fields } from '../../common/lib/redux-fields/index';
 import OverviewTable from './OverviewTable';
 import AttendeesTable from './AttendeesTable';
-import UsersActivityPointsTable from './UsersActivityPointsTable';
 
 const messages = defineMessages({
   title: {
@@ -152,6 +151,7 @@ class ActivityPointsPage extends Component {
                     :
                       <AttendeesTable {...{ attendees }} />
                     }
+                    <div className="clearfix"></div>
                   </div>
                 </div>
               </div>

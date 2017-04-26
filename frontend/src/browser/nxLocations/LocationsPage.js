@@ -1,9 +1,10 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as actions from '../../common/nxLocations/actions';
@@ -42,15 +43,34 @@ class LocationsPage extends Component {
     fields: PropTypes.object.isRequired,
     removeLocation: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   editLocation(locationId) {
     browserHistory.push(`/admin/nxLocations/${locationId}`);
   }
 
+  getLocationActions(location) {
+    const { removeLocation } = this.props;
+
+    return (
+      <span className="action-buttons">
+        <i
+          className="fa fa-trash-o trash-group"
+          onClick={() => removeLocation(location.id)}
+        ></i>
+        <i
+          className="fa fa-pencil"
+          onClick={() => this.editLocation(location.id)}
+        ></i>
+      </span>
+    );
+  }
+
   render() {
     const { locations, fields } = this.props;
-    const { removeLocation, hasPermission } = this.props;
+    const { hasPermission } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (!locations) {
       return <div></div>;
@@ -63,6 +83,14 @@ class LocationsPage extends Component {
           .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
     }
+
+    const locationsData = filteredLocations.map(location => ({
+      id: location.id,
+      locationName: location.name,
+      address: `${location.addressLine1}${location.addressLine2 ? `, ${location.addressLine2}` : ''}
+               , ${location.city}, ${location.zipCode}, ${location.countryCode}`,
+      actions: this.getLocationActions(location),
+    })).toArray();
 
     return (
       <div className="locations-managment-page">
@@ -104,43 +132,28 @@ class LocationsPage extends Component {
                   </div>
                 </div>
                 <div className="box-body table-responsive no-padding">
-                  <table className="table table-hover">
-                    <tbody>
-                      <tr>
-                        <th><FormattedMessage {...messages.locationName} /></th>
-                        <th><FormattedMessage {...messages.address} /></th>
-                        <th><FormattedMessage {...messages.actions} /></th>
-                      </tr>
-                      {filteredLocations ?
-                        filteredLocations.map(location =>
-                          <tr key={location.id}>
-                            <td>{`${location.name}`}</td>
-                            <td>
-                              {`${location.addressLine1}`}
-                              {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
-                              {`, ${location.city}, ${location.zipCode}, ${location.countryCode}`}
-                            </td>
-                            <td className="action-buttons">
-                              <i
-                                className="fa fa-trash-o trash-group"
-                                onClick={() => removeLocation(location.id)}
-                              ></i>
-                              <i
-                                className="fa fa-pencil"
-                                onClick={() => this.editLocation(location.id)}
-                              ></i>
-                            </td>
-                          </tr>
-                        )
-                        :
-                        <tr>
-                          <td colSpan="2" style={{ textAlign: 'center' }}>
-                            <FormattedMessage {...messages.noLocations} />
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
+                  <BootstrapTable
+                    data={locationsData}
+                    striped
+                    hover
+                    height="300px"
+                    containerStyle={{ height: '320px' }}
+                  >
+                    <TableHeaderColumn isKey hidden dataField="id" />
+
+                    <TableHeaderColumn dataField="locationName" dataSort>
+                      {formatMessage(messages.locationName)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="address" dataSort dataFormat={x => x}>
+                      {formatMessage(messages.address)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="actions" dataFormat={x => x}>
+                      {formatMessage(messages.actions)}
+                    </TableHeaderColumn>
+                  </BootstrapTable>
+                  <div className="clearfix"></div>
                 </div>
               </div>
             </div>
@@ -157,6 +170,8 @@ LocationsPage = fields(LocationsPage, {
     'filter',
   ],
 });
+
+LocationsPage = injectIntl(LocationsPage);
 
 export default connect(state => ({
   locations: state.nxLocations.locations,

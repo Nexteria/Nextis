@@ -1840,4 +1840,12 @@ export default [
     defaultMessage: 'Signed Out',
     id: 'events.users.filter.signedOutEvents',
   },
+  {
+    defaultMessage: 'First name',
+    id: 'contacts.list.firstName',
+  },
+  {
+    defaultMessage: 'Last name',
+    id: 'contacts.list.lastName',
+  },
 ];

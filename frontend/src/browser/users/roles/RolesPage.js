@@ -1,9 +1,10 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../../common/lib/redux-fields/index';
 import * as actions from '../../../common/users/actions';
@@ -39,7 +40,25 @@ class RolesPage extends Component {
     removeRole: PropTypes.func.isRequired,
     loadPermissionsList: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    intl: PropTypes.func.isRequired,
   };
+
+  getRoleActions(role) {
+    const { removeRole } = this.props;
+
+    return (
+      <span className="action-buttons">
+        <i
+          className="fa fa-trash-o trash-group"
+          onClick={() => removeRole(role)}
+        ></i>
+        <i
+          className="fa fa-pencil"
+          onClick={() => this.editRole(role.id)}
+        ></i>
+      </span>
+    );
+  }
 
   editRole(roleId) {
     browserHistory.push(`/admin/roles/${roleId}`);
@@ -48,6 +67,7 @@ class RolesPage extends Component {
   render() {
     const { rolesList, fields } = this.props;
     const { removeRole, hasPermission } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (!rolesList) {
       return <div></div>;
@@ -60,6 +80,12 @@ class RolesPage extends Component {
           .indexOf(diacritics.remove(fields.filter.value).toLowerCase()) !== -1
       );
     }
+
+    const rolesData = filteredRoles.map(role => ({
+      id: role.id,
+      roleName: role.display_name,
+      actions: this.getRoleActions(role),
+    })).toArray();
 
     return (
       <div className="event-managment-page">
@@ -101,37 +127,24 @@ class RolesPage extends Component {
                   </div>
                 </div>
                 <div className="box-body table-responsive no-padding items-container">
-                  <table className="table table-hover">
-                    <tbody>
-                      <tr>
-                        <th><FormattedMessage {...messages.roleName} /></th>
-                        <th><FormattedMessage {...messages.actions} /></th>
-                      </tr>
-                      {filteredRoles ?
-                        filteredRoles.map(role =>
-                          <tr key={role.id}>
-                            <td>{`${role.display_name}`}</td>
-                            <td className="action-buttons">
-                              <i
-                                className="fa fa-trash-o trash-group"
-                                onClick={() => removeRole(role)}
-                              ></i>
-                              <i
-                                className="fa fa-pencil"
-                                onClick={() => this.editRole(role.id)}
-                              ></i>
-                            </td>
-                          </tr>
-                        )
-                        :
-                        <tr>
-                          <td colSpan="2" style={{ textAlign: 'center' }}>
-                            <FormattedMessage {...messages.noRoles} />
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
+                  <BootstrapTable
+                    data={rolesData}
+                    striped
+                    hover
+                    height="300px"
+                    containerStyle={{ height: '320px' }}
+                  >
+                    <TableHeaderColumn isKey hidden dataField="id" />
+
+                    <TableHeaderColumn dataField="roleName" dataSort>
+                      {formatMessage(messages.roleName)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="actions" dataFormat={x => x}>
+                      {formatMessage(messages.actions)}
+                    </TableHeaderColumn>
+                  </BootstrapTable>
+                  <div className="clearfix"></div>
                 </div>
               </div>
             </div>
@@ -148,6 +161,8 @@ RolesPage = fields(RolesPage, {
     'filter',
   ],
 });
+
+RolesPage = injectIntl(RolesPage);
 
 export default connect(state => ({
   rolesList: state.users.rolesList,

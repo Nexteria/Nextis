@@ -130,6 +130,7 @@ export default class InvitedTab extends Component {
               </TableHeaderColumn>
             </BootstrapTable>
           )}
+          <div className="clearfix"></div>
         </div>
       </div>
     );

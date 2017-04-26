@@ -1,9 +1,10 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as usersActions from '../../common/users/actions';
@@ -22,9 +23,13 @@ const messages = defineMessages({
     defaultMessage: 'No users here',
     id: 'users.manage.noUsers'
   },
-  userName: {
-    defaultMessage: 'User name',
-    id: 'users.manage.userName'
+  firstName: {
+    defaultMessage: 'First name',
+    id: 'users.manage.firstName'
+  },
+  lastName: {
+    defaultMessage: 'Last name',
+    id: 'users.manage.lastName'
   },
   actions: {
     defaultMessage: 'Actions',
@@ -49,14 +54,35 @@ class UsersPayments extends Component {
   static propTypes = {
     users: PropTypes.object,
     fields: PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   editUser(userId) {
     browserHistory.push(`/admin/users/${userId}`);
   }
 
+  getUserActions(user) {
+    return (
+      <span className="action-buttons">
+        <i
+          onClick={() => browserHistory.push(`/admin/users/${user.id}/payments`)}
+          className="fa fa-pencil"
+        ></i>
+      </span>
+    );
+  }
+
+  accountBalanceSortFunc(a, b, order) {   // order is desc or asc
+    if (order === 'desc') {
+      return a.accountBalanceNumber - b.accountBalanceNumber;
+    }
+
+    return b.accountBalanceNumber - a.accountBalanceNumber;
+  }
+
   render() {
     const { users, fields } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (!users) {
       return <div></div>;
@@ -69,6 +95,16 @@ class UsersPayments extends Component {
           .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
     }
+
+    const usersData = filteredUsers.valueSeq().map(user => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      accountBalance: (<span className={user.accountBalance >= 0 ? 'green-text' : 'red-text'}>
+        {user.accountBalance / 100} &euro;</span>),
+      accountBalanceNumber: user.accountBalance / 100,
+      actions: this.getUserActions(user),
+    })).toArray();
 
     return (
       <div className="row">
@@ -107,39 +143,38 @@ class UsersPayments extends Component {
               </div>
             </div>
             <div className="box-body table-responsive no-padding items-container">
-              <table className="table table-hover">
-                <tbody>
-                  <tr>
-                    <th><FormattedMessage {...messages.userName} /></th>
-                    <th><FormattedMessage {...messages.accountBalance} /></th>
-                    <th><FormattedMessage {...messages.actions} /></th>
-                  </tr>
-                  {filteredUsers ?
-                    filteredUsers.map(user =>
-                      <tr
-                        key={user.id}
-                        onClick={() => browserHistory.push(`/admin/users/${user.id}/payments`)}
-                      >
-                        <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
-                        <td
-                          className={user.accountBalance >= 0 ? 'green-text' : 'red-text'}
-                        >{user.accountBalance / 100} &euro;</td>
-                        <td className="action-buttons">
-                          <i
-                            className="fa fa-pencil"
-                          ></i>
-                        </td>
-                      </tr>
-                    )
-                    :
-                    <tr>
-                      <td colSpan="2" id="no-user-div">
-                        <FormattedMessage {...messages.noUsers} />
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
+              <BootstrapTable
+                data={usersData}
+                multiColumnSort={3}
+                striped
+                hover
+                height="300px"
+                containerStyle={{ height: '320px' }}
+              >
+                <TableHeaderColumn isKey hidden dataField="id" />
+
+                <TableHeaderColumn dataField="firstName" dataSort>
+                  {formatMessage(messages.firstName)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="lastName" dataSort>
+                  {formatMessage(messages.lastName)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  dataField="accountBalance"
+                  sortFunc={this.accountBalanceSortFunc}
+                  dataSort
+                  dataFormat={x => x}
+                >
+                  {formatMessage(messages.accountBalance)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="actions" dataFormat={x => x}>
+                  {formatMessage(messages.actions)}
+                </TableHeaderColumn>
+              </BootstrapTable>
+              <div className="clearfix"></div>
             </div>
           </div>
         </div>
@@ -154,6 +189,8 @@ UsersPayments = fields(UsersPayments, {
     'filter',
   ],
 });
+
+UsersPayments = injectIntl(UsersPayments);
 
 export default connect(state => ({
   users: state.users.users,

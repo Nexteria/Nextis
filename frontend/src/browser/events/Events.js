@@ -1,12 +1,11 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { Map } from 'immutable';
-import { FormattedMessage, defineMessages, FormattedRelative } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl, FormattedRelative } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
-import Tabs from 'react-bootstrap/lib/Tabs';
-import Tab from 'react-bootstrap/lib/Tab';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as actions from '../../common/events/actions';
@@ -61,48 +60,33 @@ class Events extends Component {
     fields: PropTypes.object.isRequired,
     removeEvent: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
-  getEventRow(event) {
+  getEventActions(event) {
     const { removeEvent } = this.props;
-    const attendees = event.attendeesGroups.reduce((reduction, group) =>
-      reduction.merge(group.users)
-    , new Map());
-
-    const attending = attendees.filter(user => user.get('signedIn'));
-    const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
 
     return (
-      <tr key={event.id}>
-        <td>{`${event.name}`}</td>
-        <td>
-          <FormattedRelative value={event.eventStartDateTime} />
-        </td>
-        <td>{`${event.minCapacity} - ${event.maxCapacity}`}</td>
-        <td>{`${attending.size}`}</td>
-        <td>{`${notAttending.size}`}</td>
-        <td>{`${attendees.size}`}</td>
-        <td className="action-buttons">
-          <i
-            className="fa fa-trash-o trash-group"
-            onClick={() => removeEvent(event.id)}
-          ></i>
-          <i
-            className="fa fa-pencil"
-            onClick={() => this.editEvent(event.id)}
-          ></i>
-          <i
-            className="fa fa-envelope-o"
-            onClick={() => browserHistory.push(`/admin/events/${event.id}/emails`)}
-          >
-          </i>
-          <i
-            className="fa fa-list-alt"
-            onClick={() => browserHistory.push(`/host/events/${event.id}`)}
-          >
-          </i>
-        </td>
-      </tr>
+      <span className="action-buttons">
+        <i
+          className="fa fa-trash-o trash-group"
+          onClick={() => removeEvent(event.id)}
+        ></i>
+        <i
+          className="fa fa-pencil"
+          onClick={() => this.editEvent(event.id)}
+        ></i>
+        <i
+          className="fa fa-envelope-o"
+          onClick={() => browserHistory.push(`/admin/events/${event.id}/emails`)}
+        >
+        </i>
+        <i
+          className="fa fa-list-alt"
+          onClick={() => browserHistory.push(`/host/events/${event.id}`)}
+        >
+        </i>
+      </span>
     );
   }
 
@@ -110,9 +94,18 @@ class Events extends Component {
     browserHistory.push(`/admin/events/${eventId}`);
   }
 
+  eventStarTimeSortFunc(a, b, order) {   // order is desc or asc
+    if (order === 'desc') {
+      return a.eventStartDateTime - b.eventStartDateTime;
+    }
+
+    return b.eventStartDateTime - a.eventStartDateTime;
+  }
+
   render() {
     const { events, fields } = this.props;
     const { hasPermission } = this.props;
+    const { formatMessage } = this.props.intl;
 
     if (!events) {
       return <div></div>;
@@ -128,6 +121,26 @@ class Events extends Component {
           .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
     }
+
+    const eventsData = filteredEvents.map(event => {
+      const attendees = event.attendeesGroups.reduce((reduction, group) =>
+        reduction.merge(group.users)
+      , new Map());
+
+      const attending = attendees.filter(user => user.get('signedIn'));
+      const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
+
+      return {
+        eventName: event.name,
+        eventStarts: <FormattedRelative value={event.eventStartDateTime} />,
+        eventStartDateTime: event.eventStartDateTime,
+        capacity: `${event.minCapacity} - ${event.maxCapacity}`,
+        signedIn: attending.size,
+        wontCome: notAttending.size,
+        invited: attendees.size,
+        actions: this.getEventActions(event),
+      };
+    }).toArray();
 
     return (
       <div className="row">
@@ -162,28 +175,56 @@ class Events extends Component {
               </div>
             </div>
             <div className="box-body table-responsive no-padding items-container">
-              <table className="table table-hover">
-                <tbody>
-                  <tr>
-                    <th><FormattedMessage {...messages.eventName} /></th>
-                    <th><FormattedMessage {...messages.eventStarts} /></th>
-                    <th><FormattedMessage {...messages.capacity} /></th>
-                    <th><FormattedMessage {...messages.signedIn} /></th>
-                    <th><FormattedMessage {...messages.wontCome} /></th>
-                    <th><FormattedMessage {...messages.invited} /></th>
-                    <th><FormattedMessage {...messages.actions} /></th>
-                  </tr>
-                  {filteredEvents ?
-                    filteredEvents.map(event => this.getEventRow(event))
-                    :
-                    <tr>
-                      <td colSpan="2" style={{ textAlign: 'center' }}>
-                        <FormattedMessage {...messages.noEvents} />
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
+              <BootstrapTable
+                data={eventsData}
+                multiColumnSort={3}
+                striped
+                hover
+                height="300px"
+                containerStyle={{ height: '320px' }}
+              >
+                <TableHeaderColumn isKey hidden dataField="id" />
+
+                <TableHeaderColumn dataField="eventName" dataSort width="30%">
+                  {formatMessage(messages.eventName)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  width="10%"
+                  dataField="eventStarts"
+                  sortFunc={this.eventStarTimeSortFunc}
+                  dataSort
+                  dataFormat={x => x}
+                >
+                  {formatMessage(messages.eventStarts)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="capacity">
+                  {formatMessage(messages.capacity)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="signedIn" dataSort>
+                  {formatMessage(messages.signedIn)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="wontCome" dataSort>
+                  {formatMessage(messages.wontCome)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="invited" dataSort>
+                  {formatMessage(messages.invited)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  dataField="actions"
+                  tdStyle={{ whiteSpace: 'normal' }}
+                  width="10%"
+                  dataFormat={x => x}
+                >
+                  {formatMessage(messages.actions)}
+                </TableHeaderColumn>
+              </BootstrapTable>
+              <div className="clearfix"></div>
             </div>
           </div>
         </div>
@@ -198,6 +239,8 @@ Events = fields(Events, {
     'filter',
   ],
 });
+
+Events = injectIntl(Events);
 
 export default connect(state => ({
   events: state.events.events,

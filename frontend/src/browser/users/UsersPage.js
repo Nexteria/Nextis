@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import './UserGroupsPage.scss';
 import { fields } from '../../common/lib/redux-fields/index';
@@ -22,9 +23,13 @@ const messages = defineMessages({
     defaultMessage: 'No users here',
     id: 'users.manage.noUsers'
   },
-  userName: {
-    defaultMessage: 'User name',
-    id: 'users.manage.userName'
+  firstName: {
+    defaultMessage: 'First name',
+    id: 'users.manage.firstName'
+  },
+  lastName: {
+    defaultMessage: 'Last name',
+    id: 'users.manage.lastName'
   },
   actions: {
     defaultMessage: 'Actions',
@@ -41,10 +46,6 @@ const messages = defineMessages({
   studentLevel: {
     defaultMessage: 'Student level',
     id: 'users.manage.studentLevel'
-  },
-  lastName: {
-    defaultMessage: 'Last name',
-    id: 'users.manage.lastName'
   },
   sortBy: {
     defaultMessage: 'Sort by',
@@ -91,38 +92,72 @@ class UsersPage extends Component {
     return color;
   }
 
+  getUserPointsComponent(user) {
+    return (
+      <span style={{ color: this.calculateUserPointsColor(user) }}>
+        {user.gainedActivityPoints}
+        {user.activityPointsBaseNumber ?
+          <span>
+            <span> (</span>
+            {user.gainedActivityPoints === 0 ? 0 :
+              Math.round(
+                user.gainedActivityPoints / user.activityPointsBaseNumber * 100
+              )
+            }
+            <span>%)</span>
+          </span>
+          : null
+        }
+      </span>
+    );
+  }
+
+  getUserActions(user) {
+    const { removeUser, hasPermission } = this.props;
+
+    return (
+      <span className="action-buttons">
+        {hasPermission('delete_users') ?
+          <i
+            className="fa fa-trash-o trash-group"
+            onClick={() => removeUser(user.id)}
+          ></i>
+          : ''
+        }
+
+        <i
+          className="fa fa-pencil"
+          onClick={() => this.editUser(user.id)}
+        ></i>
+
+        <i
+          className="fa fa-file-text-o"
+          onClick={() =>
+            browserHistory.push(`/admin/users/${user.id}/points`)
+          }
+        ></i>
+      </span>
+    );
+  }
+
+  pointsSortFunc(a, b, order) {   // order is desc or asc
+    if (order === 'desc') {
+      return a.gainedActivityPoints - b.gainedActivityPoints;
+    }
+
+    return b.gainedActivityPoints - a.gainedActivityPoints;
+  }
+
   render() {
     const { users, fields, studentLevels } = this.props;
-    const { removeUser, hasPermission } = this.props;
+    const { hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
     if (!users) {
       return <div></div>;
     }
 
-    let filteredUsers = users.valueSeq().map(user => user).sort((a, b) => {
-      if (!fields.sortBy.value || fields.sortBy.value === 'LAST_NAME') {
-        return a.lastName.toLowerCase() < b.lastName.toLowerCase() ? -1 : 1;
-      }
-
-      if (fields.sortBy.value === 'STUDENT_LEVEL') {
-        if (!a.studentLevelId) {
-          return 1;
-        }
-
-        if (!b.studentLevelId) {
-          return -1;
-        }
-
-        return a.studentLevelId < b.studentLevelId ? -1 : 1;
-      }
-
-      if (fields.sortBy.value === 'POINTS') {
-        return a.gainedActivityPoints < b.gainedActivityPoints ? -1 : 1;
-      }
-
-      return 0;
-    });
+    let filteredUsers = users.valueSeq().map(user => user);
 
     if (fields.levelFilter.value) {
       filteredUsers = filteredUsers.valueSeq().filter(user =>
@@ -136,6 +171,17 @@ class UsersPage extends Component {
           .indexOf(diacritics.remove(fields.filter.value).toLowerCase()) !== -1
       );
     }
+
+    const userData = filteredUsers.map(user => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      studentLevel: user.studentLevelId ? studentLevels.get(user.studentLevelId).name : '-',
+      points: this.getUserPointsComponent(user),
+      gainedActivityPoints: user.gainedActivityPoints,
+      userBaseSemesterActivityPoints: user.activityPointsBaseNumber,
+      actions: this.getUserActions(user),
+    })).toArray();
 
     return (
       <div className="group-managment-page">
@@ -159,22 +205,6 @@ class UsersPage extends Component {
                 <div className="box-header">
                   <h3 className="box-title"><FormattedMessage {...messages.tableTitle} /></h3>
                   <div className="box-tools">
-                    <div className="input-group input-group-sm pull-right" style={{ width: '150px' }}>
-                      <label style={{ position: 'absolute', top: '-25px' }}>
-                        <FormattedMessage {...messages.sortBy} />:
-                      </label>
-                      <select
-                        name="sortBy"
-                        className="form-control"
-                        {...fields.sortBy}
-                      >
-                        <option value="LAST_NAME">{formatMessage(messages.lastName)}</option>
-                        <option value="STUDENT_LEVEL">{formatMessage(messages.studentLevel)}</option>
-                        <option value="POINTS">{formatMessage(messages.points)}</option>
-                      </select>
-
-                    </div>
-
                     <div className="input-group input-group-sm pull-right" style={{ width: '150px' }}>
                       <label style={{ position: 'absolute', top: '-25px' }}>
                         <FormattedMessage {...messages.levelFilter} />:
@@ -210,77 +240,41 @@ class UsersPage extends Component {
                   </div>
                 </div>
                 <div className="box-body table-responsive no-padding items-container">
-                  <table className="table table-hover">
-                    <tbody>
-                      <tr>
-                        <th><FormattedMessage {...messages.userName} /></th>
-                        <th><FormattedMessage {...messages.studentLevel} /></th>
-                        <th><FormattedMessage {...messages.points} /></th>
-                        <th><FormattedMessage {...messages.userBaseSemesterActivityPoints} /></th>
-                        <th><FormattedMessage {...messages.actions} /></th>
-                      </tr>
-                      {filteredUsers ?
-                        filteredUsers.map(user =>
-                          <tr key={user.id}>
-                            <td>{`${user.firstName} ${user.lastName} (${user.username})`}</td>
-                            <td>
-                              {user.studentLevelId ?
-                                studentLevels.get(user.studentLevelId).name
-                                :
-                                '-'
-                              }
-                            </td>
-                            <td style={{ color: this.calculateUserPointsColor(user) }}>
-                              {user.gainedActivityPoints}
-                              {user.activityPointsBaseNumber ?
-                                <span>
-                                  <span> (</span>
-                                  {user.gainedActivityPoints === 0 ? 0 :
-                                    Math.round(
-                                      user.gainedActivityPoints / user.activityPointsBaseNumber * 100
-                                    )
-                                  }
-                                  <span>%)</span>
-                                </span>
-                                : null
-                              }
-                            </td>
-                            <td>
-                              {user.activityPointsBaseNumber}
-                            </td>
-                            <td className="action-buttons">
-                              {hasPermission('delete_users') ?
-                                <i
-                                  className="fa fa-trash-o trash-group"
-                                  onClick={() => removeUser(user.id)}
-                                ></i>
-                                : ''
-                              }
+                  <BootstrapTable
+                    data={userData}
+                    multiColumnSort={3}
+                    striped
+                    hover
+                    height="300px"
+                    containerStyle={{ height: '320px' }}
+                  >
+                    <TableHeaderColumn isKey hidden dataField="id" />
 
-                              <i
-                                className="fa fa-pencil"
-                                onClick={() => this.editUser(user.id)}
-                              ></i>
+                    <TableHeaderColumn dataField="firstName" dataSort>
+                      {formatMessage(messages.firstName)}
+                    </TableHeaderColumn>
 
-                              <i
-                                className="fa fa-file-text-o"
-                                onClick={() =>
-                                  browserHistory.push(`/admin/users/${user.id}/points`)
-                                }
-                              ></i>
+                    <TableHeaderColumn dataField="lastName" dataSort>
+                      {formatMessage(messages.lastName)}
+                    </TableHeaderColumn>
 
-                            </td>
-                          </tr>
-                        )
-                        :
-                        <tr>
-                          <td colSpan="2" style={{ textAlign: 'center' }}>
-                            <FormattedMessage {...messages.noUsers} />
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
+                    <TableHeaderColumn dataField="studentLevel" dataSort>
+                      {formatMessage(messages.studentLevel)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="points" dataSort sortFunc={this.pointsSortFunc} dataFormat={x => x}>
+                      {formatMessage(messages.points)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="userBaseSemesterActivityPoints" dataSort>
+                      {formatMessage(messages.userBaseSemesterActivityPoints)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="actions" dataFormat={x => x}>
+                      {formatMessage(messages.actions)}
+                    </TableHeaderColumn>
+                  </BootstrapTable>
+                  <div className="clearfix"></div>
                 </div>
               </div>
             </div>

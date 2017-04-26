@@ -1,9 +1,10 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import diacritics from 'diacritics';
-import { browserHistory } from 'react-router'
+import { browserHistory } from 'react-router';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import UserProfileDialog from './UserProfileDialog';
@@ -23,9 +24,13 @@ const messages = defineMessages({
     defaultMessage: 'Contacts - students',
     id: 'contacts.list.contactStudentsTitile'
   },
-  fullName: {
-    defaultMessage: 'Full name',
-    id: 'contacts.list.fullName',
+  firstName: {
+    defaultMessage: 'First name',
+    id: 'contacts.list.firstName',
+  },
+  lastName: {
+    defaultMessage: 'Last name',
+    id: 'contacts.list.lastName',
   },
   level: {
     defaultMessage: 'Level',
@@ -49,11 +54,14 @@ class ContactList extends Component {
     fields: PropTypes.object,
     user: PropTypes.number,
     openUserDetail: PropTypes.func.isRequired,
-    studentLevels: PropTypes.object
+    studentLevels: PropTypes.object,
+    intl: PropTypes.object.isRequired,
   };
 
   render() {
     const { users, rolesList, studentLevels, fields, user, openUserDetail } = this.props;
+    const { formatMessage } = this.props.intl;
+
     let students = [];
     if (users) {
       students = users.filter(user => user.roles.includes(rolesList.get('STUDENT').id))
@@ -73,6 +81,15 @@ class ContactList extends Component {
         );
       }
     }
+
+    const contactsData = students.valueSeq().map(student => ({
+      id: student.id,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      level: studentLevels.get(student.studentLevelId).name,
+      email: student.email,
+      phone: student.phone,
+    })).toArray();
 
     return (
       <div>
@@ -109,33 +126,39 @@ class ContactList extends Component {
                   </div>
                 </div>
                 <div className="box-body table-responsive no-padding items-container">
-                  <table className="table table-hover contactListTable">
-                    <thead>
-                      <tr>
-                        <th><FormattedMessage {...messages.fullName} /></th>
-                        <th><FormattedMessage {...messages.level} /></th>
-                        <th><FormattedMessage {...messages.email} /></th>
-                        <th><FormattedMessage {...messages.phone} /></th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {users ?
-                        students.map(student =>
-                          <tr key={student.id} onClick={() => browserHistory.push(`/users/${student.id}`)}>
-                            <td>{student.firstName} {student.lastName}</td>
-                            <td>{studentLevels.get(student.studentLevelId).name}</td>
-                            <td>{student.email}</td>
-                            <td>{student.phone}</td>
-                          </tr>
-                        )
-                        :
-                        <tr>
-                          <td colSpan="4" style={{ textAlign: 'center' }}>
-                            <FormattedMessage {...messages.no_contacts} /></td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
+                  <BootstrapTable
+                    data={contactsData}
+                    multiColumnSort={3}
+                    striped
+                    hover
+                    options={{
+                      onRowClick: (student) => browserHistory.push(`/users/${student.id}`),
+                    }}
+                    height="300px"
+                  >
+                    <TableHeaderColumn isKey hidden dataField="id" />
+
+                    <TableHeaderColumn dataField="firstName" dataSort>
+                      {formatMessage(messages.firstName)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="lastName">
+                      {formatMessage(messages.lastName)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="level" dataSort>
+                      {formatMessage(messages.level)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="email" dataSort>
+                      {formatMessage(messages.email)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="phone" dataSort>
+                      {formatMessage(messages.phone)}
+                    </TableHeaderColumn>
+                  </BootstrapTable>
+                  <div className="clearfix"></div>
                 </div>
               </div>
             </div>
@@ -153,6 +176,8 @@ ContactList = fields(ContactList, {
     'filter',
   ],
 });
+
+ContactList = injectIntl(ContactList);
 
 export default connect(state => ({
   users: state.users.users,

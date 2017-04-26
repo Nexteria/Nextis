@@ -1778,4 +1778,12 @@ export default [
     defaultMessage: 'Odhlásený',
     id: 'events.users.filter.signedOutEvents',
   },
+  {
+    defaultMessage: 'Meno',
+    id: 'contacts.list.firstName',
+  },
+  {
+    defaultMessage: 'Priezvisko',
+    id: 'contacts.list.lastName',
+  },
 ];
