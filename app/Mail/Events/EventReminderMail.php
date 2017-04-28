@@ -39,7 +39,7 @@ class EventReminderMail extends Mailable
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
         $this->eventLocation = $event->location;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y h:i');
+        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
 
         $host = \App\User::findOrFail($event->hostId);
         $this->hostFirstName = $host->firstName.' '.$host->lastName;

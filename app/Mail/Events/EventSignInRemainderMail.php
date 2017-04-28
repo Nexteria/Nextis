@@ -45,7 +45,7 @@ class EventSignInRemainderMail extends Mailable
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
         $this->eventLocation = $event->location;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y h:i');
+        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
         $this->eventSignInDeadline = $eventSignInDeadline;
 
         $lectors = $event->lectors;

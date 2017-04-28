@@ -33,7 +33,7 @@ class EventFreePlaceMail extends Mailable
         $this->user = $user;
         $this->eventName = $event->name;
         $this->eventType = Str::upper($event->eventType);
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y h:i');
+        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
         $this->eventLocation = $event->location;

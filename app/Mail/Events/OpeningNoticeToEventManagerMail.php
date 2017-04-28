@@ -38,7 +38,7 @@ class OpeningNoticeToEventManagerMail extends Mailable
         $this->managerEmail = $manager->email;
         $this->hostName = $host->firstName.' '.$host->lastName;
         $this->eventLocation = $event->location;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y h:i');
+        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
 
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';

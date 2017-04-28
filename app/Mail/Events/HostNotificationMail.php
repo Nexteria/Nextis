@@ -33,7 +33,7 @@ class HostNotificationMail extends Mailable
         $this->hostEmail = $host->email;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y h:i');
+        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
     }
 
     /**
