@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\NxEventAttendee as NxEventAttendee;
+use App\NxEvent;
 use Carbon\Carbon;
 use App\Events\EventAttendeePlaceReleased;
 
@@ -33,28 +34,19 @@ class NxEventAttendeesController extends Controller
                 ]);
             }
 
-            // check if max group capacity was reached
-            $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
-            if ($signedIn >= $group->maxCapacity) {
-                return view('events.sign_in_by_token', [
-                  'message' => trans('events.groupSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
-                  'attendeeName' => $attendee->user->firstName,
-                  'signInFailed' => true,
-                ]);
-            }
 
-            $event = $attendee->attendeesGroup->nxEvent;
-            $signedIn = 0;
-            foreach ($event->attendeesGroups as $group) {
-                $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
-            }
-
-            if ($signedIn >= $event->maxCapacity) {
-                return view('events.sign_in_by_token', [
-                  'message' => trans('events.eventSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
-                  'attendeeName' => $attendee->user->firstName,
-                  'signInFailed' => true,
-                ]);
+            // check if can signIn to event
+            $attendeesToSignIn = [$attendee];
+            foreach ($attendeesToSignIn as $eventAttendee) {
+                $event = $eventAttendee->attendeesGroup->nxEvent;
+                $canSignIn = $event->canSignInAttendee($eventAttendee);
+                if ($canSignIn !== true) {
+                    return view('events.sign_in_by_token', [
+                      'message' => $canSignIn,
+                      'attendeeName' => $attendee->user->firstName,
+                      'signInFailed' => true,
+                    ]);
+                }
             }
 
             $attendeesToSignIn = [$attendee];
@@ -186,28 +178,13 @@ class NxEventAttendeesController extends Controller
                 }
             }
 
-            // check if max group capacity was reached
-            foreach ($attendeesToSignIn as $eventAttendee) {
-                $group = $eventAttendee->attendeesGroup;
-                $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
-                if ($signedIn >= $group->maxCapacity) {
-                    return response()->json([
-                      'error' => trans('events.groupSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
-                    ], 400);
-                }
-            }
-
-            // check if event max capacity was reached
+            // check if can signIn to event
             foreach ($attendeesToSignIn as $eventAttendee) {
                 $event = $eventAttendee->attendeesGroup->nxEvent;
-                $signedIn = 0;
-                foreach ($event->attendeesGroups as $group) {
-                    $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
-                }
-
-                if ($signedIn >= $event->maxCapacity) {
+                $canSignIn = $event->canSignInAttendee($eventAttendee);
+                if ($canSignIn !== true) {
                     return response()->json([
-                      'error' => trans('events.eventSignInsAreMaxed', ['eventName' => $group->nxEvent->name]),
+                      'error' => $canSignIn,
                     ], 400);
                 }
             }

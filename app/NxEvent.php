@@ -187,9 +187,13 @@ class NxEvent extends Model
 
         // check if attendee group max capacity was reached
         $group = $attendee->attendeesGroup;
+        if ($group->signUpDeadlineDateTime->lt(\Carbon\Carbon::now())) {
+            return trans('events.groupSignInExpired', ['eventName' => $this->name]);
+        }
+
         $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
         if ($signedIn >= $group->maxCapacity) {
-            return false;
+            return trans('events.groupSignInsAreMaxed', ['eventName' => $this->name]);
         }
 
         $signedIn = 0;
@@ -198,7 +202,7 @@ class NxEvent extends Model
         }
 
         if ($signedIn >= $this->maxCapacity) {
-            return false;
+            return trans('events.eventSignInsAreMaxed', ['eventName' => $this->name]);
         }
 
         return true;
