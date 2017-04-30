@@ -129,7 +129,7 @@ class NxEvent extends Model
             foreach ($attributes['attendeesGroups'] as $group) {
                 $groupModel = AttendeesGroup::find($group['id']);
                 if ($groupModel) {
-                    $groupModel->updateData($group);
+                    $groupModel->updatePeopleList($group);
                 } else {
                     $groupModel = AttendeesGroup::createNew($group);
                     $this->attendeesGroups()->save($groupModel);

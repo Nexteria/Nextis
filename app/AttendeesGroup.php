@@ -27,11 +27,37 @@ class AttendeesGroup extends Model
         $group->save();
 
         foreach ($attributes['users'] as $user) {
-          $group->attendees()->save(NxEventAttendee::createNew(array_merge($user, ["attendeesGroupId" => $group->id])));
+            $group->attendees()->save(NxEventAttendee::createNew(array_merge($user, ["attendeesGroupId" => $group->id])));
         }
 
         $group->save();
         return $group;
+    }
+
+    public function updatePeopleList($attributes)
+    {
+        $this->fill($attributes);
+        $this->ownerId = \Auth::user()->id;
+
+        $idsMap = [];
+        foreach ($attributes['users'] as $user) {
+            $attendee = $this->attendees()->where('userId', '=', $user['id'])->first();
+            if (!$attendee) {
+                $attendee = NxEventAttendee::createNew(array_merge($user, ["attendeesGroupId" => $this->id]));
+                $this->attendees()->save($attendee);
+            }
+
+            $idsMap[$attendee->id] = true;
+        }
+
+        $ids = $this->attendees()->pluck('id');
+        foreach ($ids as $id) {
+            if (!isset($idsMap[$id])) {
+                NxEventAttendee::find($id)->delete();
+            }
+        }
+
+        $this->save();
     }
 
     public function updateData($attributes)
