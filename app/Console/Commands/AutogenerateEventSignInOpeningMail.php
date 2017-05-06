@@ -34,8 +34,6 @@ class AutogenerateEventSignInOpeningMail extends Command
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
             $settings = $event->getSettings();
-
-            
             $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
 
             $isOpening = false;

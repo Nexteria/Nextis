@@ -27,7 +27,6 @@ const User = Record({
   buddyDescription: RichTextEditor.createEmptyValue(),
   state: 'inactive',
   nexteriaTeamRole: '',
-  studentLevelId: '',
   created_at: null,
   updated_at: null,
   newPassword: '',
@@ -37,11 +36,6 @@ const User = Record({
   confirmationPassword: '',
   confirmedPrivacyPolicy: false,
   confirmedMarketingUse: false,
-  gainedActivityPoints: 0,
-  minimumSemesterActivityPoints: 0,
-  activityPointsBaseNumber: 0,
-  potentialActivityPoints: 0,
-  monthlySchoolFee: 0,
   accountBalance: 0,
 });
 

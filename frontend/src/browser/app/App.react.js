@@ -122,7 +122,7 @@ class App extends Component {
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header {...{ viewer }} location={location} />
-        <AppSidebar {...{ viewer, hasPermission }} ref="main-footer" />
+        <AppSidebar {...{ viewer, rolesList, hasPermission }} ref="main-footer" />
         <div className="content-wrapper">
           {children}
         </div>

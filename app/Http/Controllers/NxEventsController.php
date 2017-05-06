@@ -47,9 +47,29 @@ class NxEventsController extends Controller
         return response()->json($this->nxEventTransformer->transform($event->fresh()));
     }
 
-    public function getNxEvents()
+    public function getNxEvents(Request $request)
     {
-        $events = NxEvent::all();
+        $filters = collect([
+            'semesterId' => DefaultSystemSettings::get('activeSemesterId'),
+            'status' => 'published',
+        ]);
+
+        $query = NxEvent::query();
+        $filters->mapWithKeys(function ($item, $key) use ($request) {
+            if ($request->has($key)) {
+                return [$key => $request->get($key)];
+            }
+
+            return [$key => $item];
+        })->each(function ($item, $key) use ($query) {
+            $query = $query->where($key, $item);
+        });
+        
+        $events = $query->with('attendeesGroups')
+                        ->with('lectors')
+                        ->with('groupedEvents')
+                        ->with('exclusionaryEvents')
+                        ->get();
 
         return response()->json($this->nxEventTransformer->transformCollection($events));
     }

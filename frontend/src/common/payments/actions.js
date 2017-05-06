@@ -42,6 +42,9 @@ export const ASSOCIATE_PAYMENT_SUCCESS = 'ASSOCIATE_PAYMENT_SUCCESS';
 export const LOAD_USER_PAYMENTS = 'LOAD_USER_PAYMENTS';
 export const LOAD_USER_PAYMENTS_SUCCESS = 'LOAD_USER_PAYMENTS_SUCCESS';
 
+export const LOAD_USERS_PAYMENTS = 'LOAD_USERS_PAYMENTS';
+export const LOAD_USERS_PAYMENTS_SUCCESS = 'LOAD_USERS_PAYMENTS_SUCCESS';
+
 export const OPEN_PAYMENT_ASSOCIATION_DIALOG = 'OPEN_PAYMENT_ASSOCIATION_DIALOG';
 export const CLOSE_PAYMENT_ASSOCIATION_DIALOG = 'CLOSE_PAYMENT_ASSOCIATION_DIALOG';
 export const CHANGE_ASSOCIATION_USER_ID = 'CHANGE_ASSOCIATION_USER_ID';
@@ -132,10 +135,22 @@ export function uploadPaymentsImport(files) {
 }
 
 export function loadUsersPayments(userId) {
+  if (userId) {
+    return ({ fetch }) => ({
+      type: LOAD_USER_PAYMENTS,
+      payload: {
+        promise: fetch(`/users/${userId}/payments`, {
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+        }).then(response => response.json()),
+      },
+    });
+  }
+
   return ({ fetch }) => ({
-    type: LOAD_USER_PAYMENTS,
+    type: LOAD_USERS_PAYMENTS,
     payload: {
-      promise: fetch(`/users/${userId}/payments`, {
+      promise: fetch('/users/payments', {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
       }).then(response => response.json()),

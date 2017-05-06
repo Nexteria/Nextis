@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
-use App\Role;
+use App\Student;
 
 class AutogenerateTuitionPaymentNotification extends Command
 {
@@ -44,14 +44,10 @@ class AutogenerateTuitionPaymentNotification extends Command
             $isDefaultCheckingDay = false;
         }
 
-        $activeStudents = Role::where('name', 'STUDENT')
-                              ->first()
-                              ->users()
-                              ->where('state', \Config::get('constants.states.ACTIVE'))
-                              ->get();
+        $activeStudents = Student::where('status', \Config::get('constants.states.ACTIVE'))->get();
 
-        foreach ($activeStudents as $user) {
-            $paymentSettings = $user->paymentSettings;
+        foreach ($activeStudents as $student) {
+            $paymentSettings = $student->user->paymentSettings;
 
             if ($paymentSettings) {
                 if ($paymentSettings->checkingSchoolFeePaymentsDay !== $day ||
@@ -62,7 +58,7 @@ class AutogenerateTuitionPaymentNotification extends Command
                 continue;
             }
 
-            $payments = \App\Payment::where('variableSymbol', $user->tuitionFeeVariableSymbol)->orderBy('created_at', 'desc')->get();
+            $payments = \App\Payment::where('variableSymbol', $student->tuitionFeeVariableSymbol)->orderBy('created_at', 'desc')->get();
 
             $debetAmountBeforeDL = 0;
             $debetAmountAfterDL = 0;
@@ -90,7 +86,7 @@ class AutogenerateTuitionPaymentNotification extends Command
             $debtAmount = $debetAmountAfterDL - $kreditAmount;
 
             if ($isAfterDeadline) {
-                $email = new \App\Mail\NoTuitionFeePayment($user, $debtAmount);
+                $email = new \App\Mail\NoTuitionFeePayment($student->user, $debtAmount);
                 \Mail::send($email);
             }
         }

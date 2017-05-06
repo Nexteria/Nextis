@@ -18,7 +18,7 @@ class UserTransformer extends Transformer
             'lastName' => $user->lastName,
             'email' => $user->email,
             'phone' => $user->phone,
-            'tuitionFeeVariableSymbol' => $user->tuitionFeeVariableSymbol,
+            'tuitionFeeVariableSymbol' => $user->student ? $user->student->tuitionFeeVariableSymbol : null,
             'facebookLink' => $user->facebookLink,
             'linkedinLink' => $user->linkedinLink,
             'personalDescription' => $user->personalDescription ? $user->personalDescription : '',
@@ -35,32 +35,12 @@ class UserTransformer extends Transformer
             'state' => $user->state,
             'iban' => $user->iban,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
-            'studentLevelId' => (int) $user->studentLevelId,
             'hostedEvents' => array_map('intval', $user->hostedEvents()->pluck('id')->toArray()),
             'created_at' => $user->created_at ? $user->created_at->__toString() : null,
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
             'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,
             'confirmedMarketingUse' => $user->confirmedMarketingUse,
-            'minimumSemesterActivityPoints' => $user->minimumSemesterActivityPoints,
-            'activityPointsBaseNumber' => $user->activityPointsBaseNumber,
-            'monthlySchoolFee' => (int) $user->monthlySchoolFee,
-         ];
-
-        if (in_array('gainedActivityPoints', $fields) || in_array('potentialActivityPoints', $fields)) {
-            $activityPoints = $user->computeActivityPoints();
-        }
-
-        if (in_array('gainedActivityPoints', $fields)) {
-            $result['gainedActivityPoints'] = $activityPoints['sumGainedPoints'];
-        }
-
-        if (in_array('potentialActivityPoints', $fields)) {
-            $result['potentialActivityPoints'] = $activityPoints['sumPotentialPoints'];
-        }
-
-        if (Auth::user()->id == $user->id || Auth::user()->hasRole('ADMIN')) {
-            $result['accountBalance'] = (int) $user->getAccountBalance();
-        }
+        ];
 
         return $result;
     }

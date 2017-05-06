@@ -95,10 +95,6 @@ const messages = defineMessages({
     defaultMessage: 'Guide description',
     id: 'user.edit.guideDescription',
   },
-  studentLevel: {
-    defaultMessage: 'Student level',
-    id: 'user.edit.studentLevel',
-  },
   nexteriaTeamRole: {
     defaultMessage: 'Nexteria team role',
     id: 'user.edit.nexteriaTeamRole',
@@ -122,10 +118,6 @@ const messages = defineMessages({
   username: {
     defaultMessage: 'Username',
     id: 'user.edit.username',
-  },
-  chooseStudentLevel: {
-    defaultMessage: 'Choose student level',
-    id: 'user.edit.chooseStudentLevel',
   },
   expelledUserState: {
     defaultMessage: 'Expelled',
@@ -183,22 +175,6 @@ const messages = defineMessages({
     defaultMessage: 'Study year',
     id: 'user.edit.studyYear',
   },
-  minimumSemesterActivityPoints: {
-    defaultMessage: 'Minimum activity points for semester',
-    id: 'user.edit.minimumSemesterActivityPoints',
-  },
-  activityPointsBaseNumber: {
-    defaultMessage: 'Activity points base for student',
-    id: 'user.edit.activityPointsBaseNumber',
-  },
-  monthlySchoolFee: {
-    defaultMessage: 'Monthly school fee',
-    id: 'user.edit.monthlySchoolFee',
-  },
-  monthlySchoolFeeInCents: {
-    defaultMessage: 'Monthly school fee in cents!',
-    id: 'user.edit.monthlySchoolFeeInCents',
-  },
 });
 
 const validate = (values, props) => {
@@ -217,10 +193,6 @@ const validate = (values, props) => {
 
   if (!values.lastName) {
     errors.lastName = formatMessage(messages.requiredField);
-  }
-
-  if (!values.studentLevel) {
-    errors.studentLevel = formatMessage(messages.requiredField);
   }
 
   if (!values.username) {
@@ -251,12 +223,6 @@ const validate = (values, props) => {
     }
   }
 
-  if (!values.monthlySchoolFee) {
-    errors.monthlySchoolFee = formatMessage(messages.requiredField);
-  } else if (isNaN(Number(values.monthlySchoolFee))) {
-    errors.monthlySchoolFee = formatMessage(messages.requiredNumber);
-  }
-
   if (props.mode === 'profile') {
     if (!values.iban) {
       errors.iban = formatMessage(messages.requiredField);
@@ -280,18 +246,6 @@ const validate = (values, props) => {
 
     if (!values.actualJobInfo) {
       errors.actualJobInfo = formatMessage(messages.requiredField);
-    }
-
-    if (!values.minimumSemesterActivityPoints) {
-      errors.minimumSemesterActivityPoints = formatMessage(messages.requiredField);
-    } else if (isNaN(values.minimumSemesterActivityPoints)) {
-      errors.minimumSemesterActivityPoints = formatMessage(messages.requiredNumber);
-    }
-
-    if (!values.activityPointsBaseNumber) {
-      errors.activityPointsBaseNumber = formatMessage(messages.requiredField);
-    } else if (isNaN(values.activityPointsBaseNumber)) {
-      errors.activityPointsBaseNumber = formatMessage(messages.requiredNumber);
     }
 
     const descriptionLength = values.personalDescription ?
@@ -346,10 +300,8 @@ export class EditUser extends Component {
     setField: PropTypes.func,
     rolesList: PropTypes.object,
     updateUserRole: PropTypes.func,
-    studentLevels: PropTypes.object,
     intl: PropTypes.object.isRequired,
     loadRolesList: PropTypes.func.isRequired,
-    loadStudentLevelsList: PropTypes.func.isRequired,
     params: PropTypes.object,
     users: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
@@ -492,7 +444,6 @@ export class EditUser extends Component {
       submitting,
       title,
       rolesList,
-      studentLevels,
       userStates,
     } = this.props;
 
@@ -582,23 +533,6 @@ export class EditUser extends Component {
                       component={this.renderInput}
                       label={`${formatMessage(messages.phone)}${isLector ? '' : '*'}`}
                     />
-
-                    {roles.includes(rolesList.get('STUDENT').id) ?
-
-                      <Field
-                        name="studentLevelId"
-                        component={this.renderSelect}
-                        label={`${formatMessage(messages.studentLevel)}*`}
-                      >
-                        <option value="" readOnly>
-                          {formatMessage(messages.chooseStudentLevel)}
-                        </option>
-                        {studentLevels.valueSeq().map(level =>
-                          <option key={level.id} value={level.id}>{level.name}</option>
-                        )}
-                      </Field>
-                      : ''
-                    }
 
                     <Field
                       name="facebookLink"
@@ -719,29 +653,6 @@ export class EditUser extends Component {
                             </option>
                           ) : ''}
                         </Field>
-                        {roles.includes(rolesList.get('STUDENT').id) ?
-                          <div>
-                            <Field
-                              name="minimumSemesterActivityPoints"
-                              type="number"
-                              component={this.renderInput}
-                              label={formatMessage(messages.minimumSemesterActivityPoints)}
-                            />
-                            <Field
-                              name="activityPointsBaseNumber"
-                              type="number"
-                              component={this.renderInput}
-                              label={formatMessage(messages.activityPointsBaseNumber)}
-                            />
-                          </div>
-                        : ''}
-
-                        <Field
-                          name="monthlySchoolFee"
-                          type="text"
-                          component={this.renderInput}
-                          label={`${formatMessage(messages.monthlySchoolFeeInCents)}`}
-                        />
                       </div>
                       : ''
                     }
@@ -833,14 +744,10 @@ EditUser = fields(EditUser, {
     'guideDescription',
     'buddyDescription',
     'nexteriaTeamRole',
-    'studentLevelId',
     'state',
     'newPassword',
     'oldPassword',
     'confirmationPassword',
-    'activityPointsBaseNumber',
-    'minimumSemesterActivityPoints',
-    'monthlySchoolFee',
   ],
 });
 
@@ -859,6 +766,5 @@ export default connect((state) => ({
   rolesList: state.users.rolesList,
   roles: selector(state, 'roles'),
   users: state.users.users,
-  studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...fieldsActions, ...actions })(EditUser);

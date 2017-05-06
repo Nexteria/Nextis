@@ -36,7 +36,7 @@ class PaymentsController extends Controller
 
         if ($payment->user) {
             $email = null;
-            if ($payment->variableSymbol == $payment->user->tuitionFeeVariableSymbol) {
+            if ($payment->user->student && $payment->variableSymbol == $payment->user->student->tuitionFeeVariableSymbol) {
                 $email = new \App\Mail\ReceivedTuitionFeeConfirmation($payment);
             } else {
                 $email = new \App\Mail\ReceivedPaymentConfirmation($payment);
@@ -109,12 +109,7 @@ class PaymentsController extends Controller
             ];
         }
 
-        $activeStudents = \App\Role::where('name', 'STUDENT')
-                              ->first()
-                              ->users()
-                              ->where('state', \Config::get('constants.states.ACTIVE'))
-                              ->get();
-
+        $activeStudents = \App\Student::where('status', \Config::get('constants.states.ACTIVE'))->get();
 
         $activeStudents->each(function ($student) use (&$levels, $from, $to) {
             $debetPaymentsSum = Payment::where('transactionType', 'debet')

@@ -80,6 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/users', 'UsersController@getUsers');
         Route::get('/users/{id}', 'UsersController@getUsers')->where(['id' => '[0-9]+|me']);
         Route::get('/users/{userId}/payments', 'UsersController@getUserPayments')->where(['userId' => '[0-9]+']);
+        Route::get('/users/payments', 'UsersController@getUsersPayments');
         Route::post('/users', 'UsersController@createUser');
         Route::put('/users', 'UsersController@updateUser');
         Route::put('/users/me/password', 'UsersController@changePassword');
@@ -87,7 +88,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/semesters', 'SemestersController@getSemesters');
         
-        Route::get('/users/{userId}/attendees', 'UsersController@getEventsAttendeesForUser');
+        Route::get('/users/{userId}/activityPoints', 'UsersController@getActivityPoints');
+        Route::get('/users/{userId}/semesters', 'UsersController@getSemesters');
 
         Route::delete('/users/{userId}', 'UsersController@deleteUser')
           ->where(array('userId' => '[0-9]+'));

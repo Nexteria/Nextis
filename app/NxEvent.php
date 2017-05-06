@@ -75,12 +75,12 @@ class NxEvent extends Model
             $event->publicFeedbackLink = $response['publicResponseUrl'];
         }
 
-        $event->save();
-
         if (isset($attributes['semester']) && $attributes['semester']) {
             $semester = \App\Semester::findOrFail($attributes['semester']);
-            $semester->events()->save($event);
+            $event->semesterId = $semester->id;
         }
+
+        $event->save();
 
         return $event;
     }
@@ -158,12 +158,10 @@ class NxEvent extends Model
             $this->publicFeedbackLink = $response['publicResponseUrl'];
         }
 
-        $semesters = [];
         if (isset($attributes['semester']) && $attributes['semester']) {
             $semester = \App\Semester::findOrFail($attributes['semester']);
-            $semesters[] = $semester->id;
+            $this->semesterId = $semester->id;
         }
-        $this->semesters()->sync($semesters);
 
         $this->save();
     }
@@ -248,9 +246,9 @@ class NxEvent extends Model
         return $this->hasOne('App\StudentLevel', 'curriculumLevelId');
     }
 
-    public function semesters()
+    public function semester()
     {
-        return $this->belongsToMany('App\Semester');
+        return $this->belongsTo('App\Semester', 'semesterId');
     }
 
     public function settings()

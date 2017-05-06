@@ -52,6 +52,11 @@ export const VERIFY_EMAIL_AVALABLE_SUCCESS = 'VERIFY_EMAIL_AVALABLE_SUCCESS';
 export const CONFIRM_PRIVACY_POLICY = 'CONFIRM_PRIVACY_POLICY';
 export const CONFIRM_PRIVACY_POLICY_SUCCESS = 'CONFIRM_PRIVACY_POLICY_SUCCESS';
 
+export const GET_USER_SEMESTERS_START = 'GET_USER_SEMESTERS_START';
+export const GET_USER_SEMESTERS_ERROR = 'GET_USER_SEMESTERS_ERROR';
+export const GET_USER_SEMESTERS_SUCCESS = 'GET_USER_SEMESTERS_SUCCESS';
+export const GET_USER_SEMESTERS = 'GET_USER_SEMESTERS';
+
 export const LOAD_USER_FOR_EDITING = 'LOAD_USER_FOR_EDITING';
 export const ADD_USER_TO_GROUP = 'ADD_USER_TO_GROUP';
 export const ADD_GROUP_TO_GROUP = 'ADD_GROUP_TO_GROUP';
@@ -72,6 +77,19 @@ export function loadViewer() {
         credentials: 'same-origin',
       }).then(response => response.json()),
     }
+  });
+}
+
+export function loadUserSemesters(userId) {
+  return ({ fetch }) => ({
+    type: GET_USER_SEMESTERS,
+    payload: {
+      promise: fetch(`/users/${userId}/semesters`, {
+        credentials: 'same-origin',
+        method: 'get',
+        headers: { 'Content-Type': 'application/json' },
+      }).then((response) => response.json()),
+    },
   });
 }
 
@@ -151,7 +169,6 @@ export function saveUser(values) {
           buddyDescription: values.buddyDescription.toString('html'),
           guideDescription: values.guideDescription.toString('html'),
           lectorDescription: values.lectorDescription.toString('html'),
-          studentLevelId: values.studentLevelId,
           photo: values.photo,
           actualJobInfo: values.actualJobInfo,
           school: values.school,
@@ -164,8 +181,6 @@ export function saveUser(values) {
           iban: values.iban,
           newPassword: values.newPassword,
           confirmationPassword: values.confirmationPassword,
-          minimumSemesterActivityPoints: values.minimumSemesterActivityPoints,
-          activityPointsBaseNumber: values.activityPointsBaseNumber,
         }),
       }).then(response => response.json())
       .then(response => { browserHistory.goBack(); return response; }),

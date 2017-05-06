@@ -277,7 +277,7 @@ const validate = (values, props) => {
       values.shortDescription.getEditorState().getCurrentContent().getPlainText().length
       : 0;
     if (shortDescriptionLength < 150) {
-      errors.shortDescription = formatMessage(messages.requiredLengthField, {characters: 150 - shortDescriptionLength});
+      errors.shortDescription = formatMessage(messages.requiredLengthField, { characters: 150 - shortDescriptionLength });
     }
 
   return errors;

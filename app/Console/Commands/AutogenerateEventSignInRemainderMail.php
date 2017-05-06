@@ -46,6 +46,11 @@ class AutogenerateEventSignInRemainderMail extends Command
 
                     $attendees = $group->attendees()->whereNull('signedIn')->whereNull('wontGo')->whereNull('signedOut')->get();
                     foreach ($attendees as $attendee) {
+                        // ak sa nemoze prihlasit ktokolvek zo skupiny, nemoze sa cela skupina
+                        if ($event->canSignInAttendee($attendee) !== true) {
+                            break;
+                        }
+
                         $email = new \App\Mail\Events\EventSignInRemainderMail($event, $attendee->user, $attendee->signInToken, $eventSignInDeadline, $manager);
                         \Mail::send($email);
                     }

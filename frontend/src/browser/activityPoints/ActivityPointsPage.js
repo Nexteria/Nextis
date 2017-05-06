@@ -2,7 +2,9 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+
 import * as eventsActions from '../../common/events/actions';
+import * as usersActions from '../../common/users/actions';
 import * as attendeesGroupActions from '../../common/attendeesGroup/actions';
 
 import { fields } from '../../common/lib/redux-fields/index';
@@ -40,13 +42,21 @@ const messages = defineMessages({
   },
 });
 
+const styles = {
+  semesterSelector: {
+    maxWidth: '220px',
+    margin: 'auto',
+    marginBottom: '10px',
+  },
+};
+
 class ActivityPointsPage extends Component {
 
   static propTypes = {
     nexteriaIban: PropTypes.string,
     userPayments: PropTypes.object,
     viewer: PropTypes.object,
-    attendees: PropTypes.list,
+    attendees: PropTypes.object,
     events: PropTypes.object,
     users: PropTypes.object,
     studentLevels: PropTypes.object,
@@ -54,6 +64,9 @@ class ActivityPointsPage extends Component {
     params: PropTypes.object,
     loadUsersPayments: PropTypes.func,
     getEventsAttendeesForUser: PropTypes.func,
+    activeSemesterId: PropTypes.number.isRequired,
+    viewerSemesters: PropTypes.object,
+    loadUserSemesters: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -61,6 +74,8 @@ class ActivityPointsPage extends Component {
       viewer,
       params,
       getEventsAttendeesForUser,
+      activeSemesterId,
+      loadUserSemesters,
     } = this.props;
     let userId = viewer.id;
 
@@ -68,21 +83,22 @@ class ActivityPointsPage extends Component {
       userId = parseInt(params.userId, 10);
     }
 
-    getEventsAttendeesForUser(userId);
+    loadUserSemesters(userId);
+    getEventsAttendeesForUser(userId, activeSemesterId);
   }
-
 
   render() {
     const {
       viewer,
       attendees,
       users,
-      studentLevels,
       fields,
+      getEventsAttendeesForUser,
       params,
+      viewerSemesters,
     } = this.props;
 
-    if (!users || !attendees) {
+    if (!users || !attendees || !viewerSemesters) {
       return <div></div>;
     }
 
@@ -91,6 +107,8 @@ class ActivityPointsPage extends Component {
     if (params && params.userId) {
       activeUser = users.get(parseInt(params.userId, 10));
     }
+
+    const activeSemester = viewerSemesters.get(parseInt(fields.semesterId.value));
 
     return (
       <div>
@@ -110,15 +128,34 @@ class ActivityPointsPage extends Component {
                   <span
                     style={{ fontSize: '2em' }}
                   >
-                    {activeUser.gainedActivityPoints}&nbsp;
+                    {activeSemester.get('gainedActivityPoints').sumGainedPoints}&nbsp;
                     <FormattedMessage {...messages.from} />&nbsp;
-                    {activeUser.activityPointsBaseNumber}&nbsp;
+                    {activeSemester.get('activityPointsBaseNumber')}&nbsp;
                     <FormattedMessage {...messages.points} />
                   </span>
                 </div>
-                <OverviewTable viewer={activeUser} />
+                <OverviewTable activeSemester={activeSemester} />
               </div>
             </div>
+          </div>
+        </div>
+        <div className="row text-center">
+          <div className="form-group">
+            <select
+              className="form-control"
+              name="semesterId"
+              style={styles.semesterSelector}
+              {...fields.semesterId}
+              value={fields.semesterId.value}
+              onChange={(e) => {
+                fields.semesterId.onChange(e);
+                getEventsAttendeesForUser(activeUser.get('id'), e.target.value);
+              }}
+            >
+              {viewerSemesters.valueSeq().map(semester =>
+                <option key={semester.get('id')} value={semester.get('id')}>{semester.get('name')}</option>
+              )}
+            </select>
           </div>
         </div>
         <div className="row">
@@ -167,14 +204,19 @@ ActivityPointsPage = fields(ActivityPointsPage, {
   path: 'ActivityPoints',
   fields: [
     'usersFilter',
+    'semesterId',
     'attendeesFilter',
   ],
+  getInitialState: (props) => ({ semesterId: props.activeSemesterId })
 });
 
 export default connect(state => ({
   events: state.events.events,
   studentLevels: state.users.studentLevels,
   viewer: state.users.viewer,
+  viewerSemesters: state.users.viewerSemesters,
   users: state.users.users,
+  semesters: state.semesters.semesters,
+  activeSemesterId: state.semesters.activeSemesterId,
   attendees: state.events.attendees,
-}), { ...attendeesGroupActions, ...eventsActions })(ActivityPointsPage);
+}), { ...attendeesGroupActions, ...usersActions, ...eventsActions })(ActivityPointsPage);

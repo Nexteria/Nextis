@@ -75,10 +75,13 @@ export default class AppSideBar extends Component {
   static propTypes = {
     viewer: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    rolesList: PropTypes.object.isRequired,
   };
 
   render() {
-    const { viewer, hasPermission } = this.props;
+    const { viewer, rolesList, hasPermission } = this.props;
+
+    const isStudent = viewer.roles.includes(rolesList.get('STUDENT').id);
 
     return (
       <aside className="main-sidebar">
@@ -90,17 +93,23 @@ export default class AppSideBar extends Component {
                 <span><FormattedMessage {...messages.events} /></span>
               </Link>
             </li>
-            <li>
-              <Link to="/points">
-                <span><FormattedMessage {...messages.activityPoints} /></span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/payments">
-                <i className="fa fa-eur text-green"></i>
-                <span><FormattedMessage {...messages.payments} /></span>
-              </Link>
-            </li>
+            {isStudent ?
+              <li>
+                <Link to="/points">
+                  <span><FormattedMessage {...messages.activityPoints} /></span>
+                </Link>
+              </li>
+              : null
+            }
+            {isStudent ?
+              <li>
+                <Link to="/payments">
+                  <i className="fa fa-eur text-green"></i>
+                  <span><FormattedMessage {...messages.payments} /></span>
+                </Link>
+              </li>
+              : null
+            }
             {viewer.hostedEvents.size > 0 ?
               <li>
                 <Link to="/host/events">

@@ -16,11 +16,11 @@ const messages = defineMessages({
 export default class OverviewTable extends Component {
 
   static propTypes = {
-    viewer: PropTypes.object,
+    activeSemester: PropTypes.object,
   };
   render() {
     const {
-      viewer,
+      activeSemester,
     } = this.props;
 
     return (
@@ -28,7 +28,7 @@ export default class OverviewTable extends Component {
         <tbody>
           <tr>
             <td><FormattedMessage {...messages.studetsMinimumPortionOfBasePoints} />:</td>
-            <td>{viewer.minimumSemesterActivityPoints}</td>
+            <td>{activeSemester.get('minimumSemesterActivityPoints')}</td>
           </tr>
         </tbody>
       </table>

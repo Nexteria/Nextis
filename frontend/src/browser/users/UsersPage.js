@@ -43,10 +43,6 @@ const messages = defineMessages({
     defaultMessage: 'Students base activity points',
     id: 'users.manage.userBaseSemesterActivityPoints'
   },
-  studentLevel: {
-    defaultMessage: 'Student level',
-    id: 'users.manage.studentLevel'
-  },
   sortBy: {
     defaultMessage: 'Sort by',
     id: 'users.manage.sortBy'
@@ -54,10 +50,6 @@ const messages = defineMessages({
   all: {
     defaultMessage: 'All',
     id: 'users.manage.all'
-  },
-  levelFilter: {
-    defaultMessage: 'Filter level',
-    id: 'users.manage.levelFilter'
   },
 });
 
@@ -68,7 +60,6 @@ class UsersPage extends Component {
     fields: PropTypes.object.isRequired,
     removeUser: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
-    studentLevels: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
@@ -149,7 +140,7 @@ class UsersPage extends Component {
   }
 
   render() {
-    const { users, fields, studentLevels } = this.props;
+    const { users, fields } = this.props;
     const { hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
@@ -159,11 +150,6 @@ class UsersPage extends Component {
 
     let filteredUsers = users.valueSeq().map(user => user);
 
-    if (fields.levelFilter.value) {
-      filteredUsers = filteredUsers.valueSeq().filter(user =>
-        user.studentLevelId === parseInt(fields.levelFilter.value, 10)
-      );
-    }
 
     if (fields.filter.value) {
       filteredUsers = filteredUsers.valueSeq().filter(user =>
@@ -176,7 +162,6 @@ class UsersPage extends Component {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
-      studentLevel: user.studentLevelId ? studentLevels.get(user.studentLevelId).name : '-',
       points: this.getUserPointsComponent(user),
       gainedActivityPoints: user.gainedActivityPoints,
       userBaseSemesterActivityPoints: user.activityPointsBaseNumber,
@@ -205,23 +190,6 @@ class UsersPage extends Component {
                 <div className="box-header">
                   <h3 className="box-title"><FormattedMessage {...messages.tableTitle} /></h3>
                   <div className="box-tools">
-                    <div className="input-group input-group-sm pull-right" style={{ width: '150px' }}>
-                      <label style={{ position: 'absolute', top: '-25px' }}>
-                        <FormattedMessage {...messages.levelFilter} />:
-                      </label>
-                      <select
-                        name="sortBy"
-                        className="form-control"
-                        {...fields.levelFilter}
-                      >
-                        <option value="">{formatMessage(messages.all)}</option>
-                        {studentLevels.valueSeq().map(level =>
-                          <option key={level.id} value={level.id}>{level.name}</option>
-                        )}
-                      </select>
-
-                    </div>
-
                     <div className="input-group input-group-sm" style={{ width: '150px' }}>
                       <input
                         type="text"
@@ -258,10 +226,6 @@ class UsersPage extends Component {
                       {formatMessage(messages.lastName)}
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="studentLevel" dataSort>
-                      {formatMessage(messages.studentLevel)}
-                    </TableHeaderColumn>
-
                     <TableHeaderColumn dataField="points" dataSort sortFunc={this.pointsSortFunc} dataFormat={x => x}>
                       {formatMessage(messages.points)}
                     </TableHeaderColumn>
@@ -289,7 +253,6 @@ UsersPage = fields(UsersPage, {
   path: 'users',
   fields: [
     'filter',
-    'levelFilter',
     'sortBy',
   ],
 });
@@ -298,6 +261,5 @@ UsersPage = injectIntl(UsersPage);
 
 export default connect(state => ({
   users: state.users.users,
-  studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(UsersPage);

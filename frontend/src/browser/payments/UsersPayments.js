@@ -55,10 +55,13 @@ class UsersPayments extends Component {
     users: PropTypes.object,
     fields: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
+    loadUsersPayments: PropTypes.func.isRequired,
+    usersPayments: PropTypes.object,
   };
 
-  editUser(userId) {
-    browserHistory.push(`/admin/users/${userId}`);
+  componentWillMount() {
+    const { loadUsersPayments } = this.props;
+    loadUsersPayments();
   }
 
   getUserActions(user) {
@@ -72,6 +75,10 @@ class UsersPayments extends Component {
     );
   }
 
+  editUser(userId) {
+    browserHistory.push(`/admin/users/${userId}`);
+  }
+
   accountBalanceSortFunc(a, b, order) {   // order is desc or asc
     if (order === 'desc') {
       return a.accountBalanceNumber - b.accountBalanceNumber;
@@ -80,11 +87,24 @@ class UsersPayments extends Component {
     return b.accountBalanceNumber - a.accountBalanceNumber;
   }
 
+  computeUserAccountBallance(payments) {
+    let balance = 0;
+    payments.forEach(payment => {
+      if (payment.transactionType === 'debet') {
+        balance -= payment.amount;
+      } else {
+        balance += payment.amount;
+      }
+    });
+
+    return balance;
+  }
+
   render() {
-    const { users, fields } = this.props;
+    const { users, usersPayments, fields } = this.props;
     const { formatMessage } = this.props.intl;
 
-    if (!users) {
+    if (!users || !usersPayments) {
       return <div></div>;
     }
 
@@ -96,15 +116,18 @@ class UsersPayments extends Component {
       );
     }
 
-    const usersData = filteredUsers.valueSeq().map(user => ({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      accountBalance: (<span className={user.accountBalance >= 0 ? 'green-text' : 'red-text'}>
-        {user.accountBalance / 100} &euro;</span>),
-      accountBalanceNumber: user.accountBalance / 100,
-      actions: this.getUserActions(user),
-    })).toArray();
+    const usersData = filteredUsers.valueSeq().map(user => {
+      const balance = this.computeUserAccountBallance(usersPayments.get(user.id));
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        accountBalance: (<span className={balance >= 0 ? 'green-text' : 'red-text'}>
+          {balance / 100} &euro;</span>),
+        accountBalanceNumber: balance / 100,
+        actions: this.getUserActions(user),
+      };
+    }).toArray();
 
     return (
       <div className="row">
@@ -194,5 +217,6 @@ UsersPayments = injectIntl(UsersPayments);
 
 export default connect(state => ({
   users: state.users.users,
+  usersPayments: state.payments.usersPayments,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...paymentsActions, ...usersActions })(UsersPayments);

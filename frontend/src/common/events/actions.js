@@ -139,7 +139,13 @@ export function saveEvent(fields) {
   });
 }
 
-export function loadEventList() {
+export function loadEventList(filters = {}) {
+  let params = '?';
+
+  Object.keys(filters).forEach((key, index) => {
+    params += (index ? `&${key}=${filters[key]}` : `${key}=${filters[key]}`);
+  });
+
   return ({ fetch }) => ({
     type: LOAD_EVENTS_LIST,
     payload: {
@@ -337,11 +343,11 @@ export function closeLocationDetailsDialog() {
   };
 }
 
-export function getEventsAttendeesForUser(userId) {
+export function getEventsAttendeesForUser(userId, semesterId) {
   return ({ fetch }) => ({
     type: GET_EVENTS_ATTENDEES_FOR_USER,
     payload: {
-      promise: fetch(`/users/${userId}/attendees`, {
+      promise: fetch(`/users/${userId}/activityPoints?semesterId=${semesterId}`, {
         credentials: 'same-origin',
         method: 'get',
         headers: { 'Content-Type': 'application/json' },

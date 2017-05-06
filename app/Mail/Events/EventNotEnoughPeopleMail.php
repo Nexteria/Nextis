@@ -44,7 +44,7 @@ class EventNotEnoughPeopleMail extends Mailable
     public function build()
     {
         $this->to($this->managerEmail)
-             ->subject('[NLA '.$this->eventType.'] MALÝ POČET PRIHLÁSENÝCH, '.$this->eventName)
+             ->subject('[Nexteria Space] MALÝ POČET PRIHLÁSENÝCH, '.$this->eventType.' '.$this->eventName)
              ->view('emails.events.event_not_enought_people');
     }
 }

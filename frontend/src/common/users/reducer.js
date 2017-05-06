@@ -21,6 +21,8 @@ function hasPermission(permission, state) {
 
 const InitialState = Record({
   viewer: null,
+  viewerSemesters: null,
+  viewerRolesData: new Map(),
   users: null,
   rolesList: null,
   groups: null,
@@ -38,19 +40,30 @@ const InitialState = Record({
 export default function usersReducer(state = new InitialState, action) {
   switch (action.type) {
     case actions.LOAD_VIEWER_SUCCESS: {
-      const user = action.payload;
+      const user = action.payload.user;
+      const student = action.payload.student;
       const viewer = new User({
         ...user,
         hostedEvents: new List(user.hostedEvents),
         roles: new List(user.roles.map(role => role.id)),
-        studentLevelId: parseInt(user.studentLevelId, 10),
         personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
         guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
         lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
         buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
       });
 
-      return state.set('viewer', viewer);
+      let newState = state;
+      if (student) {
+        newState = newState.setIn(['viewerRolesData', 'student'], new Map(student));
+      }
+
+      return newState.set('viewer', viewer);
+    }
+
+    case actions.GET_USER_SEMESTERS_SUCCESS: {
+      return state.set('viewerSemesters', new Map(action.payload.map(semester =>
+        [semester.id, new Map(semester)])
+      ));
     }
 
     case actions.CONFIRM_PRIVACY_POLICY_SUCCESS: {
@@ -59,7 +72,6 @@ export default function usersReducer(state = new InitialState, action) {
         ...user,
         hostedEvents: new List(user.hostedEvents),
         roles: new List(user.roles.map(role => role.id)),
-        studentLevelId: parseInt(user.studentLevelId, 10),
         personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
         guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
         lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
@@ -80,7 +92,6 @@ export default function usersReducer(state = new InitialState, action) {
         ...action.payload,
         hostedEvents: new List(action.payload.hostedEvents),
         roles: new List(action.payload.roles.map(role => role.id)),
-        studentLevelId: parseInt(action.payload.studentLevelId, 10),
         personalDescription: RichTextEditor.createValueFromString(action.payload.personalDescription, 'html'),
         guideDescription: RichTextEditor.createValueFromString(action.payload.guideDescription, 'html'),
         lectorDescription: RichTextEditor.createValueFromString(action.payload.lectorDescription, 'html'),
@@ -162,7 +173,6 @@ export default function usersReducer(state = new InitialState, action) {
           ...user,
           hostedEvents: new List(user.hostedEvents),
           roles: new List(user.roles.map(role => role.id)),
-          studentLevelId: parseInt(user.studentLevelId, 10),
           personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
           guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
           lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),

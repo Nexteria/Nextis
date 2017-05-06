@@ -10,8 +10,6 @@ class NxEventTransformer extends Transformer
         $transformer = new AttendeesGroupTransformer();
         $attendees = $transformer->transformCollection($event->attendeesGroups);
 
-        $semester = $event->semesters()->first();
-
         return [
             'id' => (int) $event->id,
             'name' => $event->name,
@@ -35,7 +33,7 @@ class NxEventTransformer extends Transformer
             'groupedEvents' => array_map('intval', $event->groupedEvents()->pluck('id')->toArray()),
             'exclusionaryEvents' => array_map('intval', $event->exclusionaryEvents()->pluck('id')->toArray()),
             'curriculumLevelId' => (int) $event->curriculumLevelId,
-            'semester' => $semester ? (int) $semester->id : null,
+            'semester' => $event->semester ? (int) $event->semester->id : null,
          ];
     }
 }

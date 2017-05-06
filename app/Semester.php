@@ -16,6 +16,6 @@ class Semester extends Model
 
     public function events()
     {
-        return $this->belongsToMany('App\NxEvent');
+        return $this->hasMany('App\NxEvent', 'semesterId');
     }
 }

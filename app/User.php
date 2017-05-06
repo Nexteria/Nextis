@@ -43,7 +43,6 @@ class User extends Authenticatable
         'minimumSemesterActivityPoints',
         'activityPointsBaseNumber',
         'nexteriaTeamRole',
-        'monthlySchoolFee',
     ];
 
     protected $dates = ['deleted_at'];
@@ -66,7 +65,6 @@ class User extends Authenticatable
         $user->buddyDescription = clean($attributes['buddyDescription']);
         $user->guideDescription = clean($attributes['guideDescription']);
         $user->lectorDescription = clean($attributes['lectorDescription']);
-        $user->tuitionFeeVariableSymbol = Carbon::now()->format("Ym").$user->id;
 
         if ($attributes['newPassword'] === $attributes['confirmationPassword']) {
             $user->password = \Hash::make($attributes['newPassword']);
@@ -74,10 +72,6 @@ class User extends Authenticatable
         
         if ($attributes['profilePicture']) {
             $user->profilePictureId = $attributes['profilePicture']->id;
-        }
-        
-        if ($attributes['studentLevelId']) {
-            $user->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
         }
 
         $user->roles()->sync(Role::whereIn('id', $attributes['roles'])->pluck('id')->toArray());
@@ -92,10 +86,6 @@ class User extends Authenticatable
 
         if (isset($attributes['roles'])) {
             $this->roles()->sync(Role::whereIn('id', $attributes['roles'])->pluck('id')->toArray());
-        }
-
-        if ($attributes['studentLevelId']) {
-            $this->studentLevelId = StudentLevel::findOrFail($attributes['studentLevelId'])->id;
         }
 
         if (isset($attributes['personalDescription'])) {
@@ -139,9 +129,9 @@ class User extends Authenticatable
         return $this->hasOne('App\Image', 'profilePictureId');
     }
 
-    public function studentLevel()
+    public function student()
     {
-        return $this->hasOne('App\StudentLevel', 'studentLevelId');
+        return $this->hasOne('App\Student', 'userId');
     }
 
     public function payments()
@@ -172,7 +162,7 @@ class User extends Authenticatable
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
             if ($event != null) {
-                if ($event->semesters()->where('semester_id', '=', $semesterId)->exists()) {
+                if ($event->semesterId == $semesterId) {
                     if ($attendee->filledFeedback && $attendee->wasPresent) {
                         $sumGainedPoints += $event->activityPoints;
                     }
@@ -200,8 +190,8 @@ class User extends Authenticatable
         $newPayment->userId = $this->id;
         $newPayment->deadline_at = Carbon::createFromDate($year, $month, $paymentSettings->schoolFeePaymentsDeadlineDay);
         $newPayment->addedByUserId = $adminUserId;
-        $newPayment->amount = $this->monthlySchoolFee;
-        $newPayment->variableSymbol = $this->tuitionFeeVariableSymbol;
+        $newPayment->amount = $this->student->getActiveSemester()->pivot->tuitionFee;
+        $newPayment->variableSymbol = $this->student->tuitionFeeVariableSymbol;
         $newPayment->description = 'Automaticky vygenerovane';
 
         if ($createdAt) {

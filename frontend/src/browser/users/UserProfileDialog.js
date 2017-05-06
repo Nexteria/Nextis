@@ -86,9 +86,6 @@ export class UserProfileDialog extends Component {
               <img className="profile-user-img img-responsive img-circle" src="/img/avatar.png" alt="User profile picture" />
 
               <h3 className="profile-username text-center">{user.firstName} {user.lastName}</h3>
-
-              <p className="text-muted text-center">{studentLevels.get(user.studentLevelId).name}</p>
-
               <hr />
 
               <strong><i className="fa fa-file-text-o margin-r-5"></i> <FormattedMessage {...messages.personalDescription} /></strong>

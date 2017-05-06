@@ -9,6 +9,7 @@ const InitialState = Record({
   associateUserId: null,
   associationPaymentId: null,
   userPayments: null,
+  usersPayments: null,
   paymentsSettings: null,
 }, 'payments');
 
@@ -48,6 +49,12 @@ export default function nxLocationsReducer(state = new InitialState, action) {
       return state.set('userPayments',
         new List(action.payload.map(payment => new Payment(payment)))
       );
+    }
+
+    case actions.LOAD_USERS_PAYMENTS_SUCCESS: {
+      return state.set('usersPayments', new Map(Object.keys(action.payload).map(userId =>
+        [parseInt(userId, 10), new List(action.payload[userId])]
+      )));
     }
 
     case actions.DELETE_PAYMENTS_SUCCESS: {

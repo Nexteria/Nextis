@@ -59,7 +59,7 @@ const messages = defineMessages({
 class AttendeesTable extends Component {
 
   static propTypes = {
-    attendees: PropTypes.array,
+    attendees: PropTypes.object,
     fields: PropTypes.object,
     intl: PropTypes.object.isRequired,
   };

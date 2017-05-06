@@ -32,7 +32,7 @@ class InviteUser extends Command
           'userName' => $user->firstName,
           'userEmail' => $user->email,
           'userPassword' => str_random(12),
-          'userVariableSymbol' => $user->tuitionFeeVariableSymbol,
+          'userVariableSymbol' => $user->student->tuitionFeeVariableSymbol,
         ];
 
         $user->password = \Hash::make($data['userPassword']);

@@ -169,6 +169,12 @@ class Payment extends Model
             if ($vsPayment) {
                 $user = $vsPayment->user;
                 $payment->userId = $user->id;
+            } else {
+                $student = \App\Student::where('tuitionFeeVariableSymbol', $payment->variableSymbol)
+                                        ->first();
+                if ($student) {
+                    $payment->userId = $student->userId;
+                }
             }
         }
 

@@ -34,10 +34,18 @@ class AutogenerateOpeningNoticeToEventManagerMail extends Command
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
             $settings = $event->getSettings();
-            $remainderDate = $event->eventStartDateTime
-                                      ->subDays($settings['eventSignInOpeningManagerNotificationDaysBefore'])
-                                      ->format('Y-m-d');
 
+            $remainderDate = null;
+            foreach ($event->attendeesGroups as $group) {
+                if (!$remainderDate) {
+                    $remainderDate = $group->signUpOpenDateTime;
+                } elseif ($remainderDate->gt($group->signUpOpenDateTime)) {
+                    $remainderDate = $group->signUpOpenDateTime;
+                }
+            }
+
+            $remainderDate = $remainderDate->subDays($settings['eventSignInOpeningManagerNotificationDaysBefore'])
+                                           ->format('Y-m-d');
             if ($remainderDate === $today) {
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
                 $host = \App\User::findOrFail($event->hostId);

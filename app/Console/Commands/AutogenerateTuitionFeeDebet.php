@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
-use App\Role;
+use App\Student;
 
 class AutogenerateTuitionFeeDebet extends Command
 {
@@ -43,16 +43,10 @@ class AutogenerateTuitionFeeDebet extends Command
         if ($tuitionSettings->generationSchoolFeeDay !== $day) {
             $isDefaultGenerationDay = false;
         }
-        
 
-        $activeStudents = Role::where('name', 'STUDENT')
-                              ->first()
-                              ->users()
-                              ->where('state', \Config::get('constants.states.ACTIVE'))
-                              ->get();
-
-        foreach ($activeStudents as $user) {
-            $paymentSettings = $user->paymentSettings;
+        $activeStudents = Student::where('status', \Config::get('constants.states.ACTIVE'))->get();
+        foreach ($activeStudents as $student) {
+            $paymentSettings = $student->user->paymentSettings;
 
             if ($paymentSettings) {
                 if ($paymentSettings->generationSchoolFeeDay !== $day ||
@@ -63,7 +57,7 @@ class AutogenerateTuitionFeeDebet extends Command
                 continue;
             }
 
-            $user->generateMonthlySchoolFee($month, $year, 1);
+            $student->user->generateMonthlySchoolFee($month, $year, 1);
         }
     }
 }

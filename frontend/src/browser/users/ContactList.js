@@ -32,10 +32,6 @@ const messages = defineMessages({
     defaultMessage: 'Last name',
     id: 'contacts.list.lastName',
   },
-  level: {
-    defaultMessage: 'Level',
-    id: 'contacts.list.level',
-  },
   email: {
     defaultMessage: 'Email',
     id: 'contacts.list.email',
@@ -53,26 +49,16 @@ class ContactList extends Component {
     rolesList: PropTypes.object,
     fields: PropTypes.object,
     user: PropTypes.number,
-    openUserDetail: PropTypes.func.isRequired,
-    studentLevels: PropTypes.object,
     intl: PropTypes.object.isRequired,
   };
 
   render() {
-    const { users, rolesList, studentLevels, fields, user, openUserDetail } = this.props;
+    const { users, rolesList, fields, user } = this.props;
     const { formatMessage } = this.props.intl;
 
-    let students = [];
+    let students = users;
     if (users) {
-      students = users.filter(user => user.roles.includes(rolesList.get('STUDENT').id))
-        .valueSeq().sort((a, b) => {
-          if (studentLevels.get(a.studentLevelId).name ===
-            studentLevels.get(b.studentLevelId).name) {
-            return ((a.lastName > b.lastName) ? 1 : -1);
-          }
-          return ((studentLevels.get(a.studentLevelId).name >
-            studentLevels.get(b.studentLevelId).name) ? 1 : -1);
-        });
+      students = users.filter(user => user.roles.includes(rolesList.get('STUDENT').id));
 
       if (fields.filter.value) {
         students = students.filter(user =>
@@ -86,7 +72,6 @@ class ContactList extends Component {
       id: student.id,
       firstName: student.firstName,
       lastName: student.lastName,
-      level: studentLevels.get(student.studentLevelId).name,
       email: student.email,
       phone: student.phone,
     })).toArray();
@@ -146,10 +131,6 @@ class ContactList extends Component {
                       {formatMessage(messages.lastName)}
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="level" dataSort>
-                      {formatMessage(messages.level)}
-                    </TableHeaderColumn>
-
                     <TableHeaderColumn dataField="email" dataSort>
                       {formatMessage(messages.email)}
                     </TableHeaderColumn>
@@ -164,7 +145,7 @@ class ContactList extends Component {
             </div>
           </div>
         </section>
-        {user ? <UserProfileDialog user={users.get(user)} /> : ""}
+        {user ? <UserProfileDialog user={users.get(user)} /> : null}
       </div>
     );
   }
@@ -182,6 +163,5 @@ ContactList = injectIntl(ContactList);
 export default connect(state => ({
   users: state.users.users,
   user: state.users.user,
-  studentLevels: state.users.studentLevels,
   rolesList: state.users.rolesList,
 }), actions)(ContactList);

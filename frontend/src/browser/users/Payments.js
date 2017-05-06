@@ -65,6 +65,7 @@ class Payments extends Component {
     nexteriaIban: PropTypes.string,
     userPayments: PropTypes.object,
     viewer: PropTypes.object,
+    viewerRolesData: PropTypes.object.isRequired,
     loadUsersPayments: PropTypes.func,
   };
 
@@ -80,8 +81,24 @@ class Payments extends Component {
     const {
       nexteriaIban,
       viewer,
+      viewerRolesData,
       userPayments,
     } = this.props;
+
+    if (!userPayments) {
+      return <div></div>
+    }
+
+    const student = viewerRolesData.get('student');
+
+    let balance = 0;
+    userPayments.forEach(payment => {
+      if (payment.transactionType === 'debet') {
+        balance -= payment.amount;
+      } else {
+        balance += payment.amount;
+      }
+    });
 
     return (
       <div>
@@ -99,14 +116,14 @@ class Payments extends Component {
                   <div className="text-center">
                     <span
                       id="account-balance-span"
-                      className={viewer.accountBalance >= 0 ? 'green-text' : 'red-text'}
-                    >{viewer.accountBalance / 100} &euro;</span>
+                      className={balance >= 0 ? 'green-text' : 'red-text'}
+                    >{balance / 100} &euro;</span>
                   </div>
                   <table className="table table-bordered">
                     <tbody>
                       <tr>
                         <th><FormattedMessage {...messages.monthlySchoolFee} />:</th>
-                        <th>{viewer.monthlySchoolFee / 100} &euro;</th>
+                        <th>{student.get('tuitionFee') / 100} &euro;</th>
                       </tr>
                     </tbody>
                   </table>
@@ -123,7 +140,7 @@ class Payments extends Component {
                       </tr>
                       <tr>
                         <td><FormattedMessage {...messages.vs} />:</td>
-                        <td>{viewer.tuitionFeeVariableSymbol}</td>
+                        <td>{student.get('tuitionFeeVariableSymbol')}</td>
                       </tr>
                       <tr>
                         <td><FormattedMessage {...messages.recieverMessage} />:</td>
@@ -176,6 +193,7 @@ class Payments extends Component {
 export default connect(state => ({
   nexteriaIban: state.app.constants.nexteriaIban,
   viewer: state.users.viewer,
+  viewerRolesData: state.users.viewerRolesData,
   userPayments: state.payments.userPayments,
   users: state.users.users,
   studentLevels: state.users.studentLevels,

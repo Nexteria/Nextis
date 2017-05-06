@@ -20,17 +20,22 @@ class UsersController extends Controller
     protected $paymentTransformer;
     protected $nxEventAttendeeTransformer;
     protected $userPaymentSettingsTransformer;
+    protected $studentTransformer;
 
     public function __construct(
         \App\Transformers\UserTransformer $userTransformer,
         \App\Transformers\PaymentTransformer $paymentTransformer,
         \App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer,
-        \App\Transformers\UserPaymentSettingsTransformer $userPaymentSettingsTransformer
+        \App\Transformers\UserPaymentSettingsTransformer $userPaymentSettingsTransformer,
+        \App\Transformers\StudentSemesterTransformer $studentSemesterTransformer,
+        \App\Transformers\StudentTransformer $studentTransformer
     ) {
         $this->userTransformer = $userTransformer;
         $this->paymentTransformer = $paymentTransformer;
         $this->userPaymentSettingsTransformer = $userPaymentSettingsTransformer;
         $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
+        $this->studentSemesterTransformer = $studentSemesterTransformer;
+        $this->studentTransformer = $studentTransformer;
     }
 
     public function checkUsernameAvailability()
@@ -44,9 +49,9 @@ class UsersController extends Controller
         }
 
         if (\Input::has('id')) {
-          $isAvailable = !User::where('username', '=', $username)->where('id', '!=', \Input::get('id'))->exists();  
+            $isAvailable = !User::where('username', '=', $username)->where('id', '!=', \Input::get('id'))->exists();  
         } else {
-          $isAvailable = !User::where('username', '=', $username)->exists();
+            $isAvailable = !User::where('username', '=', $username)->exists();
         }
 
         if (!$isAvailable) {
@@ -92,9 +97,9 @@ class UsersController extends Controller
         }
 
         if (\Input::has('id')) {
-          $isAvailable = !User::where('email', '=', $email)->where('id', '!=', \Input::get('id'))->exists();
+            $isAvailable = !User::where('email', '=', $email)->where('id', '!=', \Input::get('id'))->exists();
         } else {
-          $isAvailable = !User::where('email', '=', $email)->exists();
+            $isAvailable = !User::where('email', '=', $email)->exists();
         }
         
 
@@ -149,19 +154,22 @@ class UsersController extends Controller
     {
         if ($userId) {
             if ($userId === 'me') {
-                return response()->json($this->userTransformer->transform(\Auth::user()->fresh(['roles']), ['gainedActivityPoints', 'potentialActivityPoints']));
+                $data = [
+                  'user' => $this->userTransformer->transform(\Auth::user()->fresh(['roles'], ['gainedActivityPoints', 'potentialActivityPoints'])),
+                ];
+
+                if (\Auth::user()->hasRole('STUDENT')) {
+                    $data['student'] = $this->studentTransformer->transform(\Auth::user()->student);
+                }
+
+                return response()->json($data);
             }
 
-            return response()->json($this->userTransformer->transform(User::findOrFail($userId)->fresh(['roles']), ['gainedActivityPoints', 'potentialActivityPoints']));
-        }
-
-        $fields = [];
-        if (\Auth::user()->hasRole('ADMIN')) {
-            $fields = ['gainedActivityPoints', 'potentialActivityPoints'];
+            return response()->json($this->userTransformer->transform(User::findOrFail($userId)->fresh(['roles'], ['gainedActivityPoints', 'potentialActivityPoints'])));
         }
 
         $users = User::with(['roles'])->get();
-        return response()->json($this->userTransformer->transformCollection($users, $fields));
+        return response()->json($this->userTransformer->transformCollection($users, []));
     }
 
     public function deleteUser($userId)
@@ -175,21 +183,51 @@ class UsersController extends Controller
         return response()->json($this->paymentTransformer->transformCollection($user->payments));
     }
 
-    public function getEventsAttendeesForUser($userId)
+    public function getUsersPayments()
+    {
+        $users = User::with('payments')->get();
+        $data = [];
+        foreach ($users as $user) {
+            $data[$user->id] = $this->paymentTransformer->transformCollection($user->payments);
+        }
+
+        return response()->json($data);
+    }
+
+    public function getActivityPoints(Request $request, $userId)
     {
         $user = User::findOrFail($userId);
         $attendees = $user->eventAttendees;
 
         $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
+        if ($request->has('semesterId')) {
+            $semesterId = $request->input('semesterId');
+        }
+
         $attendees = $attendees->filter(function ($attendee, $key) use ($semesterId) {
             if (!$attendee->event()) {
                 return false;
             }
 
-            return $attendee->event()->semesters()->where('semester_id', '=', $semesterId)->exists();
+            return $attendee->event()->semesterId == $semesterId;
         });
 
         return response()->json($this->nxEventAttendeeTransformer->transformCollection($attendees, ['event']));
+    }
+
+    public function getSemesters($userId)
+    {
+        $user = User::findOrFail($userId);
+        $semesters = $user->student->semesters;
+
+        $semesters = $this->studentSemesterTransformer->transformCollection($semesters);
+        $newSemesters = [];
+        foreach ($semesters as &$semester) {
+            $semester['gainedActivityPoints'] = $user->computeActivityPoints($semester['id']);
+            $newSemesters[] = $semester;
+        }
+
+        return response()->json($newSemesters);
     }
 
     public function deletePayments(Request $request, $userId)
