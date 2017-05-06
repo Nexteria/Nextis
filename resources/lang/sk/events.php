@@ -8,5 +8,5 @@ return [
     'sorryCanNotDoIt' => 'Ľutujeme, dana operácia nebude vykonaná. Pre viac informácií kontaktuj event managera.',
     'reasonIsRequiredForWontGo' => 'Event :eventName je povinný preto prosím zadaj dôvod prečo sa nezúčastníš (min. 100 znakov)',
     'groupSignInExpired' => 'Prihlásenie na event :eventName už nie je možné - je po deadline-e na prihlásenie pre Vašu skupinu.',
-    'canChangeStatusToWontGo' => 'Tento link nie je možné použiť ak sa študent už predtím prihlásil alebo odhlásil z eventu: :eventName - na odhlásenie / prihlásenie prosím použi rozhranie v Space-e',
+    'canChangeStatusToWontGo' => 'Tento link nie je možné použiť, ak sa študent už predtým prihlásil alebo odhlásil z eventu: :eventName - na odhlásenie / prihlásenie prosím použi rozhranie v Space-e',
 ];
