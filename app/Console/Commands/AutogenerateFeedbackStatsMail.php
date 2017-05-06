@@ -40,10 +40,16 @@ class AutogenerateFeedbackStatsMail extends Command
 
             $settings = $event->getSettings();
             if ($feedbackDeadline === $today) {
-                try {
-                    $respondentsEmails = \FeedbackForms::getRespondents($event->feedbackLink)['respondents'];
-                } catch (\Exception $e) {
-                    continue;
+                $maxRetries = 50;
+                while ($maxRetries > 0) {
+                    try {
+                        $respondentsEmails = \FeedbackForms::getRespondents($event->feedbackLink)['respondents'];
+                    } catch (\Exception $e) {
+                        \Log::error(var_export($e, true));
+                        $maxRetries = $maxRetries - 1;
+                        continue;
+                    }
+                    $maxRetries = 0;
                 }
                 
                 $expectedFilledCount = 0;
@@ -51,7 +57,11 @@ class AutogenerateFeedbackStatsMail extends Command
 
                 $userIds = \App\User::whereIn('email', $respondentsEmails)->pluck('id');
                 foreach ($event->attendeesGroups as $group) {
-                    $attendees = $group->attendees()->whereIn('userId', $userIds)->orWhere('filledFeedback', '=', true)->get();
+                    $attendees = $group->attendees()->where(function ($query) use ($userIds) {
+                        $query->whereIn('userId', $userIds);
+                        $query->orWhere('filledFeedback', '=', true);
+                    })->get();
+
                     foreach ($attendees as $attendee) {
                         $attendee->filledFeedback = true;
                         $attendee->save();

@@ -34,22 +34,30 @@ class AutogenerateFeedbackFormRemainder extends Command
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
             $settings = $event->getSettings();
-            $feedbackDeadline = $event->eventEndDateTime
-                                      ->addDays($settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1);
+            $feedbackDeadline = $event->eventEndDateTime->addDays($settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1);
             $remainderDate = $feedbackDeadline->subDays($settings['feedbackRemainderDaysBefore'])->format('Y-m-d');
 
             if ($remainderDate === $today) {
-                try {
-                    $respondentsEmails = \FeedbackForms::getRespondents($event->feedbackLink)['respondents'];
-                } catch (\Exception $e) {
-                    continue;
+                $maxRetries = 50;
+                while ($maxRetries > 0) {
+                    try {
+                        $respondentsEmails = \FeedbackForms::getRespondents($event->feedbackLink)['respondents'];
+                    } catch (\Exception $e) {
+                        \Log::error(var_export($e, true));
+                        $maxRetries = $maxRetries - 1;
+                        continue;
+                    }
+                    $maxRetries = 0;
                 }
                 
                 $userIds = \App\User::whereIn('email', $respondentsEmails)->pluck('id');
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
 
                 foreach ($event->attendeesGroups as $group) {
-                    $attendees = $group->attendees()->whereIn('userId', $userIds)->orWhere('filledFeedback', '=', true)->get();
+                    $attendees = $group->attendees()->where(function ($query) use ($userIds) {
+                        $query->whereIn('userId', $userIds);
+                        $query->orWhere('filledFeedback', '=', true);
+                    })->get();
                     foreach ($attendees as $attendee) {
                         $attendee->filledFeedback = true;
                         $attendee->save();
