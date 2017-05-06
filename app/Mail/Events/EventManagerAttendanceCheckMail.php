@@ -17,6 +17,7 @@ class EventManagerAttendanceCheckMail extends Mailable
     public $eventType;
     public $eventManagerName;
     public $feedbackCheckDay;
+    public $managerDeadline;
 
     /**
      * Create a new message instance.
@@ -33,6 +34,7 @@ class EventManagerAttendanceCheckMail extends Mailable
 
         $settings = $event->getSettings();
         $this->feedbackCheckDay = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('d.m.Y');
+        $this->managerDeadline = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'] - 1)->format('d.m.Y');
     }
 
     /**

@@ -31,6 +31,7 @@ class NxEventAttendeesController extends Controller
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
                   'attendeeName' => $attendee->user->firstName,
                   'signInFailed' => true,
+                  'signInToken' => $signInToken,
                 ]);
             }
 
@@ -45,6 +46,7 @@ class NxEventAttendeesController extends Controller
                       'message' => $canSignIn,
                       'attendeeName' => $attendee->user->firstName,
                       'signInFailed' => true,
+                      'signInToken' => $signInToken,
                     ]);
                 }
             }
@@ -63,6 +65,7 @@ class NxEventAttendeesController extends Controller
               'message' => trans('events.signInByTokenSuccess', ['eventName' => $group->nxEvent->name]),
               'attendeeName' => $attendee->user->firstName,
               'signInFailed' => false,
+              'signInToken' => $signInToken,
             ]);
         }
 
@@ -70,6 +73,7 @@ class NxEventAttendeesController extends Controller
           'message' => trans('events.sorryCanNotDoIt'),
           'attendeeName' => '',
           'signInFailed' => true,
+          'signInToken' => '',
         ]);
     }
 
@@ -85,6 +89,7 @@ class NxEventAttendeesController extends Controller
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
                   'attendeeName' => $attendee->user->firstName,
                   'signInFailed' => true,
+                  'signInToken' => $signInToken,
                 ]);
             }
 
@@ -94,6 +99,7 @@ class NxEventAttendeesController extends Controller
                   'attendeeName' => $attendee->user->firstName,
                   'wontGo' => true,
                   'signInFailed' => true,
+                  'signInToken' => $signInToken,
                 ]);
             }
 
@@ -122,6 +128,7 @@ class NxEventAttendeesController extends Controller
               'message' => trans('events.wontGoByTokenSuccess', ['eventName' => $group->nxEvent->name]),
               'attendeeName' => $attendee->user->firstName,
               'signInFailed' => false,
+              'signInToken' => $signInToken,
             ]);
         }
 
@@ -129,6 +136,7 @@ class NxEventAttendeesController extends Controller
               'message' => trans('events.sorryCanNotDoIt'),
               'attendeeName' => '',
               'signInFailed' => true,
+              'signInToken' => '',
             ]);
     }
 
