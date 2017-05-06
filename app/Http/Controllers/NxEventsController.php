@@ -116,9 +116,9 @@ class NxEventsController extends Controller
 
     public function getNxEventSettings($eventId)
     {
-        $event = NxEvent::findOrFail($eventId);
+        $event = NxEvent::find($eventId);
 
-        if (!$event->settings) {
+        if (!$event || !$event->settings) {
             abort(404);
         }
 

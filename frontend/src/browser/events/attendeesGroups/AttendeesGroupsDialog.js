@@ -240,7 +240,7 @@ export class AttendeesGroupsDialog extends Component {
     const { groups, eventGroups, users, pristine, submitting, locale, attendeesGroup, attendeesGroupIndex } = this.props;
     const {
       addUser,
-      onChange,
+      onSave,
       addGroup,
       closeAttendeesGroupDialog,
       updateAttendeesGroup,
@@ -270,7 +270,7 @@ export class AttendeesGroupsDialog extends Component {
         </Header>
 
         <Body>
-          <form className="col-md-12" onSubmit={handleSubmit((data) => updateAttendeesGroup(data, attendeesGroupIndex, onChange, eventGroups))}>
+          <form className="col-md-12" onSubmit={handleSubmit((data) => updateAttendeesGroup(data, attendeesGroupIndex, onSave, eventGroups))}>
             <div className="col-md-5">
               <Field
                 name="name"
@@ -345,6 +345,7 @@ export class AttendeesGroupsDialog extends Component {
 AttendeesGroupsDialog = reduxForm({
   form: 'editAttendeeGroup',
   validate,
+  enableReinitialize: true,
 })(AttendeesGroupsDialog);
 
 AttendeesGroupsDialog = injectIntl(AttendeesGroupsDialog);

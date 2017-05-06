@@ -1,6 +1,4 @@
-import { Record, List } from 'immutable';
-import RichTextEditor from 'react-rte';
-import moment from 'moment';
+import { Record } from 'immutable';
 
 const EventSettings = Record({
   feedbackEmailDelay: 2,

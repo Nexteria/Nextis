@@ -594,7 +594,7 @@ export class EditEvent extends Component {
             {touched && error && <label>{error}</label>}
           </div>
         </div>
-        <AttendeesGroupsDialog actualEvent={actualEvent} onChange={input.onChange} eventGroups={input.value}/>
+        <AttendeesGroupsDialog actualEvent={actualEvent} onSave={input.onChange} eventGroups={input.value}/>
       </div>
     );
   }
@@ -915,6 +915,5 @@ export default connect((state) => ({
   studentLevels: state.users.studentLevels,
   locations: state.nxLocations.locations,
   eventSettings: state.events.eventSettings,
-  initialValues: state.fields.get('editEvent') ? state.fields.get('editEvent').toObject() : state.fields.get('editEvent'),
   actualEventId: selector(state, 'id'),
 }), { ...fieldsActions, ...attendeesGroupActions, ...eventActions })(EditEvent);

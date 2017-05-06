@@ -1,6 +1,5 @@
 import { Record, List } from 'immutable';
 import RichTextEditor from 'react-rte';
-import moment from 'moment';
 
 const Event = Record({
   id: null,

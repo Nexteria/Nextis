@@ -55,7 +55,7 @@ export default class InvitedTab extends Component {
     intl: PropTypes.object.isRequired,
   }
 
-  reasonFormater(cell, row) {
+  reasonFormater(cell) {
     return <span dangerouslySetInnerHTML={{ __html: cell }}></span>
   }
 
@@ -84,6 +84,7 @@ export default class InvitedTab extends Component {
         const person = user.toObject();
         person.firstName = users.getIn([user.get('id'), 'firstName']);
         person.lastName = users.getIn([user.get('id'), 'lastName']);
+        person.signedOutReason = person.signedOutReason.toString('html');
         return person;
       }).toArray()
     )

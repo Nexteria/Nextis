@@ -1,6 +1,5 @@
 import * as actions from './actions';
 import { Record, Map } from 'immutable';
-import shortid from 'shortid';
 import RichTextEditor from 'react-rte';
 
 
