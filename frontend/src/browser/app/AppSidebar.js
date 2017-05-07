@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
+
 import './AppSidebar.scss';
 
 
@@ -67,6 +68,22 @@ const messages = defineMessages({
     defaultMessage: 'Other',
     id: 'app.sidebar.links.other',
   },
+  studiesAdministration: {
+    defaultMessage: 'Administrácia štúdia',
+    id: 'app.sidebar.links.studiesAdministration',
+  },
+  systemAdministration: {
+    defaultMessage: 'Administrácia systému',
+    id: 'app.sidebar.links.systemAdministration',
+  },
+  students: {
+    defaultMessage: 'Študenti',
+    id: 'app.sidebar.links.students',
+  },
+  semesters: {
+    defaultMessage: 'Semestre',
+    id: 'app.sidebar.links.semesters',
+  },
 });
 
 
@@ -76,26 +93,31 @@ export default class AppSideBar extends Component {
     viewer: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
     rolesList: PropTypes.object.isRequired,
+    toggleSidebar: PropTypes.func.isRequired,
   };
 
   render() {
-    const { viewer, rolesList, hasPermission } = this.props;
+    const { viewer, rolesList, hasPermission, toggleSidebar } = this.props;
 
     const isStudent = viewer.roles.includes(rolesList.get('STUDENT').id);
 
     return (
-      <aside className="main-sidebar">
+      <aside className="main-sidebar" onClick={toggleSidebar}>
         <section className="sidebar">
           <ul className="sidebar-menu">
-            <li className="header"><FormattedMessage {...messages.studies} /></li>
+            <li className="header">
+              <i className="fa fa-briefcase"></i>
+              <FormattedMessage {...messages.studies} /></li>
             <li>
               <Link to="/events">
+                <i className="fa fa-calendar-o"></i>
                 <span><FormattedMessage {...messages.events} /></span>
               </Link>
             </li>
             {isStudent ?
               <li>
                 <Link to="/points">
+                  <i className="fa fa-file-text-o"></i>
                   <span><FormattedMessage {...messages.activityPoints} /></span>
                 </Link>
               </li>
@@ -104,7 +126,7 @@ export default class AppSideBar extends Component {
             {isStudent ?
               <li>
                 <Link to="/payments">
-                  <i className="fa fa-eur text-green"></i>
+                  <i className="fa fa-money text-green"></i>
                   <span><FormattedMessage {...messages.payments} /></span>
                 </Link>
               </li>
@@ -113,6 +135,7 @@ export default class AppSideBar extends Component {
             {viewer.hostedEvents.size > 0 ?
               <li>
                 <Link to="/host/events">
+                  <i className="fa fa-support"></i>
                   <span><FormattedMessage {...messages.hostedEvents} /></span>
                   <small className="label pull-right bg-red">
                     <FormattedMessage {...messages.important} />
@@ -121,44 +144,69 @@ export default class AppSideBar extends Component {
               </li>
               : ''
             }
-            <li className="header"><FormattedMessage {...messages.network} /></li>
             <li>
               <Link to="/contacts">
-                <i className="fa fa-users text-green"></i>
+                <i className="fa fa-phone text-green"></i>
                 <span><FormattedMessage {...messages.contacts} /></span>
               </Link>
             </li>
             {hasPermission('view_admin_section') ?
               <div className="admin-section">
-                <li className="admin-header"><FormattedMessage {...messages.adminSection} /></li>
+                <li className="header">
+                  <i className="fa fa-university"></i>
+                  <FormattedMessage {...messages.studiesAdministration} />
+                </li>
+                <li>
+                  <Link to="/admin/events/category/afterSignInOpening">
+                    <i className="fa fa-calendar"></i>
+                    <span><FormattedMessage {...messages.events} /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/students">
+                    <i className="fa fa-graduation-cap"></i>
+                    <span><FormattedMessage {...messages.students} /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/semesters">
+                    <i className="fa fa-book"></i>
+                    <span><FormattedMessage {...messages.semesters} /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/payments">
+                    <i className="fa fa-eur"></i>
+                    <span><FormattedMessage {...messages.payments} /></span>
+                  </Link>
+                </li>
+
+                <li className="header">
+                  <i className="fa fa-gears"></i>
+                  <FormattedMessage {...messages.systemAdministration} />
+                </li>
                 <li>
                   <Link to="/admin/userGroups">
+                    <i className="fa fa-group"></i>
                     <span><FormattedMessage {...messages.userGroups} /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/admin/users">
+                    <i className="fa fa-user"></i>
                     <span><FormattedMessage {...messages.users} /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/admin/roles">
+                    <i className="fa fa-legal"></i>
                     <span><FormattedMessage {...messages.roles} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/events">
-                    <span><FormattedMessage {...messages.events} /></span>
-                  </Link>
-                </li>
-                <li>
                   <Link to="/admin/nxLocations">
+                    <i className="fa fa-home"></i>
                     <span><FormattedMessage {...messages.locations} /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/payments">
-                    <span><FormattedMessage {...messages.payments} /></span>
                   </Link>
                 </li>
               </div>

@@ -1870,4 +1870,36 @@ export default [
     defaultMessage: 'Krstné meno',
     id: 'users.manage.firstName',
   },
+  {
+    defaultMessage: 'Archivované',
+    id: 'events.manage.archived',
+  },
+  {
+    defaultMessage: 'Nepoublikované',
+    id: 'events.manage.drafts',
+  },
+  {
+    defaultMessage: 'Publikované',
+    id: 'events.manage.published',
+  },
+  {
+    defaultMessage: 'Pred prihlasovaním',
+    id: 'events.manage.beforeSignInOpening',
+  },
+  {
+    defaultMessage: 'Otvorené prihlasovanie',
+    id: 'events.manage.afterSignInOpening',
+  },
+  {
+    defaultMessage: 'Ukončené prihlasovanie',
+    id: 'events.manage.signInClosed',
+  },
+  {
+    defaultMessage: 'Zber feedbacku',
+    id: 'events.manage.waitingForFeedback',
+  },
+  {
+    defaultMessage: 'Čakajúce na vyhodnotenie',
+    id: 'events.manage.watingForEvaluation',
+  },
 ];

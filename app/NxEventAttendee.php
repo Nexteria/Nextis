@@ -5,12 +5,15 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 use App\User;
 use App\AttendeesGroup;
 
-class NxEventAttendee extends Authenticatable
+class NxEventAttendee extends Authenticatable implements AuditableContract
 {
+    use Auditable;
     use SoftDeletes;
 
     /**

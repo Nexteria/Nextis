@@ -4,7 +4,8 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import validator from 'validator';
-import moment from 'moment';
+import setMonth from 'date-fns/set_month';
+import format from 'date-fns/format';
 
 
 import * as paymentsActions from '../../common/payments/actions';
@@ -112,6 +113,7 @@ class PaymentsSettings extends Component {
 
   renderMonthsSelector(data) {
     const { input, label, type, meta: { asyncValidating, touched, error, pristine } } = data;
+    const now = new Date();
 
     return (
       <div
@@ -144,7 +146,7 @@ class PaymentsSettings extends Component {
                       input.onChange(result);
                     }}
                   />
-                  {moment().month(month).format('MMMM')}
+                  {format(setMonth(now, month), 'MMMM')}
                 </label>
               </div>
             );

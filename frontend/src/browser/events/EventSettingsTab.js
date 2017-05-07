@@ -1,7 +1,6 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import moment from 'moment';
 import validator from 'validator';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';

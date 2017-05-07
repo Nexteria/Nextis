@@ -10,6 +10,7 @@ import nxLocations from './nxLocations/reducer';
 import attendeesGroup from './attendeesGroup/reducer';
 import payments from './payments/reducer';
 import semesters from './semesters/reducer';
+import students from './students/reducer';
 
 import { LOGOUT } from './app/actions';
 import { combineReducers } from 'redux';
@@ -46,6 +47,7 @@ export default function configureReducer(initialState, platformReducers) {
     routing,
     payments,
     semesters,
+    students,
     form: formReducer,
   });
 

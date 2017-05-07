@@ -15,8 +15,8 @@ class AttendeesGroupTransformer extends Transformer
         return [
             'id' => (int) $group->id,
             'name' => $group->name,
-            'signUpOpenDateTime' => $group->signUpOpenDateTime ? $group->signUpOpenDateTime->__toString() : null,
-            'signUpDeadlineDateTime' => $group->signUpDeadlineDateTime ? $group->signUpDeadlineDateTime->__toString() : null,
+            'signUpOpenDateTime' => $group->signUpOpenDateTime ? $group->signUpOpenDateTime->toIso8601String() : null,
+            'signUpDeadlineDateTime' => $group->signUpDeadlineDateTime ? $group->signUpDeadlineDateTime->toIso8601String() : null,
             'minCapacity' => (int) $group->minCapacity,
             'maxCapacity' => (int) $group->maxCapacity,
             'users' => $users,

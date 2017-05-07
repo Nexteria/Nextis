@@ -16,6 +16,7 @@ import EditUser from './users/EditUser';
 import UsersPage from './users/UsersPage';
 import EditEvent from './events/EditEvent';
 import EventsPage from './events/EventsPage';
+import Events from './events/Events';
 import EventLoginDialog from './events/EventLoginDialog';
 import ActivityPointsPage from './activityPoints/ActivityPointsPage';
 import AdminApp from './app/AdminApp';
@@ -34,6 +35,8 @@ import UserProfileDialog from './users/UserProfileDialog';
 import TuitionFeesSummaryExportDialog from './payments/Exports/TuitionFeesSummaryExportDialog';
 import ImportPaymentsDialog from './payments/Imports/ImportPaymentsDialog';
 import AddPaymentsDialog from './payments/AddPaymentsDialog';
+import SemestersPage from './administration/semesters/SemestersPage';
+import StudentsPage from './administration/students/StudentsPage';
 
 export default function createRoutes() {
   return (
@@ -53,6 +56,8 @@ export default function createRoutes() {
 
       <Route component={AdminApp} path="admin">
         <Route component={UsersPage} path="users" />
+        <Route component={SemestersPage} path="semesters" />
+        <Route component={StudentsPage} path="students" />
         <Route component={CreateUserPage} path="users/create" />
         <Route component={EditUser} path="users/:userId" />
         <Route component={ActivityPointsPage} path="users/:userId/points" />
@@ -63,7 +68,9 @@ export default function createRoutes() {
           <Route component={EditUserGroup} path=":groupId" />
         </Route>
 
-        <Route component={EventsPage} path="events" />
+        <Route component={EventsPage} path="events">
+          <Route component={Events} path="category/:category" />
+        </Route>
         <Route component={EditEvent} path="events/:eventId" />
 
         <Route component={EventEmailsDialog} path="events/:eventId/emails" />

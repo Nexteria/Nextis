@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import isAfter from 'date-fns/is_after';
+import addMonths from 'date-fns/add_months';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import * as actions from '../../common/events/actions';
@@ -90,8 +92,20 @@ class Events extends Component {
     );
   }
 
-  editEvent(eventId) {
-    browserHistory.push(`/admin/events/${eventId}`);
+  renderCapacity(capacity) {
+    return (
+      <span className={`badge bg-${capacity.progressColor}`}>
+        {`${capacity.signedIn}/${capacity.maxCapacity}`}
+      </span>
+    );
+  }
+
+  sortCapacity(a, b, order) {
+    if (order === 'desc') {
+      return a.capacity.signedIn - b.capacity.signedIn;
+    }
+
+    return b.capacity.signedIn - a.capacity.signedIn;
   }
 
   eventStarTimeSortFunc(a, b, order) {   // order is desc or asc
@@ -112,7 +126,7 @@ class Events extends Component {
     }
 
     let filteredEvents = events.valueSeq()
-      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1)
+      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1)
       .map(event => event);
 
     if (fields.filter.value) {
@@ -129,99 +143,85 @@ class Events extends Component {
 
       const attending = attendees.filter(user => user.get('signedIn'));
       const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
+      let progressColor = 'green';
+      const progressPercentage = Math.round(attending.size / event.maxCapacity * 100);
+      if (progressPercentage < 75 && progressPercentage > 50) {
+        progressColor = 'yellow';
+      }
+
+      if (attending.size < event.minCapacity) {
+        progressColor = 'red';
+      }
 
       return {
+        id: event.id,
         eventName: event.name,
-        eventStarts: <FormattedRelative value={event.eventStartDateTime} />,
+        eventStarts: <FormattedRelative value={addMonths(event.eventStartDateTime, 3)} />,
         eventStartDateTime: event.eventStartDateTime,
-        capacity: `${event.minCapacity} - ${event.maxCapacity}`,
-        signedIn: attending.size,
-        wontCome: notAttending.size,
-        invited: attendees.size,
+        capacity: {
+          maxCapacity: event.maxCapacity,
+          minCapacity: event.minCapacity,
+          signedIn: attending.size,
+          wontCome: notAttending.size,
+          invited: attendees.size,
+          progressColor,
+        },
         actions: this.getEventActions(event),
       };
     }).toArray();
 
     return (
       <div className="row">
-        <div className="col-xs-12">
+        <div className="col-md-12">
           <div className="box">
             <div className="box-header">
-              <h3 className="box-title"><FormattedMessage {...messages.tableTitle} /></h3>
-              {hasPermission('create_events') ?
-                <i
-                  className="fa fa-plus text-green"
-                  style={{ cursor: 'pointer', marginLeft: '2em' }}
-                  onClick={() => browserHistory.push('/admin/events/create')}
-                ></i>
-               : ''
-              }
+              <h3 className="box-title"></h3>
               <div className="box-tools">
                 <div className="input-group input-group-sm" style={{ width: '150px' }}>
-                  <input
-                    type="text"
-                    name="table_search"
-                    className="form-control pull-right"
-                    placeholder="Search"
-                    {...fields.filter}
-                  />
+                  <input type="text" name="table_search" className="form-control pull-right" placeholder="Search" />
 
                   <div className="input-group-btn">
-                    <button type="submit" className="btn btn-default">
-                      <i className="fa fa-search"></i>
-                    </button>
+                    <button type="submit" className="btn btn-default"><i className="fa fa-search"></i></button>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="box-body table-responsive no-padding items-container">
+            <div className="box-body no-padding">
               <BootstrapTable
                 data={eventsData}
                 multiColumnSort={3}
                 striped
+                bodyStyle={{ cursor: 'pointer' }}
                 hover
-                height="300px"
-                containerStyle={{ height: '320px' }}
+                options={{
+                  onRowClick: (event) => browserHistory.push(`/admin/events/${event.id}`),
+                }}
               >
                 <TableHeaderColumn isKey hidden dataField="id" />
 
-                <TableHeaderColumn dataField="eventName" dataSort width="30%">
-                  {formatMessage(messages.eventName)}
+                <TableHeaderColumn dataField="eventName" dataSort>
+                  Názov eventu
                 </TableHeaderColumn>
 
                 <TableHeaderColumn
-                  width="10%"
                   dataField="eventStarts"
-                  sortFunc={this.eventStarTimeSortFunc}
                   dataSort
+                  sortFunc={this.eventStarTimeSortFunc}
                   dataFormat={x => x}
+                  width="15em"
                 >
-                  {formatMessage(messages.eventStarts)}
-                </TableHeaderColumn>
-
-                <TableHeaderColumn dataField="capacity">
-                  {formatMessage(messages.capacity)}
-                </TableHeaderColumn>
-
-                <TableHeaderColumn dataField="signedIn" dataSort>
-                  {formatMessage(messages.signedIn)}
-                </TableHeaderColumn>
-
-                <TableHeaderColumn dataField="wontCome" dataSort>
-                  {formatMessage(messages.wontCome)}
-                </TableHeaderColumn>
-
-                <TableHeaderColumn dataField="invited" dataSort>
-                  {formatMessage(messages.invited)}
+                  Uzatvorenie prihlasovania
                 </TableHeaderColumn>
 
                 <TableHeaderColumn
-                  dataField="actions"
-                  tdStyle={{ whiteSpace: 'normal' }}
-                  width="10%"
-                  dataFormat={x => x}
+                  dataField="capacity"
+                  dataSort
+                  dataFormat={this.renderCapacity}
+                  width="6em"
+                  dataAlign="center"
+                  sortFunc={this.sortCapacity}
                 >
-                  {formatMessage(messages.actions)}
+                  Kapacita
                 </TableHeaderColumn>
               </BootstrapTable>
               <div className="clearfix"></div>

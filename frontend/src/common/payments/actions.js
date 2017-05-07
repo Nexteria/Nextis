@@ -1,3 +1,5 @@
+import format from 'date-fns/format';
+
 export const UPLOAD_PAYMENTS_IMPORT = 'UPLOAD_PAYMENTS_IMPORT';
 export const UPLOAD_PAYMENTS_IMPORT_START = 'UPLOAD_PAYMENTS_IMPORT_START';
 export const UPLOAD_PAYMENTS_IMPORT_SUCCESS = 'UPLOAD_PAYMENTS_IMPORT_SUCCESS';
@@ -169,8 +171,8 @@ export function addPayments(values, users) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...values,
-          validFrom: values.validFrom.utc().format('YYYY-MM-DD'),
-          deadlineAt: values.deadlineAt.utc().format('YYYY-MM-DD'),
+          validFrom: format(values.validFrom, 'YYYY-MM-DD'),
+          deadlineAt: format(values.deadlineAt, 'YYYY-MM-DD'),
           users: users.toList().toArray(),
         }),
       }),

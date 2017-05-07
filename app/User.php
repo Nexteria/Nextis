@@ -6,14 +6,17 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 use App\Role;
 use App\Payment;
 use App\StudentLevel;
 use Carbon\Carbon;
 
-class User extends Authenticatable
+class User extends Authenticatable implements AuditableContract
 {
+    use Auditable;
     use SoftDeletes, Notifiable, EntrustUserTrait {
         SoftDeletes::restore insteadof EntrustUserTrait;
         EntrustUserTrait::restore insteadof SoftDeletes;

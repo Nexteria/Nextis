@@ -14,8 +14,21 @@ class Semester extends Model
         'endDate',
     ];
 
+    protected $dates = ['deleted_at', 'startDate', 'endDate'];
+
     public function events()
     {
         return $this->hasMany('App\NxEvent', 'semesterId');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany('App\Student', 'semester_student', 'semesterId', 'studentId')
+                    ->withPivot([
+                      'studentLevelId',
+                      'tuitionFee',
+                      'activityPointsBaseNumber',
+                      'minimumSemesterActivityPoints'
+                    ]);
     }
 }

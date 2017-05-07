@@ -1,11 +1,65 @@
-li.admin-header {
-    background-color: #a60564;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 3em;
+.sidebar-menu li a:hover {
+    cursor: pointer;
 }
 
-.sidebar-menu li a:hover {
-  cursor: pointer;
+.sidebar-menu li.header i {
+    margin-right: 10px;
+}
+
+.sidebar {
+    overflow-y: auto;
+    margin-bottom: 10px;
+    max-height: 91vh;
+    width: 255px;
+}
+
+.main-sidebar {
+  overflow: hidden;
+}
+
+.sidebar-closed {
+    .main-sidebar {
+        width: 3em;
+    }
+
+    .content-wrapper,
+    .main-footer {
+        margin-left: 3em;
+    }
+
+    .sidebar-menu li,
+    .sidebar-menu .admin-section li {
+      font-size: 14px;
+    }
+
+    .sidebar-menu li,
+    .sidebar-menu .admin-section li {
+      padding-left: 1em;
+    }
+
+    .sidebar-menu li a,
+    .main-sidebar .sidebar-menu .admin-section li a,
+    .main-sidebar .sidebar-menu .admin-section li a:hover {
+      padding-left: 0em;
+      margin-left: 0em;
+      border: 0em;
+    }
+
+    .sidebar-menu li i,
+    .sidebar-menu .admin-section li i {
+        padding-right: 5em;
+        padding-left: 0em;
+        margin-left: 0em;
+    }
+
+    @media screen and (max-width: 480px) {
+        .main-sidebar {
+            width: 0em;
+        }
+
+        .content-wrapper,
+        .main-footer {
+            margin-left: 0em;
+        }
+    }
 }

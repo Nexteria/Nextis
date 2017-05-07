@@ -152,6 +152,7 @@ return [
         Illuminate\Notifications\NotificationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Bogardo\Mailgun\MailgunServiceProvider::class,
+        OwenIt\Auditing\AuditingServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -2,11 +2,9 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
-import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
+import Modal, { Header, Title, Body } from 'react-bootstrap/lib/Modal';
 import { browserHistory, Link } from 'react-router';
-import Datetime from 'react-datetime';
-import moment from 'moment';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import Dropzone from 'react-dropzone';
 
 

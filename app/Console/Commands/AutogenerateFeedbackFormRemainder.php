@@ -37,6 +37,7 @@ class AutogenerateFeedbackFormRemainder extends Command
             $feedbackDeadline = $event->eventEndDateTime->addDays($settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1);
             $remainderDate = $feedbackDeadline->subDays($settings['feedbackRemainderDaysBefore'])->format('Y-m-d');
 
+            $respondentsEmails = [];
             if ($remainderDate === $today) {
                 $maxRetries = 50;
                 while ($maxRetries > 0) {

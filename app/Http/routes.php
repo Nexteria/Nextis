@@ -23,6 +23,14 @@ Route::post('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@update
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
+
+        Route::group(['prefix' => '/admin'], function () {
+            Route::get('/nxEvents/categories', 'AdminController@getNxEventsCategories');
+            Route::put('/nxEvents', 'AdminController@getNxEvents');
+
+            Route::get('/semesters', 'AdminController@getSemesters');
+            Route::get('/students', 'AdminController@getStudents');
+        });
         
         Route::get('/app/constants', 'HomeController@getConstants');
 

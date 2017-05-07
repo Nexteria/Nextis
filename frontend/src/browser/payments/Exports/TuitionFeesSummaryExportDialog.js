@@ -2,11 +2,12 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
-import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
+import Modal, { Header, Title, Body } from 'react-bootstrap/lib/Modal';
 import { browserHistory, Link } from 'react-router';
 import Datetime from 'react-datetime';
-import moment from 'moment';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
+import isAfter from 'date-fns/is_after';
+import format from 'date-fns/format';
 
 
 import * as paymentsActions from '../../../common/payments/actions';
@@ -57,13 +58,13 @@ const validate = (values, props) => {
   const errors = {};
   if (!values.exportStartDate) {
     errors.exportStartDate = formatMessage(messages.requiredField);
-  } else if (values.exportEndDate && values.exportStartDate.isAfter(values.exportEndDate)) {
+  } else if (values.exportEndDate && isAfter(values.exportStartDate, values.exportEndDate)) {
     errors.exportStartDate = formatMessage(messages.startDateMustBeBeforeEndDate);
   }
 
   if (!values.exportEndDate) {
     errors.exportEndDate = formatMessage(messages.requiredField);
-  } else if (values.exportStartDate && values.exportStartDate.isAfter(values.exportEndDate)) {
+  } else if (values.exportStartDate && isAfter(values.exportStartDate, values.exportEndDate)) {
     errors.exportEndDate = formatMessage(messages.endDateMustBeAfterStartDate);
   }
 
@@ -112,8 +113,8 @@ export class TuitionFeesSummaryExportDialog extends Component {
 
     const { formatMessage } = this.props.intl;
 
-    const fromDate = exportStartDate ? exportStartDate.format('YYYY-MM-DD HH:mm:ss') : '';
-    const toDate = exportEndDate ? exportEndDate.format('YYYY-MM-DD HH:mm:ss') : '';
+    const fromDate = exportStartDate ? format(exportStartDate, 'YYYY-MM-DD HH:mm:ss') : '';
+    const toDate = exportEndDate ? format(exportEndDate, 'YYYY-MM-DD HH:mm:ss') : '';
 
     return (
       <Modal

@@ -6,7 +6,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import Datetime from 'react-datetime';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import validator from 'validator';
-import moment from 'moment';
+import isAfter from 'date-fns/is_after';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 
@@ -252,17 +252,17 @@ const validate = (values, props) => {
 
   if (!values.eventStartDateTime) {
     errors.eventStartDateTime = formatMessage(messages.requiredField);
-  } else if (moment().utc().isAfter(values.eventStartDateTime) && !values.id) {
+  } else if (isAfter(new Date(), values.eventStartDateTime) && !values.id) {
     errors.eventStartDateTime = formatMessage(messages.dateMustBeInFuture);
-  } else if (values.eventEndDateTime && values.eventStartDateTime.isAfter(values.eventEndDateTime)) {
+  } else if (values.eventEndDateTime && isAfter(values.eventStartDateTime, values.eventEndDateTime)) {
     errors.eventStartDateTime = formatMessage(messages.startDateMustBeBeforeEndDate);
   }
 
   if (!values.eventEndDateTime) {
     errors.eventEndDateTime = formatMessage(messages.requiredField);
-  } else if (moment().utc().isAfter(values.eventEndDateTime) && !values.id) {
+  } else if (isAfter(new Date(), values.eventEndDateTime) && !values.id) {
     errors.eventEndDateTime = formatMessage(messages.dateMustBeInFuture);
-  } else if (values.eventStartDateTime && values.eventStartDateTime.isAfter(values.eventEndDateTime)) {
+  } else if (values.eventStartDateTime && isAfter(values.eventStartDateTime, values.eventEndDateTime)) {
     errors.eventStartDateTime = formatMessage(messages.endDateMustBeAfterStartDate);
   }
 

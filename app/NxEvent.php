@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 use App\User;
 use App\AttendeesGroup;
@@ -205,6 +206,108 @@ class NxEvent extends Model
         }
 
         return true;
+    }
+
+    public static function getArchivedEvents()
+    {
+        return NxEvent::where('eventEndDateTime', '<', Carbon::now()->subMonth()->toDateString())
+                        ->where('status', '=', 'published')->get();
+    }
+
+    public static function getPublishedEvents()
+    {
+        return NxEvent::where('status', '=', 'published')
+                       ->where('eventEndDateTime', '>', Carbon::now()->subMonth()->toDateString())->get();
+    }
+
+    public static function getDraftEvents()
+    {
+        return NxEvent::where('status', '!=', 'published')->get();
+    }
+
+    public static function getBeforeSignInOpeningEvents()
+    {
+        return NxEvent::where('status', '=', 'published')
+                       ->where('eventStartDateTime', '>', Carbon::now()->toDateString())
+                       ->whereDoesntHave('attendeesGroups', function ($query) {
+                          $query->where('signUpOpenDateTime', '<', Carbon::now()->toDateString());
+                       })
+                       ->get();
+    }
+
+    public static function getOpenedSignInEvents()
+    {
+        return NxEvent::where('status', '=', 'published')
+                       ->where('eventStartDateTime', '>', Carbon::now()->toDateString())
+                       ->whereHas('attendeesGroups', function ($query) {
+                          $query->where('signUpOpenDateTime', '<', Carbon::now()->toDateString())
+                                ->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
+                       })
+                       ->get();
+    }
+
+    public static function getClosedSignInEvents()
+    {
+        return NxEvent::where('status', '=', 'published')
+                       ->where('eventStartDateTime', '>', Carbon::now()->toDateString())
+                       ->whereDoesntHave('attendeesGroups', function ($query) {
+                          $query->where('signUpOpenDateTime', '<', Carbon::now()->toDateString())
+                                ->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
+                       })
+                       ->whereDoesntHave('attendeesGroups', function ($query) {
+                          $query->where('signUpOpenDateTime', '>', Carbon::now()->toDateString())
+                                ->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
+                       })
+                       ->get();
+    }
+
+    public static function getWaitingForFeedbackEvents()
+    {
+        $settings = \App\DefaultSystemSettings::getNxEventsSettings();
+        $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
+
+        $noSettings = NxEvent::where('status', '=', 'published')
+                       ->where('eventEndDateTime', '<', Carbon::now()->toDateString())
+                       ->doesntHave('settings')
+                       ->where('eventEndDateTime', '>', Carbon::now()->subDays($fedbackDeadlineDays + 1)->toDateString())
+                       ->get();
+
+        $hasSettings = NxEvent::where('status', '=', 'published')
+                       ->where('eventEndDateTime', '<', Carbon::now()->toDateString())
+                       ->has('settings')
+                       ->get()
+                       ->filter(function ($event) {
+                          $settings = $event->settings;
+                          $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
+                          return $event->eventEndDateTime->gt(Carbon::now()->subDays($fedbackDeadlineDays));
+                       });
+
+        return $noSettings->merge($hasSettings);
+    }
+
+    public static function getWaitingForEvaluationEvents()
+    {
+        $settings = \App\DefaultSystemSettings::getNxEventsSettings();
+        $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
+
+        $noSettings = NxEvent::where('status', '=', 'published')
+                       ->doesntHave('settings')
+                       ->where('eventEndDateTime', '>', Carbon::now()->subDays(30)->toDateString())
+                       ->where('eventEndDateTime', '<', Carbon::now()->subDays($fedbackDeadlineDays)->toDateString())
+                       ->get();
+
+        $hasSettings = NxEvent::where('status', '=', 'published')
+                       ->where('eventEndDateTime', '<', Carbon::now()->toDateString())
+                       ->where('eventEndDateTime', '>', Carbon::now()->subDays(30)->toDateString())
+                       ->has('settings')
+                       ->get()
+                       ->filter(function ($event) {
+                          $settings = $event->settings;
+                          $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
+                          return $event->eventEndDateTime->lt(Carbon::now()->subDays($fedbackDeadlineDays));
+                       });
+
+        return $noSettings->merge($hasSettings);
     }
 
     public function attendeesGroups()

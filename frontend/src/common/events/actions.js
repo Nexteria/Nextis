@@ -1,5 +1,6 @@
 import { SubmissionError } from 'redux-form';
 import { browserHistory } from 'react-router';
+import format from 'date-fns/format';
 
 export const CHECK_FEEDBACK_FORM_LINK = 'CHECK_FEEDBACK_FORM_LINK';
 export const CHECK_FEEDBACK_FORM_LINK_START = 'CHECK_FEEDBACK_FORM_LINK_START';
@@ -55,6 +56,11 @@ export const CHANGE_ATTENDEE_FEEDBACK_STATUS_SUCCESS = 'CHANGE_ATTENDEE_FEEDBACK
 export const CHANGE_ATTENDEE_PRESENCE_STATUS = 'CHANGE_ATTENDEE_PRESENCE_STATUS';
 export const CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS = 'CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS';
 
+export const LOAD_EVENT_CATEGORIES_LIST = 'LOAD_EVENT_CATEGORIES_LIST';
+export const LOAD_EVENT_CATEGORIES_LIST_START = 'LOAD_EVENT_CATEGORIES_LIST_START';
+export const LOAD_EVENT_CATEGORIES_LIST_SUCCESS = 'LOAD_EVENT_CATEGORIES_LIST_SUCCESS';
+export const LOAD_EVENT_CATEGORIES_LIST_ERROR = 'LOAD_EVENT_CATEGORIES_LIST_ERROR';
+
 export const REMOVE_ATTENDEES_GROUP = 'REMOVE_ATTENDEES_GROUP';
 export const TOGGLE_EVENT_ACTIONS = 'TOGGLE_EVENT_ACTIONS';
 export const CLOSE_EVENT_DETAILS_DIALOG = 'CLOSE_EVENT_DETAILS_DIALOG';
@@ -89,6 +95,11 @@ export const LOAD_EVENT_CUSTOM_SETTINGS_START = 'LOAD_EVENT_CUSTOM_SETTINGS_STAR
 export const LOAD_EVENT_CUSTOM_SETTINGS_SUCCESS = 'LOAD_EVENT_CUSTOM_SETTINGS_SUCCESS';
 export const LOAD_EVENT_CUSTOM_SETTINGS_ERROR = 'LOAD_EVENT_CUSTOM_SETTINGS_ERROR';
 
+export const CHANGE_ACTIVE_EVENT_CATEGORY = 'CHANGE_ACTIVE_EVENT_CATEGORY';
+export const CHANGE_ACTIVE_EVENT_CATEGORY_START = 'CHANGE_ACTIVE_EVENT_CATEGORY_START';
+export const CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS = 'CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS';
+export const CHANGE_ACTIVE_EVENT_CATEGORY_ERROR = 'CHANGE_ACTIVE_EVENT_CATEGORY_ERROR';
+
 export function togglePastEvents() {
   return {
     type: TOGGLE_PAST_EVENTS,
@@ -104,20 +115,20 @@ export function toggleFutureEvents() {
 export function saveEvent(fields) {
   let data = {
     ...fields,
-    eventStartDateTime: fields.eventStartDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
-    eventEndDateTime: fields.eventEndDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
+    eventStartDateTime: format(fields.eventStartDateTime, 'YYYY-MM-DD HH:mm:ss'),
+    eventEndDateTime: format(fields.eventEndDateTime, 'YYYY-MM-DD HH:mm:ss'),
     attendeesGroups: fields.attendeesGroups.map(group => ({
       id: group.id,
       maxCapacity: group.maxCapacity,
       minCapacity: group.minCapacity,
       name: group.name,
-      signUpDeadlineDateTime: group.signUpDeadlineDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
-      signUpOpenDateTime: group.signUpOpenDateTime.utc().format('YYYY-MM-DD HH:mm:ss'),
+      signUpDeadlineDateTime: format(group.signUpDeadlineDateTime, 'YYYY-MM-DD HH:mm:ss'),
+      signUpOpenDateTime: format(group.signUpOpenDateTime, 'YYYY-MM-DD HH:mm:ss'),
       users: group.users.valueSeq().map(user => ({
         id: user.get('id'),
-        signedIn: user.get('signedIn') ? user.get('signedIn').utc().format('YYYY-MM-DD HH:mm:ss') : null,
-        signedOut: user.get('signedOut') ? user.get('signedOut').utc().format('YYYY-MM-DD HH:mm:ss') : null,
-        wontGo: user.get('wontGo') ? user.get('wontGo').utc().format('YYYY-MM-DD HH:mm:ss') : null,
+        signedIn: user.get('signedIn') ? format(user.get('signedIn'), 'YYYY-MM-DD HH:mm:ss') : null,
+        signedOut: user.get('signedOut') ? format(user.get('signedOut'), 'YYYY-MM-DD HH:mm:ss') : null,
+        wontGo: user.get('wontGo') ? format(user.get('wontGo'), 'YYYY-MM-DD HH:mm:ss') : null,
         signedOutReason: user.get('signedOutReason').toString('html'),
       })),
     })),
@@ -161,6 +172,38 @@ export function loadEventList(filters = {}) {
       }).then(response => response.json()),
     },
   });
+}
+
+export function loadEventCategories() {
+  return ({ fetch }) => ({
+    type: LOAD_EVENT_CATEGORIES_LIST,
+    payload: {
+      promise: fetch('/admin/nxEvents/categories', {
+        credentials: 'same-origin',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function changeActiveEventCategory(codename) {
+  return ({ fetch, getState }) => {
+    const eventIds = getState().events.categories.getIn([codename, 'events']);
+
+    return {
+      type: CHANGE_ACTIVE_EVENT_CATEGORY,
+      meta: {
+        codename,
+      },
+      payload: {
+        promise: fetch('/admin/nxEvents', {
+          method: 'put',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventsIds: eventIds }),
+        }).then(response => response.json()),
+      }
+    };
+  };
 }
 
 export function removeEvent(eventId) {

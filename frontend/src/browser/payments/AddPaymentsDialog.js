@@ -7,6 +7,7 @@ import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
 import { Field, reduxForm } from 'redux-form';
 import Datetime from 'react-datetime';
+import isAfter from 'date-fns/is_after';
 
 
 import GroupMembers from '../events/attendeesGroups/GroupMembers';
@@ -94,7 +95,7 @@ const validate = (values, props) => {
 
   if (!values.validFrom) {
     errors.validFrom = formatMessage(messages.requiredField);
-  } else if (values.deadlineAt && values.validFrom.isAfter(values.deadlineAt)) {
+  } else if (values.deadlineAt && isAfter(values.validFrom, values.deadlineAt)) {
     errors.validFrom = formatMessage(messages.validFromDateMustBeBeforeDeadlineDate);
   }
 

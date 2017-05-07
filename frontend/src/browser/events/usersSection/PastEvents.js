@@ -1,7 +1,9 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import format from 'date-fns/format';
+import subMonths from 'date-fns/sub_months';
+import isAfter from 'date-fns/is_after';
 import { formValueSelector } from 'redux-form';
 
 import Event from './Event';
@@ -95,25 +97,26 @@ class PastEvents extends Component {
 
         return true;
       })
-      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1);
+      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1);
 
+    const now = new Date();
     return (
       <span>
         {Array(pastMonthCount).fill().map((_, index) =>
           <ul key={index} className="timeline">
             <li className="time-label">
               <span className="bg-yellow">
-                {moment().subtract(pastMonthCount - index, 'M').year() === moment().utc().year() ?
-                  moment().subtract(pastMonthCount - index, 'M').format('MMMM')
+                {subMonths(now, pastMonthCount - index).getFullYear() === now.getFullYear() ?
+                  format(subMonths(now, pastMonthCount - index), 'MMMM')
                   :
-                  moment().subtract(pastMonthCount - index, 'M').format('MMMM YY')
+                  format(subMonths(now, pastMonthCount - index), 'MMMM YY')
                 }
               </span>
             </li>
             {sortedEvents.filter(event => {
-              const iterationDate = moment().subtract(pastMonthCount - index + 1, 'M');
-              const isMonthSame = iterationDate.month() === event.eventStartDateTime.month();
-              const isYearSame = iterationDate.year() === event.eventStartDateTime.year();
+              const iterationDate = subMonths(now, pastMonthCount - index + 1);
+              const isMonthSame = iterationDate.getMonth() === event.eventStartDateTime.getMonth();
+              const isYearSame = iterationDate.getFullYear() === event.eventStartDateTime.getFullYear();
               return isMonthSame && isYearSame;
             }).map(event =>
               <Event

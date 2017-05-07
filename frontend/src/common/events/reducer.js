@@ -1,5 +1,5 @@
 import { Record, List, Map } from 'immutable';
-import moment from 'moment';
+import parse from 'date-fns/parse';
 import RichTextEditor from 'react-rte';
 
 
@@ -38,6 +38,7 @@ const InitialState = Record({
     data: null,
   }),
   emails: null,
+  categories: new Map(),
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -56,20 +57,20 @@ export default function eventsReducer(state = new InitialState, action) {
         lectors: new List(action.payload.lectors),
         groupedEvents: new List(action.payload.groupedEvents),
         exclusionaryEvents: new List(action.payload.exclusionaryEvents),
-        eventStartDateTime: moment.utc(action.payload.eventStartDateTime),
-        eventEndDateTime: moment.utc(action.payload.eventEndDateTime),
+        eventStartDateTime: parse(action.payload.eventStartDateTime),
+        eventEndDateTime: parse(action.payload.eventEndDateTime),
         description: RichTextEditor.createValueFromString(action.payload.description, 'html'),
         shortDescription: RichTextEditor.createValueFromString(action.payload.shortDescription, 'html'),
         attendeesGroups: new List(action.payload.attendeesGroups.map(group => new AttendeesGroup({
           ...group,
-          signUpDeadlineDateTime: moment.utc(group.signUpDeadlineDateTime),
-          signUpOpenDateTime: moment.utc(group.signUpOpenDateTime),
+          signUpDeadlineDateTime: parse(group.signUpDeadlineDateTime),
+          signUpOpenDateTime: parse(group.signUpOpenDateTime),
           users: new Map(group.users.map(user => [user.id, new Map({
             ...user,
             id: user.id,
-            signedIn: user.signedIn ? moment.utc(user.signedIn) : null,
-            signedOut: user.signedOut ? moment.utc(user.signedOut) : null,
-            wontGo: user.wontGo ? moment.utc(user.wontGo) : null,
+            signedIn: user.signedIn ? parse(user.signedIn) : null,
+            signedOut: user.signedOut ? parse(user.signedOut) : null,
+            wontGo: user.wontGo ? parse(user.wontGo) : null,
             signedOutReason: user.signedOutReason,
           })])),
         }))),
@@ -85,20 +86,20 @@ export default function eventsReducer(state = new InitialState, action) {
           lectors: new List(event.lectors),
           groupedEvents: new List(event.groupedEvents),
           exclusionaryEvents: new List(event.exclusionaryEvents),
-          eventStartDateTime: moment.utc(event.eventStartDateTime),
-          eventEndDateTime: moment.utc(event.eventEndDateTime),
+          eventStartDateTime: parse(event.eventStartDateTime),
+          eventEndDateTime: parse(event.eventEndDateTime),
           description: RichTextEditor.createValueFromString(event.description, 'html'),
           shortDescription: RichTextEditor.createValueFromString(event.shortDescription, 'html'),
           attendeesGroups: new List(event.attendeesGroups.map(group => new AttendeesGroup({
             ...group,
-            signUpDeadlineDateTime: moment.utc(group.signUpDeadlineDateTime),
-            signUpOpenDateTime: moment.utc(group.signUpOpenDateTime),
+            signUpDeadlineDateTime: parse(group.signUpDeadlineDateTime),
+            signUpOpenDateTime: parse(group.signUpOpenDateTime),
             users: new Map(group.users.map(user => [user.id, new Map({
               ...user,
               id: user.id,
-              signedIn: user.signedIn ? moment(user.signedIn) : null,
-              signedOut: user.signedOut ? moment(user.signedOut) : null,
-              wontGo: user.wontGo ? moment(user.wontGo) : null,
+              signedIn: user.signedIn ? parse(user.signedIn) : null,
+              signedOut: user.signedOut ? parse(user.signedOut) : null,
+              wontGo: user.wontGo ? parse(user.wontGo) : null,
               signedOutReason: user.signedOutReason,
             })])),
           }))),
@@ -136,7 +137,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('wontGo', moment.utc(response.wontGo))
+      ], user => user.set('wontGo', parse(response.wontGo))
         .set('signedIn', null)
         .set('signedOut', null))
         .setIn(['signOut', 'userId'], null)
@@ -158,7 +159,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('signedIn', moment.utc(response.signedIn))
+      ], user => user.set('signedIn', parse(response.signedIn))
         .set('signedOut', null)
         .set('wontGo', null));
     }
@@ -190,7 +191,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('standIn', moment.utc(response.standIn)));
+      ], user => user.set('standIn', parse(response.standIn)));
     }
 
     case actions.ATTENDEE_SIGN_OUT_SUCCESS: {
@@ -205,7 +206,7 @@ export default function eventsReducer(state = new InitialState, action) {
         groupIndex,
         'users',
         response.id,
-      ], user => user.set('signedOut', moment.utc(response.signedOut))
+      ], user => user.set('signedOut', parse(response.signedOut))
         .set('signedOutReason', response.signedOutReason)
         .set('signedIn', null)
         .set('wontGo', null))
@@ -312,6 +313,40 @@ export default function eventsReducer(state = new InitialState, action) {
 
     case actions.RESET_EVENT_EMAILS_STATUS: {
       return state.set('emails', null);
+    }
+
+    case actions.LOAD_EVENT_CATEGORIES_LIST_SUCCESS: {
+      return state.set('categories', new Map(action.payload.map(category =>
+        [category.codename, new Map(category)]
+      )));
+    }
+
+    case actions.CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS: {
+      return state.set('events', new Map(action.payload.map(event =>
+        [event.id, new Event({
+          ...event,
+          lectors: new List(event.lectors),
+          groupedEvents: new List(event.groupedEvents),
+          exclusionaryEvents: new List(event.exclusionaryEvents),
+          eventStartDateTime: parse(event.eventStartDateTime),
+          eventEndDateTime: parse(event.eventEndDateTime),
+          description: RichTextEditor.createValueFromString(event.description, 'html'),
+          shortDescription: RichTextEditor.createValueFromString(event.shortDescription, 'html'),
+          attendeesGroups: new List(event.attendeesGroups.map(group => new AttendeesGroup({
+            ...group,
+            signUpDeadlineDateTime: parse(group.signUpDeadlineDateTime),
+            signUpOpenDateTime: parse(group.signUpOpenDateTime),
+            users: new Map(group.users.map(user => [user.id, new Map({
+              ...user,
+              id: user.id,
+              signedIn: user.signedIn ? parse(user.signedIn) : null,
+              signedOut: user.signedOut ? parse(user.signedOut) : null,
+              wontGo: user.wontGo ? parse(user.wontGo) : null,
+              signedOutReason: user.signedOutReason,
+            })])),
+          }))),
+        })]
+      )));
     }
 
     case actions.FETCH_EVENT_EMAILS_STATUS_SUCCESS: {

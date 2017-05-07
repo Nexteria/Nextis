@@ -44,4 +44,18 @@ class Student extends Model
                       'minimumSemesterActivityPoints'
                     ]);
     }
+
+    public function getTuitionFeeBalance()
+    {
+        $accountBalance = 0;
+        foreach ($this->user->payments()->where('variableSymbol', $this->tuitionFeeVariableSymbol)->get() as $payment) {
+            if ($payment->transactionType == 'kredit') {
+                $accountBalance += $payment->amount;
+            } else {
+                $accountBalance -= $payment->amount;
+            }
+        }
+
+        return $accountBalance;
+    }
 }

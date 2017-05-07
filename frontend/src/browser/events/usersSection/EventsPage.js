@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
+import isAfter from 'date-fns/is_after';
 
 
 import './EventsPage.scss';
@@ -167,7 +168,7 @@ class EventsPage extends Component {
           return false;
         }
       })
-      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1);
+      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1);
 
     return (
         eventId ?

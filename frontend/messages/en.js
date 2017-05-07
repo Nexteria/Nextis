@@ -1932,4 +1932,36 @@ export default [
     defaultMessage: 'First name',
     id: 'users.manage.firstName',
   },
+  {
+    defaultMessage: 'Archived',
+    id: 'events.manage.archived',
+  },
+  {
+    defaultMessage: 'Drafts',
+    id: 'events.manage.drafts',
+  },
+  {
+    defaultMessage: 'Published',
+    id: 'events.manage.published',
+  },
+  {
+    defaultMessage: 'Before Sign In Opening',
+    id: 'events.manage.beforeSignInOpening',
+  },
+  {
+    defaultMessage: 'After Sign In Opening',
+    id: 'events.manage.afterSignInOpening',
+  },
+  {
+    defaultMessage: 'Sign In Closed',
+    id: 'events.manage.signInClosed',
+  },
+  {
+    defaultMessage: 'Waiting for Feedback',
+    id: 'events.manage.waitingForFeedback',
+  },
+  {
+    defaultMessage: 'Wating for evaluation',
+    id: 'events.manage.watingForEvaluation',
+  },
 ];

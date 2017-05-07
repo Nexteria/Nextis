@@ -1,7 +1,12 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import format from 'date-fns/format';
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+import setMonth from 'date-fns/set_month';
+import addMonths from 'date-fns/add_months';
+
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { formValueSelector } from 'redux-form';
 
@@ -126,20 +131,21 @@ class PresentEvents extends Component {
         
         return true;
       })
-      .sort((a, b) => a.eventStartDateTime.isAfter(b.eventStartDateTime) ? 1 : -1);
+      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1);
 
+    const now = new Date();
     return (
       <ul className="timeline">
         <li className="time-label">
           <span className="bg-yellow">
-            {moment().format('MMMM')}
+            {format(now, 'MMMM')}
           </span>
         </li>
 
         {sortedEvents.filter(event => {
-           const isMonthSame = moment().month() === event.eventStartDateTime.month();
-           const isYearSame = moment().year() === event.eventStartDateTime.year();
-           return isMonthSame && isYearSame && moment().utc().isAfter(event.eventStartDateTime);
+           const isMonthSame = now.getMonth() === event.eventStartDateTime.getMonth();
+           const isYearSame = now.getFullYear() === event.eventStartDateTime.getFullYear();
+           return isMonthSame && isYearSame && isAfter(now, event.eventStartDateTime);
         }).map(event =>
           <Event
             hide={!visiblePastEvents}
@@ -172,9 +178,9 @@ class PresentEvents extends Component {
 
         {sortedEvents.filter(event =>
           {
-           const isMonthSame = moment().month() === event.eventStartDateTime.month();
-           const isYearSame = moment().year() === event.eventStartDateTime.year();
-           return isMonthSame && isYearSame && moment().utc().isBefore(event.eventStartDateTime);
+           const isMonthSame = now.getMonth() === event.eventStartDateTime.getMonth();
+           const isYearSame = now.getFullYear() === event.eventStartDateTime.getFullYear();
+           return isMonthSame && isYearSame && isBefore(now, event.eventStartDateTime);
         }).map(event =>
           <Event
             hide={false}
@@ -201,17 +207,17 @@ class PresentEvents extends Component {
             <ul key={index + 1} className="timeline">
               <li className="time-label">
                 <span className="bg-yellow">
-                {moment().add(index + 1, 'M').year() === moment().utc().year() ?
-                  moment().month(moment().month() + index + 1).format('MMMM')
+                {addMonths(now, index + 1).getFullYear() === now.getFullYear() ?
+                  format(setMonth(now, now.getMonth() + index + 1), 'MMMM')
                   :
-                  moment().add(index + 1, 'M').format('MMMM YY')
+                  format(addMonths(now, index + 1), 'MMMM YY')
                 }
                 </span>
               </li>
               {sortedEvents.filter(event => {
-                const iterationDate = moment().add(index + 1, 'M');
-                const isMonthSame = iterationDate.month() === event.eventStartDateTime.month();
-                const isYearSame = iterationDate.year() === event.eventStartDateTime.year();
+                const iterationDate = addMonths(now, index + 1);
+                const isMonthSame = iterationDate.getMonth() === event.eventStartDateTime.getMonth();
+                const isYearSame = iterationDate.getFullYear() === event.eventStartDateTime.getFullYear();
                 return isMonthSame && isYearSame;
               }).map(event =>
                 <Event

@@ -5,8 +5,7 @@ import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import Datetime from 'react-datetime';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
-import validator from 'validator';
-import moment from 'moment';
+import isAfter from 'date-fns/is_after';
 import RichTextEditor from 'react-rte';
 import { Map } from 'immutable';
 
@@ -101,17 +100,17 @@ const validate = (values, props) => {
 
   if (!values.signUpOpenDateTime) {
     errors.signUpOpenDateTime = formatMessage(messages.requiredField);
-  } else if (actualEvent.eventStartDateTime && values.signUpOpenDateTime.isAfter(actualEvent.eventStartDateTime)) {
+  } else if (actualEvent.eventStartDateTime && isAfter(values.signUpOpenDateTime, actualEvent.eventStartDateTime)) {
     errors.signUpOpenDateTime = formatMessage(messages.dateMustBeBeforeEvent);
-  } else if (values.signUpDeadlineDateTime && values.signUpOpenDateTime.isAfter(values.signUpDeadlineDateTime)) {
+  } else if (values.signUpDeadlineDateTime && isAfter(values.signUpOpenDateTime, values.signUpDeadlineDateTime)) {
     errors.signUpOpenDateTime = formatMessage(messages.startDateMustBeBeforeEndDate);
   }
 
   if (!values.signUpDeadlineDateTime) {
     errors.signUpDeadlineDateTime = formatMessage(messages.requiredField);
-  } else if (actualEvent.eventStartDateTime && values.signUpDeadlineDateTime.isAfter(actualEvent.eventStartDateTime)) {
+  } else if (actualEvent.eventStartDateTime && isAfter(values.signUpDeadlineDateTime, actualEvent.eventStartDateTime)) {
     errors.signUpDeadlineDateTime = formatMessage(messages.dateMustBeBeforeEvent);
-  } else if (values.signUpOpenDateTime && values.signUpOpenDateTime.isAfter(values.signUpDeadlineDateTime)) {
+  } else if (values.signUpOpenDateTime && isAfter(values.signUpOpenDateTime, values.signUpDeadlineDateTime)) {
     errors.signUpDeadlineDateTime = formatMessage(messages.endDateMustBeAfterStartDate);
   }
 

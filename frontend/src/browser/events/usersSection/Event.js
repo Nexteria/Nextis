@@ -4,7 +4,10 @@ import { Map } from 'immutable';
 import { browserHistory, Link } from 'react-router';
 import { FormattedMessage, FormattedDate, defineMessages } from 'react-intl';
 import './Event.scss';
-import moment from 'moment';
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 
 
 const messages = defineMessages({
@@ -147,7 +150,8 @@ export default class Event extends Component {
       signOutAsStandIn,
     } = this.props;
 
-    const oldEvent = event.eventStartDateTime.isBefore(moment.utc());
+    const now = parse(new Date());
+    const oldEvent = isBefore(event.eventStartDateTime, now);
     const attendees = event.attendeesGroups.reduce((reduction, group) =>
       reduction.merge(group.users)
     , new Map());
@@ -162,13 +166,12 @@ export default class Event extends Component {
 
     // TODO what if user will be in multiple groups?
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
-    const now = moment().utc();
     const isSignInOpen = group ?
-      now.isAfter(group.signUpOpenDateTime) && now.isBefore(group.signUpDeadlineDateTime)
+      isAfter(now, group.signUpOpenDateTime) && isBefore(now, group.signUpDeadlineDateTime)
     : false;
 
     const signInExpired = group ?
-      moment().utc().isAfter(group.signUpDeadlineDateTime) : false;
+      isAfter(now, group.signUpDeadlineDateTime) : false;
 
     const attendee = group ? group.users.get(viewer.id) : null;
     const groupSignIns = group ? group.users.filter(user => user.get('signedIn')).size : 0;
@@ -358,9 +361,9 @@ export default class Event extends Component {
                   <i className="fa fa-clock-o"></i>
                 </div>
                 <div className="col-md-10 col-sm-10 col-xs-10">
-                  {event.eventStartDateTime.format('D.M.YYYY, H:mm')}
+                  {format(event.eventStartDateTime, 'D.M.YYYY, H:mm')}
                   <span> - </span>
-                  {event.eventEndDateTime.format('D.M.YYYY, H:mm')}
+                  {format(event.eventEndDateTime, 'D.M.YYYY, H:mm')}
                 </div>
               </div>
               <div className="col-md-12 col-sm-12 col-xs-12">
@@ -425,9 +428,9 @@ export default class Event extends Component {
                   <div>
                     <i className="fa fa-clock-o"></i>
                     <span> </span>
-                    {event.eventStartDateTime.format('D.M.YYYY, H:mm')}
+                    {format(event.eventStartDateTime, 'D.M.YYYY, H:mm')}
                     <span> - </span>
-                    {event.eventEndDateTime.format('D.M.YYYY, H:mm')}
+                    {format(event.eventEndDateTime, 'D.M.YYYY, H:mm')}
                     <span>,</span>
                   </div>
                   <div

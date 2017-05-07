@@ -1,7 +1,8 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import moment from 'moment';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './react-bootstrap-table.css';
 import Icon from '../components/Icon';
@@ -56,11 +57,11 @@ export default class InvitedTab extends Component {
   }
 
   reasonFormater(cell) {
-    return <span dangerouslySetInnerHTML={{ __html: cell }}></span>
+    return <span dangerouslySetInnerHTML={{ __html: cell }}></span>;
   }
 
   dateFormater(cell) {
-    return cell ? moment.utc(cell).format('D.M.YYYY, H:mm') : '';
+    return cell ? format(parse(cell), 'D.M.YYYY, H:mm') : '';
   }
 
   booleanFormater(cell) {
