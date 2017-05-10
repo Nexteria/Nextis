@@ -73,7 +73,7 @@ class App extends Component {
     loadUsers();
     loadUserGroups();
     loadRolesList();
-    loadEventList();
+    loadEventList({ status: 'all', semesterId: 'all' });
     loadStudentLevelsList();
     loadLocationsList();
     loadConstants();

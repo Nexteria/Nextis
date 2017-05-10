@@ -61,6 +61,12 @@ class NxEventsController extends Controller
             }
 
             return [$key => $item];
+        })->reject(function ($value, $key) {
+            if ($value === 'all') {
+                return true;
+            }
+
+            return false;
         })->each(function ($item, $key) use ($query) {
             $query = $query->where($key, $item);
         });

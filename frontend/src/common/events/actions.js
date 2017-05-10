@@ -149,7 +149,7 @@ export function loadEventList(filters = {}) {
   return ({ fetch }) => ({
     type: LOAD_EVENTS_LIST,
     payload: {
-      promise: fetch('/nxEvents', {
+      promise: fetch(`/nxEvents${params}`, {
         credentials: 'same-origin',
       }).then(response => response.json()),
     },
