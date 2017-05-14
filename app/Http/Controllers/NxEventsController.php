@@ -227,7 +227,7 @@ class NxEventsController extends Controller
 
             foreach ($eventTypes as $eventType) {
                 $query = ['event' => $eventType, 'duration' => '3m'];
-                $response = Mailgun::api()->get(env('MAILGUN_DOMAIN')."/tags/".$tag.'/stats', $query);
+                $response = Mailgun::api()->get(env('MAILGUN_DOMAIN')."/tags/".urlencode($tag).'/stats', $query);
                 $emails[$key][$eventType] = collect($response->http_response_body->stats)->sum(function ($resolution) use ($eventType) {
                     return $resolution->$eventType->total;
                 });
