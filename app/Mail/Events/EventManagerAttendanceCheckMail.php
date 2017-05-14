@@ -18,6 +18,7 @@ class EventManagerAttendanceCheckMail extends Mailable
     public $eventManagerName;
     public $feedbackCheckDay;
     public $managerDeadline;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -31,6 +32,7 @@ class EventManagerAttendanceCheckMail extends Mailable
         $this->eventId = $event->id;
         $this->eventManagerName = $manager->firstName;
         $this->managerEmail = $manager->email;
+        $this->emailTagBase = $event->emailTagBase;
 
         $settings = $event->getSettings();
         $this->feedbackCheckDay = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('d.m.Y');
@@ -47,5 +49,12 @@ class EventManagerAttendanceCheckMail extends Mailable
         $this->to($this->managerEmail)
              ->subject('[NLA '.$this->eventType.'] ÚČASŤ, '.$this->eventName.' deadline do '.$this->managerDeadline)
              ->view('emails.events.event_manager_attendance_check');
+
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-manager-attendance-check');
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-manager-attendance-check-'.$this->emailTagBase);
+        });
     }
 }

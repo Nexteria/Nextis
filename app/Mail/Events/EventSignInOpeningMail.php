@@ -20,6 +20,7 @@ class EventSignInOpeningMail extends Mailable
     public $eventType;
     public $eventShortDescription;
     public $eventId;
+    public $emailTagBase;
 
     public $eventLocation;
     public $eventLocationName;
@@ -47,6 +48,7 @@ class EventSignInOpeningMail extends Mailable
         $this->eventLocation = $event->location;
         $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
         $this->eventSignInDeadline = $eventSignInDeadline;
+        $this->emailTagBase = $event->emailTagBase;
 
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';
@@ -84,11 +86,10 @@ class EventSignInOpeningMail extends Mailable
              ->view('emails.events.event_signin_opening');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'event-signin-opening');
             $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Tag', 'event-signin-opening-'.Str::ascii($this->eventName).'-'.$year);
+                    ->addTextHeader('X-Mailgun-Tag', 'event-signin-opening-'.$this->emailTagBase);
         });
     }
 }

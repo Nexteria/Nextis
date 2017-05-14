@@ -18,6 +18,7 @@ class OpeningNoticeToEventManagerMail extends Mailable
     public $eventManagerName;
     public $feedbackCheckDay;
     public $hostName;
+    public $emailTagBase;
 
     public $eventLocation;
     public $eventLocationName;
@@ -39,6 +40,7 @@ class OpeningNoticeToEventManagerMail extends Mailable
         $this->hostName = $host->firstName.' '.$host->lastName;
         $this->eventLocation = $event->location;
         $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->emailTagBase = $event->emailTagBase;
 
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';
@@ -71,8 +73,15 @@ class OpeningNoticeToEventManagerMail extends Mailable
      */
     public function build()
     {
-        return $this->to($this->managerEmail)
-                    ->subject('[NLA '.$this->eventType.'] OTVORENIE PRIHLASOVANIA NOTIFICATION, '.$this->eventName)
-                    ->view('emails.events.opening_notice_to_event_manager');
+        $this->to($this->managerEmail)
+             ->subject('[NLA '.$this->eventType.'] OTVORENIE PRIHLASOVANIA NOTIFICATION, '.$this->eventName)
+             ->view('emails.events.opening_notice_to_event_manager');
+
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-opening-notice-event-manager');
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-opening-notice-event-manager-'.$this->emailTagBase);
+        });
     }
 }

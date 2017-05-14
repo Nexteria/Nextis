@@ -19,6 +19,7 @@ class EventFeedbackRemainderMail extends Mailable
     public $eventType;
     public $eventManagerName;
     public $eventManagerPhone;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -34,6 +35,7 @@ class EventFeedbackRemainderMail extends Mailable
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
         $this->feedbackLink = $event->publicFeedbackLink;
+        $this->emailTagBase = $event->emailTagBase;
         
         $settings = $event->getSettings();
         $daysToDeadlineFromStart = $settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1;
@@ -52,11 +54,10 @@ class EventFeedbackRemainderMail extends Mailable
                     ->view('emails.events.event_feedback_remainder');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'feedback-remainder');
             $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Tag', 'feedback-remainder-'.Str::ascii($this->eventName).'-'.$year);
+                    ->addTextHeader('X-Mailgun-Tag', 'feedback-remainder-'.$this->emailTagBase);
         });
     }
 }

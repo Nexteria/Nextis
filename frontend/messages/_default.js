@@ -141,12 +141,12 @@ export default [
     "defaultMessage": "Email"
   },
   {
-    "id": "contacts.list.fullName",
-    "defaultMessage": "Full name"
+    "id": "contacts.list.firstName",
+    "defaultMessage": "First name"
   },
   {
-    "id": "contacts.list.level",
-    "defaultMessage": "Level"
+    "id": "contacts.list.lastName",
+    "defaultMessage": "Last name"
   },
   {
     "id": "contacts.list.no_contacts",
@@ -282,11 +282,11 @@ export default [
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Invited"
+    "defaultMessage": "Attendees"
   },
   {
     "id": "event.edit.attendeesTab",
-    "defaultMessage": "Attendees"
+    "defaultMessage": "Invited"
   },
   {
     "id": "event.edit.chooseEventLocation",
@@ -315,6 +315,82 @@ export default [
   {
     "id": "event.edit.details",
     "defaultMessage": "Details"
+  },
+  {
+    "id": "event.edit.emails",
+    "defaultMessage": "Emails"
+  },
+  {
+    "id": "event.edit.emails.clicked",
+    "defaultMessage": "Clicked"
+  },
+  {
+    "id": "event.edit.emails.delivered",
+    "defaultMessage": "Delivered"
+  },
+  {
+    "id": "event.edit.emails.emailName",
+    "defaultMessage": "Email name"
+  },
+  {
+    "id": "event.edit.emails.eventFeedbackStats",
+    "defaultMessage": "Feedback stats"
+  },
+  {
+    "id": "event.edit.emails.eventFreePlaceNotification",
+    "defaultMessage": "Free place notification"
+  },
+  {
+    "id": "event.edit.emails.eventHostNotification",
+    "defaultMessage": "Host instructions email"
+  },
+  {
+    "id": "event.edit.emails.eventManagerAttendanceCheck",
+    "defaultMessage": "Attendance check remainder to event manager"
+  },
+  {
+    "id": "event.edit.emails.eventNotEnoughPeople",
+    "defaultMessage": "Not enought people warning"
+  },
+  {
+    "id": "event.edit.emails.eventOpeningNoticeEventManager",
+    "defaultMessage": "Notice to event manager before sign in opening"
+  },
+  {
+    "id": "event.edit.emails.eventRemainder",
+    "defaultMessage": "Event remainder"
+  },
+  {
+    "id": "event.edit.emails.eventSigninOpening",
+    "defaultMessage": "Sign in opening email"
+  },
+  {
+    "id": "event.edit.emails.eventSigninRemainder",
+    "defaultMessage": "Sign in remainder"
+  },
+  {
+    "id": "event.edit.emails.feedbackNotification",
+    "defaultMessage": "Feedback notification"
+  },
+  {
+    "id": "event.edit.emails.feedbackRemainder",
+    "defaultMessage": "Feedback remainder"
+  },
+  {
+    "id": "event.edit.emails.hostAttendanceCheck",
+    "defaultMessage": "Attendance check remainder to host"
+  },
+  {
+    "id": "event.edit.emails.opened",
+    "defaultMessage": "Opened"
+  },
+  {
+    "id": "event.edit.emails.recipients",
+    "defaultMessage": "Recipients"
+  },
+  {
+    "id": "event.edit.emails.wasSent",
+    "defaultMessage": "Was sent"
   },
   {
     "id": "event.edit.emptyGroup",
@@ -455,6 +531,10 @@ export default [
   {
     "id": "event.edit.noSemester",
     "defaultMessage": "Not in semester"
+  },
+  {
+    "id": "event.edit.publicFeedbackLink",
+    "defaultMessage": "Public link for respondents"
   },
   {
     "id": "event.edit.requiredField",
@@ -717,6 +797,10 @@ export default [
     "defaultMessage": "Sign in"
   },
   {
+    "id": "event.users.signInAsStandIn",
+    "defaultMessage": "Sign in as Stand in"
+  },
+  {
     "id": "event.users.signInExpired",
     "defaultMessage": "Sign in deadline was:"
   },
@@ -731,6 +815,14 @@ export default [
   {
     "id": "event.users.signOut",
     "defaultMessage": "Sign out"
+  },
+  {
+    "id": "event.users.signOutAsStandIn",
+    "defaultMessage": "Sign out as Stand in"
+  },
+  {
+    "id": "event.users.standInPeople",
+    "defaultMessage": "Stand in people"
   },
   {
     "id": "event.users.unavailableEvent",
@@ -817,6 +909,10 @@ export default [
     "defaultMessage": "No events here"
   },
   {
+    "id": "events.manage.settings.eventManager",
+    "defaultMessage": "Event manager"
+  },
+  {
     "id": "events.manage.settings.eventSignInOpeningManagerNotificationDaysBefore",
     "defaultMessage": "How many days before first event sign in opening should events manager receive summary email"
   },
@@ -879,6 +975,10 @@ export default [
   {
     "id": "events.manage.settings.save",
     "defaultMessage": "Save"
+  },
+  {
+    "id": "events.manage.settings.sentCopyOfAllEventNotificationsToManager",
+    "defaultMessage": "Sent copy of all event notifications to manager"
   },
   {
     "id": "events.manage.signedIn",
@@ -899,6 +999,26 @@ export default [
   {
     "id": "events.manage.wontCome",
     "defaultMessage": "Wont come"
+  },
+  {
+    "id": "events.users.filter.allEvents",
+    "defaultMessage": "All"
+  },
+  {
+    "id": "events.users.filter.onlyForMeEvents",
+    "defaultMessage": "Only for me"
+  },
+  {
+    "id": "events.users.filter.signedInEvents",
+    "defaultMessage": "Signed in"
+  },
+  {
+    "id": "events.users.filter.signedOutEvents",
+    "defaultMessage": "Signed Out"
+  },
+  {
+    "id": "events.users.filter.standInEvents",
+    "defaultMessage": "Stand in"
   },
   {
     "id": "events.users.hideFutureEvents",
@@ -1417,10 +1537,6 @@ export default [
     "defaultMessage": "Active"
   },
   {
-    "id": "user.edit.activityPointsBaseNumber",
-    "defaultMessage": "Activity points base for student"
-  },
-  {
     "id": "user.edit.actualJobInfo",
     "defaultMessage": "Actual job"
   },
@@ -1431,10 +1547,6 @@ export default [
   {
     "id": "user.edit.changePassword",
     "defaultMessage": "Change password"
-  },
-  {
-    "id": "user.edit.chooseStudentLevel",
-    "defaultMessage": "Choose student level"
   },
   {
     "id": "user.edit.confirmationPassword",
@@ -1497,18 +1609,6 @@ export default [
     "defaultMessage": "LinkedIn link"
   },
   {
-    "id": "user.edit.minimumSemesterActivityPoints",
-    "defaultMessage": "Minimum activity points for semester"
-  },
-  {
-    "id": "user.edit.monthlySchoolFee",
-    "defaultMessage": "Monthly school fee"
-  },
-  {
-    "id": "user.edit.monthlySchoolFeeInCents",
-    "defaultMessage": "Monthly school fee in cents!"
-  },
-  {
     "id": "user.edit.newPassword",
     "defaultMessage": "New password"
   },
@@ -1554,11 +1654,11 @@ export default [
   },
   {
     "id": "user.edit.requiredField",
-    "defaultMessage": "This field is required!"
+    "defaultMessage": "This field is required"
   },
   {
     "id": "user.edit.requiredField",
-    "defaultMessage": "This field is required"
+    "defaultMessage": "This field is required!"
   },
   {
     "id": "user.edit.requiredLengthField",
@@ -1575,10 +1675,6 @@ export default [
   {
     "id": "user.edit.school",
     "defaultMessage": "School"
-  },
-  {
-    "id": "user.edit.studentLevel",
-    "defaultMessage": "Student level"
   },
   {
     "id": "user.edit.studyProgram",
@@ -1721,12 +1817,20 @@ export default [
     "defaultMessage": "All"
   },
   {
+    "id": "users.manage.firstName",
+    "defaultMessage": "First name"
+  },
+  {
+    "id": "users.manage.firstName",
+    "defaultMessage": "First name"
+  },
+  {
     "id": "users.manage.lastName",
     "defaultMessage": "Last name"
   },
   {
-    "id": "users.manage.levelFilter",
-    "defaultMessage": "Filter level"
+    "id": "users.manage.lastName",
+    "defaultMessage": "Last name"
   },
   {
     "id": "users.manage.noUsers",
@@ -1743,10 +1847,6 @@ export default [
   {
     "id": "users.manage.sortBy",
     "defaultMessage": "Sort by"
-  },
-  {
-    "id": "users.manage.studentLevel",
-    "defaultMessage": "Student level"
   },
   {
     "id": "users.manage.table.title",
@@ -1773,20 +1873,12 @@ export default [
     "defaultMessage": "Students base activity points"
   },
   {
-    "id": "users.manage.userName",
-    "defaultMessage": "User name"
-  },
-  {
-    "id": "users.manage.userName",
-    "defaultMessage": "User name"
+    "id": "viewer.activityPoints.amountOfPoints",
+    "defaultMessage": "Amount of point"
   },
   {
     "id": "viewer.activityPoints.amountOfPoints",
     "defaultMessage": "Amount of points"
-  },
-  {
-    "id": "viewer.activityPoints.amountOfPoints",
-    "defaultMessage": "Amount of point"
   },
   {
     "id": "viewer.activityPoints.attendees",
@@ -1821,14 +1913,6 @@ export default [
     "defaultMessage": "Gained points"
   },
   {
-    "id": "viewer.activityPoints.gainedPoints",
-    "defaultMessage": "Gained points"
-  },
-  {
-    "id": "viewer.activityPoints.level",
-    "defaultMessage": "Level"
-  },
-  {
     "id": "viewer.activityPoints.loadingAttendees",
     "defaultMessage": "Loading"
   },
@@ -1837,20 +1921,8 @@ export default [
     "defaultMessage": "Name"
   },
   {
-    "id": "viewer.activityPoints.name",
-    "defaultMessage": "Name"
-  },
-  {
-    "id": "viewer.activityPoints.order",
-    "defaultMessage": "Order"
-  },
-  {
     "id": "viewer.activityPoints.otherStudents",
     "defaultMessage": "Other students"
-  },
-  {
-    "id": "viewer.activityPoints.percentageGainedPoints",
-    "defaultMessage": "Gained points"
   },
   {
     "id": "viewer.activityPoints.points",

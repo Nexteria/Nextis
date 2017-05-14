@@ -10,6 +10,8 @@ use App\UserGroup as UserGroup;
 use App\User as User;
 use App\DefaultSystemSettings;
 use App\NxEventsSettings;
+use Illuminate\Support\Str;
+use Mailgun;
 
 class NxEventsController extends Controller
 {
@@ -183,5 +185,57 @@ class NxEventsController extends Controller
         $event->settings->update(['eventsManagerUserId' => $defaultSettings['eventsManagerUserId']]);
 
         return response()->json([], 200);
+    }
+
+    public function getEmailsStats($eventId)
+    {
+        $emailTagBase = NxEvent::findOrFail($eventId)->emailTagBase;
+
+        $emails = [
+          [ 'codename' => 'event-opening-notice-event-manager' ],
+          [ 'codename' => 'event-signin-opening' ],
+          [ 'codename' => 'event-host-notification' ],
+          [ 'codename' => 'event-signin-remainder' ],
+          [ 'codename' => 'event-not-enough-people' ],
+          [ 'codename' => 'event-free-place-notification' ],
+          [ 'codename' => 'event-remainder' ],
+          [ 'codename' => 'host-attendance-check' ],
+          [ 'codename' => 'event-manager-attendance-check' ],
+          [ 'codename' => 'feedback-notification' ],
+          [ 'codename' => 'feedback-remainder' ],
+          [ 'codename' => 'event-feedback-stats' ],
+        ];
+
+        foreach ($emails as $key => $email) {
+            $tag = $email['codename'].'-'.$emailTagBase;
+            $emails[$key]['wasSent'] = false;
+            $emails[$key]['order'] = $key;
+            $emails[$key]['codename'] = Str::camel($emails[$key]['codename']);
+
+            $eventTypes = [
+              'accepted',
+              'delivered',
+              'opened',
+              'clicked',
+            ];
+
+            try {
+                $response = Mailgun::api()->get(env('MAILGUN_DOMAIN')."/tags/".$tag);
+            } catch (Mailgun\Connection\Exceptions\MissingEndpoint $e) {
+                continue;
+            }
+
+            foreach ($eventTypes as $eventType) {
+                $query = ['event' => $eventType, 'duration' => '3m'];
+                $response = Mailgun::api()->get(env('MAILGUN_DOMAIN')."/tags/".$tag.'/stats', $query);
+                $emails[$key][$eventType] = collect($response->http_response_body->stats)->sum(function ($resolution) use ($eventType) {
+                    return $resolution->$eventType->total;
+                });
+            }
+
+            $emails[$key]['wasSent'] = true;
+        }
+
+        return $emails;
     }
 }

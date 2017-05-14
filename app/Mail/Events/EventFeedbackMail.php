@@ -20,6 +20,7 @@ class EventFeedbackMail extends Mailable
     public $feedbackDeadline;
     public $feedbackLink;
     public $eventType;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -35,6 +36,7 @@ class EventFeedbackMail extends Mailable
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
         $this->feedbackLink = $event->publicFeedbackLink;
+        $this->emailTagBase = $event->emailTagBase;
 
         $settings = $event->getSettings();
         $daysToDeadlineFromStart = $settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1;
@@ -53,11 +55,10 @@ class EventFeedbackMail extends Mailable
                     ->view('emails.events.event_feedback_email');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'feedback-notification');
             $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Tag', 'feedback-notification-'.Str::ascii($this->eventName).'-'.$year);
+                    ->addTextHeader('X-Mailgun-Tag', 'feedback-notification-'.$this->emailTagBase);
         });
     }
 }

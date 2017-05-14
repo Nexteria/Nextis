@@ -1848,4 +1848,88 @@ export default [
     defaultMessage: 'Last name',
     id: 'contacts.list.lastName',
   },
+  {
+    defaultMessage: 'Emails',
+    id: 'event.edit.emails',
+  },
+  {
+    defaultMessage: 'Clicked',
+    id: 'event.edit.emails.clicked',
+  },
+  {
+    defaultMessage: 'Delivered',
+    id: 'event.edit.emails.delivered',
+  },
+  {
+    defaultMessage: 'Email name',
+    id: 'event.edit.emails.emailName',
+  },
+  {
+    defaultMessage: 'Feedback stats for event manager',
+    id: 'event.edit.emails.eventFeedbackStats',
+  },
+  {
+    defaultMessage: 'Free place notification',
+    id: 'event.edit.emails.eventFreePlaceNotification',
+  },
+  {
+    defaultMessage: 'Instruction for host',
+    id: 'event.edit.emails.eventHostNotification',
+  },
+  {
+    defaultMessage: 'Attendance check notification for event manager',
+    id: 'event.edit.emails.eventManagerAttendanceCheck',
+  },
+  {
+    defaultMessage: 'Low attendance warning for event manager',
+    id: 'event.edit.emails.eventNotEnoughPeople',
+  },
+  {
+    defaultMessage: 'Event info before sign in opening for event manager',
+    id: 'event.edit.emails.eventOpeningNoticeEventManager',
+  },
+  {
+    defaultMessage: 'Event remainder',
+    id: 'event.edit.emails.eventRemainder',
+  },
+  {
+    defaultMessage: 'Sign in opening',
+    id: 'event.edit.emails.eventSigninOpening',
+  },
+  {
+    defaultMessage: 'Sign in remainder',
+    id: 'event.edit.emails.eventSigninRemainder',
+  },
+  {
+    defaultMessage: 'Feedback notification',
+    id: 'event.edit.emails.feedbackNotification',
+  },
+  {
+    defaultMessage: 'Feedback remainder',
+    id: 'event.edit.emails.feedbackRemainder',
+  },
+  {
+    defaultMessage: 'Host attendance check notification',
+    id: 'event.edit.emails.hostAttendanceCheck',
+  },
+  {
+    defaultMessage: 'Opened',
+    id: 'event.edit.emails.opened',
+  },
+  {
+    defaultMessage: 'Recipients',
+    id: 'event.edit.emails.recipients',
+  },
+  {
+    defaultMessage: 'Sent',
+    id: 'event.edit.emails.wasSent',
+  },
+  {
+    defaultMessage: 'Event manager',
+    id: 'events.manage.settings.eventManager',
+  },
+  {
+    defaultMessage: 'First name',
+    id: 'users.manage.firstName',
+  },
 ];

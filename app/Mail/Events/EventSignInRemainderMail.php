@@ -21,6 +21,7 @@ class EventSignInRemainderMail extends Mailable
     public $eventType;
     public $eventShortDescription;
     public $eventId;
+    public $emailTagBase;
 
     public $eventLocation;
     public $eventLocationName;
@@ -47,6 +48,7 @@ class EventSignInRemainderMail extends Mailable
         $this->eventLocation = $event->location;
         $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
         $this->eventSignInDeadline = $eventSignInDeadline;
+        $this->emailTagBase = $event->emailTagBase;
 
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';
@@ -84,11 +86,10 @@ class EventSignInRemainderMail extends Mailable
                     ->view('emails.events.event_signin_reminder');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'event-signin-remainder');
             $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Tag', 'event-signin-remainder-'.Str::ascii($this->eventName).'-'.$year);
+                    ->addTextHeader('X-Mailgun-Tag', 'event-signin-remainder-'.$this->emailTagBase);
         });
     }
 }

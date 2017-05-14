@@ -18,6 +18,7 @@ class EventReminderMail extends Mailable
     public $eventManagerName;
     public $eventName;
     public $eventType;
+    public $emailTagBase;
 
     public $eventLocation;
     public $eventLocationName;
@@ -40,6 +41,7 @@ class EventReminderMail extends Mailable
         $this->eventType = Str::upper($event->eventType);
         $this->eventLocation = $event->location;
         $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->emailTagBase = $event->emailTagBase;
 
         $host = \App\User::findOrFail($event->hostId);
         $this->hostFirstName = $host->firstName.' '.$host->lastName;
@@ -69,11 +71,10 @@ class EventReminderMail extends Mailable
                     ->view('emails.events.event_reminder');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'event-remainder');
             $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Tag', 'event-remainder-'.Str::ascii($this->eventName).'-'.$year);
+                    ->addTextHeader('X-Mailgun-Tag', 'event-remainder-'.$this->emailTagBase);
         });
     }
 }

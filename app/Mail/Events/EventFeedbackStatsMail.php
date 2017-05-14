@@ -19,6 +19,7 @@ class EventFeedbackStatsMail extends Mailable
     public $eventManagerEmail;
     public $eventType;
     public $formLink;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -34,6 +35,7 @@ class EventFeedbackStatsMail extends Mailable
         $this->formLink = $event->feedbackLink;
         $this->actualFiledCount = $actualFiledCount;
         $this->expectedFilledCount = $expectedFilledCount;
+        $this->emailTagBase = $event->emailTagBase;
     }
 
     /**
@@ -43,8 +45,15 @@ class EventFeedbackStatsMail extends Mailable
      */
     public function build()
     {
-        return $this->to($this->eventManagerEmail)
+        $this->to($this->eventManagerEmail)
                     ->subject('[NLA '.$this->eventType.'] FEEDBACK, STATS, '.$this->eventName)
                     ->view('emails.events.event_feedback_stats');
+
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-feedback-stats');
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-feedback-stats-'.$this->emailTagBase);
+        });
     }
 }

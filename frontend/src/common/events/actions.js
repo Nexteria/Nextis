@@ -15,6 +15,13 @@ export const LOAD_EVENTS_LIST_SUCCESS = 'LOAD_EVENTS_LIST_SUCCESS';
 export const REMOVE_EVENT = 'REMOVE_EVENT';
 export const REMOVE_EVENT_SUCCESS = 'REMOVE_EVENT_SUCCESS';
 
+export const FETCH_EVENT_EMAILS_STATUS = 'FETCH_EVENT_EMAILS_STATUS';
+export const FETCH_EVENT_EMAILS_STATUS_START = 'FETCH_EVENT_EMAILS_STATUS_START';
+export const FETCH_EVENT_EMAILS_STATUS_SUCCESS = 'FETCH_EVENT_EMAILS_STATUS_SUCCESS';
+export const FETCH_EVENT_EMAILS_STATUS_ERROR = 'FETCH_EVENT_EMAILS_STATUS_ERROR';
+
+export const RESET_EVENT_EMAILS_STATUS = 'RESET_EVENT_EMAILS_STATUS';
+
 export const ATTENDEE_WONT_GO = 'ATTENDEE_WONT_GO';
 export const ATTENDEE_WONT_GO_START = 'ATTENDEE_WONT_GO_START';
 export const ATTENDEE_WONT_GO_SUCCESS = 'ATTENDEE_WONT_GO_SUCCESS';
@@ -504,4 +511,22 @@ export function signOutAsStandIn(event, viewer, groupId) {
         })),
     },
   });
+}
+
+export function fetchEmailsStatus(eventId) {
+  return ({ fetch }) => ({
+    type: FETCH_EVENT_EMAILS_STATUS,
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/emails`, {
+        credentials: 'same-origin',
+        notifications: 'both',
+      }).then(response => response.json())
+    },
+  });
+}
+
+export function resetEmailStatus() {
+  return {
+    type: RESET_EVENT_EMAILS_STATUS,
+  };
 }

@@ -20,12 +20,17 @@ import './EditEvent.scss';
 import Event from '../../common/events/models/Event';
 import AttendeesGroupsDialog from './attendeesGroups/AttendeesGroupsDialog';
 import InvitedTab from './InvitedTab';
+import EmailsTab from './EmailsTab';
 import EventSettingsTab from './EventSettingsTab';
 
 const messages = defineMessages({
   invited: {
     defaultMessage: 'Attendees',
     id: 'event.edit.attendeesTab',
+  },
+  emails: {
+    defaultMessage: 'Emails',
+    id: 'event.edit.emails',
   },
   settings: {
     defaultMessage: 'Settings',
@@ -637,7 +642,13 @@ export class EditEvent extends Component {
         <section className="content">
           <div className="row">
             <div className="col-md-12">
-              <Tabs defaultActiveKey={1} id="event-dependencies" className="nav-tabs-custom">
+              <Tabs
+                mountOnEnter
+                animation
+                defaultActiveKey={1}
+                id="event-dependencies"
+                className="nav-tabs-custom"
+              >
                 <Tab eventKey={1} title={formatMessage(messages.details)}>
                   <form className="form-horizontal" onSubmit={handleSubmit((data) => saveEvent(data))}>
                     <div className="nav-tabs-custom">
@@ -817,8 +828,8 @@ export class EditEvent extends Component {
                           <div className="form-group">
                             <div className="col-sm-offset-2 col-sm-10">
                               <button type="submit" disabled={pristine || submitting} className="btn btn-success">
-                                  <FormattedMessage {...messages.save} />
-                                </button>
+                                <FormattedMessage {...messages.save} />
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -830,7 +841,13 @@ export class EditEvent extends Component {
                   <InvitedTab intl={this.props.intl} users={users} attendeesGroups={actualEvent.attendeesGroups} />
                 </Tab>
                 {actualEventId ?
-                  <Tab eventKey={3} title={formatMessage(messages.settings)}>
+                  <Tab eventKey={3} title={formatMessage(messages.emails)}>
+                    <EmailsTab animation mountOnEnter eventId={actualEventId} />
+                  </Tab>
+                  : null
+                }
+                {actualEventId ?
+                  <Tab eventKey={4} title={formatMessage(messages.settings)}>
                     {eventSettings.get('dataLoaded') ?
                       <EventSettingsTab
                         eventSettings={eventSettings}

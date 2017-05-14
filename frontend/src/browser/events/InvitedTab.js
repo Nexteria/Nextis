@@ -76,7 +76,7 @@ export default class InvitedTab extends Component {
     } = this.props;
 
     if (!attendeesGroups) {
-      return <div></div>
+      return <div></div>;
     }
  
     const groups = attendeesGroups.map(group =>
@@ -87,7 +87,7 @@ export default class InvitedTab extends Component {
         person.signedOutReason = person.signedOutReason.toString('html');
         return person;
       }).toArray()
-    )
+    );
 
     const { formatMessage } = this.props.intl;
 

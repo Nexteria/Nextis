@@ -19,6 +19,7 @@ class EventNotEnoughPeopleMail extends Mailable
     public $actualCapacity;
     public $maxCapacity;
     public $minCapacity;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -34,6 +35,7 @@ class EventNotEnoughPeopleMail extends Mailable
         $this->managerEmail = $manager->email;
         $this->minCapacity = $event->minCapacity;
         $this->maxCapacity = $event->maxCapacity;
+        $this->emailTagBase = $event->emailTagBase;
     }
 
     /**
@@ -46,5 +48,12 @@ class EventNotEnoughPeopleMail extends Mailable
         $this->to($this->managerEmail)
              ->subject('[Nexteria Space] MALÝ POČET PRIHLÁSENÝCH, '.$this->eventType.' '.$this->eventName)
              ->view('emails.events.event_not_enought_people');
+
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-not-enough-people');
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-not-enough-people-'.$this->emailTagBase);
+        });
     }
 }

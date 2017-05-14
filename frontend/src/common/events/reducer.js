@@ -37,6 +37,7 @@ const InitialState = Record({
     dataLoaded: false,
     data: null,
   }),
+  emails: null,
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -307,6 +308,16 @@ export default function eventsReducer(state = new InitialState, action) {
     case actions.UPDATE_EVENT_CUSTOM_SETTINGS_SUCCESS: {
       return state.setIn(['eventSettings', 'dataLoaded'], true)
                   .setIn(['eventSettings', 'data'], new EventSettings(action.payload));
+    }
+
+    case actions.RESET_EVENT_EMAILS_STATUS: {
+      return state.set('emails', null);
+    }
+
+    case actions.FETCH_EVENT_EMAILS_STATUS_SUCCESS: {
+      return state.set('emails', new Map(action.payload.map(email =>
+        [email.codename, new Map(email)]
+      )));
     }
 
   }

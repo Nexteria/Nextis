@@ -151,6 +151,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Bogardo\Mailgun\MailgunServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -222,7 +223,8 @@ return [
         'Input' => Illuminate\Support\Facades\Input::class,
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
-
+        'Uuid' => Webpatser\Uuid\Uuid::class,
+        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
     ],
 
 ];

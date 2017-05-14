@@ -22,6 +22,7 @@ class EventFreePlaceMail extends Mailable
     public $eventStartTime;
     public $eventManagerPhone;
     public $eventManagerName;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -38,6 +39,7 @@ class EventFreePlaceMail extends Mailable
         $this->eventManagerPhone = $manager->phone;
         $this->eventLocation = $event->location;
         $this->signInToken = $signInToken;
+        $this->emailTagBase = $event->emailTagBase;
 
         $eventLocationName = $this->eventLocation->name.' (';
         $eventLocationName .= $this->eventLocation->addressLine1;
@@ -63,11 +65,10 @@ class EventFreePlaceMail extends Mailable
              ->view('emails.events.event_free_place_email');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'event-free-place-notification');
             $message->getHeaders()
-                    ->addTextHeader('X-Mailgun-Tag', 'event-free-place-notification-'.Str::ascii($this->eventName).'-'.$year);
+                    ->addTextHeader('X-Mailgun-Tag', 'event-free-place-notification-'.$this->emailTagBase);
         });
     }
 }

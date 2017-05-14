@@ -20,6 +20,7 @@ class EventHostAttendanceMail extends Mailable
     public $eventType;
     public $eventManagerName;
     public $eventManagerPhone;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -36,6 +37,7 @@ class EventHostAttendanceMail extends Mailable
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
         $this->todayDate = \Carbon\Carbon::now()->format('d.m.Y');
+        $this->emailTagBase = $event->emailTagBase;
     }
 
     /**
@@ -50,9 +52,10 @@ class EventHostAttendanceMail extends Mailable
              ->view('emails.events.event_host_attendance');
 
         $this->withSwiftMessage(function ($message) {
-            $year = \Carbon\Carbon::now()->format('Y');
             $message->getHeaders()
                     ->addTextHeader('X-Mailgun-Tag', 'host-attendance-check');
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'host-attendance-check-'.$this->emailTagBase);
         });
     }
 }

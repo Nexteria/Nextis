@@ -26,5 +26,9 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() == 'local') {
             $this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
         }
+
+        $this->app->bind('mailgun.client', function () {
+            return \Http\Adapter\Guzzle6\Client::createWithConfig([]);
+        });
     }
 }

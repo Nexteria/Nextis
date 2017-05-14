@@ -1786,4 +1786,88 @@ export default [
     defaultMessage: 'Priezvisko',
     id: 'contacts.list.lastName',
   },
+  {
+    defaultMessage: 'Emaily',
+    id: 'event.edit.emails',
+  },
+  {
+    defaultMessage: 'Kliknutí',
+    id: 'event.edit.emails.clicked',
+  },
+  {
+    defaultMessage: 'Doručených',
+    id: 'event.edit.emails.delivered',
+  },
+  {
+    defaultMessage: 'Typ emailu',
+    id: 'event.edit.emails.emailName',
+  },
+  {
+    defaultMessage: 'Štatistika feedbackov event manažérovi',
+    id: 'event.edit.emails.eventFeedbackStats',
+  },
+  {
+    defaultMessage: 'Uvoľnené miesto',
+    id: 'event.edit.emails.eventFreePlaceNotification',
+  },
+  {
+    defaultMessage: 'Inštrukcie pre hosta',
+    id: 'event.edit.emails.eventHostNotification',
+  },
+  {
+    defaultMessage: 'Upozornenie na zaznačenie účasti pre event manažéra',
+    id: 'event.edit.emails.eventManagerAttendanceCheck',
+  },
+  {
+    defaultMessage: 'Upozornenie o malom počte prihlásených',
+    id: 'event.edit.emails.eventNotEnoughPeople',
+  },
+  {
+    defaultMessage: 'Info o evente pred otvorením prihlasovania event manažérovi',
+    id: 'event.edit.emails.eventOpeningNoticeEventManager',
+  },
+  {
+    defaultMessage: 'Pripomienka zajtrajšieho eventu',
+    id: 'event.edit.emails.eventRemainder',
+  },
+  {
+    defaultMessage: 'Otvorenie prihlasovania',
+    id: 'event.edit.emails.eventSigninOpening',
+  },
+  {
+    defaultMessage: 'Pripomienka na prihlásenie sa',
+    id: 'event.edit.emails.eventSigninRemainder',
+  },
+  {
+    defaultMessage: 'Vyplnenie feedbacku',
+    id: 'event.edit.emails.feedbackNotification',
+  },
+  {
+    defaultMessage: 'Pripomienka na vyplnenie feedbacku',
+    id: 'event.edit.emails.feedbackRemainder',
+  },
+  {
+    defaultMessage: 'Výzva na vyplnenie účasti pre hosta',
+    id: 'event.edit.emails.hostAttendanceCheck',
+  },
+  {
+    defaultMessage: 'Otvorených',
+    id: 'event.edit.emails.opened',
+  },
+  {
+    defaultMessage: 'Príjemcov',
+    id: 'event.edit.emails.recipients',
+  },
+  {
+    defaultMessage: 'Odoslaný',
+    id: 'event.edit.emails.wasSent',
+  },
+  {
+    defaultMessage: 'Event manažér',
+    id: 'events.manage.settings.eventManager',
+  },
+  {
+    defaultMessage: 'Krstné meno',
+    id: 'users.manage.firstName',
+  },
 ];

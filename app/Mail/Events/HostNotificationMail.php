@@ -19,6 +19,7 @@ class HostNotificationMail extends Mailable
     public $eventType;
     public $eventManagerName;
     public $eventManagerPhone;
+    public $emailTagBase;
 
     /**
      * Create a new message instance.
@@ -34,6 +35,7 @@ class HostNotificationMail extends Mailable
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
         $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->emailTagBase = $event->emailTagBase;
     }
 
     /**
@@ -43,8 +45,15 @@ class HostNotificationMail extends Mailable
      */
     public function build()
     {
-        return $this->to($this->hostEmail)
-                    ->subject('[NLA '.$this->eventType.'] Úloha hosta na '.$this->eventName)
-                    ->view('emails.events.host_notification');
+         $this->to($this->hostEmail)
+              ->subject('[NLA '.$this->eventType.'] Úloha hosta na '.$this->eventName)
+              ->view('emails.events.host_notification');
+
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-host-notification');
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'event-host-notification-'.$this->emailTagBase);
+        });
     }
 }
