@@ -169,7 +169,7 @@ class UsersController extends Controller
         }
 
         $users = User::with(['roles'])->get();
-        return response()->json($this->userTransformer->transformCollection($users, []));
+        return response()->json($this->userTransformer->transformCollection($users, ['gainedActivityPoints', 'potentialActivityPoints']));
     }
 
     public function deleteUser($userId)

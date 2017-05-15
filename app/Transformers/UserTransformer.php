@@ -42,6 +42,21 @@ class UserTransformer extends Transformer
             'confirmedMarketingUse' => $user->confirmedMarketingUse,
         ];
 
+        if (in_array('gainedActivityPoints', $fields) || in_array('potentialActivityPoints', $fields)) {
+            $activityPoints = $user->computeActivityPoints();
+        }
+
+        if (in_array('gainedActivityPoints', $fields)) {
+            $result['gainedActivityPoints'] = $activityPoints['sumGainedPoints'];
+            if ($user->student) {
+                $result['activityPointsBaseNumber'] = $user->student->getActiveSemester()->pivot->activityPointsBaseNumber;
+            }
+        }
+
+        if (in_array('potentialActivityPoints', $fields)) {
+            $result['potentialActivityPoints'] = $activityPoints['sumPotentialPoints'];
+        }
+
         return $result;
     }
 }
