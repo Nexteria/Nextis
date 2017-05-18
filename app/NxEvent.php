@@ -35,7 +35,7 @@ class NxEvent extends Model
         $event->description = clean($attributes['description']);
         $event->hostId = User::findOrFail($attributes['hostId'])->id;
         $event->nxLocationId = NxLocation::findOrFail($attributes['nxLocationId'])->id;
-        $event->emailTagBase = Uuid::generate(4);
+        $event->emailTagBase = \Uuid::generate(4);
         $event->save();
 
         foreach ($attributes['attendeesGroups'] as $group) {

@@ -30,7 +30,7 @@ class AddNxEventEmailTagField extends Migration
                 ]);
             } catch (\Exception $e) {
                 DB::table('nx_events')->where('id', $event->id)->update([
-                  'emailTagBase' => Uuid::generate(4),
+                  'emailTagBase' => \Uuid::generate(4),
                 ]);
             }
         }
