@@ -40,8 +40,6 @@ class User extends Authenticatable
         'state',
         'iban',
         'nexteriaTeamRole',
-        'minimumSemesterActivityPoints',
-        'activityPointsBaseNumber',
         'nexteriaTeamRole',
     ];
 

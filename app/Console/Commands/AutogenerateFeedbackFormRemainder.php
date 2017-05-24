@@ -43,7 +43,7 @@ class AutogenerateFeedbackFormRemainder extends Command
                     try {
                         $respondentsEmails = \FeedbackForms::getRespondents($event->feedbackLink)['respondents'];
                     } catch (\Exception $e) {
-                        \Log::error(var_export($e, true));
+                        \Log::error($e->getMessage());
                         $maxRetries = $maxRetries - 1;
                         continue;
                     }
