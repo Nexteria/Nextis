@@ -51,6 +51,10 @@ const messages = defineMessages({
     defaultMessage: 'All',
     id: 'users.manage.all'
   },
+  studentLevel: {
+    defaultMessage: 'Level',
+    id: 'user.edit.studentLevel'
+  },
 });
 
 class UsersPage extends Component {
@@ -160,6 +164,7 @@ class UsersPage extends Component {
 
     const userData = filteredUsers.map(user => ({
       id: user.id,
+      studentLevelId: user.studentLevelId,
       firstName: user.firstName,
       lastName: user.lastName,
       points: this.getUserPointsComponent(user),
@@ -224,6 +229,10 @@ class UsersPage extends Component {
 
                     <TableHeaderColumn dataField="lastName" dataSort>
                       {formatMessage(messages.lastName)}
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="studentLevelId" dataSort>
+                      {formatMessage(messages.studentLevel)}
                     </TableHeaderColumn>
 
                     <TableHeaderColumn dataField="points" dataSort sortFunc={this.pointsSortFunc} dataFormat={x => x}>
