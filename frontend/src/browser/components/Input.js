@@ -7,7 +7,7 @@ export default function renderInput(data) {
     <div
       className={`form-group ${touched && error ? 'has-error' : ''}`}
     >
-      <label className="col-sm-12 control-label">
+      <label className="col-sm-12 control-label" htmlFor={input.name}>
         {label}
       </label>
       <div className={`col-sm-12 ${asyncValidating ? 'async-validating' : ''}`}>

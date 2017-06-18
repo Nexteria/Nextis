@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('/semesters', 'AdminController@getSemesters');
             Route::post('/semesters', 'AdminController@createSemester');
+            Route::post('/semesters/{semesterId}/assign', 'AdminController@assignSemester');
 
             Route::get('/students', 'AdminController@getStudents');
         });

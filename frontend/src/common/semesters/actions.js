@@ -16,6 +16,11 @@ export const SAVE_SEMESTER_START = 'SAVE_SEMESTER_START';
 export const SAVE_SEMESTER_SUCCESS = 'SAVE_SEMESTER_SUCCESS';
 export const SAVE_SEMESTER_ERROR = 'SAVE_SEMESTER_ERROR';
 
+export const ASSIGN_SEMESTER_ACTION = 'ASSIGN_SEMESTER_ACTION';
+export const ASSIGN_SEMESTER_ACTION_START = 'ASSIGN_SEMESTER_ACTION_START';
+export const ASSIGN_SEMESTER_ACTION_SUCCESS = 'ASSIGN_SEMESTER_ACTION_SUCCESS';
+export const ASSIGN_SEMESTER_ACTION_ERROR = 'ASSIGN_SEMESTER_ACTION_ERROR';
+
 export function fetchSemesters() {
   return ({ fetch }) => ({
     type: FETCH_SEMESTERS,
@@ -23,6 +28,24 @@ export function fetchSemesters() {
       promise: fetch('/semesters', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function assignSemester(data, selectedStudents) {
+  return ({ fetch }) => ({
+    type: ASSIGN_SEMESTER_ACTION,
+    payload: {
+      promise: fetch(`/admin/semesters/${data.semesterId}/assign`, {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+          selectedStudents,
+        }),
       }).then(response => response.json()),
     },
   });

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\NxEvent as NxEvent;
 use App\Semester;
 use App\Student;
+use App\DefaultSystemSettings;
 
 class AdminController extends Controller
 {
@@ -169,5 +170,90 @@ class AdminController extends Controller
         }
 
         return $this->getSemesters($semester->id);
+    }
+
+    public function assignSemester(Request $request, $semesterId)
+    {
+        $validator = \Validator::make($request->all(), [
+          'semesterId' => 'required|numeric',
+          'tuitionFee' => 'required_unless:useDefaultTuitionFee,true|numeric|min:0',
+          'activityPointsBaseNumber' => 'required_unless:useDefaultActivityPointsBaseNumber,true|numeric|min:0',
+          'minimumSemesterActivityPoints' => 'required_unless:useDefaultMinimumSemesterActivityPoints,true|numeric|min:0',
+          'selectedStudents' => 'required|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $semester = Semester::findOrFail($semesterId);
+        $data = $request->all();
+        $defaultFlags = [
+            'useDefaultTuitionFee',
+            'useDefaultActivityPointsBaseNumber',
+            'useDefaultMinimumSemesterActivityPoints'
+        ];
+        foreach ($defaultFlags as $flag) {
+            if (!isset($data[$flag])) {
+              $data[$flag] = false;
+            }
+        }
+
+        $studentsCount = Student::whereIn('id', $data['selectedStudents'])
+                                ->whereHas('semesters', function($query) use ($semesterId){
+                                    $query->where('semesterId', $semesterId);
+                                })
+                                ->count();
+        if ($studentsCount > 0) {
+          return response()->json(['error' => 'Nemôžem aplikovať zmenu, niektorí študenti už majú priradený daný semester!'], 400);
+        }
+
+        if ($data['useDefaultTuitionFee'] === true ||
+            $data['useDefaultActivityPointsBaseNumber'] === true ||
+            $data['useDefaultMinimumSemesterActivityPoints'] === true ) {
+
+            $studentsCount = Student::whereIn('id', $data['selectedStudents'])
+                                    ->whereHas('semesters', function($query) {
+                                        $query->where('semesterId', DefaultSystemSettings::get('activeSemesterId'));
+                                    })
+                                    ->count();
+
+            if ($studentsCount !== count($data['selectedStudents'])) {
+              return response()->json(['error' => 'Nemôžem aplikovať študentove aktuálne hodnoty, pretože niektorý nemajú žiadne.'], 400);
+            }
+        }
+
+        foreach ($data['selectedStudents'] as $studentId) {
+          $student = Student::findOrFail($studentId);
+          $studentActiveSemester = $student->getActiveSemester();
+          $studentData = [
+            'studentLevelId' => $student->studentLevelId,
+          ];
+
+          if ($data['useDefaultTuitionFee'] === true) {
+            $studentData['tuitionFee'] = $studentActiveSemester->pivot->tuitionFee;
+          } else {
+            $studentData['tuitionFee'] = $data['tuitionFee'];
+          }
+
+          if ($data['useDefaultActivityPointsBaseNumber'] === true) {
+            $studentData['activityPointsBaseNumber'] = $studentActiveSemester->pivot->activityPointsBaseNumber;
+          } else {
+            $studentData['activityPointsBaseNumber'] = $data['activityPointsBaseNumber'];
+          }
+
+          if ($data['useDefaultMinimumSemesterActivityPoints'] === true) {
+            $studentData['minimumSemesterActivityPoints'] = $studentActiveSemester->pivot->minimumSemesterActivityPoints;
+          } else {
+            $studentData['minimumSemesterActivityPoints'] = $data['minimumSemesterActivityPoints'];
+          }
+
+          $semester->students()->attach($studentId, $studentData);
+        }
     }
 }

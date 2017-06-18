@@ -687,7 +687,7 @@ div.admin-section {
 }
 .sidebar-menu li > a > .pull-right {
   position: absolute;
-  right: 10px;
+  right: 30px;
   top: 50%;
   margin-top: -7px;
 }

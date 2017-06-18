@@ -1,15 +1,16 @@
 import Component from 'react-pure-render/component';
+import { List } from 'immutable';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
-import parse from 'date-fns/parse';
-import format from 'date-fns/format';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../../common/lib/redux-fields/index';
 import * as actions from '../../../common/students/actions';
+import StudentsActionsContainer from './StudentsActionsContainer';
 
 const messages = defineMessages({
   title: {
@@ -122,8 +123,7 @@ class StudentsPage extends Component {
   }
 
   render() {
-    const { students, hasPermission } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { students, hasPermission, selectedStudents, change } = this.props;
 
     const studentsData = students.map(student => {
       return {
@@ -142,8 +142,27 @@ class StudentsPage extends Component {
       };
     }).toArray();
 
+    const selectRow = {
+      mode: 'checkbox',
+      onSelect: row => {
+        if (selectedStudents.includes(row.id)) {
+          const studentIndex = selectedStudents.findIndex(value => value === row.id);
+          change('selectedStudents', selectedStudents.delete(studentIndex));
+        } else {
+          change('selectedStudents', selectedStudents.push(row.id));
+        }
+      },
+      onSelectAll: (isSelected, rows) => {
+        if (isSelected) {
+          change('selectedStudents', selectedStudents.push(...rows.map(row => row.id)));
+        } else {
+          change('selectedStudents', selectedStudents.clear());
+        }
+      }
+    };
+
     return (
-      <div className="group-managment-page">
+      <div className="students-managment-page">
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
@@ -160,12 +179,13 @@ class StudentsPage extends Component {
         <section className="content">
           <div className="row">
             <div className="col-xs-12">
-              <div className="box">
-                <div className="box-body table-responsive no-padding items-container">
+              <div className="box" style={{ marginBottom: '0px'}}>
+                <div className="box-body no-padding">
                   <BootstrapTable
                     data={studentsData}
                     multiColumnSort={3}
                     striped
+                    selectRow={selectRow}
                     hover
                     height="350px"
                     containerStyle={{ height: '370px' }}
@@ -206,21 +226,23 @@ class StudentsPage extends Component {
             </div>
           </div>
         </section>
+        <StudentsActionsContainer {...{ students, selectedStudents }} />
       </div>
     );
   }
 }
 
-StudentsPage = fields(StudentsPage, {
-  path: 'students',
-  fields: [
-    'filter',
-  ],
-});
+StudentsPage = reduxForm({
+  form: 'StudentsPage',
+})(StudentsPage);
 
-StudentsPage = injectIntl(StudentsPage);
+const selector = formValueSelector('StudentsPage');
 
 export default connect(state => ({
   students: state.students.getIn(['admin', 'students']),
+  selectedStudents: selector(state, 'selectedStudents'),
   hasPermission: (permission) => state.users.hasPermission(permission, state),
+  initialValues: {
+    selectedStudents: new List(),
+  },
 }), actions)(StudentsPage);

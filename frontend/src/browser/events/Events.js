@@ -156,7 +156,7 @@ class Events extends Component {
       return {
         id: event.id,
         eventName: event.name,
-        eventStarts: <FormattedRelative value={addMonths(event.eventStartDateTime, 3)} />,
+        eventStarts: <FormattedRelative value={event.eventStartDateTime} />,
         eventStartDateTime: event.eventStartDateTime,
         capacity: {
           maxCapacity: event.maxCapacity,
@@ -210,7 +210,7 @@ class Events extends Component {
                   dataFormat={x => x}
                   width="15em"
                 >
-                  Uzatvorenie prihlasovania
+                  Začiatok eventu
                 </TableHeaderColumn>
 
                 <TableHeaderColumn
