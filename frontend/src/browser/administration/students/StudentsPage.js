@@ -123,7 +123,11 @@ class StudentsPage extends Component {
   }
 
   render() {
-    const { students, hasPermission, selectedStudents, change } = this.props;
+    const { students, initialized, hasPermission, selectedStudents, change } = this.props;
+
+    if (!initialized) {
+      return null;
+    }
 
     const studentsData = students.map(student => {
       return {
@@ -234,6 +238,9 @@ class StudentsPage extends Component {
 
 StudentsPage = reduxForm({
   form: 'StudentsPage',
+  initialValues: {
+    selectedStudents: new List(),
+  },
 })(StudentsPage);
 
 const selector = formValueSelector('StudentsPage');
@@ -242,7 +249,4 @@ export default connect(state => ({
   students: state.students.getIn(['admin', 'students']),
   selectedStudents: selector(state, 'selectedStudents'),
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-  initialValues: {
-    selectedStudents: new List(),
-  },
 }), actions)(StudentsPage);
