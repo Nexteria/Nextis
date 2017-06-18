@@ -62,6 +62,7 @@ class SemestersPage extends Component {
     fetchAdminSemesters: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+    children: PropTypes.object,
   };
 
   componentDidMount() {
@@ -70,7 +71,7 @@ class SemestersPage extends Component {
   }
 
   render() {
-    const { semesters, hasPermission } = this.props;
+    const { semesters, hasPermission, children } = this.props;
     const { formatMessage } = this.props.intl;
 
     const semestersData = semesters.map(semester => {
@@ -93,7 +94,7 @@ class SemestersPage extends Component {
               <i
                 className="fa fa-plus text-green"
                 style={{ cursor: 'pointer', marginLeft: '2em' }}
-                onClick={() => browserHistory.push('/admin/users/create')}
+                onClick={() => browserHistory.push('/admin/semesters/new')}
               ></i>
              : ''
             }
@@ -138,6 +139,7 @@ class SemestersPage extends Component {
             </div>
           </div>
         </section>
+        {children}
       </div>
     );
   }

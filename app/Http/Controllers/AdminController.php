@@ -84,9 +84,9 @@ class AdminController extends Controller
         return response()->json($this->nxEventTransformer->transformCollection($events));
     }
 
-    public function getSemesters()
+    public function getSemesters($semesterId = null)
     {
-        $semesters = Semester::all();
+        $semesters = $semesterId ? [Semester::find($semesterId)] : Semester::all();
 
         $results = [];
         foreach ($semesters as $semester) {
@@ -134,5 +134,40 @@ class AdminController extends Controller
         }
 
         return response()->json($results);
+    }
+
+    public function createSemester(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+          'name' => 'required|min:5|max:100',
+          'startDate' => 'required|date:YYYY-MM-DD HH:mm:ss',
+          'endDate' => 'required|date:YYYY-MM-DD HH:mm:ss',
+          'levels' => 'present',
+          'levels.*.id' => 'required|numeric|min:0',
+          'levels.*.tuitionFee' => 'required|numeric|min:0',
+          'levels.*.activityPointsBaseNumber' => 'required|numeric|min:0',
+          'levels.*.minimumSemesterActivityPoints' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $semester = Semester::create($request->all());
+
+        foreach ($request->all()['levels'] as $level) {
+            $semester->studentLevels()->attach($level['id'], [
+              'tuitionFee' => $level['tuitionFee'],
+              'activityPointsBaseNumber' => $level['activityPointsBaseNumber'],
+              'minimumSemesterActivityPoints' => $level['minimumSemesterActivityPoints'],
+            ]);
+        }
+
+        return $this->getSemesters($semester->id);
     }
 }

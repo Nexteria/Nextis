@@ -31,4 +31,14 @@ class Semester extends Model
                       'minimumSemesterActivityPoints'
                     ]);
     }
+
+    public function studentLevels()
+    {
+        return $this->belongsToMany('App\StudentLevel', 'semester_student_level', 'semesterId', 'studentLevelId')
+                    ->withPivot([
+                      'tuitionFee',
+                      'activityPointsBaseNumber',
+                      'minimumSemesterActivityPoints'
+                    ]);
+    }
 }

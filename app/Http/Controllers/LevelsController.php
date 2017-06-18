@@ -10,8 +10,8 @@ class LevelsController extends Controller
 {
     public function getLevels($id = null)
     {
-        $roles = $id ? StudentLevel::find($id) : StudentLevel::all();
+        $levels = $id ? StudentLevel::find($id) : StudentLevel::all();
 
-        return response()->json($roles);
+        return response()->json($levels);
     }
 }

@@ -5,6 +5,7 @@ import * as actions from './actions';
 const InitialState = Record({
   semesters: null,
   activeSemesterId: null,
+  levels: null,
   admin: new Map({
     semesters: new Map({}),
   })
@@ -23,6 +24,12 @@ export default function semestersReducer(state = new InitialState, action) {
       return state.setIn(['admin', 'semesters'], new Map(action.payload.map(semester =>
         [semester.id, new Map(semester)]
       )));
+    }
+
+    case actions.SAVE_SEMESTER_SUCCESS: {
+      return state.updateIn(['admin', 'semesters'], semesters =>
+        semesters.set(action.payload[0].id, new Map(action.payload[0]))
+      );
     }
 
     default: {

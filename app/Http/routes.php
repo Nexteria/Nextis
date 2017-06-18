@@ -29,6 +29,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('/nxEvents', 'AdminController@getNxEvents');
 
             Route::get('/semesters', 'AdminController@getSemesters');
+            Route::post('/semesters', 'AdminController@createSemester');
+
             Route::get('/students', 'AdminController@getStudents');
         });
         

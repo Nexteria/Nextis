@@ -36,6 +36,7 @@ import TuitionFeesSummaryExportDialog from './payments/Exports/TuitionFeesSummar
 import ImportPaymentsDialog from './payments/Imports/ImportPaymentsDialog';
 import AddPaymentsDialog from './payments/AddPaymentsDialog';
 import SemestersPage from './administration/semesters/SemestersPage';
+import NewSemesterDialog from './administration/semesters/NewSemesterDialog';
 import StudentsPage from './administration/students/StudentsPage';
 
 export default function createRoutes() {
@@ -56,7 +57,9 @@ export default function createRoutes() {
 
       <Route component={AdminApp} path="admin">
         <Route component={UsersPage} path="users" />
-        <Route component={SemestersPage} path="semesters" />
+        <Route component={SemestersPage} path="semesters">
+          <Route component={NewSemesterDialog} path="new" />
+        </Route>
         <Route component={StudentsPage} path="students" />
         <Route component={CreateUserPage} path="users/create" />
         <Route component={EditUser} path="users/:userId" />
