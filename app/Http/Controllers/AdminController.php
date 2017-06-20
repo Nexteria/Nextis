@@ -210,7 +210,7 @@ class AdminController extends Controller
                                 })
                                 ->count();
         if ($studentsCount > 0) {
-          return response()->json(['error' => 'Nemôžem aplikovať zmenu, niektorí študenti už majú priradený daný semester!'], 400);
+            return response()->json(['error' => 'Nemôžem aplikovať zmenu, niektorí študenti už majú priradený daný semester!'], 400);
         }
 
         if ($data['useDefaultTuitionFee'] === true ||
@@ -229,31 +229,62 @@ class AdminController extends Controller
         }
 
         foreach ($data['selectedStudents'] as $studentId) {
-          $student = Student::findOrFail($studentId);
-          $studentActiveSemester = $student->getActiveSemester();
-          $studentData = [
-            'studentLevelId' => $student->studentLevelId,
-          ];
+            $student = Student::findOrFail($studentId);
+            $studentActiveSemester = $student->getActiveSemester();
+            $studentData = [
+              'studentLevelId' => $student->studentLevelId,
+            ];
 
-          if ($data['useDefaultTuitionFee'] === true) {
-            $studentData['tuitionFee'] = $studentActiveSemester->pivot->tuitionFee;
-          } else {
-            $studentData['tuitionFee'] = $data['tuitionFee'];
-          }
+            if ($data['useDefaultTuitionFee'] === true) {
+                $studentData['tuitionFee'] = $studentActiveSemester->pivot->tuitionFee;
+            } else {
+                $studentData['tuitionFee'] = $data['tuitionFee'];
+            }
 
-          if ($data['useDefaultActivityPointsBaseNumber'] === true) {
-            $studentData['activityPointsBaseNumber'] = $studentActiveSemester->pivot->activityPointsBaseNumber;
-          } else {
-            $studentData['activityPointsBaseNumber'] = $data['activityPointsBaseNumber'];
-          }
+            if ($data['useDefaultActivityPointsBaseNumber'] === true) {
+                $studentData['activityPointsBaseNumber'] = $studentActiveSemester->pivot->activityPointsBaseNumber;
+            } else {
+                $studentData['activityPointsBaseNumber'] = $data['activityPointsBaseNumber'];
+            }
 
-          if ($data['useDefaultMinimumSemesterActivityPoints'] === true) {
-            $studentData['minimumSemesterActivityPoints'] = $studentActiveSemester->pivot->minimumSemesterActivityPoints;
-          } else {
-            $studentData['minimumSemesterActivityPoints'] = $data['minimumSemesterActivityPoints'];
-          }
+            if ($data['useDefaultMinimumSemesterActivityPoints'] === true) {
+                $studentData['minimumSemesterActivityPoints'] = $studentActiveSemester->pivot->minimumSemesterActivityPoints;
+            } else {
+                $studentData['minimumSemesterActivityPoints'] = $data['minimumSemesterActivityPoints'];
+            }
 
-          $semester->students()->attach($studentId, $studentData);
+            $semester->students()->attach($studentId, $studentData);
         }
+    }
+
+    public function endSchoolYear()
+    {
+        $firstLevel = \App\StudentLevel::where('codename', '1_level')->first();
+        $secondLevel = \App\StudentLevel::where('codename', '2_level')->first();
+        $thirdLevel = \App\StudentLevel::where('codename', '3_level')->first();
+        $alumniLevel = \App\StudentLevel::where('codename', 'alumni_level')->first();
+
+        foreach ($thirdLevel->students()->where('status', 'active')->get() as $student) {
+            $thirdLevel->userGroup->users()->detach($student->userId);
+            $alumniLevel->userGroup->users()->attach($student->userId);
+            $student->studentLevelId = $alumniLevel->id;
+            $student->save();
+        }
+
+        foreach ($secondLevel->students()->where('status', 'active')->get() as $student) {
+            $secondLevel->userGroup->users()->detach($student->userId);
+            $thirdLevel->userGroup->users()->attach($student->userId);
+            $student->studentLevelId = $thirdLevel->id;
+            $student->save();
+        }
+
+        foreach ($firstLevel->students()->where('status', 'active')->get() as $student) {
+            $firstLevel->userGroup->users()->detach($student->userId);
+            $secondLevel->userGroup->users()->attach($student->userId);
+            $student->studentLevelId = $secondLevel->id;
+            $student->save();
+        }
+
+        return $this->getStudents();
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDefaultsLevelColumns extends Migration
+class AddLevelCodenameColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,7 @@ class AddDefaultsLevelColumns extends Migration
     public function up()
     {
         Schema::table('student_levels', function (Blueprint $table) {
-            $table->integer('defaultTuitionFee')->unsigned();
-            $table->integer('defaultActivityPointsBaseNumber')->unsigned();
-            $table->integer('defaultMinimumSemesterActivityPoints')->unsigned();
+            $table->string('codename', 100)->nullable()->unique();
         });
     }
 
@@ -28,9 +26,7 @@ class AddDefaultsLevelColumns extends Migration
     public function down()
     {
         Schema::table('student_levels', function (Blueprint $table) {
-            $table->dropColumn('defaultTuitionFee');
-            $table->dropColumn('defaultActivityPointsBaseNumber');
-            $table->dropColumn('defaultMinimumSemesterActivityPoints');
+            $table->dropColumn('codename');
         });
     }
 }

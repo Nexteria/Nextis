@@ -53,10 +53,13 @@ class UserGroupsPage extends Component {
 
     return (
       <span className="action-buttons">
-        <i
-          className="fa fa-trash-o trash-group"
-          onClick={() => removeUserGroup(group.id)}
-        ></i>
+        {!group.levelId ?
+          <i
+            className="fa fa-trash-o trash-group"
+            onClick={() => removeUserGroup(group.id)}
+          ></i>
+          : null
+        }
         <i
           className="fa fa-pencil"
           onClick={() => this.editUserGroup(group.id)}

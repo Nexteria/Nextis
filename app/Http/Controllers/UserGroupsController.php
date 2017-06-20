@@ -31,6 +31,7 @@ class UserGroupsController extends Controller
     {
         $group = UserGroup::findOrFail(\Input::get('id'));
         $group->ownerId = \Auth::user()->id;
+        $group->name = \Input::get('name');
         $group->users()->sync(User::whereIn('id', \Input::get('users'))->pluck('id')->toArray());
 
         $group->save();

@@ -10,6 +10,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { fields } from '../../../common/lib/redux-fields/index';
 import * as actions from '../../../common/students/actions';
+import * as usersActions from '../../../common/users/actions';
 import StudentsActionsContainer from './StudentsActionsContainer';
 
 const messages = defineMessages({
@@ -61,13 +62,15 @@ class StudentsPage extends Component {
     semesters: PropTypes.object,
     fields: PropTypes.object.isRequired,
     fetchAdminStudents: PropTypes.func.isRequired,
+    loadStudentLevelsList: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
-    const { fetchAdminStudents } = this.props;
+    const { fetchAdminStudents, loadStudentLevelsList } = this.props;
     fetchAdminStudents();
+    loadStudentLevelsList();
   }
 
   calculateStudentPointsColor(student) {
@@ -123,7 +126,7 @@ class StudentsPage extends Component {
   }
 
   render() {
-    const { students, initialized, hasPermission, selectedStudents, change } = this.props;
+    const { students, studentLevels, initialized, hasPermission, selectedStudents, change } = this.props;
 
     if (!initialized) {
       return null;
@@ -135,6 +138,7 @@ class StudentsPage extends Component {
         firstName: student.get('firstName'),
         lastName: student.get('lastName'),
         studentLevelId: student.get('studentLevelId'),
+        studentLevelName: studentLevels.get(student.get('studentLevelId')).name,
         activityPointsBaseNumber: student.get('activityPointsBaseNumber'),
         minimumSemesterActivityPoints: student.get('minimumSemesterActivityPoints'),
         sumGainedPoints: student.get('sumGainedPoints'),
@@ -204,7 +208,7 @@ class StudentsPage extends Component {
                       Priezvisko
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="studentLevelId" dataSort dataFormat={x => x}>
+                    <TableHeaderColumn dataField="studentLevelName" dataSort dataFormat={x => x}>
                       Level
                     </TableHeaderColumn>
 
@@ -247,6 +251,7 @@ const selector = formValueSelector('StudentsPage');
 
 export default connect(state => ({
   students: state.students.getIn(['admin', 'students']),
+  studentLevels: state.users.studentLevels,
   selectedStudents: selector(state, 'selectedStudents'),
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), actions)(StudentsPage);
+}), { ...actions, ...usersActions })(StudentsPage);

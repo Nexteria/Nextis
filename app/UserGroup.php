@@ -38,4 +38,9 @@ class UserGroup extends Authenticatable
     {
         return $this->belongsToMany('App\User');
     }
+
+    public function studentLevel()
+    {
+        return $this->hasOne('App\StudentLevel');
+    }
 }

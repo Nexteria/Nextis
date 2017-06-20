@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import SelectComponent from '../../components/Select';
 import AssignNewSemesterAction from './actions/AssignNewSemesterAction';
+import EndSchoolYear from './actions/EndSchoolYear';
 import * as actions from '../../../common/students/actions';
 
 class StudentsActionsContainer extends Component {
@@ -24,7 +25,8 @@ class StudentsActionsContainer extends Component {
 
     const actionMap = new Map({
       no_action: <div></div>,
-      assign_new_semester: <AssignNewSemesterAction {...{ selectedStudents }}/>,
+      assign_new_semester: <AssignNewSemesterAction {...{ selectedStudents }} />,
+      end_school_year: <EndSchoolYear {...{ selectedStudents }} />,
     });
 
     return (
@@ -43,6 +45,7 @@ class StudentsActionsContainer extends Component {
                     >
                       <option value="no_action">Zvoľte akciu</option>
                       <option value="assign_new_semester">Priradiť nový semester</option>
+                      <option value="end_school_year">Ukončiť školský rok</option>
                     )}
                     </Field>
                   </div>

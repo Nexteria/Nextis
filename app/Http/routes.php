@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/semesters/{semesterId}/assign', 'AdminController@assignSemester');
 
             Route::get('/students', 'AdminController@getStudents');
+            Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
         });
         
         Route::get('/app/constants', 'HomeController@getConstants');

@@ -7,6 +7,7 @@ class UserGroupTransformer extends Transformer {
        return [
           'id' => (int) $userGroup->id,
           'name' => $userGroup->name,
+          'levelId' => $userGroup->studentLevel ? $userGroup->studentLevel->id : null,
           'users' => $userGroup->users->pluck('id'),
        ];
     }
