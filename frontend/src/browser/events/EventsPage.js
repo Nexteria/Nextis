@@ -2,7 +2,7 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 
@@ -121,7 +121,14 @@ class EventsPage extends Component {
               <div className="info-box bg-yellow">
                 <span className="info-box-icon"><i className="fa fa-calendar"></i></span>
                 <div className="info-box-content">
-                  <h2>Eventy - {totalEventsCount}</h2>
+                  <h2>
+                    <span>Eventy - {totalEventsCount}</span>
+                    <i
+                      className="fa fa-plus"
+                      style={{ marginLeft: '1em', fontSize: '0.8em', cursor: 'pointer' }}
+                      onClick={() => browserHistory.push('/admin/events/new')}
+                    ></i>
+                  </h2>
                 </div>
               </div>
               <div className="box-footer no-padding">
