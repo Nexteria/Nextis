@@ -153,6 +153,8 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Bogardo\Mailgun\MailgunServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
+        Propaganistas\LaravelPhone\LaravelPhoneServiceProvider::class,
+        Propaganistas\LaravelIntl\IntlServiceProvider::class,
 
         /*
          * Application Service Providers...

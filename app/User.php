@@ -43,7 +43,6 @@ class User extends Authenticatable implements AuditableContract
         'state',
         'iban',
         'nexteriaTeamRole',
-        'nexteriaTeamRole',
     ];
 
     protected $dates = ['deleted_at'];

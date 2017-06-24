@@ -15,6 +15,8 @@ class Student extends Model
         'lastName',
         'tuitionFeeVariableSymbol',
         'status',
+        'studentLevelId',
+        'userId',
     ];
 
     public function user()

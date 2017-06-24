@@ -1,0 +1,68 @@
+<mjml>
+  <mj-head>
+    <mj-title>Nexteria Space</mj-title>
+  </mj-head>
+  <mj-body>
+    <mj-container background-color="#d6dde5">
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
+        </mj-column>
+        <mj-column width="90%" vertical-align="top">
+          <mj-text align="center" padding-bottom="0px">
+          <h1>
+            Vitaj!
+          </h1>
+        </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text align="left" padding-bottom="5px">
+            <b>Ahoj FirstName,</b>
+          </mj-text>
+          <mj-text line-height="14px">
+            práve čítaš svoj prvý email z nášho Space-u. Na tomto <a href="https://space.nexteria.sk" target="_blank">linku</a> sa môžeš zaregistrovať, nižšie nájdeš svoje prihlasovacie údaje. Prosím, ako prvé si <b>zmeň prihlasovacie heslo</b> a vyplň <b>svoj profil</b>.
+          </mj-text>
+          <mj-text line-height="14px">
+            Profil sa zobrazuje v sekcii kontaktov, kde si môžeš pozrieť čomu sa venujú tvoji spolužiaci. Okrem toho sa zasiela aj lektorom s ktorými sa stretnete na eventoch, aby mali prehľad s akými študentami budú v kontakte. Je preto dôležité aby si vyplnil aspoň základné informácie.
+          </mj-text>
+          <mj-text line-height="14px">
+            V profile sa vypĺňa aj položka IBAN - túto informáciu využívame pri automatickom detekovaní kto zaplatil školné a kto nie, aby sme to nemuseli robiť manuálne. Primárne sa systém pozrie na VS ale ak ho zabudnete vyplniť pri platbe, IBAN slúži ako druhotný identifikátor.
+          </mj-text>
+          <mj-text line-height="14px">
+            <b>Prihlasovacie meno:</b> meno</br>
+          	<b>Prihlasovacie heslo:</b> heslo</br>
+          </mj-text>
+      		<mj-text line-height="14px">
+            <i>Poznámka: momentálne načítanie Space-u trvá troška dlhšie, tak ak sa ti bude zobrazovať biela obrazovka treba pockať, po chvíli sa Space objaví :) o tomto probléme viem a pokúsime sa ho čo najskôr odstrániť.</i>
+      		</mj-text>
+      		<mj-text line-height="14px">
+      		Všetko dôležité nájdeš v Space-i na ľavej lište. Od prihlasovania na eventy, cez kontrolu svojich bodov a školného, po kontakty na ďalších študentov. Držím Ti palce s objavovaním a spoznávaním nášho Space-u :)
+          </mj-text>
+      
+      		<mj-text line-height="14px">
+						Ak by si s niečim potreboval pomôcť, píš na alzbeta.drutarovska@nexteria.sk
+      		</mj-text>/
+        </mj-column>
+        <mj-column width="100%" vertical-align="top">
+          <mj-text padding-bottom="0px" font-family="Helvetica,Arial,sans-serif" font-size="12px" line-height="12px" padding-top="0px">
+            Za tím NLA
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="12px" line-height="12px">
+					Alžbeta Drutarovská
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="12px" line-height="12px">
+          Candidate & Student Development Coordinator
+          </mj-text>
+          <mj-text padding-bottom="10px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="12px" line-height="12px">
+            +421 948 049 905
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
+            Copyright © 2017 Nexteria, All rights reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import * as actions from '../../../../common/students/actions';
 
-class EndSchoolYear extends Component {
+class EndSchoolYearAction extends Component {
 
   static propTypes = {
     semesters: PropTypes.object,
@@ -14,6 +14,7 @@ class EndSchoolYear extends Component {
     endSchoolYear: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
   };
 
   render() {
@@ -25,13 +26,13 @@ class EndSchoolYear extends Component {
     return (
       <section className="content">
         <div className="row">
-          <form id="endSchoolYear" onSubmit={handleSubmit((data) => endSchoolYear())}>
+          <form id="endSchoolYear" onSubmit={handleSubmit(() => endSchoolYear())}>
             <div className="col-md-12">
               <label>Vykonaním tejto akcie sa stane:</label>
               <ul>
-                  <li>premiestnia sa všetci <b>študenti</b>, ktorí majú nastavení status na <b>aktívny</b>, z aktuálnej levelovej (1.,2.,3.) skupiny do nasledujúcej (2.,3.,alumni)</li>
-                  <li>študentom z predchádzajúceho kroku sa nastaví level o jeden vyšší</li>
-                  <li>akcia sa vykoná nezávisle na výbere študentov v zozname</li>
+                <li>premiestnia sa všetci <b>študenti</b>, ktorí majú nastavení status na <b>aktívny</b>, z aktuálnej levelovej (1.,2.,3.) skupiny do nasledujúcej (2.,3.,alumni)</li>
+                <li>študentom z predchádzajúceho kroku sa nastaví level o jeden vyšší</li>
+                <li>akcia sa vykoná nezávisle na výbere študentov v zozname</li>
               </ul>
             </div>
             <div className="col-md-12 text-right">
@@ -51,10 +52,10 @@ class EndSchoolYear extends Component {
   }
 }
 
-EndSchoolYear = reduxForm({
+EndSchoolYearAction = reduxForm({
   form: 'EndSchoolYear',
-})(EndSchoolYear);
+})(EndSchoolYearAction);
 
 export default connect(state => ({
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), actions)(EndSchoolYear);
+}), actions)(EndSchoolYearAction);

@@ -18,7 +18,9 @@
         "webpatser/laravel-uuid": "2.*",
         "bogardo/mailgun": "^5.0",
         "php-http/guzzle6-adapter": "^1.1",
-        "owen-it/laravel-auditing": "^4.0"
+        "owen-it/laravel-auditing": "^4.0",
+        "propaganistas/laravel-phone": "^2.8",
+        "propaganistas/laravel-intl": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

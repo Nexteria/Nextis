@@ -8,6 +8,11 @@ export const END_SCHOOL_YEAR_START = 'END_SCHOOL_YEAR_START';
 export const END_SCHOOL_YEAR_SUCCESS = 'END_SCHOOL_YEAR_SUCCESS';
 export const END_SCHOOL_YEAR_ERROR = 'END_SCHOOL_YEAR_ERROR';
 
+export const UPLOAD_NEW_STUDENTS_EXCEL = 'UPLOAD_NEW_STUDENTS_EXCEL';
+export const UPLOAD_NEW_STUDENTS_EXCEL_START = 'UPLOAD_NEW_STUDENTS_EXCEL_START';
+export const UPLOAD_NEW_STUDENTS_EXCEL_SUCCESS = 'UPLOAD_NEW_STUDENTS_EXCEL_SUCCESS';
+export const UPLOAD_NEW_STUDENTS_EXCEL_ERROR = 'UPLOAD_NEW_STUDENTS_EXCEL_ERROR';
+
 
 export function fetchAdminStudents() {
   return ({ fetch }) => ({
@@ -29,6 +34,24 @@ export function endSchoolYear() {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
         notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function uploadNewStudentsExcel(files) {
+  const data = new FormData();
+  data.append('file', files[0]);
+
+  return ({ fetch }) => ({
+    type: UPLOAD_NEW_STUDENTS_EXCEL,
+    payload: {
+      promise: fetch('/admin/students/import', {
+        credentials: 'same-origin',
+        headers: {},
+        method: 'post',
+        notifications: 'both',
+        body: data,
       }).then(response => response.json()),
     },
   });

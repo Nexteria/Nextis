@@ -31,7 +31,7 @@ function checkStatus(response, notifications) {
     } else {
       response.json().then(resp => {
         toastr.options.closeButton = true;
-        toastr.options.timeOut = 15000;
+        toastr.options.timeOut = 0;
         toastr.error(resp.error);
       });
     }

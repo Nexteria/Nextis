@@ -8,7 +8,12 @@ use App\Http\Requests;
 use App\NxEvent as NxEvent;
 use App\Semester;
 use App\Student;
+use App\StudentLevel;
+use App\User;
+use App\Role;
 use App\DefaultSystemSettings;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -283,6 +288,206 @@ class AdminController extends Controller
             $secondLevel->userGroup->users()->attach($student->userId);
             $student->studentLevelId = $secondLevel->id;
             $student->save();
+        }
+
+        return $this->getStudents();
+    }
+
+    public function getNewStudentsImportTemplate()
+    {
+        return \Excel::create('Import novoprijatých študentov', function ($excel) {
+            $statuses = Student::groupBy('status')
+                                ->pluck('status')
+                                ->toArray();
+
+            $excel->sheet('Študenti', function ($sheet) use ($statuses) {
+                $sheet->loadView('exports.example_new_students_import');
+
+                $objValidation = $sheet->getCell('F2')->getDataValidation();
+                $objValidation->setType(\PHPExcel_Cell_DataValidation::TYPE_LIST);
+                $objValidation->setShowDropDown(true);
+                $objValidation->setAllowBlank(false);
+                $objValidation->setShowInputMessage(true);
+                $objValidation->setShowDropDown(true);
+                $objValidation->setPromptTitle('Pick from list');
+                $objValidation->setPrompt('Please pick a value from the drop-down list.');
+                $objValidation->setErrorTitle('Input error');
+                $objValidation->setError('Value is not in list');
+                $objValidation->setFormula1('"'.implode(',', $statuses).'"');
+
+                $objValidation = $sheet->getCell('G2')->getDataValidation();
+                $objValidation->setType(\PHPExcel_Cell_DataValidation::TYPE_LIST);
+                $objValidation->setShowDropDown(true);
+                $objValidation->setAllowBlank(false);
+                $objValidation->setShowInputMessage(true);
+                $objValidation->setShowDropDown(true);
+                $objValidation->setPromptTitle('Pick from list');
+                $objValidation->setPrompt('Please pick a value from the drop-down list.');
+                $objValidation->setErrorTitle('Input error');
+                $objValidation->setError('Value is not in list');
+                $objValidation->setFormula1('"yes,no"');
+            });
+        })->download('xls');
+    }
+
+    public function importNewStudentsFromExcel()
+    {
+        $reader = \Excel::load(\Input::file('file'));
+        $students = $reader->toArray();
+
+        $rowFields = [
+            'menopovinne',
+            'priezviskopovinne',
+            'uzivatelske_menonepovinne_vygeneruje_sa',
+            'emailpovinne',
+            'telefonpovinne',
+            'stavpovinne',
+            'heslonepovinne_vygeneruje_sa',
+            'skolanepovinne',
+            'studijny_programnepovinne',
+            'fakultanepovinne',
+            'rok_studianepovinne',
+            'odoslat_welcome_emailpovinne',
+        ];
+
+        $statuses = Student::groupBy('status')
+                                ->pluck('status')
+                                ->toArray();
+        foreach ($students as $student) {
+            $validator = \Validator::make($student, [
+                'menopovinne' => 'required|alpha|min:2',
+                'priezviskopovinne' => 'required|alpha|min:2',
+                'uzivatelske_menonepovinne_vygeneruje_sa' => 'nullable|string',
+                'emailpovinne' => 'required|email',
+                'telefonpovinne' => 'required|phone:AUTO',
+                'stavpovinne' => 'required|in:'.implode(',', $statuses),
+                'heslonepovinne_vygeneruje_sa' => 'nullable|string|min:5',
+                'skolanepovinne' => 'nullable|string',
+                'menopstudijny_programnepovinneovinne' => 'nullable|string',
+                'fakultanepovinne' => 'nullable|string',
+                'rok_studianepovinne' => 'nullable|numeric|min:1|max:10',
+                'odoslat_welcome_emailpovinne' => 'required|in:yes,no',
+            ]);
+
+            if ($validator->fails()) {
+                $messages = '';
+                foreach (json_decode($validator->messages()) as $message) {
+                    $messages .= ' '.implode(' ', $message);
+                }
+
+                return response()->json(['error' => $messages], 400);
+            }
+
+            $username = $student['uzivatelske_menonepovinne_vygeneruje_sa'];
+            if ($username) {
+                $isUsernameUsed = User::where('username', $username)
+                                       ->exists();
+                if ($isUsernameUsed) {
+                    return response()->json(['error' => 'Username: '.$username.' is already used!'], 400);
+                }
+            }
+
+            $email = $student['emailpovinne'];
+            if ($email) {
+                $isEmailUsed = User::where('email', $email)
+                                       ->exists();
+                if ($isEmailUsed) {
+                    return response()->json(['error' => 'Email: '.$email.' is already used!'], 400);
+                }
+            }
+
+            $phone = $student['telefonpovinne'];
+            if ($phone) {
+                $isPhoneUsed = User::where('phone', $phone)
+                                       ->exists();
+                if ($isPhoneUsed) {
+                    return response()->json(['error' => 'Phone: '.$phone.' is already used!'], 400);
+                }
+            }
+        }
+
+        foreach ($students as $student) {
+            # vytvori sa user
+            $userData = [
+                'firstName' => $student['menopovinne'],
+                'lastName' => $student['priezviskopovinne'],
+                'email' => $student['emailpovinne'],
+                'phone' => $student['telefonpovinne'],
+                'username' => '',
+                'school' => '',
+                'studyProgram' => '',
+                'faculty' => '',
+                'studyYear' => '',
+                'state' => 'active',
+            ];
+
+            if (isset($student['menopstudijny_programnepovinneovinne'])) {
+                $userData['studyProgram'] = $student['menopstudijny_programnepovinneovinne'];
+            }
+
+            if (isset($student['skolanepovinne'])) {
+                $userData['school'] = $student['skolanepovinne'];
+            }
+
+            if (isset($student['fakultanepovinne'])) {
+                $userData['faculty'] = $student['fakultanepovinne'];
+            }
+
+            if (isset($student['rok_studianepovinne'])) {
+                $userData['studyYear'] = $student['rok_studianepovinne'];
+            }
+
+            if (isset($student['uzivatelske_menonepovinne_vygeneruje_sa'])) {
+                $userData['username'] = $student['uzivatelske_menonepovinne_vygeneruje_sa'];
+            } else {
+                $username = Str::ascii(Str::lower($userData['firstName'])).'.'.Str::ascii(Str::lower($userData['lastName']));
+                $index = 1;
+                while (User::where('username', $username)->exists()) {
+                    $username = Str::ascii(Str::lower($userData['firstName'])).'.'.Str::ascii(Str::lower($userData['lastName'])).$index;
+                    $index++;
+                }
+                $userData['username'] = $username;
+            }
+
+            $password = Str::random(12);
+            if ($student['heslonepovinne_vygeneruje_sa']) {
+                $password = $student['heslonepovinne_vygeneruje_sa'];
+            }
+
+            $user = User::create($userData);
+            $user->password = \Hash::make($password);
+            $user->roles()->sync(Role::where('name', 'STUDENT')->pluck('id'));
+            $user->save();
+
+            # vytvori sa student
+            $level = StudentLevel::where('codename', '0_level')->first();
+
+            $studentData = [
+                'firstName' => $student['menopovinne'],
+                'lastName' => $student['priezviskopovinne'],
+                'status' => $student['stavpovinne'],
+                'tuitionFeeVariableSymbol' => Carbon::now()->format("Ym").$user->id,
+                'studentLevelId' => $level->id,
+                'userId' => $user->id,
+            ];
+
+            $studentModel = Student::create($studentData);
+
+            $level->userGroup->users()->attach($user->id);
+
+            # priradime studentovi aktualny semester
+            $semester = Semester::find(DefaultSystemSettings::get('activeSemesterId'));
+            $semester->students()->attach($studentModel->id, [
+                'tuitionFee' => 0,
+                'activityPointsBaseNumber' => 0,
+                'minimumSemesterActivityPoints' => 0,
+                'studentLevelId' => $level->id,
+            ]);
+
+            if ($student['odoslat_welcome_emailpovinne'] === 'yes') {
+                $email = new \App\Mail\NewStudentsWelcome($user->email, $studentData['firstName'], $password);
+                \Mail::send($email);
+            }
         }
 
         return $this->getStudents();
