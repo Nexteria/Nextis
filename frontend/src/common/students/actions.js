@@ -13,6 +13,10 @@ export const UPLOAD_NEW_STUDENTS_EXCEL_START = 'UPLOAD_NEW_STUDENTS_EXCEL_START'
 export const UPLOAD_NEW_STUDENTS_EXCEL_SUCCESS = 'UPLOAD_NEW_STUDENTS_EXCEL_SUCCESS';
 export const UPLOAD_NEW_STUDENTS_EXCEL_ERROR = 'UPLOAD_NEW_STUDENTS_EXCEL_ERROR';
 
+export const CHANGE_STUDENT_LEVEL = 'CHANGE_STUDENT_LEVEL';
+export const CHANGE_STUDENT_LEVEL_START = 'CHANGE_STUDENT_LEVEL_START';
+export const CHANGE_STUDENT_LEVEL_SUCCESS = 'CHANGE_STUDENT_LEVEL_SUCCESS';
+export const CHANGE_STUDENT_LEVEL_ERROR = 'CHANGE_STUDENT_LEVEL_ERROR';
 
 export function fetchAdminStudents() {
   return ({ fetch }) => ({
@@ -52,6 +56,23 @@ export function uploadNewStudentsExcel(files) {
         method: 'post',
         notifications: 'both',
         body: data,
+      }).then(response => response.json()),
+    },
+  });
+}
+export function changeStudentLevel(data, selectedStudents) {
+  return ({ fetch }) => ({
+    type: CHANGE_STUDENT_LEVEL,
+    payload: {
+      promise: fetch('/admin/students/level', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+          selectedStudents,
+        }),
       }).then(response => response.json()),
     },
   });

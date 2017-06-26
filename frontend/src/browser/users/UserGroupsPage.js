@@ -46,7 +46,13 @@ class UserGroupsPage extends Component {
     fields: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+    loadUserGroups: PropTypes.func.isRequired,
   };
+
+  componentWillMount() {
+    const { loadUserGroups } = this.props;
+    loadUserGroups();
+  }
 
   getGroupActions(group) {
     const { removeUserGroup } = this.props;

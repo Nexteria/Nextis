@@ -492,4 +492,45 @@ class AdminController extends Controller
 
         return $this->getStudents();
     }
+
+    public function changeStudentLevel(Request $request)
+    {
+        $levels = StudentLevel::all()->pluck('id')->toArray();
+        $validator = \Validator::make($request->all(), [
+          'studentLevelId' => 'required|in:'.implode(',', $levels),
+          'selectedStudents' => 'required|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $data = $request->all();
+        foreach ($data['selectedStudents'] as $studentId) {
+            $student = Student::findOrFail($studentId);
+
+            # detach student from old level group
+            $level = StudentLevel::find($student->studentLevelId);
+            $level->userGroup->users()->detach($student->userId);
+
+            # change student level
+            $student->studentLevelId = $data['studentLevelId'];
+            $student->save();
+
+            # change student active semester level
+            $semester = $student->getActiveSemester();
+            $semester->pivot->studentLevelId = $data['studentLevelId'];
+
+            # attach student to new level group
+            $level = StudentLevel::find($data['studentLevelId']);
+            $level->userGroup->users()->attach($student->userId);
+        }
+
+        return $this->getStudents();
+    }
 }

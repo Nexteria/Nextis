@@ -9,6 +9,7 @@ import SelectComponent from '../../components/Select';
 import AssignNewSemesterAction from './actions/AssignNewSemesterAction';
 import EndSchoolYearAction from './actions/EndSchoolYearAction';
 import ImportNewStudentsAction from './actions/ImportNewStudentsAction';
+import ChangeStudentLevelAction from './actions/ChangeStudentLevelAction';
 import * as actions from '../../../common/students/actions';
 
 class StudentsActionsContainer extends Component {
@@ -29,6 +30,7 @@ class StudentsActionsContainer extends Component {
       assign_new_semester: <AssignNewSemesterAction {...{ selectedStudents }} />,
       end_school_year: <EndSchoolYearAction {...{ selectedStudents }} />,
       import_new_students: <ImportNewStudentsAction {...{ selectedStudents }} />,
+      change_student_level: <ChangeStudentLevelAction {...{ selectedStudents }} />,
     });
 
     return (
@@ -49,6 +51,7 @@ class StudentsActionsContainer extends Component {
                       <option value="assign_new_semester">Priradiť nový semester</option>
                       <option value="end_school_year">Ukončiť školský rok</option>
                       <option value="import_new_students">Nahrať nových študentov</option>
+                      <option value="change_student_level">Zmena levelu študenta</option>
                     )}
                     </Field>
                   </div>

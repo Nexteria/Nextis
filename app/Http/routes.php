@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('/students', 'AdminController@getStudents');
             Route::post('/students/import', 'AdminController@importNewStudentsFromExcel');
+            Route::post('/students/level', 'AdminController@changeStudentLevel');
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
             Route::get('/templates/imports/newStudents', 'AdminController@getNewStudentsImportTemplate');
         });
