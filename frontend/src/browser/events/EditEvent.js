@@ -313,6 +313,8 @@ export class EditEvent extends Component {
     clearEventCustomSettings: PropTypes.func.isRequired,
     loadEventCustomSettings: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
+    changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
+    changeAttendeePresenceStatus: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -615,6 +617,8 @@ export class EditEvent extends Component {
       editAttendeesGroup,
       eventSettings,
       createEventCustomSettings,
+      changeAttendeeFeedbackStatus,
+      changeAttendeePresenceStatus,
     } = this.props;
 
     const { formatMessage } = this.props.intl;
@@ -838,7 +842,14 @@ export class EditEvent extends Component {
                   </form>
                 </Tab>
                 <Tab eventKey={2} title={formatMessage(messages.invited)}>
-                  <InvitedTab intl={this.props.intl} users={users} attendeesGroups={actualEvent.attendeesGroups} />
+                  <InvitedTab
+                    eventId={actualEventId}
+                    intl={this.props.intl}
+                    users={users}
+                    attendeesGroups={events.get(actualEventId).attendeesGroups}
+                    changeAttendeeFeedbackStatus={changeAttendeeFeedbackStatus}
+                    changeAttendeePresenceStatus={changeAttendeePresenceStatus}
+                  />
                 </Tab>
                 {actualEventId ?
                   <Tab eventKey={3} title={formatMessage(messages.emails)}>
