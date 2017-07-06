@@ -18,6 +18,21 @@ export const CHANGE_STUDENT_LEVEL_START = 'CHANGE_STUDENT_LEVEL_START';
 export const CHANGE_STUDENT_LEVEL_SUCCESS = 'CHANGE_STUDENT_LEVEL_SUCCESS';
 export const CHANGE_STUDENT_LEVEL_ERROR = 'CHANGE_STUDENT_LEVEL_ERROR';
 
+export const CREATE_STUDENT_COMMENT = 'CREATE_STUDENT_COMMENT';
+export const CREATE_STUDENT_COMMENT_START = 'CREATE_STUDENT_COMMENT_START';
+export const CREATE_STUDENT_COMMENT_SUCCESS = 'CREATE_STUDENT_COMMENT_SUCCESS';
+export const CREATE_STUDENT_COMMENT_ERROR = 'CREATE_STUDENT_COMMENT_ERROR';
+
+export const FETCH_STUDENT_COMMENTS = 'FETCH_STUDENT_COMMENTS';
+export const FETCH_STUDENT_COMMENTS_START = 'FETCH_STUDENT_COMMENTS_START';
+export const FETCH_STUDENT_COMMENTS_SUCCESS = 'FETCH_STUDENT_COMMENTS_SUCCESS';
+export const FETCH_STUDENT_COMMENTS_ERROR = 'FETCH_STUDENT_COMMENTS_ERROR';
+
+export const CREATE_STUDENT_NOTE_COMMENT = 'CREATE_STUDENT_NOTE_COMMENT';
+export const CREATE_STUDENT_NOTE_COMMENT_START = 'CREATE_STUDENT_NOTE_COMMENT_START';
+export const CREATE_STUDENT_NOTE_COMMENT_SUCCESS = 'CREATE_STUDENT_NOTE_COMMENT_SUCCESS';
+export const CREATE_STUDENT_NOTE_COMMENT_ERROR = 'CREATE_STUDENT_NOTE_COMMENT_ERROR';
+
 export function fetchAdminStudents() {
   return ({ fetch }) => ({
     type: FETCH_ADMIN_STUDENTS,
@@ -72,6 +87,54 @@ export function changeStudentLevel(data, selectedStudents) {
         body: JSON.stringify({
           ...data,
           selectedStudents,
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function createStudentComment(data, studentId) {
+  return ({ fetch }) => ({
+    type: CREATE_STUDENT_COMMENT,
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/comments`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          commentBody: data.newCommentBody.toString('html'),
+          commentTitle: data.newCommentTitle,
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function fetchStudentComments(studentId) {
+  return ({ fetch }) => ({
+    type: FETCH_STUDENT_COMMENTS,
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/comments`, {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function createNoteComment(text, commentId) {
+  return ({ fetch }) => ({
+    type: CREATE_STUDENT_NOTE_COMMENT,
+    payload: {
+      promise: fetch(`/admin/comments/${commentId}/comments`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          text,
+          commentId,
         }),
       }).then(response => response.json()),
     },

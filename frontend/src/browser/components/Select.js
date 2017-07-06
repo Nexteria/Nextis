@@ -12,6 +12,7 @@ export default function renderSelect(data) {
         <select
           {...input}
           className="form-control"
+          readOnly={data.readOnly}
         >
         {children}
         </select>

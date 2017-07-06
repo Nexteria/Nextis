@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use BrianFaust\Commentable\HasComments;
 
 use App\DefaultSystemSettings;
 use App\User;
@@ -9,6 +10,7 @@ use App\User;
 class Student extends Model
 {
     use SoftDeletes;
+    use HasComments;
 
     protected $fillable = [
         'firstName',

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93b6e48b4820eb8386e8f9fcee9a9e82",
-    "content-hash": "3378e4d0cbc49bdc982b6a5e5e8054c1",
+    "hash": "748950e2a847ee59195a8b3c2b0598ee",
+    "content-hash": "61e99ffc4c47da884b7fa59026f2c0b4",
     "packages": [
         {
             "name": "bogardo/mailgun",
@@ -763,6 +763,120 @@
             "time": "2016-07-16 12:58:58"
         },
         {
+            "name": "faustbrian/laravel-commentable",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/faustbrian/Laravel-Commentable.git",
+                "reference": "fc30fed31f9621a0139a52acd4e9180be4564a7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/faustbrian/Laravel-Commentable/zipball/fc30fed31f9621a0139a52acd4e9180be4564a7e",
+                "reference": "fc30fed31f9621a0139a52acd4e9180be4564a7e",
+                "shasum": ""
+            },
+            "require": {
+                "faustbrian/laravel-service-provider": "^1.0",
+                "illuminate/database": "5.3.* || 5.4.*",
+                "kalnoy/nestedset": "^4.1",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "graham-campbell/testbench": "^3.2",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BrianFaust\\Commentable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Faust",
+                    "email": "hello@brianfaust.de",
+                    "homepage": "https://brianfaust.de"
+                }
+            ],
+            "description": "Commentable Polymorphic Eloquent Models for for Laravel 5",
+            "keywords": [
+                "Brian Faust",
+                "Laravel Commentable",
+                "faustbrian",
+                "framework",
+                "laravel",
+                "laravel-commentable"
+            ],
+            "time": "2017-04-24 15:00:00"
+        },
+        {
+            "name": "faustbrian/laravel-service-provider",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/faustbrian/Laravel-Service-Provider.git",
+                "reference": "00f35b6639081a9a7acd3564529d6715dc6e9b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/faustbrian/Laravel-Service-Provider/zipball/00f35b6639081a9a7acd3564529d6715dc6e9b32",
+                "reference": "00f35b6639081a9a7acd3564529d6715dc6e9b32",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.3.* || 5.4.*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "graham-campbell/testbench": "^3.2",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BrianFaust\\ServiceProvider\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Faust",
+                    "email": "hello@brianfaust.de",
+                    "homepage": "https://brianfaust.de"
+                }
+            ],
+            "description": "DRY Service Provider for Laravel 5 Packages",
+            "keywords": [
+                "Brian Faust",
+                "Laravel Service Provider",
+                "faustbrian",
+                "framework",
+                "laravel",
+                "laravel-service-provider"
+            ],
+            "time": "2017-01-20 12:24:12"
+        },
+        {
             "name": "firebase/php-jwt",
             "version": "v4.0.0",
             "source": {
@@ -807,16 +921,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.5.2",
+            "version": "8.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "25e86a18972d349480b5456805c4a61a76667e22"
+                "reference": "0aba3105c1896412a8c6454a5c7843115c1dce7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/25e86a18972d349480b5456805c4a61a76667e22",
-                "reference": "25e86a18972d349480b5456805c4a61a76667e22",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/0aba3105c1896412a8c6454a5c7843115c1dce7b",
+                "reference": "0aba3105c1896412a8c6454a5c7843115c1dce7b",
                 "shasum": ""
             },
             "require": {
@@ -871,7 +985,7 @@
                 "phonenumber",
                 "validation"
             ],
-            "time": "2017-06-20 18:25:02"
+            "time": "2017-07-04 16:24:53"
         },
         {
             "name": "giggsey/locale",
@@ -1333,16 +1447,16 @@
         },
         {
             "name": "jenssegers/date",
-            "version": "v3.2.11",
+            "version": "v3.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/date.git",
-                "reference": "68262b137a4811cc351b3c26308e252505606b8f"
+                "reference": "1db4d580d1d45085a48fd4a332697619b9a3851c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/date/zipball/68262b137a4811cc351b3c26308e252505606b8f",
-                "reference": "68262b137a4811cc351b3c26308e252505606b8f",
+                "url": "https://api.github.com/repos/jenssegers/date/zipball/1db4d580d1d45085a48fd4a332697619b9a3851c",
+                "reference": "1db4d580d1d45085a48fd4a332697619b9a3851c",
                 "shasum": ""
             },
             "require": {
@@ -1358,6 +1472,14 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.1-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Jenssegers\\Date\\DateServiceProvider"
+                    ],
+                    "aliases": {
+                        "Date": "Jenssegers\\Date\\Date"
+                    }
                 }
             },
             "autoload": {
@@ -1386,7 +1508,7 @@
                 "time",
                 "translation"
             ],
-            "time": "2017-06-06 11:42:35"
+            "time": "2017-06-30 11:51:03"
         },
         {
             "name": "jeremeamia/SuperClosure",
@@ -1478,6 +1600,60 @@
             ],
             "description": "ISO 3166-1 alpha-2 mapping",
             "time": "2015-12-15 15:40:03"
+        },
+        {
+            "name": "kalnoy/nestedset",
+            "version": "v4.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lazychaser/laravel-nestedset.git",
+                "reference": "e6ab99fe457859a66bafa993d60f050ee11ded67"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/e6ab99fe457859a66bafa993d60f050ee11ded67",
+                "reference": "e6ab99fe457859a66bafa993d60f050ee11ded67",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.2.* | 5.3.* | 5.4.*",
+                "illuminate/events": "5.2.* | 5.3.* | 5.4.*",
+                "illuminate/support": "5.2.* | 5.3.* | 5.4.*",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "v4.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kalnoy\\Nestedset\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kalnoy",
+                    "email": "lazychaser@gmail.com"
+                }
+            ],
+            "description": "Nested Set Model for Laravel 4-5",
+            "keywords": [
+                "database",
+                "hierarchy",
+                "laravel",
+                "nested sets",
+                "nsm"
+            ],
+            "time": "2017-06-20 07:05:32"
         },
         {
             "name": "laravel/framework",
@@ -1746,16 +1922,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "2.1.18",
+            "version": "2.1.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "a43db59e621e8e8d72321e885d1610509cc7b096"
+                "reference": "f4535ac21968f6086438e098cdf289b350aa993c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/a43db59e621e8e8d72321e885d1610509cc7b096",
-                "reference": "a43db59e621e8e8d72321e885d1610509cc7b096",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/f4535ac21968f6086438e098cdf289b350aa993c",
+                "reference": "f4535ac21968f6086438e098cdf289b350aa993c",
                 "shasum": ""
             },
             "require": {
@@ -1820,7 +1996,7 @@
                 "import",
                 "laravel"
             ],
-            "time": "2017-06-21 20:39:34"
+            "time": "2017-07-02 07:00:56"
         },
         {
             "name": "mailgun/mailgun-php",
@@ -2111,16 +2287,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "2b9e2f71b722f7c53918ab0c25f7646c2013f17d"
+                "reference": "0808939f81c1347a3c8a82a5925385a08074b0f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2b9e2f71b722f7c53918ab0c25f7646c2013f17d",
-                "reference": "2b9e2f71b722f7c53918ab0c25f7646c2013f17d",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/0808939f81c1347a3c8a82a5925385a08074b0f1",
+                "reference": "0808939f81c1347a3c8a82a5925385a08074b0f1",
                 "shasum": ""
             },
             "require": {
@@ -2158,7 +2334,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2017-03-05 18:23:57"
+            "time": "2017-06-28 20:53:48"
         },
         {
             "name": "owen-it/laravel-auditing",
@@ -2525,16 +2701,16 @@
         },
         {
             "name": "php-http/message",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/message.git",
-                "reference": "13df8c48f40ca7925303aa336f19be4b80984f01"
+                "reference": "2edd63bae5f52f79363c5f18904b05ce3a4b7253"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/13df8c48f40ca7925303aa336f19be4b80984f01",
-                "reference": "13df8c48f40ca7925303aa336f19be4b80984f01",
+                "url": "https://api.github.com/repos/php-http/message/zipball/2edd63bae5f52f79363c5f18904b05ce3a4b7253",
+                "reference": "2edd63bae5f52f79363c5f18904b05ce3a4b7253",
                 "shasum": ""
             },
             "require": {
@@ -2542,6 +2718,9 @@
                 "php": ">=5.4",
                 "php-http/message-factory": "^1.0.2",
                 "psr/http-message": "^1.0"
+            },
+            "provide": {
+                "php-http/message-factory-implementation": "1.0"
             },
             "require-dev": {
                 "akeneo/phpspec-skip-example-extension": "^1.0",
@@ -2590,7 +2769,7 @@
                 "message",
                 "psr-7"
             ],
-            "time": "2017-02-14 08:58:37"
+            "time": "2017-07-05 06:40:53"
         },
         {
             "name": "php-http/message-factory",
@@ -3159,16 +3338,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.8.8",
+            "version": "v0.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "fe65c30cbc55c71e61ba3a38b5a581149be31b8e"
+                "reference": "58a31cc4404c8f632d8c557bc72056af2d3a83db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/fe65c30cbc55c71e61ba3a38b5a581149be31b8e",
-                "reference": "fe65c30cbc55c71e61ba3a38b5a581149be31b8e",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/58a31cc4404c8f632d8c557bc72056af2d3a83db",
+                "reference": "58a31cc4404c8f632d8c557bc72056af2d3a83db",
                 "shasum": ""
             },
             "require": {
@@ -3228,7 +3407,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2017-06-24 06:16:19"
+            "time": "2017-07-06 14:53:52"
         },
         {
             "name": "ramsey/uuid",
@@ -3658,16 +3837,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "4054a102470665451108f9b59305c79176ef98f0"
+                "reference": "67535f1e3fd662bdc68d7ba317c93eecd973617e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/4054a102470665451108f9b59305c79176ef98f0",
-                "reference": "4054a102470665451108f9b59305c79176ef98f0",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/67535f1e3fd662bdc68d7ba317c93eecd973617e",
+                "reference": "67535f1e3fd662bdc68d7ba317c93eecd973617e",
                 "shasum": ""
             },
             "require": {
@@ -3717,7 +3896,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-04 18:15:29"
+            "time": "2017-06-09 14:53:08"
         },
         {
             "name": "symfony/finder",
@@ -3905,7 +4084,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -4524,16 +4703,16 @@
         },
         {
             "name": "webpatser/laravel-uuid",
-            "version": "2.0.1",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webpatser/laravel-uuid.git",
-                "reference": "6ed2705775e3edf066b90e1292f76f157ec00507"
+                "reference": "b95a131db730dedec7604a731f39d6c327f5eca1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webpatser/laravel-uuid/zipball/6ed2705775e3edf066b90e1292f76f157ec00507",
-                "reference": "6ed2705775e3edf066b90e1292f76f157ec00507",
+                "url": "https://api.github.com/repos/webpatser/laravel-uuid/zipball/b95a131db730dedec7604a731f39d6c327f5eca1",
+                "reference": "b95a131db730dedec7604a731f39d6c327f5eca1",
                 "shasum": ""
             },
             "require": {
@@ -4547,6 +4726,13 @@
                 "paragonie/random_compat": "A random_bytes Php 5.x polyfill."
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Uuid": "Webpatser\\Uuid\\UuidFacade"
+                    }
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Webpatser\\Uuid": "src/"
@@ -4567,7 +4753,7 @@
             "keywords": [
                 "UUID RFC4122"
             ],
-            "time": "2016-05-09 09:22:18"
+            "time": "2017-06-26 09:33:47"
         },
         {
             "name": "zizaco/entrust",
@@ -5988,16 +6174,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063"
+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/9752a30000a8ca9f4b34b5227d15d0101b96b063",
-                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/1f93a8d19b8241617f5074a123e282575b821df8",
+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
                 "shasum": ""
             },
             "require": {
@@ -6039,7 +6225,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-02 22:05:06"
+            "time": "2017-06-15 12:58:50"
         }
     ],
     "aliases": [],

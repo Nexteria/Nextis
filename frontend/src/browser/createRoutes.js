@@ -38,6 +38,8 @@ import AddPaymentsDialog from './payments/AddPaymentsDialog';
 import SemestersPage from './administration/semesters/SemestersPage';
 import NewSemesterDialog from './administration/semesters/NewSemesterDialog';
 import StudentsPage from './administration/students/StudentsPage';
+import StudentProfilePage from './administration/students/StudentProfilePage';
+import StudentNotesFeed from './administration/students/StudentNotesFeed';
 
 export default function createRoutes() {
   return (
@@ -60,7 +62,9 @@ export default function createRoutes() {
         <Route component={SemestersPage} path="semesters">
           <Route component={NewSemesterDialog} path="new" />
         </Route>
-        <Route component={StudentsPage} path="students" />
+        <Route component={StudentsPage} path="students">
+          <Route component={StudentProfilePage} path=":studentId(/:tab)" />
+        </Route>
         <Route component={CreateUserPage} path="users/create" />
         <Route component={EditUser} path="users/:userId" />
         <Route component={ActivityPointsPage} path="users/:userId/points" />

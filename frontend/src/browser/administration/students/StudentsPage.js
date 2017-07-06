@@ -1,14 +1,12 @@
 import Component from 'react-pure-render/component';
 import { List } from 'immutable';
 import React, { PropTypes } from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import diacritics from 'diacritics';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import { fields } from '../../../common/lib/redux-fields/index';
 import * as actions from '../../../common/students/actions';
 import * as usersActions from '../../../common/users/actions';
 import StudentsActionsContainer from './StudentsActionsContainer';
@@ -56,15 +54,19 @@ const messages = defineMessages({
   },
 });
 
+const styles = {
+  rowTd: {
+    cursor: 'pointer',
+  },
+};
+
 class StudentsPage extends Component {
 
   static propTypes = {
     semesters: PropTypes.object,
-    fields: PropTypes.object.isRequired,
     fetchAdminStudents: PropTypes.func.isRequired,
     loadStudentLevelsList: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
-    intl: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
@@ -126,10 +128,20 @@ class StudentsPage extends Component {
   }
 
   render() {
-    const { students, studentLevels, initialized, hasPermission, selectedStudents, change } = this.props;
+    const { students, children, params, studentLevels, initialized, hasPermission, selectedStudents, change } = this.props;
 
-    if (!initialized) {
+    const studentId = params ? parseInt(params.studentId, 10) : null;
+
+    if (!initialized || (studentId && !students.has(studentId))) {
       return null;
+    }
+
+    if (children) {
+      return (
+        <div>
+          {children}
+        </div>
+      );
     }
 
     const studentsData = students.map(student => {
@@ -174,14 +186,6 @@ class StudentsPage extends Component {
         <section className="content-header">
           <h1>
             <FormattedMessage {...messages.title} />
-            {hasPermission('create_users') ?
-              <i
-                className="fa fa-plus text-green"
-                style={{ cursor: 'pointer', marginLeft: '2em' }}
-                onClick={() => browserHistory.push('/admin/users/create')}
-              ></i>
-             : ''
-            }
           </h1>
         </section>
         <section className="content">
@@ -193,6 +197,9 @@ class StudentsPage extends Component {
                     data={studentsData}
                     multiColumnSort={3}
                     striped
+                    options={{
+                      onRowClick: row => browserHistory.push(`/admin/students/${row.id}`),
+                    }}
                     selectRow={selectRow}
                     hover
                     height="350px"
@@ -200,31 +207,31 @@ class StudentsPage extends Component {
                   >
                     <TableHeaderColumn isKey hidden dataField="id" />
 
-                    <TableHeaderColumn dataField="firstName" dataSort>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="firstName" dataSort>
                       Meno
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="lastName" dataSort dataFormat={x => x}>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="lastName" dataSort dataFormat={x => x}>
                       Priezvisko
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="studentLevelName" dataSort dataFormat={x => x}>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="studentLevelName" dataSort dataFormat={x => x}>
                       Level
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="pointsSummary" dataSort dataFormat={x => x}>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="pointsSummary" dataSort dataFormat={x => x}>
                       Aktuálne získané body
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="activityPointsBaseNumber" dataSort>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="activityPointsBaseNumber" dataSort>
                       Bodový základ
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="tuitionFeeBalance" dataSort sortFunc={this.sortTuitionFeeFunction} dataFormat={x => x}>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="tuitionFeeBalance" dataSort sortFunc={this.sortTuitionFeeFunction} dataFormat={x => x}>
                       Školné
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="status" dataSort>
+                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="status" dataSort>
                       Status
                     </TableHeaderColumn>
                   </BootstrapTable>

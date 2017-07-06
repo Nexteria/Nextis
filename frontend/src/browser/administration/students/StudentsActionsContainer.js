@@ -16,10 +16,8 @@ class StudentsActionsContainer extends Component {
 
   static propTypes = {
     semesters: PropTypes.object,
-    fields: PropTypes.object.isRequired,
-    studentsAction: PropTypes.string.isRequired,
+    studentsAction: PropTypes.string,
     hasPermission: PropTypes.func.isRequired,
-    intl: PropTypes.object.isRequired,
   };
 
   render() {

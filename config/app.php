@@ -171,6 +171,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
+        BrianFaust\Commentable\CommentableServiceProvider::class,
+        Mews\Purifier\PurifierServiceProvider::class,
 
     ],
 
@@ -228,6 +230,7 @@ return [
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Uuid' => Webpatser\Uuid\Uuid::class,
         'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
+        'Purifier' => Mews\Purifier\Facades\Purifier::class,
     ],
 
 ];

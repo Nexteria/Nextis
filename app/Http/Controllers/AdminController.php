@@ -14,6 +14,7 @@ use App\Role;
 use App\DefaultSystemSettings;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use BrianFaust\Commentable\Comment;
 
 class AdminController extends Controller
 {
@@ -28,12 +29,19 @@ class AdminController extends Controller
      */
     protected $nxEventsSettingsTransformer;
 
+    /**
+     * @var \App\Transformers\CommentsTransformer
+     */
+    protected $commentsTransformer;
+
     public function __construct(
         \App\Transformers\NxEventTransformer $nxEventTransformer,
-        \App\Transformers\NxEventsSettingsTransformer $nxEventsSettingsTransformer
+        \App\Transformers\NxEventsSettingsTransformer $nxEventsSettingsTransformer,
+        \App\Transformers\CommentsTransformer $commentsTransformer
     ) {
         $this->nxEventTransformer = $nxEventTransformer;
         $this->nxEventsSettingsTransformer = $nxEventsSettingsTransformer;
+        $this->commentsTransformer = $commentsTransformer;
     }
 
     public function getNxEventsCategories()
@@ -532,5 +540,41 @@ class AdminController extends Controller
         }
 
         return $this->getStudents();
+    }
+
+    public function createStudentComment(Request $request, $studentId)
+    {
+        $student = Student::findOrFail($studentId);
+
+        $message = clean($request->get('commentBody'));
+        $comment = $student->comment([
+            'title' => $request->get('commentTitle'),
+            'body' => $message,
+        ], \Auth::user());
+
+        return response()->json($this->commentsTransformer->transform($comment));
+    }
+
+    public function getStudentComments(Request $request, $studentId)
+    {
+        $student = Student::findOrFail($studentId);
+
+        return response()->json($this->commentsTransformer->transformCollection($student->comments));
+    }
+
+    public function createComment(Request $request, $commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+
+        $commentableType = $comment->commentable_type;
+        $commentable = call_user_func([$commentableType, 'findOrFail'], $comment->commentable_id);
+
+        $data = [
+            'title' => '',
+            'body' => $request->get('text'),
+        ];
+        $newComment = $commentable->comment($data, \Auth::user(), $comment);
+
+        return response()->json($this->commentsTransformer->transform($newComment));
     }
 }

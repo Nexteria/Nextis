@@ -20,7 +20,8 @@
         "php-http/guzzle6-adapter": "^1.1",
         "owen-it/laravel-auditing": "^4.0",
         "propaganistas/laravel-phone": "^2.8",
-        "propaganistas/laravel-intl": "^1.2"
+        "propaganistas/laravel-intl": "^1.2",
+        "faustbrian/laravel-commentable": "2.1.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
