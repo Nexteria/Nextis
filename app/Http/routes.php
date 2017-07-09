@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
 
             Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
+            Route::put('/comments/{commentId}', 'AdminController@updateComment');
             Route::delete('/comments/{commentId}', 'AdminController@deleteComment');
             
             Route::get('/templates/imports/newStudents', 'AdminController@getNewStudentsImportTemplate');

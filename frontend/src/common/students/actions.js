@@ -38,6 +38,11 @@ export const DELETE_COMMENT_START = 'DELETE_COMMENT_START';
 export const DELETE_COMMENT_SUCCESS = 'DELETE_COMMENT_SUCCESS';
 export const DELETE_COMMENT_ERROR = 'DELETE_COMMENT_ERROR';
 
+export const UPDATE_NOTE_COMMENT = 'UPDATE_NOTE_COMMENT';
+export const UPDATE_NOTE_COMMENT_START = 'UPDATE_NOTE_COMMENT_START';
+export const UPDATE_NOTE_COMMENT_SUCCESS = 'UPDATE_NOTE_COMMENT_SUCCESS';
+export const UPDATE_NOTE_COMMENT_ERROR = 'UPDATE_NOTE_COMMENT_ERROR';
+
 export function fetchAdminStudents() {
   return ({ fetch }) => ({
     type: FETCH_ADMIN_STUDENTS,
@@ -158,6 +163,24 @@ export function deleteComment(commentId) {
         headers: { 'Content-Type': 'application/json' },
         method: 'delete',
         notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function updateNoteComment(title, body, commentId) {
+  return ({ fetch }) => ({
+    type: UPDATE_NOTE_COMMENT,
+    payload: {
+      promise: fetch(`/admin/comments/${commentId}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'put',
+        notifications: 'both',
+        body: JSON.stringify({
+          title,
+          body: body.toString('html'),
+        }),
       }).then(response => response.json()),
     },
   });

@@ -3,7 +3,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import RichTextEditor from 'react-rte';
-import format from 'date-fns/format';
 
 
 import * as actions from '../../../common/students/actions';

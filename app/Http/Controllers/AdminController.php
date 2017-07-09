@@ -578,10 +578,22 @@ class AdminController extends Controller
         return response()->json($this->commentsTransformer->transform($newComment));
     }
 
-    public function deleteComment(Request $request, $commentId) {
+    public function deleteComment(Request $request, $commentId)
+    {
         $comment = Comment::findOrFail($commentId);
         $comment->delete();
 
         return response()->json('');
+    }
+
+    public function updateComment(Request $request, $commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+
+        $comment->title = $request->get('title');
+        $comment->body = clean($request->get('body'));
+        $comment->save();
+
+        return response()->json($this->commentsTransformer->transform($comment));
     }
 }

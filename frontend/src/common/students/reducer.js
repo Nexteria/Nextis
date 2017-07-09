@@ -64,6 +64,13 @@ export default function studentsReducer(state = new InitialState, action) {
       return newState;
     }
 
+    case actions.UPDATE_NOTE_COMMENT_SUCCESS: {
+      const { id, title, body } = action.payload;
+
+      return state.setIn(['admin', 'activeStudentComments', id, 'title'], title)
+                  .setIn(['admin', 'activeStudentComments', id, 'body'], body);
+    }
+
     case actions.DELETE_COMMENT_SUCCESS: {
       const commentId = action.meta.commentId;
       const comment = state.getIn(['admin', 'activeStudentComments', commentId]);
