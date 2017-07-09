@@ -10,6 +10,7 @@ import AssignNewSemesterAction from './actions/AssignNewSemesterAction';
 import EndSchoolYearAction from './actions/EndSchoolYearAction';
 import ImportNewStudentsAction from './actions/ImportNewStudentsAction';
 import ChangeStudentLevelAction from './actions/ChangeStudentLevelAction';
+import AddNoteAction from './actions/AddNoteAction';
 import * as actions from '../../../common/students/actions';
 
 class StudentsActionsContainer extends Component {
@@ -18,6 +19,7 @@ class StudentsActionsContainer extends Component {
     semesters: PropTypes.object,
     studentsAction: PropTypes.string,
     hasPermission: PropTypes.func.isRequired,
+    selectedStudents: PropTypes.object,
   };
 
   render() {
@@ -29,6 +31,7 @@ class StudentsActionsContainer extends Component {
       end_school_year: <EndSchoolYearAction {...{ selectedStudents }} />,
       import_new_students: <ImportNewStudentsAction {...{ selectedStudents }} />,
       change_student_level: <ChangeStudentLevelAction {...{ selectedStudents }} />,
+      add_student_note: <AddNoteAction {...{ selectedStudents }} />,
     });
 
     return (
@@ -50,6 +53,7 @@ class StudentsActionsContainer extends Component {
                       <option value="end_school_year">Ukončiť školský rok</option>
                       <option value="import_new_students">Nahrať nových študentov</option>
                       <option value="change_student_level">Zmena levelu študenta</option>
+                      <option value="add_student_note">Pridať študentom poznámku</option>
                     )}
                     </Field>
                   </div>

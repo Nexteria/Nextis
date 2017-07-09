@@ -51,7 +51,7 @@ class StudentNotesFeed extends Component {
   }
 
   editingComment(commentId, formValues) {
-    return formValues[`comment_${commentId}`] &&
+    return formValues && formValues[`comment_${commentId}`] &&
       formValues[`comment_${commentId}`] !== null;
   }
 
@@ -70,27 +70,6 @@ class StudentNotesFeed extends Component {
             className="btn btn-success btn-flat"
           >Odoslať</button>
         </span>
-      </div>
-    );
-  }
-
-  renderTextEditor(data) {
-    const { input, label, meta: { error } } = data;
-
-    return (
-      <div className={`form-group ${error ? 'has-error' : ''}`}>
-        <label className="col-sm-12 control-label">
-          {label}
-        </label>
-        <div className="col-sm-12">
-          <TextEditor
-            {...input}
-          />
-          <div className="has-error">
-            {error && <label>{error}</label>}
-          </div>
-        </div>
-        <div className="clearfix"></div>
       </div>
     );
   }
@@ -139,7 +118,7 @@ class StudentNotesFeed extends Component {
 
                       <Field
                         name={`comment_${comment.get('id')}.body`}
-                        component={this.renderTextEditor}
+                        component={TextEditor}
                         label="Správa poznámky"
                       />
 

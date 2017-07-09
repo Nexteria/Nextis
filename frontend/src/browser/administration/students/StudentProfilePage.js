@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
-import RichTextEditor from 'react-rte';
 import { browserHistory } from 'react-router';
 
 
@@ -12,7 +11,6 @@ import * as actions from '../../../common/students/actions';
 import * as usersActions from '../../../common/users/actions';
 import InputComponent from '../../components/Input';
 import SelectComponent from '../../components/Select';
-import TextEditor from '../../components/TextEditor';
 import StudentNotesTab from './StudentNotesTab';
 import StudentNotesFeed from './StudentNotesFeed';
 
@@ -38,29 +36,7 @@ class StudentProfilePage extends Component {
 
     initialize({
       ...student.toObject(),
-      newComment: RichTextEditor.createValueFromString('', 'html'),
     });
-  }
-
-  renderEditor(data) {
-    const { input, label, meta: { error } } = data;
-
-    return (
-      <div className={`form-group ${error ? 'has-error' : ''}`}>
-        <label className="col-sm-12 control-label">
-          {label}
-        </label>
-        <div className="col-sm-12">
-          <TextEditor
-            {...input}
-          />
-          <div className="has-error">
-            {error && <label>{error}</label>}
-          </div>
-        </div>
-        <div className="clearfix"></div>
-      </div>
-    );
   }
 
   render() {

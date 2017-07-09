@@ -194,24 +194,6 @@ export class CreateLocationDialog extends Component {
     );
   }
 
-  renderEditor(data) {
-    const { input, label, name, children, meta: { touched, error } } = data;
-
-    return (
-      <div className="col-md-6">
-        <div className={`form-group ${error ? 'has-error' : ''}`}>
-          <label className="control-label">{label}</label>
-          <TextEditor
-            {...input}
-          />
-          <div className="has-error">
-            {error && <label>{error}</label>}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   renderSelect(data) {
     const { input, label, children, meta: { touched, error } } = data;
 
@@ -403,17 +385,19 @@ export class CreateLocationDialog extends Component {
               mapZoom={mapZoom}
             />
 
-            <Field
-              name="instructions"
-              component={this.renderEditor}
-              label={formatMessage(messages.instructions)}
-            />
+            <div className="col-md-6">
+              <Field
+                name="instructions"
+                component={TextEditor}
+                label={formatMessage(messages.instructions)}
+              />
 
-            <Field
-              name="description"
-              component={this.renderEditor}
-              label={formatMessage(messages.description)}
-            />
+              <Field
+                name="description"
+                component={TextEditor}
+                label={formatMessage(messages.description)}
+              />
+            </div>
 
             <Field
               name="pictures"

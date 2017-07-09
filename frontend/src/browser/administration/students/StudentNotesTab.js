@@ -30,27 +30,6 @@ class StudentNotesTab extends Component {
     });
   }
 
-  renderEditor(data) {
-    const { input, label, meta: { error } } = data;
-
-    return (
-      <div className={`form-group ${error ? 'has-error' : ''}`}>
-        <label className="col-sm-12 control-label">
-          {label}
-        </label>
-        <div className="col-sm-12">
-          <TextEditor
-            {...input}
-          />
-          <div className="has-error">
-            {error && <label>{error}</label>}
-          </div>
-        </div>
-        <div className="clearfix"></div>
-      </div>
-    );
-  }
-
   render() {
     const { student, initialized, handleSubmit, createStudentComment } = this.props;
 
@@ -68,7 +47,7 @@ class StudentNotesTab extends Component {
         />
         <Field
           name={'newCommentBody'}
-          component={this.renderEditor}
+          component={TextEditor}
           label="Správa poznámky"
         />
         <button

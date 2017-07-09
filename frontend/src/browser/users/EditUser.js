@@ -366,26 +366,6 @@ export class EditUser extends Component {
     );
   }
 
-  renderEditor(data) {
-    const { input, label, meta: { error } } = data;
-
-    return (
-      <div className={`form-group ${error ? 'has-error' : ''}`}>
-        <label className="col-sm-2 control-label">
-          {label}
-        </label>
-        <div className="col-sm-10">
-          <TextEditor
-            {...input}
-          />
-          <div className="has-error">
-            {error && <label>{error}</label>}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   renderSelect(data) {
     const { input, label, children, meta: { touched, error } } = data;
 
@@ -565,7 +545,9 @@ export class EditUser extends Component {
 
                     <Field
                       name="personalDescription"
-                      component={this.renderEditor}
+                      component={TextEditor}
+                      contentCol={10}
+                      labelCol={2}
                       label={
                         `${formatMessage(messages.personalDescription)}
                         ${mode === 'profile' ? '*' : ''}`
@@ -575,7 +557,9 @@ export class EditUser extends Component {
                     {roles.includes(rolesList.get('GUIDE').id) ?
                       <Field
                         name="guideDescription"
-                        component={this.renderEditor}
+                        component={TextEditor}
+                        contentCol={10}
+                        labelCol={2}
                         label={`${formatMessage(messages.guideDescription)}`}
                       />
                       : ''

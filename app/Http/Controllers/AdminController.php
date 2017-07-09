@@ -555,6 +555,22 @@ class AdminController extends Controller
         return response()->json($this->commentsTransformer->transform($comment));
     }
 
+    public function createBulkStudentsComment(Request $request)
+    {
+        $studentIds = $request->get('studentIds');
+        foreach ($studentIds as $studentId) {
+            $student = Student::findOrFail($studentId);
+
+            $message = clean($request->get('commentBody'));
+            $comment = $student->comment([
+                'title' => $request->get('commentTitle'),
+                'body' => $message,
+            ], \Auth::user());
+        }
+
+        return response()->json('');
+    }
+
     public function getStudentComments(Request $request, $studentId)
     {
         $student = Student::findOrFail($studentId);

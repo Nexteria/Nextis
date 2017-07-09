@@ -536,26 +536,6 @@ export class EditEvent extends Component {
     );
   }
 
-  renderEditor(data) {
-    const { input, label, name, children, meta: { touched, error } } = data;
-
-    return (
-      <div className={`form-group ${error ? 'has-error' : ''}`}>
-        <label className="col-sm-2 control-label">
-          {label}
-        </label>
-        <div className="col-sm-10">
-          <TextEditor
-            {...input}
-          />
-          <div className="has-error">
-            {error && <label>{error}</label>}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   renderAttendeesGroups(data) {
     const { input, addAttendeesGroup, actualEvent, editAttendeesGroup, emptyLabel, label, meta: { touched, error } } = data;
 
@@ -809,13 +789,17 @@ export class EditEvent extends Component {
 
                           <Field
                             name="shortDescription"
-                            component={this.renderEditor}
+                            component={TextEditor}
+                            contentCol={10}
+                            labelCol={2}
                             label={`${formatMessage(messages.shortDescription)}*`}
                           />
 
                           <Field
                             name="description"
-                            component={this.renderEditor}
+                            component={TextEditor}
+                            contentCol={10}
+                            labelCol={2}
                             label={formatMessage(messages.description)}
                           />
 

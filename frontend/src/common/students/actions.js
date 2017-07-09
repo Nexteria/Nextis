@@ -43,6 +43,12 @@ export const UPDATE_NOTE_COMMENT_START = 'UPDATE_NOTE_COMMENT_START';
 export const UPDATE_NOTE_COMMENT_SUCCESS = 'UPDATE_NOTE_COMMENT_SUCCESS';
 export const UPDATE_NOTE_COMMENT_ERROR = 'UPDATE_NOTE_COMMENT_ERROR';
 
+export const CREATE_BULK_STUDENTS_COMMENT = 'CREATE_BULK_STUDENTS_COMMENT';
+export const CREATE_BULK_STUDENTS_COMMENT_START = 'CREATE_BULK_STUDENTS_COMMENT_START';
+export const CREATE_BULK_STUDENTS_COMMENT_SUCCES = 'CREATE_BULK_STUDENTS_COMMENT_SUCCESS';
+export const CREATE_BULK_STUDENTS_COMMENT_ERROR = 'CREATE_BULK_STUDENTS_COMMENT_ERROR';
+
+
 export function fetchAdminStudents() {
   return ({ fetch }) => ({
     type: FETCH_ADMIN_STUDENTS,
@@ -115,6 +121,25 @@ export function createStudentComment(data, studentId) {
         body: JSON.stringify({
           commentBody: data.newCommentBody.toString('html'),
           commentTitle: data.newCommentTitle,
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function createBulkStudentsComment(data, studentIds) {
+  return ({ fetch }) => ({
+    type: CREATE_BULK_STUDENTS_COMMENT,
+    payload: {
+      promise: fetch('/admin/students/comments', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          commentBody: data.newCommentBody.toString('html'),
+          commentTitle: data.newCommentTitle,
+          studentIds
         }),
       }).then(response => response.json()),
     },
