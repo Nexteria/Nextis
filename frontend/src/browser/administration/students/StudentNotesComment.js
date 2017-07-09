@@ -4,16 +4,26 @@ import format from 'date-fns/format';
 
 
 import Avatar from '../../components/Avatar';
+import confirmAction from '../../components/ConfirmAction';
+
+
+const styles = {
+  deleteIcon: {
+    marginLeft: '1em',
+    cursor: 'pointer',
+  }
+};
 
 export default class StudentNotesComment extends Component {
 
   static propTypes = {
     comment: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
+    deleteComment: PropTypes.func.isRequired,
   };
 
   render() {
-    const { comment, users } = this.props;
+    const { comment, users, deleteComment } = this.props;
 
     return (
       <div className="box-comment">
@@ -24,6 +34,15 @@ export default class StudentNotesComment extends Component {
             {` ${users.getIn([comment.get('creatorId'), 'lastName'])}`}
             <span className="text-muted pull-right">
               {format(comment.get('createdAt'), 'D.M.YYYY HH:mm')}
+              <i
+                className="fa fa-trash"
+                style={styles.deleteIcon}
+                onClick={() => confirmAction(
+                  'Ste si istý, že chcete zmazať tento komentár?',
+                  () => deleteComment(comment.get('id')),
+                  null
+                )}
+              ></i>
             </span>
           </span>
           {comment.get('body')}

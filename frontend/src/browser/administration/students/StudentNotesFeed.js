@@ -9,7 +9,16 @@ import isAfter from 'date-fns/is_after';
 
 import * as actions from '../../../common/students/actions';
 import * as usersActions from '../../../common/users/actions';
+import confirmAction from '../../components/ConfirmAction';
 import StudentNotesComment from './StudentNotesComment';
+
+
+const styles = {
+  deleteIcon: {
+    marginLeft: '1em',
+    cursor: 'pointer',
+  }
+};
 
 class StudentNotesFeed extends Component {
 
@@ -22,6 +31,8 @@ class StudentNotesFeed extends Component {
     handleSubmit: PropTypes.func.isRequired,
     initialized: PropTypes.bool.isRequired,
     createNoteComment: PropTypes.func.isRequired,
+    deleteComment: PropTypes.func.isRequired,
+    change: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -31,20 +42,25 @@ class StudentNotesFeed extends Component {
   }
 
   renderCommentInput(data) {
-    const { input, commentId, createNoteComment } = data;
+    const { input, commentId, change, createNoteComment } = data;
 
     return (
       <div className="input-group">
         <input type="text" placeholder="Napíšte komentár ..." className="form-control" {...input} />
         <span className="input-group-btn">
-          <button onClick={() => createNoteComment(input.value, commentId)} className="btn btn-success btn-flat">Odoslať</button>
+          <button
+            onClick={() => {
+              createNoteComment(input.value, commentId);
+              change(input.name, '');
+            }}
+            className="btn btn-success btn-flat">Odoslať</button>
         </span>
       </div>
     );
   }
 
   render() {
-    const { comments, users, createNoteComment } = this.props;
+    const { comments, users, change, createNoteComment, deleteComment } = this.props;
 
     let dayComments = new Map();
 
@@ -72,6 +88,15 @@ class StudentNotesFeed extends Component {
                     <span className="time">
                       <i className="fa fa-clock-o"></i> {format(comment.get('createdAt'), 'HH:mm')}
                       <span>, {users.getIn([comment.get('creatorId'), 'firstName'])} {users.getIn([comment.get('creatorId'), 'lastName'])}</span>
+                      <i
+                        className="fa fa-trash"
+                        style={styles.deleteIcon}
+                        onClick={() => confirmAction(
+                          'Ste si istý, že chcete zmazať túto poznámku?',
+                          () => deleteComment(comment.get('id')),
+                          null
+                        )}
+                      ></i>
                     </span>
 
                     <h3 className="timeline-header"><a>{comment.get('title')}</a>&nbsp;</h3>
@@ -86,7 +111,7 @@ class StudentNotesFeed extends Component {
                         {comment.get('children')
                           .sort((a, b) => isAfter(a.createdAt, b.createdAt) ? 1 : -1)
                           .map(children =>
-                            <StudentNotesComment users={users} comment={comments.get(children)} />
+                            <StudentNotesComment users={users} comment={comments.get(children)} deleteComment={deleteComment} />
                         )}
                       </div>
                       : null
@@ -95,6 +120,7 @@ class StudentNotesFeed extends Component {
                       <Field
                         name={`comments.note_${comment.get('id')}`}
                         component={this.renderCommentInput}
+                        change={change}
                         commentId={comment.get('id')}
                         createNoteComment={createNoteComment}
                       />

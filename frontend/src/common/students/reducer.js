@@ -64,6 +64,20 @@ export default function studentsReducer(state = new InitialState, action) {
       return newState;
     }
 
+    case actions.DELETE_COMMENT_SUCCESS: {
+      const commentId = action.meta.commentId;
+      const comment = state.getIn(['admin', 'activeStudentComments', commentId]);
+
+      let newState = state;
+      const parentId = comment.get('parentId');
+      if (parentId > 0) {
+        newState = newState.deleteIn(
+          ['admin', 'activeStudentComments', parentId, 'children', commentId]
+        );
+      }
+      return newState.deleteIn(['admin', 'activeStudentComments', commentId]);
+    }
+
     default: {
       return state;
     }
