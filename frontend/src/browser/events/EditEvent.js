@@ -830,7 +830,7 @@ export class EditEvent extends Component {
                     eventId={actualEventId}
                     intl={this.props.intl}
                     users={users}
-                    attendeesGroups={events.get(actualEventId).attendeesGroups}
+                    attendeesGroups={actualEvent.attendeesGroups}
                     changeAttendeeFeedbackStatus={changeAttendeeFeedbackStatus}
                     changeAttendeePresenceStatus={changeAttendeePresenceStatus}
                   />
