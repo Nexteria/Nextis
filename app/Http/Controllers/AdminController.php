@@ -14,7 +14,7 @@ use App\Role;
 use App\DefaultSystemSettings;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use BrianFaust\Commentable\Comment;
+use App\Comment;
 
 class AdminController extends Controller
 {
@@ -544,6 +544,20 @@ class AdminController extends Controller
 
     public function createStudentComment(Request $request, $studentId)
     {
+        $validator = \Validator::make($request->all(), [
+          'commentBody' => 'required|string|min:2',
+          'commentTitle' => 'required|string|min:2',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
         $student = Student::findOrFail($studentId);
 
         $message = clean($request->get('commentBody'));
@@ -580,6 +594,19 @@ class AdminController extends Controller
 
     public function createComment(Request $request, $commentId)
     {
+        $validator = \Validator::make($request->all(), [
+          'text' => 'required|string|min:2',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
         $comment = Comment::findOrFail($commentId);
 
         $commentableType = $comment->commentable_type;

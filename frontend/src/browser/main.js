@@ -14,6 +14,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 injectTapEventPlugin();
 
+console.warn = () => {};
+
 const initialState = createInitialState();
 const reportingMiddleware = configureReporting({
   appVersion: initialState.config.appVersion,

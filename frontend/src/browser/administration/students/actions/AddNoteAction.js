@@ -15,12 +15,14 @@ class AddNoteAction extends Component {
     createBulkStudentsComment: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
     selectedStudents: PropTypes.object.isRequired,
   };
 
   render() {
     const {
       selectedStudents,
+      reset,
       handleSubmit,
       createBulkStudentsComment,
     } = this.props;
@@ -28,7 +30,12 @@ class AddNoteAction extends Component {
     return (
       <section className="content">
         <div className="row">
-          <form id="createStudentNotesForm" onSubmit={handleSubmit((data) => createBulkStudentsComment(data, selectedStudents))}>
+          <form
+            id="createStudentNotesForm"
+            onSubmit={handleSubmit((data) =>
+              createBulkStudentsComment(data, selectedStudents).then(reset)
+            )}
+          >
             <div className="col-md-12">
               <Field
                 name={'newCommentTitle'}

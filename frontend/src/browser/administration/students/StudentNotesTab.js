@@ -18,6 +18,7 @@ class StudentNotesTab extends Component {
     hasPermission: PropTypes.func.isRequired,
     createStudentComment: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
     initialized: PropTypes.bool.isRequired,
   };
 
@@ -31,14 +32,19 @@ class StudentNotesTab extends Component {
   }
 
   render() {
-    const { student, initialized, handleSubmit, createStudentComment } = this.props;
+    const { student, reset, initialized, handleSubmit, createStudentComment } = this.props;
 
     if (!initialized) {
       return <div></div>;
     }
 
     return (
-      <form id="newCommentForm" onSubmit={handleSubmit(data => createStudentComment(data, student.get('id')))}>
+      <form
+        id="newCommentForm"
+        onSubmit={handleSubmit(data =>
+          createStudentComment(data, student.get('id')).then(reset)
+        )}
+      >
         <Field
           name={'newCommentTitle'}
           component={InputComponent}

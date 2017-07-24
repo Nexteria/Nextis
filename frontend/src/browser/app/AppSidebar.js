@@ -86,6 +86,14 @@ const messages = defineMessages({
   },
 });
 
+const styles = {
+  activeLinkStyle: {
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    color: '#00a65a',
+    fontWeight: 'bold',
+  }
+};
+
 
 export default class AppSideBar extends Component {
 
@@ -109,14 +117,14 @@ export default class AppSideBar extends Component {
               <i className="fa fa-briefcase"></i>
               <FormattedMessage {...messages.studies} /></li>
             <li>
-              <Link to="/events">
+              <Link activeStyle={styles.activeLinkStyle} to="/events">
                 <i className="fa fa-calendar-o"></i>
                 <span><FormattedMessage {...messages.events} /></span>
               </Link>
             </li>
             {isStudent ?
               <li>
-                <Link to="/points">
+                <Link activeStyle={styles.activeLinkStyle} to="/points">
                   <i className="fa fa-file-text-o"></i>
                   <span><FormattedMessage {...messages.activityPoints} /></span>
                 </Link>
@@ -125,7 +133,7 @@ export default class AppSideBar extends Component {
             }
             {isStudent ?
               <li>
-                <Link to="/payments">
+                <Link activeStyle={styles.activeLinkStyle} to="/payments">
                   <i className="fa fa-money text-green"></i>
                   <span><FormattedMessage {...messages.payments} /></span>
                 </Link>
@@ -134,7 +142,7 @@ export default class AppSideBar extends Component {
             }
             {viewer.hostedEvents.size > 0 ?
               <li>
-                <Link to="/host/events">
+                <Link activeStyle={styles.activeLinkStyle} to="/host/events">
                   <i className="fa fa-support"></i>
                   <span><FormattedMessage {...messages.hostedEvents} /></span>
                   <small className="label pull-right bg-red">
@@ -145,8 +153,8 @@ export default class AppSideBar extends Component {
               : ''
             }
             <li>
-              <Link to="/contacts">
-                <i className="fa fa-phone text-green"></i>
+              <Link activeStyle={styles.activeLinkStyle} to="/contacts">
+                <i className="fa fa-phone"></i>
                 <span><FormattedMessage {...messages.contacts} /></span>
               </Link>
             </li>
@@ -157,25 +165,25 @@ export default class AppSideBar extends Component {
                   <FormattedMessage {...messages.studiesAdministration} />
                 </li>
                 <li>
-                  <Link to="/admin/events/category/afterSignInOpening">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/events/category/afterSignInOpening">
                     <i className="fa fa-calendar"></i>
                     <span><FormattedMessage {...messages.events} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/students">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/students">
                     <i className="fa fa-graduation-cap"></i>
                     <span><FormattedMessage {...messages.students} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/semesters">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/semesters">
                     <i className="fa fa-book"></i>
                     <span><FormattedMessage {...messages.semesters} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/payments">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/payments">
                     <i className="fa fa-eur"></i>
                     <span><FormattedMessage {...messages.payments} /></span>
                   </Link>
@@ -186,25 +194,25 @@ export default class AppSideBar extends Component {
                   <FormattedMessage {...messages.systemAdministration} />
                 </li>
                 <li>
-                  <Link to="/admin/userGroups">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/userGroups">
                     <i className="fa fa-group"></i>
                     <span><FormattedMessage {...messages.userGroups} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/users">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/users">
                     <i className="fa fa-user"></i>
                     <span><FormattedMessage {...messages.users} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/roles">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/roles">
                     <i className="fa fa-legal"></i>
                     <span><FormattedMessage {...messages.roles} /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/nxLocations">
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/nxLocations">
                     <i className="fa fa-home"></i>
                     <span><FormattedMessage {...messages.locations} /></span>
                   </Link>

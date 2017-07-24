@@ -10,6 +10,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as actions from '../../../common/students/actions';
 import * as usersActions from '../../../common/users/actions';
 import StudentsActionsContainer from './StudentsActionsContainer';
+import StudentsTable from './StudentsTable';
 
 const messages = defineMessages({
   title: {
@@ -132,7 +133,7 @@ class StudentsPage extends Component {
 
     const studentId = params ? parseInt(params.studentId, 10) : null;
 
-    if (!initialized || (studentId && !students.has(studentId))) {
+    if (studentId && !students.has(studentId)) {
       return null;
     }
 
@@ -143,43 +144,6 @@ class StudentsPage extends Component {
         </div>
       );
     }
-
-    const studentsData = students.map(student => {
-      return {
-        id: student.get('id'),
-        firstName: student.get('firstName'),
-        lastName: student.get('lastName'),
-        studentLevelId: student.get('studentLevelId'),
-        studentLevelName: studentLevels.get(student.get('studentLevelId')).name,
-        activityPointsBaseNumber: student.get('activityPointsBaseNumber'),
-        minimumSemesterActivityPoints: student.get('minimumSemesterActivityPoints'),
-        sumGainedPoints: student.get('sumGainedPoints'),
-        sumPotentialPoints: student.get('sumPotentialPoints'),
-        pointsSummary: this.getStudentPointsComponent(student),
-        tuitionFeeBalance: this.getTuitionFeeBalanceComponent(student.get('tuitionFeeBalance')),
-        tuitionFeeBalanceNumber: student.get('tuitionFeeBalance'),
-        status: student.get('status'),
-      };
-    }).toArray();
-
-    const selectRow = {
-      mode: 'checkbox',
-      onSelect: row => {
-        if (selectedStudents.includes(row.id)) {
-          const studentIndex = selectedStudents.findIndex(value => value === row.id);
-          change('selectedStudents', selectedStudents.delete(studentIndex));
-        } else {
-          change('selectedStudents', selectedStudents.push(row.id));
-        }
-      },
-      onSelectAll: (isSelected, rows) => {
-        if (isSelected) {
-          change('selectedStudents', selectedStudents.push(...rows.map(row => row.id)));
-        } else {
-          change('selectedStudents', selectedStudents.clear());
-        }
-      }
-    };
 
     return (
       <div className="students-managment-page">
@@ -193,48 +157,13 @@ class StudentsPage extends Component {
             <div className="col-xs-12">
               <div className="box" style={{ marginBottom: '0px'}}>
                 <div className="box-body no-padding">
-                  <BootstrapTable
-                    data={studentsData}
-                    multiColumnSort={3}
-                    striped
-                    options={{
-                      onRowClick: row => browserHistory.push(`/admin/students/${row.id}`),
-                    }}
-                    selectRow={selectRow}
-                    hover
-                    height="350px"
-                    containerStyle={{ height: '370px' }}
-                  >
-                    <TableHeaderColumn isKey hidden dataField="id" />
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="firstName" dataSort>
-                      Meno
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="lastName" dataSort dataFormat={x => x}>
-                      Priezvisko
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="studentLevelName" dataSort dataFormat={x => x}>
-                      Level
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="pointsSummary" dataSort dataFormat={x => x}>
-                      Aktuálne získané body
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="activityPointsBaseNumber" dataSort>
-                      Bodový základ
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="tuitionFeeBalance" dataSort sortFunc={this.sortTuitionFeeFunction} dataFormat={x => x}>
-                      Školné
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn tdStyle={styles.rowTd} dataField="status" dataSort>
-                      Status
-                    </TableHeaderColumn>
-                  </BootstrapTable>
+                  <StudentsTable
+                    selectedStudents={selectedStudents}
+                    students={students}
+                    studentLevels={studentLevels}
+                    change={change}
+                    initialized={initialized}
+                  />
                   <div className="clearfix"></div>
                 </div>
               </div>
@@ -258,7 +187,7 @@ const selector = formValueSelector('StudentsPage');
 
 export default connect(state => ({
   students: state.students.getIn(['admin', 'students']),
-  studentLevels: state.users.studentLevels,
   selectedStudents: selector(state, 'selectedStudents'),
+  studentLevels: state.users.studentLevels,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...actions, ...usersActions })(StudentsPage);

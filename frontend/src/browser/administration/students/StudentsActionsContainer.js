@@ -41,7 +41,7 @@ class StudentsActionsContainer extends Component {
             <div className="col-xs-12">
               <div className="box">
                 <div className="box-header" style={{ minHeight: '4em' }}>
-                  <h3 className="box-title">Akcie nad vybranými študentami ({selectedStudents.size})</h3>
+                  <h3 className="box-title">Akcie nad vybranými študentami ({selectedStudents ? selectedStudents.size : 0})</h3>
                   <div className="box-tools">
                     <Field
                       name={'action'}

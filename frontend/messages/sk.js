@@ -1875,7 +1875,7 @@ export default [
     id: 'events.manage.archived',
   },
   {
-    defaultMessage: 'Nepoublikované',
+    defaultMessage: 'Nepublikované',
     id: 'events.manage.drafts',
   },
   {
