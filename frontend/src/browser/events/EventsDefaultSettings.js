@@ -69,7 +69,7 @@ const validate = (values, props) => {
     errors.feedbackEmailDelay = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.feedbackEmailDelay}`)) {
     errors.feedbackEmailDelay = formatMessage(messages.mustBeValidNumber);
-  } else if (parseInt(values.feedbackEmailDelay) < 1) {
+  } else if (parseInt(values.feedbackEmailDelay, 10) < 1) {
     errors.feedbackEmailDelay = formatMessage(messages.mustBeValidNumber);
   }
 
@@ -77,7 +77,7 @@ const validate = (values, props) => {
     errors.feedbackDaysToFill = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.feedbackDaysToFill}`)) {
     errors.feedbackDaysToFill = formatMessage(messages.mustBeValidNumber);
-  } else if (parseInt(values.feedbackDaysToFill) < 1) {
+  } else if (parseInt(values.feedbackDaysToFill, 10) < 1) {
     errors.feedbackDaysToFill = formatMessage(messages.mustBeValidNumber);
   }
 
@@ -85,7 +85,7 @@ const validate = (values, props) => {
     errors.feedbackRemainderDaysBefore = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.feedbackRemainderDaysBefore}`)) {
     errors.feedbackRemainderDaysBefore = formatMessage(messages.mustBeValidNumber);
-  } else if (parseInt(values.feedbackRemainderDaysBefore) < 1) {
+  } else if (parseInt(values.feedbackRemainderDaysBefore, 10) < 1) {
     errors.feedbackRemainderDaysBefore = formatMessage(messages.mustBeValidNumber);
   }
 
@@ -93,7 +93,7 @@ const validate = (values, props) => {
     errors.hostInstructionEmailDaysBefore = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.hostInstructionEmailDaysBefore}`)) {
     errors.hostInstructionEmailDaysBefore = formatMessage(messages.mustBeValidNumber);
-  } else if (parseInt(values.hostInstructionEmailDaysBefore) < 1) {
+  } else if (parseInt(values.hostInstructionEmailDaysBefore, 10) < 1) {
     errors.hostInstructionEmailDaysBefore = formatMessage(messages.mustBeValidNumber);
   }
 
@@ -101,7 +101,7 @@ const validate = (values, props) => {
     errors.eventSignInOpeningManagerNotificationDaysBefore = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.eventSignInOpeningManagerNotificationDaysBefore}`)) {
     errors.eventSignInOpeningManagerNotificationDaysBefore = formatMessage(messages.mustBeValidNumber);
-  } else if (parseInt(values.eventSignInOpeningManagerNotificationDaysBefore) < 1) {
+  } else if (parseInt(values.eventSignInOpeningManagerNotificationDaysBefore, 10) < 1) {
     errors.eventSignInOpeningManagerNotificationDaysBefore = formatMessage(messages.mustBeValidNumber);
   }
 
@@ -109,7 +109,7 @@ const validate = (values, props) => {
     errors.eventSignInRemainderDaysBefore = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.eventSignInRemainderDaysBefore}`)) {
     errors.eventSignInRemainderDaysBefore = formatMessage(messages.mustBeValidNumber);
-  } else if (parseInt(values.eventSignInRemainderDaysBefore) < 1) {
+  } else if (parseInt(values.eventSignInRemainderDaysBefore, 10) < 1) {
     errors.eventSignInRemainderDaysBefore = formatMessage(messages.mustBeValidNumber);
   }
 
@@ -129,6 +129,8 @@ class EventsDefaultSettings extends Component {
 
   static propTypes = {
     EventsDefaultSettings: PropTypes.object,
+    fetchDefaultEventsSettings: PropTypes.func.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   renderInput(data) {
@@ -153,10 +155,10 @@ class EventsDefaultSettings extends Component {
         </div>
         {pristine && input.value ?
             ''
-            :
-            <div className="has-error">
-              {touched && error && <label>{error}</label>}
-            </div>
+          :
+          <div className="has-error">
+            {touched && error && <label>{error}</label>}
+          </div>
           }
       </div>
     );
@@ -179,7 +181,7 @@ class EventsDefaultSettings extends Component {
             placeholder={label}
             tags={user ? [{ id: user.id, text: `${user.firstName} ${user.lastName}` }] : []}
             suggestions={users.map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
-            handleDelete={(i) => input.onChange(null)}
+            handleDelete={() => input.onChange(null)}
             handleAddition={(tag) => input.onChange(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id)}
           />
           <div className="has-error col-md-12" style={{ paddingLeft: '0px' }}>
@@ -187,7 +189,7 @@ class EventsDefaultSettings extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   render() {
@@ -229,7 +231,7 @@ class EventsDefaultSettings extends Component {
                     normalize={value => value ? parseInt(value, 10) : ''}
                     label={`${formatMessage(messages.hostInstructionEmailDaysBefore)}*:`}
                   />
-                
+
                   <Field
                     name="eventSignInOpeningManagerNotificationDaysBefore"
                     component={this.renderInput}

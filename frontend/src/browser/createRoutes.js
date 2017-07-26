@@ -16,6 +16,7 @@ import EditUser from './users/EditUser';
 import UsersPage from './users/UsersPage';
 import EditEvent from './events/EditEvent';
 import EventsPage from './events/EventsPage';
+import EventsDefaultSettings from './events/EventsDefaultSettings';
 import Events from './events/Events';
 import EventLoginDialog from './events/EventLoginDialog';
 import ActivityPointsPage from './activityPoints/ActivityPointsPage';
@@ -76,6 +77,7 @@ export default function createRoutes() {
         </Route>
 
         <Route component={EventsPage} path="events">
+          <Route component={EventsDefaultSettings} path="settings" />
           <Route component={Events} path="category/:category" />
         </Route>
         <Route component={EditEvent} path="events/:eventId" />

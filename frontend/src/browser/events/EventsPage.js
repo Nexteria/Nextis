@@ -3,19 +3,10 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
-import Tabs from 'react-bootstrap/lib/Tabs';
-import Tab from 'react-bootstrap/lib/Tab';
 
 import * as actions from '../../common/events/actions';
-import Events from './Events';
 import EventsDefaultSettings from './EventsDefaultSettings';
 
-const styles = {
-  semesterSelector: {
-    background: 'rgba(255,255,255,0)',
-    color: 'rgb(255,255,255)',
-  },
-};
 
 const messages = defineMessages({
   title: {
@@ -97,7 +88,6 @@ class EventsPage extends Component {
 
   render() {
     const {
-      defaultSettings,
       eventCategories,
       changeActiveEventCategory,
       children,
@@ -124,9 +114,9 @@ class EventsPage extends Component {
                   <h2>
                     <span>Eventy - {totalEventsCount}</span>
                     <i
-                      className="fa fa-plus"
+                      className="fa fa-cogs"
                       style={{ marginLeft: '1em', fontSize: '0.8em', cursor: 'pointer' }}
-                      onClick={() => browserHistory.push('/admin/events/new')}
+                      onClick={() => browserHistory.push('/admin/events/settings')}
                     ></i>
                   </h2>
                 </div>

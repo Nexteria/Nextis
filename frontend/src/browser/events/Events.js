@@ -176,6 +176,12 @@ class Events extends Component {
           <div className="box">
             <div className="box-header">
               <h3 className="box-title"></h3>
+              <div className="input-group pull-left">
+                <button
+                  className="btn btn-xs btn-success"
+                  onClick={() => browserHistory.push('/admin/events/new')}
+                >Nový event</button>
+              </div>
               <div className="box-tools">
                 <div className="input-group input-group-sm" style={{ width: '150px' }}>
                   <input type="text" name="table_search" className="form-control pull-right" placeholder="Search" />
