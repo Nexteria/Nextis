@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/students/comments', 'AdminController@createBulkStudentsComment');
             Route::get('/students/{studentId}/comments', 'AdminController@getStudentComments');
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
+            Route::post('/students/profile', 'AdminController@exportStudentProfiles');
 
             Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
             Route::put('/comments/{commentId}', 'AdminController@updateComment');

@@ -1,3 +1,4 @@
+import download from 'downloadjs';
 export const FETCH_ADMIN_STUDENTS = 'FETCH_ADMIN_STUDENTS';
 export const FETCH_ADMIN_STUDENTS_START = 'FETCH_ADMIN_STUDENTS_START';
 export const FETCH_ADMIN_STUDENTS_SUCCESS = 'FETCH_ADMIN_STUDENTS_SUCCESS';
@@ -47,6 +48,8 @@ export const CREATE_BULK_STUDENTS_COMMENT = 'CREATE_BULK_STUDENTS_COMMENT';
 export const CREATE_BULK_STUDENTS_COMMENT_START = 'CREATE_BULK_STUDENTS_COMMENT_START';
 export const CREATE_BULK_STUDENTS_COMMENT_SUCCES = 'CREATE_BULK_STUDENTS_COMMENT_SUCCESS';
 export const CREATE_BULK_STUDENTS_COMMENT_ERROR = 'CREATE_BULK_STUDENTS_COMMENT_ERROR';
+
+export const EXPORT_STUDENT_PROFILES = 'EXPORT_STUDENT_PROFILES';
 
 
 export function fetchAdminStudents() {
@@ -142,6 +145,24 @@ export function createBulkStudentsComment(data, studentIds) {
           studentIds
         }),
       }).then(response => response.json()),
+    },
+  });
+}
+
+export function exportStudentsProfiles(studentIds) {
+  return ({ fetch }) => ({
+    type: EXPORT_STUDENT_PROFILES,
+    payload: {
+      promise: fetch('/admin/students/profile', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          studentIds
+        }),
+      }).then(response => response.blob())
+      .then(blob => download(blob, 'ExportStudentskychProfilov.xls')),
     },
   });
 }

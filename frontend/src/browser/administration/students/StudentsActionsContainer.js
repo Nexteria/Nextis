@@ -11,6 +11,7 @@ import EndSchoolYearAction from './actions/EndSchoolYearAction';
 import ImportNewStudentsAction from './actions/ImportNewStudentsAction';
 import ChangeStudentLevelAction from './actions/ChangeStudentLevelAction';
 import AddNoteAction from './actions/AddNoteAction';
+import ExportStudentsProfilesAction from './actions/ExportStudentsProfilesAction';
 import * as actions from '../../../common/students/actions';
 
 class StudentsActionsContainer extends Component {
@@ -32,6 +33,7 @@ class StudentsActionsContainer extends Component {
       import_new_students: <ImportNewStudentsAction {...{ selectedStudents }} />,
       change_student_level: <ChangeStudentLevelAction {...{ selectedStudents }} />,
       add_student_note: <AddNoteAction {...{ selectedStudents }} />,
+      export_students_profiles: <ExportStudentsProfilesAction {...{ selectedStudents }} />,
     });
 
     return (
@@ -54,6 +56,7 @@ class StudentsActionsContainer extends Component {
                       <option value="import_new_students">Nahrať nových študentov</option>
                       <option value="change_student_level">Zmena levelu študenta</option>
                       <option value="add_student_note">Pridať študentom poznámku</option>
+                      <option value="export_students_profiles">Export študentských profilov</option>
                     )}
                     </Field>
                   </div>

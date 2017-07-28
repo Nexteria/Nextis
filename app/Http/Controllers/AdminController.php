@@ -213,12 +213,12 @@ class AdminController extends Controller
         ];
         foreach ($defaultFlags as $flag) {
             if (!isset($data[$flag])) {
-              $data[$flag] = false;
+                $data[$flag] = false;
             }
         }
 
         $studentsCount = Student::whereIn('id', $data['selectedStudents'])
-                                ->whereHas('semesters', function($query) use ($semesterId){
+                                ->whereHas('semesters', function ($query) use ($semesterId) {
                                     $query->where('semesterId', $semesterId);
                                 })
                                 ->count();
@@ -229,15 +229,14 @@ class AdminController extends Controller
         if ($data['useDefaultTuitionFee'] === true ||
             $data['useDefaultActivityPointsBaseNumber'] === true ||
             $data['useDefaultMinimumSemesterActivityPoints'] === true ) {
-
             $studentsCount = Student::whereIn('id', $data['selectedStudents'])
-                                    ->whereHas('semesters', function($query) {
+                                    ->whereHas('semesters', function ($query) {
                                         $query->where('semesterId', DefaultSystemSettings::get('activeSemesterId'));
                                     })
                                     ->count();
 
             if ($studentsCount !== count($data['selectedStudents'])) {
-              return response()->json(['error' => 'Nemôžem aplikovať študentove aktuálne hodnoty, pretože niektorý nemajú žiadne.'], 400);
+                return response()->json(['error' => 'Nemôžem aplikovať študentove aktuálne hodnoty, pretože niektorý nemajú žiadne.'], 400);
             }
         }
 
@@ -638,5 +637,20 @@ class AdminController extends Controller
         $comment->save();
 
         return response()->json($this->commentsTransformer->transform($comment));
+    }
+
+    public function exportStudentProfiles(Request $request)
+    {
+        $userIds = Student::whereIn('id', $request->get('studentIds'))
+                          ->pluck('userId');
+
+        return \Excel::create('Export profilov študentov', function ($excel) use ($userIds) {
+            $data = User::whereIn('id', $userIds)
+                        ->get();
+
+            $excel->sheet('Študenti', function ($sheet) use ($data) {
+                $sheet->loadView('exports.student_profiles', ['users' => $data]);
+            });
+        })->download('xls');
     }
 }

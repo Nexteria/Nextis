@@ -40,6 +40,7 @@
     "date-fns": "^1.28.5",
     "del": "^2.1.0",
     "diacritics": "^1.2.3",
+    "downloadjs": "^1.4.7",
     "draft-js": "^0.7.0",
     "enzyme": "^2.0.0",
     "eslint": "^2.13.1",
