@@ -43,9 +43,10 @@ class User extends Authenticatable implements AuditableContract
         'state',
         'iban',
         'nexteriaTeamRole',
+        'dateOfBirth',
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['dateOfBirth', 'deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.

@@ -2,6 +2,7 @@ import * as actions from './actions';
 import * as paymentsActions from '../payments/actions';
 import { Record, Map, List } from 'immutable';
 import RichTextEditor from 'react-rte';
+import parse from 'date-fns/parse';
 
 import User from './models/User';
 import Group from './models/Group';
@@ -44,6 +45,7 @@ export default function usersReducer(state = new InitialState, action) {
       const student = action.payload.student;
       const viewer = new User({
         ...user,
+        dateOfBirth: parse(user.dateOfBirth),
         hostedEvents: new List(user.hostedEvents),
         roles: new List(user.roles.map(role => role.id)),
         personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
@@ -90,6 +92,7 @@ export default function usersReducer(state = new InitialState, action) {
     case actions.SAVE_USER_SUCCESS: {
       const user = new User({
         ...action.payload,
+        dateOfBirth: parse(action.payload.dateOfBirth),
         hostedEvents: new List(action.payload.hostedEvents),
         roles: new List(action.payload.roles.map(role => role.id)),
         personalDescription: RichTextEditor.createValueFromString(action.payload.personalDescription, 'html'),
@@ -171,6 +174,7 @@ export default function usersReducer(state = new InitialState, action) {
       return state.set('users', new Map(action.payload.map(user =>
         [user.id, new User({
           ...user,
+          dateOfBirth: parse(user.dateOfBirth),
           hostedEvents: new List(user.hostedEvents),
           roles: new List(user.roles.map(role => role.id)),
           personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),

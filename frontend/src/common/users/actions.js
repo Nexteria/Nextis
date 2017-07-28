@@ -1,4 +1,5 @@
 import { browserHistory } from 'react-router';
+import format from 'date-fns/format';
 
 export const LOAD_VIEWER_START = 'LOAD_VIEWER_START';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
@@ -181,6 +182,7 @@ export function saveUser(values) {
           iban: values.iban,
           newPassword: values.newPassword,
           confirmationPassword: values.confirmationPassword,
+          dateOfBirth: format(values.dateOfBirth, 'YYYY-MM-DD HH:mm:ss'),
         }),
       }).then(response => response.json()),
     },

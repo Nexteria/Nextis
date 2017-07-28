@@ -17,6 +17,7 @@ import * as actions from '../../common/users/actions';
 import './EditUser.scss';
 import User from '../../common/users/models/User';
 import PasswordChange from './PasswordChange';
+import DatePickerComponent from '../components/DatePicker';
 
 const messages = defineMessages({
   firstName: {
@@ -311,6 +312,7 @@ export class EditUser extends Component {
     initialize: PropTypes.func.isRequired,
     roles: PropTypes.object,
     userStates: PropTypes.object.isRequired,
+    locale: PropTypes.string.isRequired,
   }
 
   componentWillMount() {
@@ -425,6 +427,7 @@ export class EditUser extends Component {
       title,
       rolesList,
       userStates,
+      locale,
     } = this.props;
 
     const { saveUser, handleSubmit, hasPermission } = this.props;
@@ -490,6 +493,16 @@ export class EditUser extends Component {
                       type="text"
                       component={this.renderInput}
                       label={`${formatMessage(messages.lastName)}*`}
+                    />
+
+                    <Field
+                      name="dateOfBirth"
+                      labelCol={2}
+                      contentCol={10}
+                      component={DatePickerComponent}
+                      label={'Dátum narodenia'}
+                      onlyDate
+                      locale={locale}
                     />
 
                     <Field
@@ -750,5 +763,6 @@ export default connect((state) => ({
   rolesList: state.users.rolesList,
   roles: selector(state, 'roles'),
   users: state.users.users,
+  locale: state.intl.currentLocale,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...fieldsActions, ...actions })(EditUser);

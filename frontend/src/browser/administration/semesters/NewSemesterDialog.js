@@ -164,7 +164,7 @@ export class NewSemesterDialog extends Component {
               <Field
                 name="startDate"
                 component={DatePickerComponent}
-                label={'Zaciatok semestra*'}
+                label={'Začiatok semestra*'}
                 locale={locale}
               />
             </div>

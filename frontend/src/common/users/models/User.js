@@ -30,6 +30,7 @@ const User = Record({
   nexteriaTeamRole: '',
   created_at: null,
   updated_at: null,
+  dateOfBirth: null,
   newPassword: '',
   oldPassword: '',
   payments: null,

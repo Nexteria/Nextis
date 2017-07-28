@@ -131,4 +131,4 @@ export class LocationDetailsDialog extends Component {
   }
 }
 
-export default connect(null, eventActions)(LocationDetailsDialog);
+export default connect(() => ({}), eventActions)(LocationDetailsDialog);
