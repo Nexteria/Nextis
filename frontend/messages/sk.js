@@ -193,8 +193,8 @@ export default [
     "defaultMessage": "Curriculum level"
   },
   {
-    "id": "event.edit.dateMustBeInFuture",
-    "defaultMessage": "Dátum musí byť v budúcnosti"
+    "id": "event.edit.dateShouldBeInFuture",
+    "defaultMessage": "Dátum by mal byť v budúcnosti"
   },
   {
     "id": "event.edit.description",

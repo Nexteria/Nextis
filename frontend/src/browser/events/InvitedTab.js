@@ -95,7 +95,7 @@ export default class InvitedTab extends Component {
     if (!attendeesGroups) {
       return <div></div>;
     }
- 
+
     const groups = attendeesGroups.map(group =>
       group.users.map(user => {
         const person = user.toObject();

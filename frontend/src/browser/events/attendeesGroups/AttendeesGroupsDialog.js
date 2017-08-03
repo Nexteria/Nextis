@@ -100,7 +100,7 @@ const validate = (values, props) => {
 
   if (!values.signUpOpenDateTime) {
     errors.signUpOpenDateTime = formatMessage(messages.requiredField);
-  } else if (actualEvent.eventStartDateTime && isAfter(values.signUpOpenDateTime, actualEvent.eventStartDateTime)) {
+  } else if (actualEvent.get('eventStartDateTime') && isAfter(values.signUpOpenDateTime, actualEvent.get('eventStartDateTime'))) {
     errors.signUpOpenDateTime = formatMessage(messages.dateMustBeBeforeEvent);
   } else if (values.signUpDeadlineDateTime && isAfter(values.signUpOpenDateTime, values.signUpDeadlineDateTime)) {
     errors.signUpOpenDateTime = formatMessage(messages.startDateMustBeBeforeEndDate);
@@ -108,7 +108,7 @@ const validate = (values, props) => {
 
   if (!values.signUpDeadlineDateTime) {
     errors.signUpDeadlineDateTime = formatMessage(messages.requiredField);
-  } else if (actualEvent.eventStartDateTime && isAfter(values.signUpDeadlineDateTime, actualEvent.eventStartDateTime)) {
+  } else if (actualEvent.get('eventStartDateTime') && isAfter(values.signUpDeadlineDateTime, actualEvent.get('eventStartDateTime'))) {
     errors.signUpDeadlineDateTime = formatMessage(messages.dateMustBeBeforeEvent);
   } else if (values.signUpOpenDateTime && isAfter(values.signUpOpenDateTime, values.signUpDeadlineDateTime)) {
     errors.signUpDeadlineDateTime = formatMessage(messages.endDateMustBeAfterStartDate);

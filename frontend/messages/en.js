@@ -233,8 +233,8 @@ export default [
     "defaultMessage": "Curriculum level"
   },
   {
-    "id": "event.edit.dateMustBeInFuture",
-    "defaultMessage": "This date must be in future"
+    "id": "event.edit.dateShouldBeInFuture",
+    "defaultMessage": "This should must be in future"
   },
   {
     "id": "event.edit.description",

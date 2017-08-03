@@ -1,4 +1,5 @@
 import Component from 'react-pure-render/component';
+import { Map, List } from 'immutable';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
@@ -164,9 +165,9 @@ const messages = defineMessages({
     defaultMessage: 'This field must be valid number',
     id: 'event.edit.mustBeValidNumber',
   },
-  dateMustBeInFuture: {
-    defaultMessage: 'This date must be in future',
-    id: 'event.edit.dateMustBeInFuture',
+  dateShouldBeInFuture: {
+    defaultMessage: 'This date should be in future',
+    id: 'event.edit.dateShouldBeInFuture',
   },
   startDateMustBeBeforeEndDate: {
     defaultMessage: 'Start date must be before end date!',
@@ -252,18 +253,14 @@ const validate = (values, props) => {
 
   if (!values.eventStartDateTime) {
     errors.eventStartDateTime = formatMessage(messages.requiredField);
-  } else if (isAfter(new Date(), values.eventStartDateTime) && !values.id) {
-    errors.eventStartDateTime = formatMessage(messages.dateMustBeInFuture);
   } else if (values.eventEndDateTime && isAfter(values.eventStartDateTime, values.eventEndDateTime)) {
     errors.eventStartDateTime = formatMessage(messages.startDateMustBeBeforeEndDate);
   }
 
   if (!values.eventEndDateTime) {
     errors.eventEndDateTime = formatMessage(messages.requiredField);
-  } else if (isAfter(new Date(), values.eventEndDateTime) && !values.id) {
-    errors.eventEndDateTime = formatMessage(messages.dateMustBeInFuture);
   } else if (values.eventStartDateTime && isAfter(values.eventStartDateTime, values.eventEndDateTime)) {
-    errors.eventStartDateTime = formatMessage(messages.endDateMustBeAfterStartDate);
+    errors.eventEndDateTime = formatMessage(messages.endDateMustBeAfterStartDate);
   }
 
   if (!values.minCapacity) {
@@ -286,6 +283,20 @@ const validate = (values, props) => {
     }
 
   return errors;
+};
+
+const warn = (values, props) => {
+  const { formatMessage } = props.intl;
+  const warnings = {};
+  if (isAfter(new Date(), values.eventEndDateTime) && !values.id) {
+    warnings.eventEndDateTime = formatMessage(messages.dateShouldBeInFuture);
+  }
+
+  if (isAfter(new Date(), values.eventStartDateTime) && !values.id) {
+    warnings.eventStartDateTime = formatMessage(messages.dateShouldBeInFuture);
+  }
+
+  return warnings;
 };
 
 export class EditEvent extends Component {
@@ -489,10 +500,10 @@ export class EditEvent extends Component {
   }
 
   renderDate(data) {
-    const { input, label, locale, meta: { touched, error } } = data;
+    const { input, label, locale, meta: { touched, error, warning } } = data;
 
     return (
-      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
+      <div className={'form-group'}>
         <label className="col-sm-2 control-label">
           {label}
         </label>
@@ -505,9 +516,18 @@ export class EditEvent extends Component {
             onBlur={input.onBlur}
             onChange={(moment) => input.onChange(moment)}
           />
-          <div className="has-error">
-            {touched && error && <label>{error}</label>}
-          </div>
+          {touched && error ?
+            <div style={{ marginLeft: 0, marginBottom: 0 }} className="form-group  has-error">
+              {touched && error && <label>{error}</label>}
+            </div>
+            : null
+          }
+          {touched && warning ?
+            <div style={{ marginLeft: 0, marginBottom: 0 }} className="form-group has-warning">
+              {touched && warning && <label>{warning}</label>}
+            </div>
+            : null
+          }
         </div>
       </div>
     );
@@ -830,7 +850,7 @@ export class EditEvent extends Component {
                     eventId={actualEventId}
                     intl={this.props.intl}
                     users={users}
-                    attendeesGroups={actualEvent.attendeesGroups}
+                    attendeesGroups={events.getIn([actualEventId, 'attendeesGroups'])}
                     changeAttendeeFeedbackStatus={changeAttendeeFeedbackStatus}
                     changeAttendeePresenceStatus={changeAttendeePresenceStatus}
                   />
@@ -892,6 +912,7 @@ EditEvent = fields(EditEvent, {
 EditEvent = reduxForm({
   form: 'editEvent',
   validate,
+  warn,
   asyncValidate: (values, dispatch, props) =>
     props.checkFeedbackFormLink(values.feedbackLink).then(
       resp => {
@@ -913,13 +934,13 @@ export default connect((state) => ({
   users: state.users.users,
   semesters: state.semesters.semesters,
   activeSemesterId: state.semesters.activeSemesterId,
-  actualEvent: {
+  actualEvent: new Map({
     minCapacity: selector(state, 'minCapacity'),
     maxCapacity: selector(state, 'maxCapacity'),
     eventStartDateTime: selector(state, 'eventStartDateTime'),
     eventEndDateTime: selector(state, 'eventEndDateTime'),
-    attendeesGroups: selector(state, 'attendeesGroups'),
-  },
+    attendeesGroups: new List(selector(state, 'attendeesGroups')),
+  }),
   events: state.events.events,
   eventsStatuses: state.events.eventsStatuses,
   locale: state.intl.currentLocale,
