@@ -138,7 +138,7 @@ class App extends Component {
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header {...{ viewer }} location={location} />
-        <AppSidebar toggleSidebar={toggleSidebarFunc} {...{ viewer, isMobileSidebarOpen, rolesList, hasPermission }} ref="main-footer" />
+        <AppSidebar toggleSidebar={toggleSidebarFunc} {...{ events, viewer, isMobileSidebarOpen, rolesList, hasPermission }} ref="main-footer" />
         <div className="content-wrapper">
           {children}
         </div>

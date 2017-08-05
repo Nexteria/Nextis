@@ -114,8 +114,8 @@ class AdminController extends Controller
             $results[] = [
               'id' => $semester->id,
               'name' => $semester->name,
-              'startDate' => $semester->startDate->toIso8601String(),
-              'endDate' => $semester->endDate->toIso8601String(),
+              'startDate' => $semester->startDate->toDateTimeString(),
+              'endDate' => $semester->endDate->toDateTimeString(),
               'events' => $semester->events()->where('status', 'published')->get()->pluck('id'),
               'activeStudents' => $students,
             ];

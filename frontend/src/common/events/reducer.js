@@ -52,6 +52,44 @@ export default function eventsReducer(state = new InitialState, action) {
     }
 
     case actions.SAVE_EVENT_SUCCESS: {
+      let questionForm = action.payload.questionForm;
+      if (questionForm) {
+        let choicesList = new Map();
+        questionForm.questions.forEach(question => {
+          choicesList = choicesList.set(question.id, new Map());
+          if (question.type !== 'shorText' && question.type !== 'longText') {
+            question.choices.forEach(choice => {
+              choicesList = choicesList.setIn([question.id, choice.id], new Map());
+            });
+          }
+        });
+
+        questionForm = new Map({
+          formData: new Map({
+            ...questionForm,
+            questions: new Map(questionForm.questions.map(question =>
+              [question.id, new Map({
+                ...question,
+                dependentOn: new Map(Object.keys(question.dependentOn).map(qId =>
+                  [qId, new Map(question.dependentOn[qId].map(choiceId => {
+                    choicesList = choicesList.setIn([qId, choiceId, question.id], true);
+                    return [choiceId, true];
+                  }))]
+                )),
+                choices: new Map(question.choices.map(choice =>
+                  [choice.id, new Map({
+                    ...choice,
+                  })]
+                )),
+              })]
+            )),
+          }),
+          choicesList,
+          isOpen: false,
+          isNewQuestionMenuOpen: false,
+        });
+      }
+
       const event = new Event({
         ...action.payload,
         lectors: new List(action.payload.lectors),
@@ -80,8 +118,46 @@ export default function eventsReducer(state = new InitialState, action) {
     }
 
     case actions.LOAD_EVENTS_LIST_SUCCESS: {
-      return state.set('events', new Map(action.payload.map(event =>
-        [event.id, new Event({
+      return state.set('events', new Map(action.payload.map(event => {
+        let questionForm = event.questionForm;
+        if (questionForm) {
+          let choicesList = new Map();
+          questionForm.questions.forEach(question => {
+            choicesList = choicesList.set(question.id, new Map());
+            if (question.type !== 'shorText' && question.type !== 'longText') {
+              question.choices.forEach(choice => {
+                choicesList = choicesList.setIn([question.id, choice.id], new Map());
+              });
+            }
+          });
+
+          questionForm = new Map({
+            formData: new Map({
+              ...event.questionForm,
+              questions: new Map(event.questionForm.questions.map(question =>
+                [question.id, new Map({
+                  ...question,
+                  dependentOn: new Map(Object.keys(question.dependentOn).map(qId =>
+                    [qId, new Map(question.dependentOn[qId].map(choiceId => {
+                      choicesList = choicesList.setIn([qId, choiceId, question.id], true);
+                      return [choiceId, true];
+                    }))]
+                  )),
+                  choices: new Map(question.choices.map(choice =>
+                    [choice.id, new Map({
+                      ...choice,
+                    })]
+                  )),
+                })]
+              )),
+            }),
+            choicesList,
+            isOpen: false,
+            isNewQuestionMenuOpen: false,
+          });
+        }
+
+        return [event.id, new Event({
           ...event,
           lectors: new List(event.lectors),
           groupedEvents: new List(event.groupedEvents),
@@ -103,8 +179,8 @@ export default function eventsReducer(state = new InitialState, action) {
               signedOutReason: user.signedOutReason,
             })])),
           }))),
-        })]
-      )));
+        })];
+      })));
     }
 
     case actions.REMOVE_EVENT_SUCCESS: {
@@ -322,8 +398,46 @@ export default function eventsReducer(state = new InitialState, action) {
     }
 
     case actions.CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS: {
-      return state.set('events', new Map(action.payload.map(event =>
-        [event.id, new Event({
+      return state.set('events', new Map(action.payload.map(event => {
+        let questionForm = event.questionForm;
+        if (questionForm) {
+          let choicesList = new Map();
+          questionForm.questions.forEach(question => {
+            choicesList = choicesList.set(question.id, new Map());
+            if (question.type !== 'shorText' && question.type !== 'longText') {
+              question.choices.forEach(choice => {
+                choicesList = choicesList.setIn([question.id, choice.id], new Map());
+              });
+            }
+          });
+
+          questionForm = new Map({
+            formData: new Map({
+              ...event.questionForm,
+              questions: new Map(event.questionForm.questions.map(question =>
+                [question.id, new Map({
+                  ...question,
+                  dependentOn: new Map(Object.keys(question.dependentOn).map(qId =>
+                    [qId, new Map(question.dependentOn[qId].map(choiceId => {
+                      choicesList = choicesList.setIn([qId, choiceId, question.id], true);
+                      return [choiceId, true];
+                    }))]
+                  )),
+                  choices: new Map(question.choices.map(choice =>
+                    [choice.id, new Map({
+                      ...choice,
+                    })]
+                  )),
+                })]
+              )),
+            }),
+            choicesList,
+            isOpen: false,
+            isNewQuestionMenuOpen: false,
+          });
+        }
+
+        return [event.id, new Event({
           ...event,
           lectors: new List(event.lectors),
           groupedEvents: new List(event.groupedEvents),
@@ -345,8 +459,8 @@ export default function eventsReducer(state = new InitialState, action) {
               signedOutReason: user.signedOutReason,
             })])),
           }))),
-        })]
-      )));
+        })];
+      })));
     }
 
     case actions.FETCH_EVENT_EMAILS_STATUS_SUCCESS: {

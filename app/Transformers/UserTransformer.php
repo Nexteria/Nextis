@@ -41,7 +41,7 @@ class UserTransformer extends Transformer
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
             'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,
             'confirmedMarketingUse' => $user->confirmedMarketingUse,
-            'dateOfBirth' => $user->dateOfBirth ? $user->dateOfBirth->toIso8601String() : null,
+            'dateOfBirth' => $user->dateOfBirth ? $user->dateOfBirth->toDateTimeString() : null,
         ];
 
         if (in_array('gainedActivityPoints', $fields) || in_array('potentialActivityPoints', $fields)) {

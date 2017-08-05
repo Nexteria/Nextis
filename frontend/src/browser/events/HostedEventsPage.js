@@ -94,7 +94,7 @@ class HostedEventsPage extends Component {
       return <div></div>;
     }
 
-    let filteredEvents = viewer.hostedEvents.map(eventId => events.get(eventId));
+    let filteredEvents = viewer.hostedEvents.filter(eventId => events.get(eventId)).map(eventId => events.get(eventId));
     if (fields.filter.value) {
       filteredEvents = events.valueSeq().filter(event =>
         diacritics.remove(`${event.name}`).toLowerCase()

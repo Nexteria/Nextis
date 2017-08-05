@@ -13,8 +13,8 @@ class CommentsTransformer extends Transformer
             'commentableType' => $comment->commentable_type,
             'creatorId' => (int) $comment->creator_id,
             'creatorType' => $comment->creator_type,
-            'updatedAt' => $comment->updated_at->toIso8601String(),
-            'createdAt' => $comment->created_at->toIso8601String(),
+            'updatedAt' => $comment->updated_at->toDateTimeString(),
+            'createdAt' => $comment->created_at->toDateTimeString(),
             'parentId' => (int) $comment->parent_id,
             'title' =>  $comment->title,
          ];
