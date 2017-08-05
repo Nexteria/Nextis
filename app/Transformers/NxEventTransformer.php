@@ -1,6 +1,7 @@
 <?php namespace App\Transformers;
 
 use App\Transformers\AttendeesGroupTransformer;
+use App\Transformers\QuestionFormTransformer;
 
 class NxEventTransformer extends Transformer
 {
@@ -9,6 +10,9 @@ class NxEventTransformer extends Transformer
     {
         $transformer = new AttendeesGroupTransformer();
         $attendees = $transformer->transformCollection($event->attendeesGroups);
+
+        $transformer = new QuestionFormTransformer();
+        $form = $event->form ? $transformer->transform($event->form) : null;
 
         return [
             'id' => (int) $event->id,
@@ -34,6 +38,7 @@ class NxEventTransformer extends Transformer
             'exclusionaryEvents' => array_map('intval', $event->exclusionaryEvents()->pluck('id')->toArray()),
             'curriculumLevelId' => (int) $event->curriculumLevelId,
             'semester' => $event->semester ? (int) $event->semester->id : null,
+            'questionForm' => $form,
          ];
     }
 }

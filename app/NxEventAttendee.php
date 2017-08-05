@@ -80,12 +80,10 @@ class NxEventAttendee extends Authenticatable implements AuditableContract
     {
         $result = [];
         $eventGroup = $this->attendeesGroup()->first();
-        if($eventGroup !== null)
-        {
+        if ($eventGroup !== null) {
             $eventId = $this->attendeesGroup()->first()->eventId;
             $event = NxEvent::find($eventId);
-            if($event !== null)
-            {
+            if ($event !== null) {
                 return $event;
             }
         }

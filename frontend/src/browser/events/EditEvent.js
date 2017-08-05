@@ -14,6 +14,7 @@ import Tab from 'react-bootstrap/lib/Tab';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import TextEditor from '../components/TextEditor';
+import FormBuilder, { createInitialState } from '../components/Forms/Builder/Form';
 import * as fieldsActions from '../../common/lib/redux-fields/actions';
 import * as attendeesGroupActions from '../../common/attendeesGroup/actions';
 import * as eventActions from '../../common/events/actions';
@@ -23,6 +24,7 @@ import AttendeesGroupsDialog from './attendeesGroups/AttendeesGroupsDialog';
 import InvitedTab from './InvitedTab';
 import EmailsTab from './EmailsTab';
 import EventSettingsTab from './EventSettingsTab';
+import FormResults from '../components/Forms/Results/FormResults';
 
 const messages = defineMessages({
   invited: {
@@ -606,6 +608,44 @@ export class EditEvent extends Component {
     );
   }
 
+  renderQuestionForm(data) {
+    const { input, label } = data;
+
+    return (
+      <div className="form-group">
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          <div className="form-control" style={{ border: 'none' }}>
+            {!input.value ?
+              <i
+                className="fa fa-plus text-green"
+                onClick={() => input.onChange(createInitialState())}
+                style={{ cursor: 'pointer' }}
+              ></i>
+              :
+              <div>
+                <FormBuilder form={input.value} onChange={input.onChange} />
+                <button
+                  className="btn btn-xs btn-success"
+                  type="button"
+                  onClick={() => input.onChange(input.value.set('isOpen', true))}
+                >Editovať</button>
+                <button
+                  className="btn btn-xs btn-danger"
+                  type="button"
+                  style={{ marginLeft: '1em' }}
+                  onClick={() => input.onChange(null)}
+                >Zmazať</button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const { fields, groupedEvents, actualEvent, pristine, submitting, events, locations, actualEventId, eventTypes, studentLevels, eventsStatuses, rolesList, title, users, locale } = this.props;
     const {
@@ -682,6 +722,12 @@ export class EditEvent extends Component {
                               <option key={type} value={type}>{formatMessage(messages[`eventType_${type}`])}</option>
                             )}
                           </Field>
+
+                          <Field
+                            name="questionForm"
+                            component={this.renderQuestionForm}
+                            label="Dotazník pri prihlasovaní"
+                          />
 
                           <Field
                             name="nxLocationId"
@@ -860,9 +906,14 @@ export class EditEvent extends Component {
                     <EmailsTab animation mountOnEnter eventId={actualEventId} />
                   </Tab>
                   : null
+                }{actualEventId && events.hasIn([actualEventId, 'questionForm']) ?
+                  <Tab eventKey={4} title={'Výsledky dotazníku'}>
+                    <FormResults formId={events.getIn([actualEventId, 'questionForm', 'formData', 'id'])} />
+                  </Tab>
+                  : null
                 }
                 {actualEventId ?
-                  <Tab eventKey={4} title={formatMessage(messages.settings)}>
+                  <Tab eventKey={5} title={formatMessage(messages.settings)}>
                     {eventSettings.get('dataLoaded') ?
                       <EventSettingsTab
                         eventSettings={eventSettings}

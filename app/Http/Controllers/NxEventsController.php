@@ -25,13 +25,14 @@ class NxEventsController extends Controller
      */
     protected $nxEventsSettingsTransformer;
 
-    function __construct(
-      \App\Transformers\NxEventTransformer $nxEventTransformer,
-      \App\Transformers\NxEventsSettingsTransformer $nxEventsSettingsTransformer
-    )
-    {
+    public function __construct(
+        \App\Transformers\NxEventTransformer $nxEventTransformer,
+        \App\Transformers\NxEventsSettingsTransformer $nxEventsSettingsTransformer,
+        \App\Transformers\BeforeEventQuestionnaireTransformer $beforeEventQuestionnaireTransformer
+    ){
         $this->nxEventTransformer = $nxEventTransformer;
         $this->nxEventsSettingsTransformer = $nxEventsSettingsTransformer;
+        $this->beforeEventQuestionnaireTransformer = $beforeEventQuestionnaireTransformer;
     }
 
     public function createNxEvent()
@@ -237,5 +238,12 @@ class NxEventsController extends Controller
         }
 
         return $emails;
+    }
+
+    public function getBeforeEventQuestionnaire($eventId)
+    {
+        $event = NxEvent::findOrFail($eventId);
+
+        return response()->json($this->beforeEventQuestionnaireTransformer->transform($event));
     }
 }

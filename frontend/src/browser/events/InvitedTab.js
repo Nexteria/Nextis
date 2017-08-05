@@ -57,7 +57,7 @@ export default class InvitedTab extends Component {
     intl: PropTypes.object.isRequired,
     changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
-    eventId: PropTypes.number.isRequired,
+    eventId: PropTypes.number,
   }
 
   reasonFormater(cell) {

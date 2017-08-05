@@ -100,6 +100,16 @@ export const CHANGE_ACTIVE_EVENT_CATEGORY_START = 'CHANGE_ACTIVE_EVENT_CATEGORY_
 export const CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS = 'CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS';
 export const CHANGE_ACTIVE_EVENT_CATEGORY_ERROR = 'CHANGE_ACTIVE_EVENT_CATEGORY_ERROR';
 
+export const LOAD_QUESTIONNAIRE = 'LOAD_QUESTIONNAIRE';
+export const LOAD_QUESTIONNAIRE_START = 'LOAD_QUESTIONNAIRE_START';
+export const LOAD_QUESTIONNAIRE_SUCCESS = 'LOAD_QUESTIONNAIRE_SUCCESS';
+export const LOAD_QUESTIONNAIRE_ERROR = 'LOAD_QUESTIONNAIRE_ERROR';
+
+export const FETCH_QUESTIONNAIRE_RESULTS = 'FETCH_QUESTIONNAIRE_RESULTS';
+export const FETCH_QUESTIONNAIRE_RESULTS_START = 'FETCH_QUESTIONNAIRE_RESULTS_START';
+export const FETCH_QUESTIONNAIRE_RESULTS_SUCCESS = 'FETCH_QUESTIONNAIRE_RESULTS_SUCCESS';
+export const FETCH_QUESTIONNAIRE_RESULTS_ERROR = 'FETCH_QUESTIONNAIRE_RESULTS_ERROR';
+
 export function togglePastEvents() {
   return {
     type: TOGGLE_PAST_EVENTS,
@@ -132,6 +142,7 @@ export function saveEvent(fields) {
         signedOutReason: user.get('signedOutReason').toString('html'),
       })),
     })),
+    questionForm: fields.questionForm ? fields.questionForm.get('formData') : null,
     description: fields.description.toString('html'),
     shortDescription: fields.shortDescription.toString('html'),
   };
@@ -168,6 +179,17 @@ export function loadEventList(filters = {}) {
     type: LOAD_EVENTS_LIST,
     payload: {
       promise: fetch(`/nxEvents${params}`, {
+        credentials: 'same-origin',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function fetchBeforeEventQuestionnaire(eventId, token) {
+  return ({ fetch }) => ({
+    type: LOAD_QUESTIONNAIRE,
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/questionnaire`, {
         credentials: 'same-origin',
       }).then(response => response.json()),
     },
@@ -267,11 +289,11 @@ export function attendeeWontGo(eventId, userId, groupId, reason) {
   });
 }
 
-export function attendeeSignIn(event, viewer, groupId, choosedEvents) {
+export function attendeeSignIn(eventId, viewer, groupId, choosedEvents, questionForm) {
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_IN,
     payload: {
-      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
+      promise: fetch(`/nxEvents/${eventId}/users/${viewer.id}`, {
         method: 'put',
         credentials: 'same-origin',
         notifications: 'both',
@@ -279,13 +301,29 @@ export function attendeeSignIn(event, viewer, groupId, choosedEvents) {
         body: JSON.stringify({
           signIn: true,
           choosedEvents: choosedEvents ? choosedEvents.filter(e => e).keySeq().map(e => e) : null,
+          questionForm,
         }),
       }).then(response => response.json())
         .then(response => ({
           ...response,
           groupId,
-          eventId: event.id,
+          eventId,
         })),
+    },
+  });
+}
+
+export function fetchQuestionnaireResults(formId) {
+  return ({ fetch }) => ({
+    type: FETCH_QUESTIONNAIRE_RESULTS,
+    meta: {
+      formId,
+    },
+    payload: {
+      promise: fetch(`/admin/questionnaire/${formId}/results`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      }).then((response) => response.json()),
     },
   });
 }

@@ -20,6 +20,7 @@ const Event = Record({
   feedbackLink: '',
   publicFeedbackLink: '',
   parentEventId: null,
+  questionForm: null,
   groupedEvents: new List(),
   curriculumLevelId: '',
   shortDescription: RichTextEditor.createEmptyValue(),

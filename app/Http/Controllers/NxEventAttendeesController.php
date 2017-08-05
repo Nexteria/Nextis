@@ -8,6 +8,9 @@ use App\NxEventAttendee as NxEventAttendee;
 use App\NxEvent;
 use Carbon\Carbon;
 use App\Events\EventAttendeePlaceReleased;
+use App\Models\QuestionForm\Question;
+use App\Models\QuestionForm\Choice;
+use App\Models\QuestionForm\Answer;
 
 class NxEventAttendeesController extends Controller
 {
@@ -149,6 +152,54 @@ class NxEventAttendeesController extends Controller
 
         if (!$attendee) {
             abort(401);
+        }
+
+        if ($attendee->event()->form) {
+            $form = $attendee->event()->form;
+            $answers = $form->getUsersAnswers($userId);
+
+            if ($answers->count() == 0 && !\Input::has('questionForm')) {
+                return response()->json([
+                    'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
+                ], 400);
+            }
+
+            if ($answers->count() == 0) {
+                $questionForm = \Input::get('questionForm');
+                foreach ($questionForm['questions'] as $question) {
+                    if ($question['type'] == 'shortText' || $question['type'] == 'longText') {
+                        $choice = array_shift($question['choices']);
+                        $choice = Choice::findOrFail($choice['id']);
+                        $answer = Answer::create([
+                            'userId' => $userId,
+                            'choiceId' => $choice->id,
+                            'answer' => isset($question['answer']) ? $question['answer'] : '',
+                        ]);
+                    }
+
+                    if ($question['type'] == 'choiceList' || $question['type'] == 'selectList') {
+                        foreach ($question['choices'] as $chId => $choice) {
+                            $choice = Choice::findOrFail($chId);
+                            $answer = Answer::create([
+                                'userId' => $userId,
+                                'choiceId' => $choice->id,
+                                'answer' => isset($question['answer']) && $chId === $question['answer'] ? 'selected' : '',
+                            ]);
+                        }
+                    }
+
+                    if ($question['type'] == 'multichoice') {
+                        foreach ($question['choices'] as $choiceId => $value) {
+                            $choice = Choice::findOrFail($choiceId);
+                            $answer = Answer::create([
+                                'userId' => $userId,
+                                'choiceId' => $choiceId,
+                                'answer' => isset($question['answer']) && isset($question['answer'][$choiceId]) ? 'selected' : '',
+                            ]);
+                        }
+                    }
+                }
+            }
         }
 
         $attendee->fill(\Input::all());

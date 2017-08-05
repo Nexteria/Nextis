@@ -40,7 +40,7 @@ import SemestersPage from './administration/semesters/SemestersPage';
 import NewSemesterDialog from './administration/semesters/NewSemesterDialog';
 import StudentsPage from './administration/students/StudentsPage';
 import StudentProfilePage from './administration/students/StudentProfilePage';
-import StudentNotesFeed from './administration/students/StudentNotesFeed';
+import BeforeEventQuestionnaire from './events/usersSection/BeforeEventQuestionnaire';
 
 export default function createRoutes() {
   return (
@@ -49,6 +49,7 @@ export default function createRoutes() {
       <Route component={EventAttendeesDialog} path="/events/:eventId/attendees" />
       <Route component={UserEventsPage} path="/events/:eventId">
         <Route component={EventLoginDialog} path="login" />
+        <Route component={BeforeEventQuestionnaire} path="questionnaire" />
       </Route>
       <Route component={ActivityPointsPage} path="/points" />
       <Route component={ContactList} path="contacts" />
@@ -78,7 +79,7 @@ export default function createRoutes() {
 
         <Route component={EventsPage} path="events">
           <Route component={EventsDefaultSettings} path="settings" />
-          <Route component={Events} path="category/:category" />
+          <Route component={Events} path="category/:category"/>
         </Route>
         <Route component={EditEvent} path="events/:eventId" />
 

@@ -15,6 +15,9 @@ use App\DefaultSystemSettings;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Comment;
+use App\Models\QuestionForm\Form;
+use App\Models\QuestionForm\Answer;
+use App\Models\QuestionForm\Choice;
 
 class AdminController extends Controller
 {
@@ -652,5 +655,36 @@ class AdminController extends Controller
                 $sheet->loadView('exports.student_profiles', ['users' => $data]);
             });
         })->download('xls');
+    }
+
+    public function getFormResults($formId)
+    {
+        $form = Form::findOrFail($formId);
+        
+        $result = [];
+        foreach ($form->getUsersAnswers() as $answer) {
+            $question = $answer->getQuestion();
+            if (isset($result[$question->id])) {
+                if (isset($result[$question->id][$answer->choiceId])) {
+                    $result[$question->id][$answer->choiceId][] = [
+                        'userId' => $answer->userId,
+                        'answer' => $answer->answer,
+                    ];
+                } else {
+                    $result[$question->id][$answer->choiceId] = [[
+                        'userId' => $answer->userId,
+                        'answer' => $answer->answer,
+                    ]];
+                }
+            } else {
+                $result[$question->id] = [];
+                $result[$question->id][$answer->choiceId] = [[
+                    'userId' => $answer->userId,
+                    'answer' => $answer->answer,
+                ]];
+            }
+        }
+
+        return $result;
     }
 }

@@ -39,6 +39,7 @@ const InitialState = Record({
   }),
   emails: null,
   categories: new Map(),
+  actualEvent: new Map(),
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -51,13 +52,67 @@ export default function eventsReducer(state = new InitialState, action) {
       return state.update('visibleFutureEvents', visibleFutureEvents => !visibleFutureEvents);
     }
 
+    case actions.LOAD_QUESTIONNAIRE_SUCCESS: {
+      let questionForm = action.payload.questionForm;
+      if (questionForm) {
+        let choicesList = new Map();
+        questionForm.questions.forEach(question => {
+          choicesList = choicesList.set(question.id, new Map());
+          question.choices.forEach(choice => {
+            choicesList = choicesList.setIn([question.id, choice.id], new Map());
+          });
+        });
+
+        questionForm = new Map({
+          formData: new Map({
+            ...questionForm,
+            questions: new Map(questionForm.questions.map(question =>
+              [question.id, new Map({
+                ...question,
+                dependentOn: new Map(Object.keys(question.dependentOn).map(qId =>
+                  [qId, new Map(question.dependentOn[qId].map(choiceId => {
+                    choicesList = choicesList.setIn([qId, choiceId, question.id], true);
+                    return [choiceId, true];
+                  }))]
+                )),
+                choices: new Map(question.choices.map(choice =>
+                  [choice.id, new Map({
+                    ...choice,
+                  })]
+                )),
+              })]
+            )),
+          }),
+          choicesList,
+          isOpen: false,
+          isNewQuestionMenuOpen: false,
+        });
+      }
+
+      return state.setIn(['actualEvent', 'id'], action.payload.id)
+                  .setIn(['actualEvent', 'questionForm'], questionForm);
+    }
+
+    case actions.FETCH_QUESTIONNAIRE_RESULTS_SUCCESS: {
+      const event = state.get('events').filter(event =>
+        event.hasIn(['questionForm', 'formData', 'id']) && event.getIn(['questionForm', 'formData', 'id']) === action.meta.formId
+      ).first();
+
+      return state.setIn(['actualEvent', 'id'], event.get('id'))
+                  .setIn(['actualEvent', 'formResults'], new Map(Object.keys(action.payload).map(qId =>
+                    [qId, new Map(Object.keys(action.payload[qId]).map(choiceKey =>
+                      [choiceKey, new Map(action.payload[qId][choiceKey].map((answer, index) => [index, new Map(answer)]))]
+                    ))]
+                  )));
+    }
+
     case actions.SAVE_EVENT_SUCCESS: {
       let questionForm = action.payload.questionForm;
       if (questionForm) {
         let choicesList = new Map();
         questionForm.questions.forEach(question => {
           choicesList = choicesList.set(question.id, new Map());
-          if (question.type !== 'shorText' && question.type !== 'longText') {
+          if (question.type !== 'shortText' && question.type !== 'longText') {
             question.choices.forEach(choice => {
               choicesList = choicesList.setIn([question.id, choice.id], new Map());
             });
@@ -112,6 +167,7 @@ export default function eventsReducer(state = new InitialState, action) {
             signedOutReason: user.signedOutReason,
           })])),
         }))),
+        questionForm,
       });
 
       return state.update('events', events => events.set(event.id, event));
@@ -124,7 +180,7 @@ export default function eventsReducer(state = new InitialState, action) {
           let choicesList = new Map();
           questionForm.questions.forEach(question => {
             choicesList = choicesList.set(question.id, new Map());
-            if (question.type !== 'shorText' && question.type !== 'longText') {
+            if (question.type !== 'shortText' && question.type !== 'longText') {
               question.choices.forEach(choice => {
                 choicesList = choicesList.setIn([question.id, choice.id], new Map());
               });
@@ -179,6 +235,7 @@ export default function eventsReducer(state = new InitialState, action) {
               signedOutReason: user.signedOutReason,
             })])),
           }))),
+          questionForm,
         })];
       })));
     }
@@ -404,7 +461,7 @@ export default function eventsReducer(state = new InitialState, action) {
           let choicesList = new Map();
           questionForm.questions.forEach(question => {
             choicesList = choicesList.set(question.id, new Map());
-            if (question.type !== 'shorText' && question.type !== 'longText') {
+            if (question.type !== 'shortText' && question.type !== 'longText') {
               question.choices.forEach(choice => {
                 choicesList = choicesList.setIn([question.id, choice.id], new Map());
               });
@@ -459,6 +516,7 @@ export default function eventsReducer(state = new InitialState, action) {
               signedOutReason: user.signedOutReason,
             })])),
           }))),
+          questionForm,
         })];
       })));
     }

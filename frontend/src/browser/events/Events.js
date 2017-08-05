@@ -100,6 +100,16 @@ class Events extends Component {
     );
   }
 
+  renderEventName(name, row) {
+    return (
+      <span>
+        <span>{name}</span>
+        {row.questionForm &&
+          <span style={{ marginLeft: '0.5em' }}><i className="fa fa-file-text-o"></i></span>}
+      </span>
+    );
+  }
+
   sortCapacity(a, b, order) {
     if (order === 'desc') {
       return a.capacity.signedIn - b.capacity.signedIn;
@@ -117,7 +127,7 @@ class Events extends Component {
   }
 
   render() {
-    const { events, fields } = this.props;
+    const { events, fields, children } = this.props;
     const { hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
@@ -156,6 +166,7 @@ class Events extends Component {
       return {
         id: event.id,
         eventName: event.name,
+        questionForm: event.questionForm ? event.questionForm.getIn(['formData', 'id']) : null,
         eventStarts: <FormattedRelative value={event.eventStartDateTime} />,
         eventStartDateTime: event.eventStartDateTime,
         capacity: {
@@ -205,7 +216,11 @@ class Events extends Component {
               >
                 <TableHeaderColumn isKey hidden dataField="id" />
 
-                <TableHeaderColumn dataField="eventName" dataSort>
+                <TableHeaderColumn
+                  dataField="eventName"
+                  dataSort
+                  dataFormat={this.renderEventName}
+                >
                   Názov eventu
                 </TableHeaderColumn>
 
@@ -234,6 +249,7 @@ class Events extends Component {
             </div>
           </div>
         </div>
+        {children}
       </div>
     );
   }

@@ -7,6 +7,9 @@ use Carbon\Carbon;
 use App\User;
 use App\AttendeesGroup;
 use App\StudentLevel;
+use App\Models\QuestionForm\Form as QuestionForm;
+use App\Models\QuestionForm\Question;
+use App\Models\QuestionForm\Choice;
 
 class NxEvent extends Model
 {
@@ -80,6 +83,45 @@ class NxEvent extends Model
         if (isset($attributes['semester']) && $attributes['semester']) {
             $semester = \App\Semester::findOrFail($attributes['semester']);
             $event->semesterId = $semester->id;
+        }
+
+        if (isset($attributes['questionForm'])) {
+            $attributes['questionForm']['userId'] = \Auth::user()->id;
+            $form = QuestionForm::create($attributes['questionForm'])->save();
+
+            foreach ($attributes['questionForm']['questions'] as $questionData) {
+                $questionData['userId'] = $attributes['questionForm']['userId'];
+                $questionData['formId'] = $attributes['questionForm']['id'];
+                $question = Question::create($questionData);
+
+                if ($questionData['type'] === 'shortText' || $questionData['type'] === 'longText') {
+                    $choiceData = [
+                        'userId' => $attributes['questionForm']['userId'],
+                        'questionId' => $questionData['id'],
+                        'order' => 0,
+                        'title' => $questionData['question'],
+                        'id' => \Uuid::generate(4),
+                    ];
+                    $choice = Choice::create($choiceData);
+                } else {
+                    foreach ($questionData['choices'] as $choiceData) {
+                        $choiceData['userId'] = $attributes['questionForm']['userId'];
+                        $choiceData['questionId'] = $questionData['id'];
+                        $choice = Choice::create($choiceData);
+                    }
+                }
+            }
+
+            foreach ($attributes['questionForm']['questions'] as $questionData) {
+                $question = Question::find($questionData['id']);
+                foreach ($questionData['dependentOn'] as $questionOptions) {
+                    foreach ($questionOptions as $oId => $option) {
+                        $question->dependencies()->attach($oId);
+                    }
+                }
+            }
+
+            $event->signInFormId = $attributes['questionForm']['id'];
         }
 
         $event->save();
@@ -163,6 +205,77 @@ class NxEvent extends Model
         if (isset($attributes['semester']) && $attributes['semester']) {
             $semester = \App\Semester::findOrFail($attributes['semester']);
             $this->semesterId = $semester->id;
+        }
+
+        if (isset($attributes['questionForm'])) {
+            $attributes['questionForm']['userId'] = \Auth::user()->id;
+            $form = QuestionForm::updateOrCreate(
+                ['id' => $attributes['questionForm']['id']],
+                $attributes['questionForm']
+            );
+
+            $questionsIds = [];
+            foreach ($attributes['questionForm']['questions'] as $questionData) {
+                $questionData['userId'] = $attributes['questionForm']['userId'];
+                $questionData['formId'] = $attributes['questionForm']['id'];
+                $question = Question::updateOrCreate(
+                    ['id' => $questionData['id']],
+                    $questionData
+                );
+                $questionsIds[] = $questionData['id'];
+
+                $choiceIds = [];
+                if (($questionData['type'] === 'shortText' || $questionData['type'] === 'longText') && !isset($questionData['choices'])) {
+                    $choiceData = [
+                        'userId' => $attributes['questionForm']['userId'],
+                        'questionId' => $questionData['id'],
+                        'order' => 0,
+                        'title' => $questionData['question'],
+                        'id' => \Uuid::generate(4),
+                    ];
+                    $choice = Choice::create($choiceData);
+                    $choiceIds[] = $choiceData['id'];
+                } else {
+                    foreach ($questionData['choices'] as $choiceData) {
+                        $choiceData['userId'] = $attributes['questionForm']['userId'];
+                        $choiceData['questionId'] = $questionData['id'];
+                        $choice = Choice::updateOrCreate(
+                            ['id' => $choiceData['id']],
+                            $choiceData
+                        );
+                        $choiceIds[] = $choiceData['id'];
+                    }
+                }
+
+                Choice::where('questionId', $questionData['id'])
+                      ->whereNotIn('id', $choiceIds)
+                      ->delete();
+            }
+
+            Question::where('formId', $attributes['questionForm']['id'])
+                  ->whereNotIn('id', $questionsIds)
+                  ->delete();
+
+
+            foreach ($attributes['questionForm']['questions'] as $questionData) {
+                $question = Question::find($questionData['id']);
+                $dependencies = [];
+                foreach ($questionData['dependentOn'] as $questionOptions) {
+                    foreach ($questionOptions as $oId => $option) {
+                        if ($option) {
+                            $dependencies[] = $oId;
+                        }
+                    }
+                }
+
+                $question->dependencies()->sync($dependencies);
+            }
+
+            $this->signInFormId = $attributes['questionForm']['id'];
+        } else {
+            if ($this->form) {
+                $this->form->delete();
+            }
         }
 
         $this->save();
@@ -358,5 +471,10 @@ class NxEvent extends Model
     public function settings()
     {
         return $this->hasOne('App\NxEventsSettings', 'eventId');
+    }
+
+    public function form()
+    {
+        return $this->belongsTo('App\Models\QuestionForm\Form', 'signInFormId');
     }
 }

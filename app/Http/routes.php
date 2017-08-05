@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/nxEvents/categories', 'AdminController@getNxEventsCategories');
             Route::put('/nxEvents', 'AdminController@getNxEvents');
 
+            Route::get('/questionnaire/{formId}/results', 'AdminController@getFormResults');
+
             Route::get('/semesters', 'AdminController@getSemesters');
             Route::post('/semesters', 'AdminController@createSemester');
             Route::post('/semesters/{semesterId}/assign', 'AdminController@assignSemester');
@@ -79,7 +81,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/nxEvents/{eventId}/users/{userId}', 'NxEventAttendeesController@updateAttendee');
         Route::get('/nxEvents/{eventId}/settings', 'NxEventsController@getNxEventSettings');
         Route::post('/nxEvents/{eventId}/settings', 'NxEventsController@updateNxEventSettings');
-        
+
+        Route::get('/nxEvents/{eventId}/questionnaire', 'NxEventsController@getBeforeEventQuestionnaire');
+
         Route::get('/nxEvents/{eventId}/emails', 'NxEventsController@getEmailsStats');
 
         Route::get('/nxEvents', 'NxEventsController@getNxEvents');

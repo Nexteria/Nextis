@@ -135,6 +135,7 @@ export default class Event extends Component {
     hide: PropTypes.bool.isRequired,
     signAsStandIn: PropTypes.func.isRequired,
     signOutAsStandIn: PropTypes.func.isRequired,
+    answerQuestionnaire: PropTypes.func.isRequired,
   };
 
   render() {
@@ -146,6 +147,7 @@ export default class Event extends Component {
       openSignOutDialog,
       attendeeWontGo,
       attendeeSignIn,
+      answerQuestionnaire,
       signAsStandIn,
       signOutAsStandIn,
     } = this.props;
@@ -269,11 +271,20 @@ export default class Event extends Component {
                         <div className="event-actions col-md-12 col-sm-12 col-xs-12">
                           <button
                             className="btn btn-success btn-xs"
-                            onClick={() =>
-                              groupedEvents.size ?
-                                browserHistory.push(`/events/${event.id}/login`)
-                              : attendeeSignIn(event, viewer, group.id)}
+                            onClick={() => {
+                              if (event.has('questionForm')) {
+                                browserHistory.push({
+                                  pathname: `/events/${event.id}/questionnaire`,
+                                  state: { viewer, groupId: group.id }
+                                });
+                              } else {
+                                groupedEvents.size ?
+                                  browserHistory.push(`/events/${event.id}/login`)
+                                : attendeeSignIn(event.id, viewer, group.id)
+                              }
+                            }}
                           >
+                            <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span>
                             <FormattedMessage {...messages.signIn} />
                           </button>
                           <button
@@ -313,7 +324,7 @@ export default class Event extends Component {
                                   onClick={() =>
                                     groupedEvents.size ?
                                       browserHistory.push(`/events/${event.id}/login`)
-                                    : attendeeSignIn(event, viewer, group.id)}
+                                    : attendeeSignIn(event.id, viewer, group.id)}
                                 >
                                   <FormattedMessage {...messages.signIn} />
                                 </button>
