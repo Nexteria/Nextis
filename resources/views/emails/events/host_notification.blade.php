@@ -69,7 +69,7 @@
       </td><td style="vertical-align:top;width:600px;">
       <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-bottom:5px;" align="center"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;"><b>Ahoj {{ $hostFirstName }},</b><br>
             Dakujem, že si sa zhostil roly Hosta na evente:<br> <b>{{ $eventType }} {{ $eventName }}, {{ $eventStartTime }}</b>.</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:14px;text-align:left;"><p>
-              Prosím prečítaj si dokument: <a href="https://goo.gl/CFMm8" target="_blank">https://goo.gl/CFMm8</a>
+              Prosím prečítaj si tento <a href="https://docs.google.com/document/d/1pAq0ebevlBD3bU1QjGPSPyQXwUwpzvaip900N1uaXxE/edit" target="_blank">dokument</a>
             </p>
             <p>
               V skratke je dôležité, aby si prišiel aspoň 30 minút pred začiatkom. 
