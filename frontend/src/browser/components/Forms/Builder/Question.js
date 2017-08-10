@@ -102,7 +102,9 @@ export function getQuestionIcon(questionType) {
 const DragHandle = SortableHandle(() => <ReorderIcon style={styles.dragIcon} />);
 
 export default function renderTextQuestion(data) {
-  const { question, onChange, onRemove, choicesList, questions } = data;
+  const { question, onChange, onRemove, choicesList, questions, attendeesGroups} = data;
+
+  const attendeesGroupsMap = new Map(attendeesGroups.map(group => [group.get('id'), group]));
 
   return (
     <Card style={styles.card}>
@@ -147,60 +149,90 @@ export default function renderTextQuestion(data) {
           checked={question.get('required')}
           onCheck={(e, v) => onChange(question.set('required', v))}
         />
-        <SelectField
-          multiple
-          floatingLabelText="Zobraziť v prípade súčasného označenia možností:"
-          hintText="Vyberte možnosti"
-          fullWidth
-          value={question.get('dependentOn').reduce((reduction, val, qKey) => {
-            let newReduction = reduction;
-            val.forEach((val2, chKey) => {
-              if (question.getIn(['dependentOn', qKey, chKey])) {
-                newReduction = newReduction.push(`${qKey}::${chKey}`);
-              }
-              return true;
-            });
-
-            return newReduction;
-          }, new List())
-            .toArray()
-          }
-          onChange={
-            (e, i, values) => {
-              let newDependency = question.get('dependentOn');
-
-              newDependency.forEach((val, qKey) => {
-                newDependency.get(qKey).forEach((val2, chKey) => {
-                  newDependency = newDependency.setIn([qKey, chKey], false);
-                });
+        <div className="col-md-6">
+          <SelectField
+            multiple
+            floatingLabelText="Zobraziť v prípade označenia možností:"
+            hintText="Vyberte možnosti"
+            fullWidth
+            value={question.get('dependentOn').reduce((reduction, val, qKey) => {
+              let newReduction = reduction;
+              val.forEach((val2, chKey) => {
+                if (question.getIn(['dependentOn', qKey, chKey])) {
+                  newReduction = newReduction.push(`${qKey}::${chKey}`);
+                }
+                return true;
               });
-              values.map(value => {
-                const tokens = value.split('::');
-                const qKey = tokens[0];
-                const chKey = tokens[1];
 
-                newDependency = newDependency.setIn([qKey, chKey], true);
-              });
-              onChange(question.set('dependentOn', newDependency));
+              return newReduction;
+            }, new List())
+              .toArray()
             }
-          }
-        >
-          {choicesList.filter((val, key) => key !== question.get('id')).reduce((reduction, val, qKey) => {
-            choicesList.get(qKey).forEach((val2, chKey) => {
-              reduction = reduction.set(`${qKey}::${chKey}`,
-                <MenuItem
-                  insetChildren
-                  key={`${qKey}::${chKey}`}
-                  checked={choicesList.getIn([qKey, chKey, question.get('id')])}
-                  value={`${qKey}::${chKey}`}
-                  primaryText={`Otázka #${questions.getIn([qKey, 'order']) + 1} - možnosť #${questions.getIn([qKey, 'choices', chKey, 'order']) + 1}`}
-                />
-              );
-            });
+            onChange={
+              (e, i, values) => {
+                let newDependency = question.get('dependentOn');
 
-            return reduction;
-          }, new Map()).toArray()}
-        </SelectField>
+                newDependency.forEach((val, qKey) => {
+                  newDependency.get(qKey).forEach((val2, chKey) => {
+                    newDependency = newDependency.setIn([qKey, chKey], false);
+                  });
+                });
+                values.map(value => {
+                  const tokens = value.split('::');
+                  const qKey = tokens[0];
+                  const chKey = tokens[1];
+
+                  newDependency = newDependency.setIn([qKey, chKey], true);
+                });
+                onChange(question.set('dependentOn', newDependency));
+              }
+            }
+          >
+            {choicesList.filter((val, key) => key !== question.get('id')).reduce((reduction, val, qKey) => {
+              choicesList.get(qKey).forEach((val2, chKey) => {
+                reduction = reduction.set(`${qKey}::${chKey}`,
+                  <MenuItem
+                    insetChildren
+                    key={`${qKey}::${chKey}`}
+                    checked={choicesList.getIn([qKey, chKey, question.get('id')])}
+                    value={`${qKey}::${chKey}`}
+                    primaryText={`Otázka #${questions.getIn([qKey, 'order']) + 1} - možnosť #${questions.getIn([qKey, 'choices', chKey, 'order']) + 1}`}
+                  />
+                );
+              });
+
+              return reduction;
+            }, new Map()).toArray()}
+          </SelectField>
+        </div>
+        <div className="col-md-6">
+          <SelectField
+            multiple
+            floatingLabelText="Zobraziť iba pre skupiny:"
+            fullWidth
+            value={question.get('groupSelection')
+                           .filter((val, qKey) => attendeesGroupsMap.has(qKey))
+                           .map((val, qKey) => qKey)
+                           .toArray()
+            }
+            onChange={
+              (e, i, values) => {
+                const newGroups = new Map(values.map(value => [value, true]));
+                onChange(question.set('groupSelection', newGroups));
+              }
+            }
+          >
+            {attendeesGroupsMap.map(val =>
+              <MenuItem
+                insetChildren
+                key={val.get('id')}
+                checked={question.get('groupSelection').has(val.get('id'))}
+                value={val.get('id')}
+                primaryText={val.get('name')}
+              />
+            ).toArray()}
+          </SelectField>
+        </div>
         {renderQuestionType(question, onChange, choicesList, questions)}
       </CardText>
       <CardActions>

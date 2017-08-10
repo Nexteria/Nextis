@@ -75,6 +75,7 @@ export default function eventsReducer(state = new InitialState, action) {
                     return [choiceId, true];
                   }))]
                 )),
+                groupSelection: new Map(question.groupSelection.map(group => [group, true])),
                 choices: new Map(question.choices.map(choice =>
                   [choice.id, new Map({
                     ...choice,
@@ -131,6 +132,7 @@ export default function eventsReducer(state = new InitialState, action) {
                     return [choiceId, true];
                   }))]
                 )),
+                groupSelection: new Map(question.groupSelection.map(group => [group, true])),
                 choices: new Map(question.choices.map(choice =>
                   [choice.id, new Map({
                     ...choice,
@@ -190,6 +192,7 @@ export default function eventsReducer(state = new InitialState, action) {
           questionForm = new Map({
             formData: new Map({
               ...event.questionForm,
+              groupDescriptions: new Map(Object.keys(event.questionForm.groupDescriptions).map(groupId => [groupId, event.questionForm.groupDescriptions[groupId]])),
               questions: new Map(event.questionForm.questions.map(question =>
                 [question.id, new Map({
                   ...question,
@@ -199,6 +202,7 @@ export default function eventsReducer(state = new InitialState, action) {
                       return [choiceId, true];
                     }))]
                   )),
+                  groupSelection: new Map(question.groupSelection.map(group => [group, true])),
                   choices: new Map(question.choices.map(choice =>
                     [choice.id, new Map({
                       ...choice,
@@ -471,6 +475,7 @@ export default function eventsReducer(state = new InitialState, action) {
           questionForm = new Map({
             formData: new Map({
               ...event.questionForm,
+              groupDescriptions: new Map(Object.keys(event.questionForm.groupDescriptions).map(groupId => [groupId, event.questionForm.groupDescriptions[groupId]])),
               questions: new Map(event.questionForm.questions.map(question =>
                 [question.id, new Map({
                   ...question,
@@ -480,6 +485,7 @@ export default function eventsReducer(state = new InitialState, action) {
                       return [choiceId, true];
                     }))]
                   )),
+                  groupSelection: new Map(question.groupSelection.map(group => [group, true])),
                   choices: new Map(question.choices.map(choice =>
                     [choice.id, new Map({
                       ...choice,

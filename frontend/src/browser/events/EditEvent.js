@@ -609,7 +609,7 @@ export class EditEvent extends Component {
   }
 
   renderQuestionForm(data) {
-    const { input, label } = data;
+    const { input, label, event } = data;
 
     return (
       <div className="form-group">
@@ -626,7 +626,7 @@ export class EditEvent extends Component {
               ></i>
               :
               <div>
-                <FormBuilder form={input.value} onChange={input.onChange} />
+                <FormBuilder form={input.value} attendeesGroups={event.get('attendeesGroups')} onChange={input.onChange} />
                 <button
                   className="btn btn-xs btn-success"
                   type="button"
@@ -727,6 +727,7 @@ export class EditEvent extends Component {
                             name="questionForm"
                             component={this.renderQuestionForm}
                             label="Dotazník pri prihlasovaní"
+                            event={actualEvent}
                           />
 
                           <Field

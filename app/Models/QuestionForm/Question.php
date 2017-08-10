@@ -34,4 +34,9 @@ class Question extends Model
     {
         return $this->belongsToMany('App\Models\QuestionForm\Choice', 'question_dependencies', 'questionId', 'choiceId');
     }
+
+    public function attendeesGroups()
+    {
+        return $this->belongsToMany('App\AttendeesGroup', 'attendee_group_question', 'questionId', 'attendeeGroupId');
+    }
 }

@@ -8,11 +8,17 @@ class QuestionFormTransformer extends Transformer
         $transformer = new QuestionTransformer();
         $questions = $transformer->transformCollection($form->questions);
 
+        $descriptions = [];
+        foreach ($form->descriptions as $description) {
+            $descriptions[$description->attendeeGroupId] = $description->description;
+        }
+
         return [
           'id' => $form->id,
           'name' => $form->name,
           'userId' => $form->userId,
           'description' => $form->description,
+          'groupDescriptions' => $descriptions,
           'questions' => $questions,
         ];
     }

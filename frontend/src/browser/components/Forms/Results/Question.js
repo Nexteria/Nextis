@@ -28,18 +28,24 @@ export default class Question extends Component {
           style={{ backgroundColor: '#ccc' }}
           subtitle=""
         />
-        <CardText>
-          {question.get('type') === 'shortText' ?
-            <ShortText question={question} results={results} /> : null}
-          {question.get('type') === 'longText' ?
-            <LongText question={question} results={results} /> : null}
-          {question.get('type') === 'multichoice' ?
-            <Multichoice question={question} results={results} /> : null}
-          {question.get('type') === 'choiceList' ?
-            <ChoiceList question={question} results={results} /> : null}
-          {question.get('type') === 'selectList' ?
-            <SelectList question={question} results={results} /> : null}
-        </CardText>
+        {results ?
+          <CardText>
+              {question.get('type') === 'shortText' ?
+                <ShortText question={question} results={results} /> : null}
+              {question.get('type') === 'longText' ?
+                <LongText question={question} results={results} /> : null}
+              {question.get('type') === 'multichoice' ?
+                <Multichoice question={question} results={results} /> : null}
+              {question.get('type') === 'choiceList' ?
+                <ChoiceList question={question} results={results} /> : null}
+              {question.get('type') === 'selectList' ?
+                <SelectList question={question} results={results} /> : null}
+          </CardText>
+          :
+          <CardText>
+            Žiadne odpovede
+          </CardText>
+        }
         <CardActions>
         </CardActions>
       </Card>

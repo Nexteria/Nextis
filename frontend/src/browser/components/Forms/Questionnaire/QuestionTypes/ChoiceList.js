@@ -25,7 +25,12 @@ export default class ChoiceList extends Component {
                 name={question.get('id')}
                 value={choice.get('id')}
                 checked={choice.get('id') === question.get('answer')}
-                onChange={e => onChange(question.set('answer', e.target.value))}
+                onChange={e =>
+                  onChange(
+                    question.set('answer', e.target.value)
+                            .update('choices', choices => choices.map(ch => ch.set('selected', choice.get('id') === ch.get('id'))))
+                  )
+                }
                 style={{ left: 0, marginLeft: 0 }}
               />
             </label>

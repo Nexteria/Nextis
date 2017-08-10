@@ -7,6 +7,8 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import uuidv4 from 'uuid';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
 
@@ -27,7 +29,8 @@ export function createInitialState() {
     formData: new Map({
       id: uuidv4(),
       name: 'Dotazník bez mena',
-      description: 'Tu zadajte popis dotazníka',
+      description: '',
+      groupDescriptions: new Map(),
       questions: new Map({}),
     }),
     choicesList: new Map(),
@@ -52,6 +55,7 @@ export function getNewQuestion(questionType, order) {
         minSelection: 1,
         maxSelection: null,
         order,
+        groupSelection: new Map(),
         type: questionType,
       });
 
@@ -65,6 +69,7 @@ export function getNewQuestion(questionType, order) {
         minSelection: 1,
         maxSelection: null,
         order,
+        groupSelection: new Map(),
         type: questionType,
       });
     case 'choiceList':
@@ -77,6 +82,7 @@ export function getNewQuestion(questionType, order) {
         minSelection: 1,
         maxSelection: 1,
         order,
+        groupSelection: new Map(),
         type: questionType,
       });
     case 'selectList':
@@ -89,6 +95,7 @@ export function getNewQuestion(questionType, order) {
         minSelection: 1,
         maxSelection: 1,
         order,
+        groupSelection: new Map(),
         type: questionType,
       });
   }
@@ -96,9 +103,10 @@ export function getNewQuestion(questionType, order) {
   return new Map();
 }
 
-const SortableItem = SortableElement(({ question, onChange, form }) =>
+const SortableItem = SortableElement(({ question, onChange, form, attendeesGroups }) =>
   <Question
     question={question}
+    attendeesGroups={attendeesGroups}
     choicesList={form.get('choicesList')}
     questions={form.getIn(['formData', 'questions'])}
     onChange={(data) => {
@@ -157,13 +165,14 @@ const SortableItem = SortableElement(({ question, onChange, form }) =>
   />
 );
 
-const SortableList = SortableContainer(({ questions, onChange, form }) =>
+const SortableList = SortableContainer(({ questions, onChange, form, attendeesGroups }) =>
   <div>
     {questions.sort((a, b) => a.get('order') - b.get('order')).map((question) => (
       <SortableItem
         key={`item-${question.get('order')}`}
         index={question.get('order')}
         question={question}
+        attendeesGroups={attendeesGroups}
         onChange={onChange}
         form={form}
       />
@@ -172,7 +181,7 @@ const SortableList = SortableContainer(({ questions, onChange, form }) =>
 );
 
 export default function renderFormBuilder(data) {
-  const { form, onChange } = data;
+  const { form, onChange, attendeesGroups } = data;
 
   const questions = form.getIn(['formData', 'questions']);
   const isNewQuestionMenuOpen = form.get('isNewQuestionMenuOpen');
@@ -194,16 +203,45 @@ export default function renderFormBuilder(data) {
             fullWidth
           />
 
-          <TextField
-            name={`form-description-${form.getIn(['formData', 'id'])}`}
-            value={form.getIn(['formData', 'description'])}
-            onChange={(e, v) => onChange(form.setIn(['formData', 'description'], v))}
-            floatingLabelText="Popis formulára"
-            rows={3}
-            multiLine
-            fullWidth
-            textareaStyle={{ border: '1px solid #ccc' }}
-          />
+          <Tabs
+            mountOnEnter
+            animation
+            defaultActiveKey={1}
+            id="event-dependencies"
+            className="nav-tabs-custom"
+          >
+            <Tab eventKey={1} title={'Predvolený'}>
+              <TextField
+                name={`form-description-${form.getIn(['formData', 'id'])}`}
+                value={form.getIn(['formData', 'description'])}
+                onChange={(e, v) => onChange(form.setIn(['formData', 'description'], v))}
+                floatingLabelText="Popis formulára"
+                rows={3}
+                multiLine
+                fullWidth
+                textareaStyle={{ border: '1px solid #ccc', padding: '1em' }}
+              />
+            </Tab>
+
+            {attendeesGroups.map(group => {
+              const gId = group.get('id') || uuidv4();
+
+              return (
+                <Tab eventKey={gId} title={group.get('name')}>
+                  <TextField
+                    name={`group-description-${gId}`}
+                    value={form.getIn(['formData', 'groupDescriptions', gId])}
+                    onChange={(e, v) => onChange(form.setIn(['formData', 'groupDescriptions', gId], v))}
+                    floatingLabelText="Popis formulára"
+                    rows={3}
+                    multiLine
+                    fullWidth
+                    textareaStyle={{ border: '1px solid #ccc', padding: '1em' }}
+                  />
+                </Tab>
+              );
+            })}
+          </Tabs>
         </Title>
       </Header>
 
@@ -211,6 +249,7 @@ export default function renderFormBuilder(data) {
         <div className="form-group">
           <SortableList
             form={form}
+            attendeesGroups={attendeesGroups}
             helperClass="sortable-helper-class"
             questions={questions}
             onChange={onChange}

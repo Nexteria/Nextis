@@ -8,6 +8,7 @@ use App\User;
 use App\AttendeesGroup;
 use App\StudentLevel;
 use App\Models\QuestionForm\Form as QuestionForm;
+use App\Models\QuestionForm\FormDescription;
 use App\Models\QuestionForm\Question;
 use App\Models\QuestionForm\Choice;
 
@@ -42,8 +43,11 @@ class NxEvent extends Model
         $event->emailTagBase = \Uuid::generate(4);
         $event->save();
 
+        $groupIdMap = [];
         foreach ($attributes['attendeesGroups'] as $group) {
-            $event->attendeesGroups()->save(AttendeesGroup::createNew($group));
+            $newGroup = AttendeesGroup::createNew($group);
+            $event->attendeesGroups()->save($newGroup);
+            $groupIdMap[$group['id']] = $newGroup->id;
         }
 
         foreach ($attributes['lectors'] as $lector) {
@@ -89,10 +93,25 @@ class NxEvent extends Model
             $attributes['questionForm']['userId'] = \Auth::user()->id;
             $form = QuestionForm::create($attributes['questionForm'])->save();
 
+            foreach ($attributes['questionForm']['groupDescriptions'] as $id => $description) {
+                $newDescription = FormDescription::create([
+                    'userId' => \Auth::user()->id,
+                    'description' => $description,
+                    'formId' => $attributes['questionForm']['id'],
+                    'attendeeGroupId' => $groupIdMap[$id],
+                ]);
+            }
+
             foreach ($attributes['questionForm']['questions'] as $questionData) {
                 $questionData['userId'] = $attributes['questionForm']['userId'];
                 $questionData['formId'] = $attributes['questionForm']['id'];
                 $question = Question::create($questionData);
+
+                $selection = [];
+                foreach ($questionData['groupSelection'] as $key => $value) {
+                    $selection[] = $groupIdMap[$key];
+                }
+                $question->attendeesGroups()->sync($selection);
 
                 if ($questionData['type'] === 'shortText' || $questionData['type'] === 'longText') {
                     $choiceData = [
@@ -168,6 +187,7 @@ class NxEvent extends Model
             $this->lectors()->sync(User::whereIn('id', $attributes['lectors'])->pluck('id')->toArray());
         }
 
+        $groupIdMap = [];
         if (isset($attributes['attendeesGroups'])) {
             $idsMap = [];
             foreach ($attributes['attendeesGroups'] as $group) {
@@ -179,6 +199,7 @@ class NxEvent extends Model
                     $this->attendeesGroups()->save($groupModel);
                 }
                 $idsMap[$groupModel->id] = true;
+                $groupIdMap[$group['id']] = $groupModel->id;
             }
 
             $ids = $this->attendeesGroups()->pluck('id');
@@ -214,6 +235,30 @@ class NxEvent extends Model
                 $attributes['questionForm']
             );
 
+            $groupIds = [];
+            $oldGroupIds = FormDescription::where('formId', $attributes['questionForm']['id'])->pluck('attendeeGroupId');
+            foreach ($attributes['questionForm']['groupDescriptions'] as $id => $description) {
+                $newDescription = FormDescription::updateOrCreate(
+                    [
+                        'formId' => $attributes['questionForm']['id'],
+                        'attendeeGroupId' => $groupIdMap[$id],
+                    ],
+                    [
+                        'userId' => \Auth::user()->id,
+                        'description' => $description,
+                        'formId' => $attributes['questionForm']['id'],
+                        'attendeeGroupId' => $groupIdMap[$id],
+                    ]
+                );
+                $groupIds[] = $groupIdMap[$id];
+            }
+
+            foreach ($oldGroupIds as $id) {
+                if (!in_array($id, $groupIds)) {
+                    FormDescription::where('formId', $attributes['questionForm']['id'])->where('attendeeGroupId', $id)->first()->delete();
+                }
+            }
+
             $questionsIds = [];
             foreach ($attributes['questionForm']['questions'] as $questionData) {
                 $questionData['userId'] = $attributes['questionForm']['userId'];
@@ -223,6 +268,14 @@ class NxEvent extends Model
                     $questionData
                 );
                 $questionsIds[] = $questionData['id'];
+
+                $selection = [];
+                foreach ($questionData['groupSelection'] as $key => $value) {
+                    if (isset($groupIdMap[$key])){
+                        $selection[] = $groupIdMap[$key];
+                    }
+                }
+                $question->attendeesGroups()->sync($selection);
 
                 $choiceIds = [];
                 if (($questionData['type'] === 'shortText' || $questionData['type'] === 'longText') && !isset($questionData['choices'])) {

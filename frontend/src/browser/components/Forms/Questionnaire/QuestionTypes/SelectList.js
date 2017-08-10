@@ -27,7 +27,11 @@ export default class SelectList extends Component {
         <Select
           input={{
             name: question.get(question.get('id')),
-            onChange: e => onChange(question.set('answer', e.target.value)),
+            onChange: e =>
+              onChange(
+                question.set('answer', e.target.value)
+                        .update('choices', choices => choices.map(ch => ch.set('selected', ch.get('id') === e.target.value)))
+              ),
             value: selectedValue,
           }}
           meta={{ asyncValidating: false, touched: false, error: false }}

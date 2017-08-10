@@ -46,4 +46,9 @@ class Form extends Model
     {
         return $this->hasOne('App\NxEvent', 'signInFormId');
     }
+
+    public function descriptions()
+    {
+        return $this->hasMany('App\Models\QuestionForm\FormDescription', 'formId');
+    }
 }

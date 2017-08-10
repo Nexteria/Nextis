@@ -1,6 +1,7 @@
 import * as actions from './actions';
 import { Record, Map } from 'immutable';
 import RichTextEditor from 'react-rte';
+import uuidv4 from 'uuid';
 
 
 import AttendeesGroup from './models/AttendeesGroup';
@@ -49,7 +50,7 @@ export default function attendeesGroupReducer(state = new InitialState, action) 
     }
 
     case actions.ADD_ATTENDEES_GROUP: {
-      return state.set('group', new AttendeesGroup())
+      return state.set('group', new AttendeesGroup().set('id', uuidv4()))
                   .set('groupIndex', null);
     }
 

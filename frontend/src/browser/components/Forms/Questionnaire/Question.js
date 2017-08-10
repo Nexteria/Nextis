@@ -12,19 +12,22 @@ export default class Question extends Component {
   static propTypes = {
     question: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
   }
 
   render() {
     const {
       question,
-      onChange
+      onChange,
+      index,
     } = this.props;
 
     return (
       <div className="col-md-12">
         <h4>
-          <span>#{question.get('order') + 1} </span>
+          <span>#{index + 1} </span>
           <span>{question.get('question')}</span>
+          <span style={{ color: '#f00' }}>{question.get('required') ? ' (povinná)' : ''}</span>
         </h4>
         {question.get('type') === 'shortText' ?
           <ShortText question={question} onChange={onChange} /> : null}
