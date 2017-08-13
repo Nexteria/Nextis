@@ -11,6 +11,7 @@ import attendeesGroup from './attendeesGroup/reducer';
 import payments from './payments/reducer';
 import semesters from './semesters/reducer';
 import students from './students/reducer';
+import publicSignin from './public/reducer';
 
 import { LOGOUT } from './app/actions';
 import { combineReducers } from 'redux';
@@ -48,6 +49,7 @@ export default function configureReducer(initialState, platformReducers) {
     payments,
     semesters,
     students,
+    publicSignin,
     form: formReducer,
   });
 

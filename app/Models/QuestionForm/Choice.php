@@ -30,4 +30,9 @@ class Choice extends Model
     {
         return $this->belongsTo('App\Models\QuestionForm\Question', 'questionId');
     }
+
+    public function answers()
+    {
+        return $this->hasMany('App\Models\QuestionForm\Answer', 'choiceId');
+    }
 }

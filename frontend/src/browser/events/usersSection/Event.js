@@ -275,12 +275,12 @@ export default class Event extends Component {
                               if (event.has('questionForm')) {
                                 browserHistory.push({
                                   pathname: `/events/${event.id}/questionnaire`,
-                                  state: { viewer, groupId: group.id }
+                                  state: { viewerId: viewer.id, groupId: group.id }
                                 });
                               } else {
                                 groupedEvents.size ?
                                   browserHistory.push(`/events/${event.id}/login`)
-                                : attendeeSignIn(event.id, viewer, group.id)
+                                : attendeeSignIn(event.id, viewer.id, group.id)
                               }
                             }}
                           >
@@ -324,7 +324,7 @@ export default class Event extends Component {
                                   onClick={() =>
                                     groupedEvents.size ?
                                       browserHistory.push(`/events/${event.id}/login`)
-                                    : attendeeSignIn(event.id, viewer, group.id)}
+                                    : attendeeSignIn(event.id, viewer.id, group.id)}
                                 >
                                   <FormattedMessage {...messages.signIn} />
                                 </button>

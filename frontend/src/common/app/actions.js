@@ -28,6 +28,16 @@ export function start() {
   };
 }
 
+export function publicStart() {
+  return ({ dispatch, storageEngine }) => {
+    loadStorage(dispatch, storageEngine);
+
+    return {
+      type: APP_STARTED
+    };
+  };
+}
+
 export function openUserMenu() {
   return () => ({
     type: OPEN_USER_MENU,

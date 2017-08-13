@@ -1,6 +1,12 @@
 import { SubmissionError } from 'redux-form';
+import download from 'downloadjs';
 import { browserHistory } from 'react-router';
 import format from 'date-fns/format';
+
+export const DOWNLOAD_TEXT_QUESTION_ANSWERS = 'DOWNLOAD_TEXT_QUESTION_ANSWERS';
+export const DOWNLOAD_TEXT_QUESTION_ANSWERS_START = 'DOWNLOAD_TEXT_QUESTION_ANSWERS_START';
+export const DOWNLOAD_TEXT_QUESTION_ANSWERS_SUCCESS = 'DOWNLOAD_TEXT_QUESTION_ANSWERS_SUCCESS';
+export const DOWNLOAD_TEXT_QUESTION_ANSWERS_ERROR = 'DOWNLOAD_TEXT_QUESTION_ANSWERS_ERROR';
 
 export const CHECK_FEEDBACK_FORM_LINK = 'CHECK_FEEDBACK_FORM_LINK';
 export const CHECK_FEEDBACK_FORM_LINK_START = 'CHECK_FEEDBACK_FORM_LINK_START';
@@ -283,17 +289,17 @@ export function attendeeWontGo(eventId, userId, groupId, reason) {
         .then(response => ({
           ...response,
           groupId,
-          eventId: eventId,
+          eventId,
         })),
     },
   });
 }
 
-export function attendeeSignIn(eventId, viewer, groupId, choosedEvents, questionForm) {
+export function attendeeSignIn(eventId, viewerId, groupId, choosedEvents, questionForm) {
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_IN,
     payload: {
-      promise: fetch(`/nxEvents/${eventId}/users/${viewer.id}`, {
+      promise: fetch(`/nxEvents/${eventId}/users/${viewerId}`, {
         method: 'put',
         credentials: 'same-origin',
         notifications: 'both',
@@ -602,6 +608,19 @@ export function fetchEmailsStatus(eventId) {
         credentials: 'same-origin',
         notifications: 'both',
       }).then(response => response.json())
+    },
+  });
+}
+
+export function downloadTextAnswers(questionId) {
+  return ({ fetch }) => ({
+    type: DOWNLOAD_TEXT_QUESTION_ANSWERS,
+    payload: {
+      promise: fetch(`/admin/questions/${questionId}/answers`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => response.blob())
+      .then(blob => download(blob, 'Odpovede.xls')),
     },
   });
 }

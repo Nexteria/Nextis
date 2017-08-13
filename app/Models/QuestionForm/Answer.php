@@ -25,6 +25,11 @@ class Answer extends Model
         return $this->belongsTo('App\Models\QuestionForm\Choice', 'choiceId');
     }
 
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'userId');
+    }
+
     public function getQuestion()
     {
         return $this->choice->question;

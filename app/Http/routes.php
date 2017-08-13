@@ -17,9 +17,16 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');
 
 // email event signIn
-Route::get('/nxEvents/{signInToken}/signIn', 'NxEventAttendeesController@updateSignInByToken');
-Route::get('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@updateWontGoByToken');
-Route::post('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@updateWontGoByToken');
+Route::get('/nxEvents/{signInToken}/signIn', 'NxEventAttendeesController@getSigninFormByToken');
+Route::get('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@getSigninFormByToken');
+Route::post('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@getSigninFormByToken');
+
+Route::group(['prefix' => '/api'], function () {
+    Route::get('/nxEvents/{signInToken}', 'NxEventAttendeesController@getBasicFormData')->where(['signInToken' => '[0-9a-zA-z]{32}']);
+    Route::put('/nxEvents/{signInToken}/signIn', 'NxEventAttendeesController@updateSignInByToken');
+    Route::put('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@updateWontGoByToken');
+    Route::get('/nxEvents/{eventId}/questionnaire', 'NxEventsController@getBeforeEventQuestionnaire');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
@@ -29,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('/nxEvents', 'AdminController@getNxEvents');
 
             Route::get('/questionnaire/{formId}/results', 'AdminController@getFormResults');
+            Route::get('/questions/{questionId}/answers', 'AdminController@getQuestionAnswers');
 
             Route::get('/semesters', 'AdminController@getSemesters');
             Route::post('/semesters', 'AdminController@createSemester');
@@ -78,11 +86,12 @@ Route::group(['middleware' => 'auth'], function () {
         
         Route::post('/nxEvents/feedbackForm/validate', 'NxEventsController@validateFeedbackForm');
 
+        Route::get('/nxEvents/settings', 'NxEventsController@getDefaultEventsSettings');
+        Route::post('/nxEvents/settings', 'NxEventsController@updateDefaultEventsSettings');
+
         Route::put('/nxEvents/{eventId}/users/{userId}', 'NxEventAttendeesController@updateAttendee');
         Route::get('/nxEvents/{eventId}/settings', 'NxEventsController@getNxEventSettings');
         Route::post('/nxEvents/{eventId}/settings', 'NxEventsController@updateNxEventSettings');
-
-        Route::get('/nxEvents/{eventId}/questionnaire', 'NxEventsController@getBeforeEventQuestionnaire');
 
         Route::get('/nxEvents/{eventId}/emails', 'NxEventsController@getEmailsStats');
 
@@ -91,8 +100,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/nxEvents/{eventId}', ['middleware' => ['permission:update_events'], 'uses' => 'NxEventsController@updateNxEvent']);
         Route::delete('/nxEvents/{eventId}', ['middleware' => ['permission:delete_events'], 'uses' => 'NxEventsController@deleteNxEvent'])
           ->where(array('groupId' => '[0-9]+'));
-        Route::get('/nxEvents/settings', 'NxEventsController@getDefaultEventsSettings');
-        Route::post('/nxEvents/settings', 'NxEventsController@updateDefaultEventsSettings');
 
         Route::get('/payments/tuitionFeesSummary/download', 'PaymentsController@exportTuitionSumary');
         Route::post('/payments/import', 'PaymentsController@importPayments');

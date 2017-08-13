@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use App\Comment;
 use App\Models\QuestionForm\Form;
 use App\Models\QuestionForm\Answer;
+use App\Models\QuestionForm\Question;
 use App\Models\QuestionForm\Choice;
 
 class AdminController extends Controller
@@ -686,5 +687,17 @@ class AdminController extends Controller
         }
 
         return $result;
+    }
+
+    public function getQuestionAnswers($questionId)
+    {
+        $question = Question::findOrFail($questionId);
+
+        return \Excel::create('Export odpovedí', function ($excel) use ($question) {
+            $answers = $question->choices()->first()->answers()->where('answer', '<>', '')->get();
+            $excel->sheet($question->question, function ($sheet) use ($answers) {
+                $sheet->loadView('exports.question_answers', ['answers' => $answers]);
+            });
+        })->download('xls');
     }
 }

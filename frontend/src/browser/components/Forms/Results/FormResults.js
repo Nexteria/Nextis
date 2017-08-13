@@ -13,6 +13,7 @@ export class FormResults extends Component {
     formId: PropTypes.func.isRequired,
     fetchQuestionnaireResults: PropTypes.func.isRequired,
     events: PropTypes.object.isRequired,
+    downloadTextAnswers: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
@@ -24,6 +25,7 @@ export class FormResults extends Component {
     const {
       actualEvent,
       events,
+      downloadTextAnswers,
     } = this.props;
 
     const event = events.get(actualEvent.get('id'));
@@ -38,6 +40,7 @@ export class FormResults extends Component {
           <Question
             key={question.get('id')}
             question={question}
+            downloadTextAnswers={downloadTextAnswers}
             results={actualEvent.getIn(['formResults', question.get('id')])}
           />
         )}

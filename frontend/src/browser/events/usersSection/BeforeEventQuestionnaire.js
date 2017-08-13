@@ -15,13 +15,14 @@ export class BeforeEventQuestionnaire extends Component {
   static propTypes = {
     actualEvent: PropTypes.object.isRequired,
     closeEventDetailsDialog: PropTypes.func.isRequired,
-    params: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired,
     fetchBeforeEventQuestionnaire: PropTypes.func.isRequired,
     initialized: PropTypes.bool.isRequired,
     attendeeSignIn: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     formData: PropTypes.object,
+    submitFunc: PropTypes.func,
   }
 
   componentDidMount() {
@@ -60,13 +61,23 @@ export class BeforeEventQuestionnaire extends Component {
       attendeeSignIn,
       actualEvent,
       formData,
+      submitFunc,
     } = this.props;
 
     if (!formData) {
       return <div></div>;
     }
 
-    const { viewer, groupId } = location.state;
+    const { viewerId, groupId } = location.state;
+
+    let submitFunction = (data) => {
+      attendeeSignIn(actualEvent.get('id'), viewerId, groupId, null, data.formData);
+      browserHistory.goBack();
+    };
+
+    if (submitFunc) {
+      submitFunction = submitFunc;
+    }
 
     const isFormValid = formData.get('questions')
       .filter(q => q.get('groupSelection').size === 0 || q.hasIn(['groupSelection', groupId]))
@@ -96,10 +107,7 @@ export class BeforeEventQuestionnaire extends Component {
         <Body>
           <form
             id="beforeEventQuestionnaire"
-            onSubmit={handleSubmit((data) => {
-              attendeeSignIn(actualEvent.get('id'), viewer, groupId, null, data.formData);
-              browserHistory.goBack();
-            })}
+            onSubmit={handleSubmit((data) => submitFunction(data))}
           >
             <div className="row">
               <Field

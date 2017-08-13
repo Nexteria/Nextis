@@ -52,7 +52,13 @@ export default function makeConfig(isDevelopment) {
         path.join(constants.SRC_DIR, 'browser/index.js'),
       ] : [
         path.join(constants.SRC_DIR, 'browser/index.js'),
-      ]
+      ],
+      publicSignin: isDevelopment ? [
+        `webpack-hot-middleware/client?path=http://${serverIp}:${constants.HOT_RELOAD_PORT}/__webpack_hmr`,
+        path.join(constants.SRC_DIR, 'browser/publicSigninIndex.js'),
+      ] : [
+        path.join(constants.SRC_DIR, 'browser/publicSigninIndex.js'),
+      ],
     },
     module: {
       noParse: /node_modules\/google-libphonenumber\/dist/,

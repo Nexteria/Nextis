@@ -30,11 +30,8 @@ class NxEventAttendeesController extends Controller
         if ($attendee) {
             $group = $attendee->attendeesGroup;
             if (!is_null($attendee->signedIn)) {
-                return view('events.sign_in_by_token', [
+                return response()->json([
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
-                  'attendeeName' => $attendee->user->firstName,
-                  'signInFailed' => true,
-                  'signInToken' => $signInToken,
                 ]);
             }
 
@@ -45,12 +42,58 @@ class NxEventAttendeesController extends Controller
                 $event = $eventAttendee->attendeesGroup->nxEvent;
                 $canSignIn = $event->canSignInAttendee($eventAttendee);
                 if ($canSignIn !== true) {
-                    return view('events.sign_in_by_token', [
+                    return response()->json([
                       'message' => $canSignIn,
-                      'attendeeName' => $attendee->user->firstName,
-                      'signInFailed' => true,
-                      'signInToken' => $signInToken,
                     ]);
+                }
+            }
+
+            if ($attendee->event()->form) {
+                $form = $attendee->event()->form;
+                $userId = $attendee->userId;
+                $answers = $form->getUsersAnswers($userId);
+    
+                if ($answers->count() == 0 && !\Input::has('questionForm')) {
+                    return response()->json([
+                        'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
+                    ], 200);
+                }
+    
+                if ($answers->count() == 0) {
+                    $questionForm = \Input::get('questionForm');
+                    foreach ($questionForm['questions'] as $question) {
+                        if ($question['type'] == 'shortText' || $question['type'] == 'longText') {
+                            $choice = array_shift($question['choices']);
+                            $choice = Choice::findOrFail($choice['id']);
+                            $answer = Answer::create([
+                                'userId' => $userId,
+                                'choiceId' => $choice->id,
+                                'answer' => isset($question['answer']) ? $question['answer'] : '',
+                            ]);
+                        }
+    
+                        if ($question['type'] == 'choiceList' || $question['type'] == 'selectList') {
+                            foreach ($question['choices'] as $chId => $choice) {
+                                $choice = Choice::findOrFail($chId);
+                                $answer = Answer::create([
+                                    'userId' => $userId,
+                                    'choiceId' => $choice->id,
+                                    'answer' => isset($question['answer']) && $chId === $question['answer'] ? 'selected' : '',
+                                ]);
+                            }
+                        }
+    
+                        if ($question['type'] == 'multichoice') {
+                            foreach ($question['choices'] as $choiceId => $value) {
+                                $choice = Choice::findOrFail($choiceId);
+                                $answer = Answer::create([
+                                    'userId' => $userId,
+                                    'choiceId' => $choiceId,
+                                    'answer' => isset($question['answer']) && isset($question['answer'][$choiceId]) ? 'selected' : '',
+                                ]);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -64,20 +107,37 @@ class NxEventAttendeesController extends Controller
                 $eventAttendee->save();
             }
 
-            return view('events.sign_in_by_token', [
+            return response()->json([
               'message' => trans('events.signInByTokenSuccess', ['eventName' => $group->nxEvent->name]),
-              'attendeeName' => $attendee->user->firstName,
-              'signInFailed' => false,
-              'signInToken' => $signInToken,
             ]);
         }
 
-        return view('events.sign_in_by_token', [
+        return response()->json([
           'message' => trans('events.sorryCanNotDoIt'),
-          'attendeeName' => '',
-          'signInFailed' => true,
-          'signInToken' => '',
         ]);
+    }
+
+    public function getBasicFormData($signInToken)
+    {
+        $attendee = NxEventAttendee::where('signInToken', $signInToken)->first();
+        if (!$attendee) {
+            return response()->json([], 404);
+        }
+
+        return response()->json([
+            'isSigned' => !is_null($attendee->signedIn),
+            'isSignedOut' => !is_null($attendee->signedOut),
+            'wontGo' => !is_null($attendee->wontGo),
+            'isEventMandatory' => (bool) $attendee->event()->mandatoryParticipation,
+            'signinFormId' => $attendee->event()->signInFormId,
+            'viewerId' => $attendee->userId,
+            'groupId' => $attendee->attendeesGroupId,
+        ], 200);
+    }
+
+    public function getSigninFormByToken()
+    {
+        return view('events.sign_in_form_by_token');
     }
 
     public function updateWontGoByToken($signInToken)
@@ -88,22 +148,15 @@ class NxEventAttendeesController extends Controller
             $group = $attendee->attendeesGroup;
 
             if (!is_null($attendee->signedIn) || !is_null($attendee->signedOut)) {
-                return view('events.sign_in_by_token', [
+                return response()->json([
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
-                  'attendeeName' => $attendee->user->firstName,
-                  'signInFailed' => true,
-                  'signInToken' => $signInToken,
-                ]);
+                ], 200);
             }
 
-            if ((!\Input::has('reason') || strlen(\Input::get('reason')) < 100) && $event->mandatoryParticipation) {
-                return view('events.sign_in_by_token', [
+            if ((!\Input::has('reason') || strlen(\Input::get('reason')) < 10) && $event->mandatoryParticipation) {
+                return response()->json([
                   'message' => trans('events.reasonIsRequiredForWontGo', ['eventName' => $group->nxEvent->name]),
-                  'attendeeName' => $attendee->user->firstName,
-                  'wontGo' => true,
-                  'signInFailed' => true,
-                  'signInToken' => $signInToken,
-                ]);
+                ], 200);
             }
 
             $attendeesWontGo = [$attendee];
@@ -119,28 +172,25 @@ class NxEventAttendeesController extends Controller
             }
 
             foreach ($attendeesWontGo as $eventAttendee) {
-                $eventAttendee->wontGo = Carbon::now();
-                if (\Input::has('reason')) {
-                    $eventAttendee->signedOutReason = clean(\Input::get('reason'));
-                }
+                if (!$eventAttendee->wontGo) {
+                    $eventAttendee->wontGo = Carbon::now();
+                    if (\Input::has('reason')) {
+                        $eventAttendee->signedOutReason = clean(\Input::get('reason'));
+                    }
 
-                $eventAttendee->save();
+                    $eventAttendee->save();
+                }
             }
 
-            return view('events.sign_in_by_token', [
+            return response()->json([
               'message' => trans('events.wontGoByTokenSuccess', ['eventName' => $group->nxEvent->name]),
               'attendeeName' => $attendee->user->firstName,
-              'signInFailed' => false,
-              'signInToken' => $signInToken,
             ]);
         }
 
-        return view('events.sign_in_by_token', [
-              'message' => trans('events.sorryCanNotDoIt'),
-              'attendeeName' => '',
-              'signInFailed' => true,
-              'signInToken' => '',
-            ]);
+        return response()->json([
+            'message' => trans('events.sorryCanNotDoIt'),
+        ], 200);
     }
 
     public function updateAttendee($eventId, $userId)

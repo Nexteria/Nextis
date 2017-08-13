@@ -9,8 +9,10 @@
         {!! Html::style('adminlte/css/skins/_all-skins.min.css') !!}
         {!! Html::style('css/login.css') !!}
         {!! Html::style('css/custom.css') !!}
+        @yield('headerScripts')
     </head>
     <body class="hold-transition skin-purple sidebar-mini fixed">
       @yield('content')
+      @yield('bodyScripts')
     </body>
 </html>
