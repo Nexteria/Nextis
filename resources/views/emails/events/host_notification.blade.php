@@ -68,25 +68,24 @@
           </h1></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td><td style="vertical-align:top;width:600px;">
       <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-bottom:5px;" align="center"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;"><b>Ahoj {{ $hostFirstName }},</b><br>
-            Dakujem, že si sa zhostil roly Hosta na evente:<br> <b>{{ $eventType }} {{ $eventName }}, {{ $eventStartTime }}</b>.</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:14px;text-align:left;"><p>
+            Dakujem, že si sa zhostil/a roly Hosta na evente:<br> <b>{{ $eventType }} {{ $eventName }}, {{ $eventStartTime }}</b>.</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:14px;text-align:left;"><p>
               Prosím prečítaj si tento <a href="https://docs.google.com/document/d/1pAq0ebevlBD3bU1QjGPSPyQXwUwpzvaip900N1uaXxE/edit" target="_blank">dokument</a>
             </p>
+            V skratke:
             <p>
-              V skratke je dôležité, aby si prišiel aspoň 30 minút pred začiatkom. 
-Prosím, kúp nejaké občerstvenie, aby ste mali počas debaty, čo chrúmať (hrozno, jablka, keksíky, niečo slané). Priprav prosím aj niečo na pitie a poháriky - všetko nájdeš v kuchynke, aj taniere na občerstvenie. 
+            Je dôležité, aby si <b>prišiel aspoň 30 minút pred začiatkom.</b>
             </p>
             <p>
-              Prosím, ak by niekto meškal - najlepšie je si vytlačiť <b>zoznam ľudí</b> zo Space - tak mu zavolaj (kontakty aj zoznam ľudí nájdeš v Space), že kedy príde a či príde. Tých, ktorí budú meškať mi prosím označ a napíš, koľko meškal. <b>Prezenčku</b> mi potom po skončení odfoť a pošli mailom.
+            Prosím, <b>kúp nejaké občerstvenie</b>, aby ste mali počas eventu, čo chrúmať (ovocie, keksíky, niečo slané). Priprav, prosím, aj niečo na pitie. Poháre a taniere nájdeš v kuchynke.
+            </p>
+            <p>Vytlač si zoznam ľudí zo Space-u a v prípade, že by niekto meškal, zavolaj mu (kontakty aj zoznam ľudí nájdeš v Space), kedy a či príde príde. Tých, ktorí budú meškať mi, prosím, označ a napíš do prezenčky, koľko meškali. Prezenčku mi po skončení odfoť a pošli mailom. Zúčastnených následne do 24 hod. vyznač v Space (bližšie info nájdeš v dokumente hore).
+Po kurze, prosím, <b>poďakuj lektorovi a odovzdaj mu symbolický dar (dezert/víno).</b></p>
+            <p>
+            Po skončení eventu pomôžte všetci spolu <b>dať miestnosť do pôvodného stavu</b>, aby tam neostal po vás neporiadok.
             </p>
             <p>
-              Po kurze prosím <b>poďakuj lektorovi</b>, teraz máme prezent aj v office, čiže ten nemusíš kupovať, Janka alebo ja Ti dáme fľastičku. 
-Potom pomôžte všetci spolu dať miestnosť do pôvodného stavu, aby tam neostal po nás neporiadok.
-To je asi všetko také základné, ale aj tak si prečítaj dokument HOSTA (viď. hore).
-            </p>
-            <p>
-              Ak by Ti bolo čokoľvek nejasné, tak mi kľudne volaj, píš, krič.
-            </p>
-            <p>Ďakujem a pekný deň želám,</p></div></td></tr></tbody></table></div><!--[if mso | IE]>
+            Ak by Ti bolo čokoľvek nejasné, tak mi kľudne volaj, píš.<br/>
+            Ďakujem a pekný deň želám,</p></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td><td style="vertical-align:top;width:600px;">
       <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">Za tím NLA</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">{{ $eventManagerName }}</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">Projektový manažér Nexteria Leadership Academy</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:10px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">{{ $eventManagerPhone }}</div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td><td style="vertical-align:top;width:600px;">
