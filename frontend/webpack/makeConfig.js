@@ -128,7 +128,7 @@ export default function makeConfig(isDevelopment) {
         plugins.push(
           // Render styles into separate cacheable file to prevent FOUC and
           // optimize for critical rendering path.
-          new ExtractTextPlugin('app-[hash].css', {
+          new ExtractTextPlugin('[name]-[hash].css', {
             allChunks: true
           }),
           new webpack.optimize.DedupePlugin(),
