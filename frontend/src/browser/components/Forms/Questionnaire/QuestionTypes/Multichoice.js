@@ -31,7 +31,7 @@ export default class MultiChoice extends Component {
               <input
                 type="checkbox"
                 value={choice.get('id')}
-                disabled={!choice.get('selected') && selectedNumber >= question.get('maxSelection')}
+                disabled={!choice.get('selected') && question.get('maxSelection') && selectedNumber >= question.get('maxSelection')}
                 checked={question.hasIn(['answer', choice.get('id')])}
                 style={{ left: 0, marginLeft: 0 }}
                 onChange={e => {
