@@ -10,7 +10,7 @@ class QuestionFormTransformer extends Transformer
 
         $descriptions = [];
         foreach ($form->descriptions as $description) {
-            $descriptions[$description->attendeeGroupId] = $description->description;
+            $descriptions[(int) $description->attendeeGroupId] = $description->description;
         }
 
         return [
