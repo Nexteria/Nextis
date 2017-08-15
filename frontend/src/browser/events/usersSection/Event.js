@@ -272,7 +272,7 @@ export default class Event extends Component {
                           <button
                             className="btn btn-success btn-xs"
                             onClick={() => {
-                              if (event.has('questionForm')) {
+                              if (event.has('questionForm') && event.get('questionForm')) {
                                 browserHistory.push({
                                   pathname: `/events/${event.id}/questionnaire`,
                                   state: { viewerId: viewer.id, groupId: group.id }
@@ -284,7 +284,7 @@ export default class Event extends Component {
                               }
                             }}
                           >
-                            <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span>
+                            {event.has('questionForm') && event.get('questionForm') ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
                             <FormattedMessage {...messages.signIn} />
                           </button>
                           <button

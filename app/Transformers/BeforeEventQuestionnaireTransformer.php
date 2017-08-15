@@ -8,7 +8,7 @@ class BeforeEventQuestionnaireTransformer extends Transformer
     public function transform($event)
     {
         $transformer = new QuestionFormTransformer();
-        $form = $transformer->transform($event->form);
+        $form = $event->form ? $transformer->transform($event->form) : null;
 
         return [
           'id' => (int) $event->id,
