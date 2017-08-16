@@ -29,9 +29,15 @@ class NxEventAttendeesController extends Controller
         $attendee = NxEventAttendee::where('signInToken', '=', $signInToken)->first();
         if ($attendee) {
             $group = $attendee->attendeesGroup;
-            if (!is_null($attendee->signedIn)) {
+            if (!is_null($attendee->signedOut) || !is_null($attendee->wontGo)) {
                 return response()->json([
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
+                ]);
+            }
+
+            if (!is_null($attendee->signedIn)) {
+                return response()->json([
+                    'message' => trans('events.signInByTokenSuccess', ['eventName' => $group->nxEvent->name]),
                 ]);
             }
 
@@ -53,7 +59,7 @@ class NxEventAttendeesController extends Controller
                 $userId = $attendee->userId;
                 $answers = $form->getUsersAnswers($userId);
     
-                if ($answers->count() == 0 && !\Input::has('questionForm')) {
+                if ($answers->count() == 0 && (!\Input::has('questionForm') || !\Input::get('questionForm'))) {
                     return response()->json([
                         'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
                     ], 200);
@@ -130,6 +136,7 @@ class NxEventAttendeesController extends Controller
             'wontGo' => !is_null($attendee->wontGo),
             'isEventMandatory' => (bool) $attendee->event()->mandatoryParticipation,
             'signinFormId' => $attendee->event()->signInFormId,
+            'eventId' => $attendee->event()->id,
             'viewerId' => $attendee->userId,
             'groupId' => $attendee->attendeesGroupId,
         ], 200);
@@ -151,6 +158,13 @@ class NxEventAttendeesController extends Controller
                 return response()->json([
                   'message' => trans('events.canChangeStatusToWontGo', ['eventName' => $group->nxEvent->name]),
                 ], 200);
+            }
+
+            if (!is_null($attendee->wontGo)) {
+                return response()->json([
+                    'message' => trans('events.wontGoByTokenSuccess', ['eventName' => $group->nxEvent->name]),
+                    'attendeeName' => $attendee->user->firstName,
+                ]);
             }
 
             if ((!\Input::has('reason') || strlen(\Input::get('reason')) < 10) && $event->mandatoryParticipation) {

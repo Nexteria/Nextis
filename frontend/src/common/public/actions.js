@@ -43,7 +43,12 @@ export function eventWontGo(token, reason) {
   });
 }
 
-export function attendeeSignIn(token, questionForm) {
+export function attendeeSignIn(token, qForm) {
+  let questionForm = null;
+  if (qForm) {
+    questionForm = qForm.formData;
+  }
+
   return ({ fetch }) => ({
     type: ATTENDEE_TOKEN_SIGN_IN,
     payload: {
@@ -53,7 +58,7 @@ export function attendeeSignIn(token, questionForm) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           signIn: true,
-          questionForm: questionForm.formData,
+          questionForm,
         }),
       }).then(response => response.json())
     },

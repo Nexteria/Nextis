@@ -13,6 +13,7 @@ const InitialState = Record({
   groupId: null,
   actionIsDone: false,
   message: null,
+  eventId: null,
 }, 'publicSignin');
 
 export default function publicSigninReducer(state = new InitialState, action) {
@@ -28,6 +29,7 @@ export default function publicSigninReducer(state = new InitialState, action) {
         .set('signinFormId', action.payload.signinFormId)
         .set('viewerId', action.payload.viewerId)
         .set('groupId', action.payload.groupId)
+        .set('eventId', action.payload.eventId)
         .set('dataLoaded', true);
     }
 

@@ -38,11 +38,12 @@ class PublicSigninPage extends Component {
   componentWillMount() {
     const { fetchEventSigninInfo, eventWontGo, attendeeSignIn, params } = this.props;
     fetchEventSigninInfo(params.signInToken).then((data) => {
-      if (!data.value.isEventMandatory && params.action === 'wontGo') {
+      const madeDecision = data.value.wontGo || data.value.isSignedOut || data.value.isSigned;
+      if ((!data.value.isEventMandatory || madeDecision) && params.action === 'wontGo') {
         eventWontGo(params.signInToken);
       }
 
-      if (!data.value.signinFormId && params.action === 'signIn') {
+      if ((!data.value.signinFormId || madeDecision) && params.action === 'signIn') {
         attendeeSignIn(params.signInToken);
       }
     });
@@ -57,6 +58,7 @@ class PublicSigninPage extends Component {
       signinFormId,
       viewerId,
       groupId,
+      eventId,
       dataLoaded,
       params,
       attendeeSignIn,
@@ -87,7 +89,7 @@ class PublicSigninPage extends Component {
           <BeforeEventQuestionnaire
             params={{
               token: signinFormId,
-              eventId: 132,
+              eventId,
             }}
             location={{
               state: {
@@ -158,4 +160,5 @@ export default connect(state => ({
   groupId: state.publicSignin.groupId,
   message: state.publicSignin.message,
   actionIsDone: state.publicSignin.actionIsDone,
+  eventId: state.publicSignin.eventId,
 }), actions)(PublicSigninPage);

@@ -27,8 +27,11 @@ export class Form extends Component {
       <div>
         <div className="col-md-12">
           <h1>{form.get('name')}</h1>
-          <p style={{ fontSize: '1.2em' }}><i>{description}</i></p>
+          {description.split('\n').map(descriptionPart =>
+            <p style={{ fontSize: '1.2em' }}><i>{descriptionPart}</i></p>
+          )}
         </div>
+        <br/>
         {form.get('questions')
           .filter(q => q.get('groupSelection').size === 0 || q.hasIn(['groupSelection', attendeeGroupId])).sort((a, b) => a.get('order') - b.get('order'))
           .filter(question => question.get('dependentOn').every((q, qId) => q.every((choice, chId) => form.getIn(['questions', qId, 'choices', chId, 'selected']))))
