@@ -238,6 +238,10 @@ class NxEvent extends Model
             $groupIds = [];
             $oldGroupIds = FormDescription::where('formId', $attributes['questionForm']['id'])->pluck('attendeeGroupId');
             foreach ($attributes['questionForm']['groupDescriptions'] as $id => $description) {
+                if (!isset($groupIdMap[$id])) {
+                    continue;
+                }
+
                 $newDescription = FormDescription::updateOrCreate(
                     [
                         'formId' => $attributes['questionForm']['id'],
