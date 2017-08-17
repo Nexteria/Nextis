@@ -321,11 +321,22 @@ export default class Event extends Component {
                               isSignInOpen && isFreeCapacity ?
                                 <button
                                   className="btn btn-success btn-xs"
-                                  onClick={() =>
-                                    groupedEvents.size ?
-                                      browserHistory.push(`/events/${event.id}/login`)
-                                    : attendeeSignIn(event.id, viewer.id, group.id)}
+                                  onClick={() => {
+                                    if (groupedEvents.size) {
+                                      browserHistory.push(`/events/${event.id}/login`);
+                                    } else {
+                                      if (event.has('questionForm') && event.get('questionForm') && attendee.get('wontGo')) {
+                                        browserHistory.push({
+                                          pathname: `/events/${event.id}/questionnaire`,
+                                          state: { viewerId: viewer.id, groupId: group.id }
+                                        });
+                                      } else {
+                                        attendeeSignIn(event.id, viewer.id, group.id);
+                                      }
+                                    }
+                                  }}
                                 >
+                                {event.has('questionForm') && event.get('questionForm') && attendee.get('wontGo') ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
                                   <FormattedMessage {...messages.signIn} />
                                 </button>
                                 : ''

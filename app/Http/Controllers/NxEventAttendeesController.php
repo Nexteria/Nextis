@@ -218,54 +218,6 @@ class NxEventAttendeesController extends Controller
             abort(401);
         }
 
-        if ($attendee->event()->form) {
-            $form = $attendee->event()->form;
-            $answers = $form->getUsersAnswers($userId);
-
-            if ($answers->count() == 0 && !\Input::has('questionForm')) {
-                return response()->json([
-                    'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
-                ], 400);
-            }
-
-            if ($answers->count() == 0) {
-                $questionForm = \Input::get('questionForm');
-                foreach ($questionForm['questions'] as $question) {
-                    if ($question['type'] == 'shortText' || $question['type'] == 'longText') {
-                        $choice = array_shift($question['choices']);
-                        $choice = Choice::findOrFail($choice['id']);
-                        $answer = Answer::create([
-                            'userId' => $userId,
-                            'choiceId' => $choice->id,
-                            'answer' => isset($question['answer']) ? $question['answer'] : '',
-                        ]);
-                    }
-
-                    if ($question['type'] == 'choiceList' || $question['type'] == 'selectList') {
-                        foreach ($question['choices'] as $chId => $choice) {
-                            $choice = Choice::findOrFail($chId);
-                            $answer = Answer::create([
-                                'userId' => $userId,
-                                'choiceId' => $choice->id,
-                                'answer' => isset($question['answer']) && $chId === $question['answer'] ? 'selected' : '',
-                            ]);
-                        }
-                    }
-
-                    if ($question['type'] == 'multichoice') {
-                        foreach ($question['choices'] as $choiceId => $value) {
-                            $choice = Choice::findOrFail($choiceId);
-                            $answer = Answer::create([
-                                'userId' => $userId,
-                                'choiceId' => $choiceId,
-                                'answer' => isset($question['answer']) && isset($question['answer'][$choiceId]) ? 'selected' : '',
-                            ]);
-                        }
-                    }
-                }
-            }
-        }
-
         $attendee->fill(\Input::all());
 
         if (\Input::has('standIn')) {
@@ -285,6 +237,54 @@ class NxEventAttendeesController extends Controller
         }
 
         if (\Input::has('signIn') && \Input::get('signIn')) {
+            if ($attendee->event()->form) {
+                $form = $attendee->event()->form;
+                $answers = $form->getUsersAnswers($userId);
+    
+                if ($answers->count() == 0 && !\Input::has('questionForm')) {
+                    return response()->json([
+                        'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
+                    ], 400);
+                }
+    
+                if ($answers->count() == 0) {
+                    $questionForm = \Input::get('questionForm');
+                    foreach ($questionForm['questions'] as $question) {
+                        if ($question['type'] == 'shortText' || $question['type'] == 'longText') {
+                            $choice = array_shift($question['choices']);
+                            $choice = Choice::findOrFail($choice['id']);
+                            $answer = Answer::create([
+                                'userId' => $userId,
+                                'choiceId' => $choice->id,
+                                'answer' => isset($question['answer']) ? $question['answer'] : '',
+                            ]);
+                        }
+    
+                        if ($question['type'] == 'choiceList' || $question['type'] == 'selectList') {
+                            foreach ($question['choices'] as $chId => $choice) {
+                                $choice = Choice::findOrFail($chId);
+                                $answer = Answer::create([
+                                    'userId' => $userId,
+                                    'choiceId' => $choice->id,
+                                    'answer' => isset($question['answer']) && $chId === $question['answer'] ? 'selected' : '',
+                                ]);
+                            }
+                        }
+    
+                        if ($question['type'] == 'multichoice') {
+                            foreach ($question['choices'] as $choiceId => $value) {
+                                $choice = Choice::findOrFail($choiceId);
+                                $answer = Answer::create([
+                                    'userId' => $userId,
+                                    'choiceId' => $choiceId,
+                                    'answer' => isset($question['answer']) && isset($question['answer'][$choiceId]) ? 'selected' : '',
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+            
             $attendeesToSignIn = [$attendee];
             if (\Input::has('choosedEvents')) {
                 foreach (\Input::get('choosedEvents') as $eId) {
