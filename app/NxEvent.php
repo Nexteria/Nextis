@@ -340,10 +340,13 @@ class NxEvent extends Model
 
     public function getSettings()
     {
+        $defaultSettings = \App\DefaultSystemSettings::getNxEventsSettings();
         $settings = $this->settings;
         if (!$settings) {
-            $settings = \App\DefaultSystemSettings::getNxEventsSettings();
+            $settings = $defaultSettings;
         }
+
+        $settings['eventsManagerUserId'] = $defaultSettings['eventsManagerUserId'];
 
         return $settings;
     }
