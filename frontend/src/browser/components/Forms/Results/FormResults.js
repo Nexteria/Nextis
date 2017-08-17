@@ -1,6 +1,8 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import RaisedButton from 'material-ui/RaisedButton';
+import DownloadIcon from 'material-ui/svg-icons/file/file-download';
 
 import * as eventActions from '../../../../common/events/actions';
 import Question from './Question';
@@ -13,7 +15,7 @@ export class FormResults extends Component {
     formId: PropTypes.func.isRequired,
     fetchQuestionnaireResults: PropTypes.func.isRequired,
     events: PropTypes.object.isRequired,
-    downloadTextAnswers: PropTypes.func.isRequired,
+    downloadAnswers: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
@@ -25,7 +27,7 @@ export class FormResults extends Component {
     const {
       actualEvent,
       events,
-      downloadTextAnswers,
+      downloadAnswers,
     } = this.props;
 
     const event = events.get(actualEvent.get('id'));
@@ -34,13 +36,28 @@ export class FormResults extends Component {
     }
 
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
         <h4>{event.get('name')}</h4>
+        <RaisedButton
+          icon={<DownloadIcon />}
+          onClick={() => downloadAnswers(event.getIn(['questionForm', 'formData', 'id']))}
+          labelColor="#fff"
+          style={{
+            margin: '0em',
+            width: '36px',
+            minWidth: '36px',
+            padding: '0px',
+            right: '0px',
+            top: '-1em',
+            position: 'absolute',
+          }}
+          backgroundColor="#9c27b0"
+          buttonStyle={{ width: '36px' }}
+        />
         {event.getIn(['questionForm', 'formData', 'questions']).sort((a, b) => a.get('order') - b.get('order')).map(question =>
           <Question
             key={question.get('id')}
             question={question}
-            downloadTextAnswers={downloadTextAnswers}
             results={actualEvent.getIn(['formResults', question.get('id')])}
           />
         )}

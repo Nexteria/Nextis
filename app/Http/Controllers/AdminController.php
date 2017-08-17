@@ -689,14 +689,59 @@ class AdminController extends Controller
         return $result;
     }
 
-    public function getQuestionAnswers($questionId)
+    public function getFormAnswers($formId)
     {
-        $question = Question::findOrFail($questionId);
+        $form = Form::findOrFail($formId);
+        $data = [
+            'questions' => [],
+            'users' => [],
+        ];
 
-        return \Excel::create('Export odpovedí', function ($excel) use ($question) {
-            $answers = $question->choices()->first()->answers()->where('answer', '<>', '')->get();
-            $excel->sheet($question->question, function ($sheet) use ($answers) {
-                $sheet->loadView('exports.question_answers', ['answers' => $answers]);
+        foreach ($form->questions as $question) {
+            $data['questions'][$question->order] = [
+                'title' => $question->question,
+                'id' => $question->id,
+            ];
+
+            foreach ($question->choices as $choice) {
+                foreach ($choice->answers as $answer) {
+                    $user = \App\User::find($answer->userId);
+                    if (!isset($data['users'][$answer->userId])) {
+                        $data['users'][$answer->userId] = [
+                            'answers' => [],
+                            'email' => $user->email,
+                            'firstName' => $user->firstName,
+                            'lastName' => $user->lastName,
+                            'level' => $user->student->level->name,
+                        ];
+                    } else {
+                        if (!isset($data['users'][$answer->userId]['answers'][$question->id])) {
+                            if ($question->type != 'shortText' && $question->type != 'longText') {
+                                if ($answer->answer == 'selected') {
+                                    $data['users'][$answer->userId]['answers'][$question->id] = $choice->title;
+                                }
+                            } else {
+                                $data['users'][$answer->userId]['answers'][$question->id] = $answer->answer;
+                            }
+                        } else {
+                            if ($question->type != 'shortText' && $question->type != 'longText') {
+                                if ($answer->answer == 'selected') {
+                                    $data['users'][$answer->userId]['answers'][$question->id] .= ', '.$choice->title;
+                                }
+                            } else {
+                                $data['users'][$answer->userId]['answers'][$question->id] .= ', '.$answer->answer;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ksort($data['questions']);
+
+        return \Excel::create('Export odpovedí', function ($excel) use ($data) {
+            $excel->sheet('Odpovede', function ($sheet) use ($data) {
+                $sheet->loadView('exports.form_answers', ['data' => $data]);
             });
         })->download('xls');
     }

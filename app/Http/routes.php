@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('/nxEvents', 'AdminController@getNxEvents');
 
             Route::get('/questionnaire/{formId}/results', 'AdminController@getFormResults');
-            Route::get('/questions/{questionId}/answers', 'AdminController@getQuestionAnswers');
+            Route::get('/questionnaire/{formId}/answers', 'AdminController@getFormAnswers');
 
             Route::get('/semesters', 'AdminController@getSemesters');
             Route::post('/semesters', 'AdminController@createSemester');

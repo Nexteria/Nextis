@@ -3,10 +3,10 @@ import download from 'downloadjs';
 import { browserHistory } from 'react-router';
 import format from 'date-fns/format';
 
-export const DOWNLOAD_TEXT_QUESTION_ANSWERS = 'DOWNLOAD_TEXT_QUESTION_ANSWERS';
-export const DOWNLOAD_TEXT_QUESTION_ANSWERS_START = 'DOWNLOAD_TEXT_QUESTION_ANSWERS_START';
-export const DOWNLOAD_TEXT_QUESTION_ANSWERS_SUCCESS = 'DOWNLOAD_TEXT_QUESTION_ANSWERS_SUCCESS';
-export const DOWNLOAD_TEXT_QUESTION_ANSWERS_ERROR = 'DOWNLOAD_TEXT_QUESTION_ANSWERS_ERROR';
+export const DOWNLOAD_FORM_ANSWERS = 'DOWNLOAD_FORM_ANSWERS';
+export const DOWNLOAD_FORM_ANSWERS_START = 'DOWNLOAD_FORM_ANSWERS_START';
+export const DOWNLOAD_FORM_ANSWERS_SUCCESS = 'DOWNLOAD_FORM_ANSWERS_SUCCESS';
+export const DOWNLOAD_FORM_ANSWERS_ERROR = 'DOWNLOAD_FORM_ANSWERS_ERROR';
 
 export const CHECK_FEEDBACK_FORM_LINK = 'CHECK_FEEDBACK_FORM_LINK';
 export const CHECK_FEEDBACK_FORM_LINK_START = 'CHECK_FEEDBACK_FORM_LINK_START';
@@ -612,11 +612,11 @@ export function fetchEmailsStatus(eventId) {
   });
 }
 
-export function downloadTextAnswers(questionId) {
+export function downloadAnswers(formId) {
   return ({ fetch }) => ({
-    type: DOWNLOAD_TEXT_QUESTION_ANSWERS,
+    type: DOWNLOAD_FORM_ANSWERS,
     payload: {
-      promise: fetch(`/admin/questions/${questionId}/answers`, {
+      promise: fetch(`/admin/questionnaire/${formId}/answers`, {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
       }).then(response => response.blob())
