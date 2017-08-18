@@ -714,23 +714,23 @@ class AdminController extends Controller
                             'lastName' => $user->lastName,
                             'level' => $user->student->level->name,
                         ];
-                    } else {
-                        if (!isset($data['users'][$answer->userId]['answers'][$question->id])) {
-                            if ($question->type != 'shortText' && $question->type != 'longText') {
-                                if ($answer->answer == 'selected') {
-                                    $data['users'][$answer->userId]['answers'][$question->id] = $choice->title;
-                                }
-                            } else {
-                                $data['users'][$answer->userId]['answers'][$question->id] = $answer->answer;
+                    }
+
+                    if (!isset($data['users'][$answer->userId]['answers'][$question->id])) {
+                        if ($question->type != 'shortText' && $question->type != 'longText') {
+                            if ($answer->answer == 'selected') {
+                                $data['users'][$answer->userId]['answers'][$question->id] = $choice->title;
                             }
                         } else {
-                            if ($question->type != 'shortText' && $question->type != 'longText') {
-                                if ($answer->answer == 'selected') {
-                                    $data['users'][$answer->userId]['answers'][$question->id] .= ', '.$choice->title;
-                                }
-                            } else {
-                                $data['users'][$answer->userId]['answers'][$question->id] .= ', '.$answer->answer;
+                            $data['users'][$answer->userId]['answers'][$question->id] = $answer->answer;
+                        }
+                    } else {
+                        if ($question->type != 'shortText' && $question->type != 'longText') {
+                            if ($answer->answer == 'selected') {
+                                $data['users'][$answer->userId]['answers'][$question->id] .= ', '.$choice->title;
                             }
+                        } else {
+                            $data['users'][$answer->userId]['answers'][$question->id] .= ', '.$answer->answer;
                         }
                     }
                 }
