@@ -4,6 +4,11 @@ export const FETCH_ADMIN_STUDENTS_START = 'FETCH_ADMIN_STUDENTS_START';
 export const FETCH_ADMIN_STUDENTS_SUCCESS = 'FETCH_ADMIN_STUDENTS_SUCCESS';
 export const FETCH_ADMIN_STUDENTS_ERROR = 'FETCH_ADMIN_STUDENTS_ERROR';
 
+export const CHANGE_TUITION_FEE = 'CHANGE_TUITION_FEE';
+export const CHANGE_TUITION_FEE_START = 'CHANGE_TUITION_FEE_START';
+export const CHANGE_TUITION_FEE_ERROR = 'CHANGE_TUITION_FEE_ERROR';
+export const CHANGE_TUITION_FEE_SUCCESS = 'CHANGE_TUITION_FEE_SUCCESS';
+
 export const END_SCHOOL_YEAR = 'END_SCHOOL_YEAR';
 export const END_SCHOOL_YEAR_START = 'END_SCHOOL_YEAR_START';
 export const END_SCHOOL_YEAR_SUCCESS = 'END_SCHOOL_YEAR_SUCCESS';
@@ -94,6 +99,25 @@ export function uploadNewStudentsExcel(files) {
     },
   });
 }
+
+export function changeTuitionFee(data, selectedStudents) {
+  return ({ fetch }) => ({
+    type: CHANGE_TUITION_FEE,
+    payload: {
+      promise: fetch('/admin/students/tuitionFee', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+          selectedStudents,
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
 export function changeStudentLevel(data, selectedStudents) {
   return ({ fetch }) => ({
     type: CHANGE_STUDENT_LEVEL,

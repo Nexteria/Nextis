@@ -536,10 +536,40 @@ class AdminController extends Controller
             # change student active semester level
             $semester = $student->getActiveSemester();
             $semester->pivot->studentLevelId = $data['studentLevelId'];
+            $semester->pivot->save();
 
             # attach student to new level group
             $level = StudentLevel::find($data['studentLevelId']);
             $level->userGroup->users()->attach($student->userId);
+        }
+
+        return $this->getStudents();
+    }
+
+    public function changeTuitionFee(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'newFeeValue' => 'required|numeric',
+            'selectedStudents' => 'required|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $data = $request->all();
+        foreach ($data['selectedStudents'] as $studentId) {
+            $student = Student::findOrFail($studentId);
+
+            # change student tuition fee
+            $semester = $student->getActiveSemester();
+            $semester->pivot->tuitionFee = floatval($data['newFeeValue']) * 100;
+            $semester->pivot->save();
         }
 
         return $this->getStudents();

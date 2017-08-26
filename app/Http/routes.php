@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/students', 'AdminController@getStudents');
             Route::post('/students/import', 'AdminController@importNewStudentsFromExcel');
             Route::post('/students/level', 'AdminController@changeStudentLevel');
+            Route::post('/students/tuitionFee', 'AdminController@changeTuitionFee');
             Route::post('/students/{studentId}/comments', 'AdminController@createStudentComment');
             Route::post('/students/comments', 'AdminController@createBulkStudentsComment');
             Route::get('/students/{studentId}/comments', 'AdminController@getStudentComments');
