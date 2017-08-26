@@ -4,49 +4,56 @@
   </mj-head>
   <mj-body>
     <mj-container background-color="#d6dde5">
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
+      </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top" background-color="#fcc133">
           <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="90%" vertical-align="top">
-          <mj-text align="center" padding-bottom="0px">
-          <h1>
-            Otvorenie prihlasovania
-          </h1>
-        </mj-text>
+          <mj-text align="center" padding-bottom="0px" line-height="30px">
+            <h1>
+              Otvorenie prihlasovania
+            </h1>
+          </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%">
           <mj-text align="center" padding-bottom="5px">
-            <b>Ahoj Danda,</b>
+            <b>Ahoj {{ $eventManagerName }},</b>
             už zajtra sa otvára prihlasovanie na event:
           </mj-text>
           <mj-text line-height="12px">
             <p>
-              <b>Názov:</b> </br>
-              NN: Fondy a ich vývoj - vplyv na biznis a život</br>
+              <b>Názov:</b> <br>
+              {{ $eventType }} {{ $eventName }}<br>
             </p>
             <p>
-              <b>Začiatok:</b></br>
-              12.10.2016 18:00</br>
+              <b>Začiatok:</b><br>
+              {{ $eventStartTime }}<br>
             </p>
             <p>
-              <b>Lektor:</b></br>
-              -</br>
+              <b>Lektor:</b><br>
+              {{ $lectorsFirstName }}<br>
             </p>
             <p>
-              <b>Host:</b></br>
-              Daniela Trnovcová</br>
+              <b>Host:</b><br>
+              {{ $hostName }}<br>
             </p>
             <p>
-              <b>Miesto:</b></br>
-              Maxman consultants (Gajova4, Bratislava, 81109, SK)</br>
+              <b>Miesto:</b><br>
+              <a href="http://www.google.com/maps/place/{{ $eventLocation->latitude }},{{ $eventLocation->longitude }}">{{ $eventLocationName }}</a><br>
             </p>
-            
           </mj-text>
           <mj-text font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
             Tvoj Nexteria Space
           </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top" background-color="#fcc133">
           <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
             Copyright © 2017 Nexteria, All rights reserved.

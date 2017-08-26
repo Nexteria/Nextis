@@ -4,58 +4,68 @@
   </mj-head>
   <mj-body>
     <mj-container background-color="#d6dde5">
-      <mj-section locked="true" full-width="full-width" padding-bottom="20" padding-top="20">
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top" background-color="#fcc133">
           <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="90%" vertical-align="top">
-          <mj-text align="center">
-          <h1>
-            Feedback remainder
-          </h1>
-        </mj-text>
+          <mj-text align="center" line-height="30px">
+            <h1>
+              Feedback po evente
+            </h1>
+          </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%">
-          <mj-text>
-            <b>Ahoj Dušan,</b>
+          <mj-text align="center">
+            <b>Ahoj {{ $userFirstName }},</b>
           </mj-text>
-          <mj-text>
-            Nájdi si, prosím, čas na jeho vyplnenie. Feedback nám pomôže správne nastavovať program NLA.
+          <mj-text align="center">
+            vyplň, prosím, feedback {{ $eventType }} {{ $eventName }} do <b>{{ $feedbackDeadline }}</b>.
           </mj-text>
-          <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="https://nextis.sk">
+          <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="{{ $feedbackLink }}">
             Vyplniť feedback
           </mj-button>
           <mj-text padding-bottom="0px" padding-top="0px" align="center">
-            Taktiež ak ho nevyplníš, nebudeme ti môcť prirátať activity body za tento event
+            Nezabudnite pri tom, prosím, aj na diakritiku. Uľahčíte nám tým našu prácu.
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" align="center">
+            Tvoj názor posúva NLA ďalej.
           </mj-text>
           <mj-text padding-bottom="0px" padding-top="0px" align="center">
             Prajem pekný zvyšok dňa.
           </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
           <mj-text padding-bottom="0px" padding-top="20px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
             Za tím NLA
           </mj-text>
           <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
-            Danda
+            {{ $eventManagerName }}
           </mj-text>
           <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
             Projektový manažér Nexteria Leadership Academy
           </mj-text>
           <mj-text padding-bottom="10px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
-            +421 908 116 504
+            {{ $eventManagerPhone }}
           </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top" background-color="#fcc133">
           <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
             Copyright © 2017 Nexteria, All rights reserved.
           </mj-text>
         </mj-column>
       </mj-section>
-     
-      <mj-section locked="true" full-width="full-width" padding-bottom="20" padding-top="20">
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
       </mj-section>
     </mj-container>
   </mj-body>

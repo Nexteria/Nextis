@@ -1,0 +1,80 @@
+<mjml>
+  <mj-head>
+    <mj-title>Nexteria Space</mj-title>
+  </mj-head>
+  <mj-body>
+    <mj-container background-color="#d6dde5">
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="90%" vertical-align="top">
+          <mj-text align="center" padding-bottom="0px" line-height="30px">
+            <h1>
+              Host eventu
+            </h1>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%">
+          <mj-text align="center" padding-bottom="5px">
+            <b>Ahoj {{ $hostFirstName }},</b></br>
+            Dakujem, že si sa zhostil/a roly Hosta na evente:<br> <b>{{ $eventType }} {{ $eventName }}, {{ $eventStartTime }}</b>.
+          </mj-text>
+          <mj-text line-height="14px">
+            <p>
+              Prosím prečítaj si tento <a href="https://docs.google.com/document/d/1pAq0ebevlBD3bU1QjGPSPyQXwUwpzvaip900N1uaXxE/edit" target="_blank">dokument</a>
+            </p>
+            
+            V skratke:
+            <p>
+              Je dôležité, aby si <b>prišiel aspoň 30 minút pred začiatkom.</b>
+            </p>
+            <p>
+              Prosím, <b>kúp nejaké občerstvenie</b>, aby ste mali počas eventu, čo chrúmať (ovocie, keksíky, niečo slané). Priprav, prosím, aj niečo na pitie. Poháre a taniere nájdeš v kuchynke.
+            </p>
+            <p>
+              Vytlač si zoznam ľudí zo Space-u a v prípade, že by niekto meškal, zavolaj mu (kontakty aj zoznam ľudí nájdeš v Space), kedy a či príde príde. Tých, ktorí budú meškať mi, prosím, označ a napíš do prezenčky, koľko meškali. Prezenčku mi po skončení odfoť a pošli mailom. Zúčastnených následne do 24 hod. vyznač v Space (bližšie info nájdeš v dokumente hore).
+              Po kurze, prosím, <b>poďakuj lektorovi a odovzdaj mu symbolický dar (dezert/víno).</b>
+            </p>
+            <p>
+              Po skončení eventu pomôžte všetci spolu <b>dať miestnosť do pôvodného stavu</b>, aby tam neostal po vás neporiadok.
+            </p>
+            <p>
+              Ak by Ti bolo čokoľvek nejasné, tak mi kľudne volaj, píš.<br/>
+              Ďakujem a pekný deň želám,
+            </p>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
+          <mj-text padding-bottom="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" padding-top="0px">
+            Za tím NLA
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
+            {{ $eventManagerName }}
+          </mj-text>
+          <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
+            Projektový manažér Nexteria Leadership Academy
+          </mj-text>
+          <mj-text padding-bottom="10px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
+            {{ $eventManagerPhone }}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
+            Copyright © 2017 Nexteria, All rights reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

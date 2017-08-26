@@ -53,11 +53,9 @@ class EventSignInRemainderMail extends Mailable
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';
 
-        $first = true;
         foreach ($lectors as $index => $lector) {
-            if (!$first) {
+            if ($index) {
                 $this->lectorsFirstName .= ', ';
-                $first = false;
             }
             $this->lectorsFirstName .= $lector->firstName.' '.$lector->lastName;
         }

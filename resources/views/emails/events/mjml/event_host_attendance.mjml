@@ -4,58 +4,58 @@
   </mj-head>
   <mj-body>
     <mj-container background-color="#d6dde5">
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
+      </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top" background-color="#fcc133">
           <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="90%" vertical-align="top">
-          <mj-text align="center" padding-bottom="0px">
-          <h1>
-            Host eventu
-          </h1>
-        </mj-text>
+          <mj-text align="center" padding-bottom="0px" line-height="30px">
+            <h1>
+              Kto prišiel?
+            </h1>
+          </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%">
           <mj-text align="center" padding-bottom="5px">
-            <b>Ahoj FirstName,</b></br>
-            Dakujem, že si sa zhostil roly Hosta na evente:</br> <b>NN: Fondy a ich vývoj - vplyv na biznis a život, 12.10.2016 18:00</b>.
+            <b>Ahoj {{ $hostFirstName }},</b>
           </mj-text>
-          <mj-text line-height="14px">
+          <mj-text line-height="16px">
             <p>
-              Prosím prečítaj si dokument: <a href="https://goo.gl/CFMm8" target="_blank">https://goo.gl/CFMm8</a>
+              Ďakujme, že si bol hostom na evente <b>{{ $eventType }} {{ $eventName }}</b>.
             </p>
-            <p>
-              V skratke je dôležité, aby si prišiel aspoň 30 minút pred začiatkom. 
-Prosím, kúp nejaké občerstvenie, aby ste mali počas debaty, čo chrúmať (hrozno, jablka, keksíky, niečo slané). Priprav prosím aj niečo na pitie a poháriky - všetko nájdeš v kuchynke, aj taniere na občerstvenie. 
-            </p>
-            <p>
-              Prosím, ak by niekto meškal - najlepšie je si vytlačiť <b>zoznam ľudí</b> zo Space - tak mu zavolaj (kontakty aj zoznam ľudí nájdeš v Space), že kedy príde a či príde. Tých, ktorí budú meškať mi prosím označ a napíš, koľko meškal. <b>Prezenčku</b> mi potom po skončení odfoť a pošli mailom.
-            </p>
-            <p>
-              Po kurze prosím <b>poďakuj lektorovi</b>, teraz máme prezent aj v office, čiže ten nemusíš kupovať, Janka alebo ja Ti dáme fľastičku. 
-Potom pomôžte všetci spolu dať miestnosť do pôvodného stavu, aby tam neostal po nás neporiadok.
-To je asi všetko také základné, ale aj tak si prečítaj dokument HOSTA (viď. hore).
-            </p>
-            <p>
-              Ak by Ti bolo čokoľvek nejasné, tak mi kľudne volaj, píš, krič.
-            </p>
-            <p>Ďakujem a pekný deň želám,</p>
+            <p>Prosím zaznač v Nexteria Space-e kto sa eventu zúčastnil <b>ešte dnes ({{ $todayDate }})</b>.</p>
+            <p>Urobiť tak môžeš tu: <a href="https://space.nexteria.sk/host/events/{{ $eventId }}" target="_blank">https://space.nexteria.sk/host/events/{{ $eventId }}</a></p>
           </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
+          <mj-text>Ďakujem a prajem pekný zvyšok dňa.</mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
           <mj-text padding-bottom="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" padding-top="0px">
             Za tím NLA
           </mj-text>
           <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
-            Danda
+            {{ $eventManagerName }}
           </mj-text>
           <mj-text padding-bottom="0px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
             Projektový manažér Nexteria Leadership Academy
           </mj-text>
           <mj-text padding-bottom="10px" padding-top="0px" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px">
-            +421 908 116 504
+            {{ $eventManagerPhone }}
           </mj-text>
         </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top" background-color="#fcc133">
           <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
             Copyright © 2017 Nexteria, All rights reserved.

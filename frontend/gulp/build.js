@@ -1,3 +1,3 @@
 import gulp from 'gulp';
 
-gulp.task('build', ['build-webpack']);
+gulp.task('build', ['build-webpack', 'compile-mjml']);

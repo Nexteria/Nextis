@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--<![endif]-->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style type="text/css">
   #outlook a { padding: 0; }
   .ReadMsgBody { width: 100%; }
@@ -55,23 +56,77 @@
 </style>
 </head>
 <body style="background: #d6dde5;">
-  <div style="background-color:#d6dde5;"><!--[if mso | IE]>
+  
+  <div class="mj-container" style="background-color:#d6dde5;"><!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]--><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" border="0"><tbody><tr><td><div style="margin:0px auto;max-width:600px;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:20px;padding-top:20px;"></td></tr></tbody></table></div></td></tr></tbody></table><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]-->
+      <!--[if mso | IE]>
       <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
         <tr>
           <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
       <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
-      <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="background:#fcc133;vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:10px;padding-bottom:10px;padding-right:0px;padding-left:0px;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0"><tbody><tr><td style="width:185px;"><img alt="" title="" height="auto" src="https://space.nexteria.sk/img/nexteria-logo.png" style="border:none;border-radius:0px;display:block;outline:none;text-decoration:none;width:100%;height:auto;" width="185"></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td><td style="vertical-align:top;width:540px;">
-      <![endif]--><div class="mj-column-per-90 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;"><h1>
-            Feedback stats
-          </h1></div></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td><td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;"><b>Ahoj {{ $eventManagerFirstName }},</b></div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">Feedback k eventu {{ $eventType }} {{ $eventName }} vyplnilo <b>{{ $actualFiledCount }}</b> ľudí z <b>{{ $expectedFilledCount }}</b>.</div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">Feedback formulár nájdeš tu: <a href="{{ $formLink }}" target="_blank">{{ $formLink }}</a></div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">Prajem pekný zvyšok dňa.</div></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td><td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:10px;" align="left"><div class="" style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">Tvoj Nexteria Space</div></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td><td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="background:#fcc133;vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><div class="" style="cursor:auto;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:center;">Copyright © 2017 Nexteria, All rights reserved.</div></td></tr></tbody></table></div><!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="vertical-align:top;width:600px;">
+      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="background:#fcc133;vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:10px;padding-bottom:10px;padding-right:0px;padding-left:0px;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0"><tbody><tr><td style="width:185px;"><img alt="" title="" height="auto" src="https://space.nexteria.sk/img/nexteria-logo.png" style="border:none;border-radius:0px;display:block;font-size:13px;outline:none;text-decoration:none;width:100%;height:auto;" width="185"></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]-->
+      <!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="vertical-align:top;width:540px;">
+      <![endif]--><div class="mj-column-per-90 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:30px;text-align:center;"><h1>
+              Feedback stats
+            </h1></div></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]-->
+      <!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="vertical-align:top;width:600px;">
+      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;"><b>Ahoj {{ $eventManagerFirstName }},</b></div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">{{ $eventType }} {{ $eventName }} vyplnilo <b>{{ $actualFiledCount }}</b> ľudí z <b>{{ $expectedFilledCount }}</b>.</div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">Feedback formulár nájdeš tu: <a href="{{ $formLink }}" target="_blank">{{ $formLink }}</a></div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">Prajem pekný zvyšok dňa.</div></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]-->
+      <!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="vertical-align:top;width:600px;">
+      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:10px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">Tvoj Nexteria Space</div></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]-->
+      <!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="vertical-align:top;width:600px;">
+      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="background:#fcc133;vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:center;">Copyright © 2017 Nexteria, All rights reserved.</div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
