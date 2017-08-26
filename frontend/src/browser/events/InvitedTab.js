@@ -58,6 +58,7 @@ export default class InvitedTab extends Component {
     changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
     eventId: PropTypes.number,
+    downloadEventAttendeesList: PropTypes.func.isRequired,
   }
 
   reasonFormater(cell) {
@@ -88,6 +89,7 @@ export default class InvitedTab extends Component {
       attendeesGroups,
       users,
       eventId,
+      downloadEventAttendeesList,
       changeAttendeeFeedbackStatus,
       changeAttendeePresenceStatus,
     } = this.props;
@@ -113,8 +115,15 @@ export default class InvitedTab extends Component {
       <div className="row">
         <div className="col-md-12">
           {groups.map((group, index) =>
-            <BootstrapTable key={index} data={group} striped hover height="300px" containerStyle={{height: '320px'}}>
-              <TableHeaderColumn isKey hidden dataField="id"></TableHeaderColumn>
+            <BootstrapTable
+              key={index}
+              data={group}
+              striped
+              hover
+              height="300px"
+              containerStyle={{ height: '320px' }}
+            >
+              <TableHeaderColumn isKey hidden dataField="id" />
 
               <TableHeaderColumn dataField="firstName" dataSort>
                 {formatMessage(messages.firstName)}
@@ -165,6 +174,16 @@ export default class InvitedTab extends Component {
               </TableHeaderColumn>
             </BootstrapTable>
           )}
+          <div className="form-group">
+            <label>Stiahnuť zoznam:</label>
+            <select onChange={(e) => downloadEventAttendeesList(eventId, e.target.value)} className="form-control">
+              <option readOnly>Vyberte možnosť</option>
+              <option value={'signedIn'}>Prihlásených</option>
+              <option value={'signedOut'}>Odhlásených</option>
+              <option value={'wontGo'}>Neprídu</option>
+              <option value={'wasPresent'}>Prítomných</option>
+            </select>
+          </div>
           <div className="clearfix"></div>
         </div>
       </div>

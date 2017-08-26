@@ -116,6 +116,11 @@ export const FETCH_QUESTIONNAIRE_RESULTS_START = 'FETCH_QUESTIONNAIRE_RESULTS_ST
 export const FETCH_QUESTIONNAIRE_RESULTS_SUCCESS = 'FETCH_QUESTIONNAIRE_RESULTS_SUCCESS';
 export const FETCH_QUESTIONNAIRE_RESULTS_ERROR = 'FETCH_QUESTIONNAIRE_RESULTS_ERROR';
 
+export const DOWNLOAD_EVENT_ATTENDEES_LIST = 'DOWNLOAD_EVENT_ATTENDEES_LIST';
+export const DOWNLOAD_EVENT_ATTENDEES_LIST_SUCCESS = 'DOWNLOAD_EVENT_ATTENDEES_LIST_SUCCESS';
+export const DOWNLOAD_EVENT_ATTENDEES_LIST_START = 'DOWNLOAD_EVENT_ATTENDEES_LIST_START';
+export const DOWNLOAD_EVENT_ATTENDEES_LIST_ERROR = 'DOWNLOAD_EVENT_ATTENDEES_LIST_ERROR';
+
 export function togglePastEvents() {
   return {
     type: TOGGLE_PAST_EVENTS,
@@ -621,6 +626,19 @@ export function downloadAnswers(formId) {
         headers: { 'Content-Type': 'application/json' },
       }).then(response => response.blob())
       .then(blob => download(blob, 'Odpovede.xls')),
+    },
+  });
+}
+
+export function downloadEventAttendeesList(eventId, type) {
+  return ({ fetch }) => ({
+    type: DOWNLOAD_EVENT_ATTENDEES_LIST,
+    payload: {
+      promise: fetch(`/admin/nxEvents/${eventId}/attendees/${type}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => response.blob())
+      .then(blob => download(blob, 'Účastníci.xls')),
     },
   });
 }

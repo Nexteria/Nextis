@@ -20,7 +20,10 @@ export class FormResults extends Component {
 
   componentDidMount() {
     const { formId, fetchQuestionnaireResults } = this.props;
-    fetchQuestionnaireResults(formId);
+
+    if (formId) {
+      fetchQuestionnaireResults(formId);
+    }
   }
 
   render() {
@@ -31,7 +34,7 @@ export class FormResults extends Component {
     } = this.props;
 
     const event = events.get(actualEvent.get('id'));
-    if (!event) {
+    if (!event || !event.hasIn(['questionForm', 'formData'])) {
       return <div></div>;
     }
 

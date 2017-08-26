@@ -328,6 +328,7 @@ export class EditEvent extends Component {
     initialize: PropTypes.func.isRequired,
     changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
+    downloadEventAttendeesList: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -653,6 +654,7 @@ export class EditEvent extends Component {
       setField,
       handleSubmit,
       semesters,
+      downloadEventAttendeesList,
       addAttendeesGroup,
       editAttendeesGroup,
       eventSettings,
@@ -897,6 +899,7 @@ export class EditEvent extends Component {
                     eventId={actualEventId}
                     intl={this.props.intl}
                     users={users}
+                    downloadEventAttendeesList={downloadEventAttendeesList}
                     attendeesGroups={events.getIn([actualEventId, 'attendeesGroups'])}
                     changeAttendeeFeedbackStatus={changeAttendeeFeedbackStatus}
                     changeAttendeePresenceStatus={changeAttendeePresenceStatus}

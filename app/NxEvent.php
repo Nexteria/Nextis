@@ -488,6 +488,11 @@ class NxEvent extends Model
         return $this->hasMany('App\AttendeesGroup', 'eventId');
     }
 
+    public function attendees()
+    {
+        return $this->hasManyThrough('App\NxEventAttendee', 'App\AttendeesGroup', 'eventId', 'attendeesGroupId', 'id');
+    }
+
     public function lectors()
     {
         return $this->belongsToMany('App\User');

@@ -775,4 +775,21 @@ class AdminController extends Controller
             });
         })->download('xls');
     }
+
+    public function getAttendeesList($eventId, $type)
+    {
+        $event = NxEvent::findOrFail($eventId);
+
+        $attendees = $event->attendees()->whereNotNull($type)->get();
+        $users = [];
+        foreach ($attendees as $attendee) {
+            $users[] = $attendee->user;
+        }
+
+        return \Excel::create('Export profilov študentov', function ($excel) use ($users) {
+            $excel->sheet('Študenti', function ($sheet) use ($users) {
+                $sheet->loadView('exports.student_profiles', ['users' => $users]);
+            });
+        })->download('xls');
+    }
 }

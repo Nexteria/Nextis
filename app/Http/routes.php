@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix' => '/admin'], function () {
             Route::get('/nxEvents/categories', 'AdminController@getNxEventsCategories');
+            Route::get('/nxEvents/{eventId}/attendees/{type}', 'AdminController@getAttendeesList');
             Route::put('/nxEvents', 'AdminController@getNxEvents');
 
             Route::get('/questionnaire/{formId}/results', 'AdminController@getFormResults');
