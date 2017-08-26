@@ -2,7 +2,7 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { Map } from 'immutable';
 import { browserHistory, Link } from 'react-router';
-import { FormattedMessage, FormattedDate, defineMessages } from 'react-intl';
+import { FormattedMessage, FormattedTime, FormattedDate, defineMessages } from 'react-intl';
 import './Event.scss';
 import isBefore from 'date-fns/is_before';
 import isAfter from 'date-fns/is_after';
@@ -258,7 +258,11 @@ export default class Event extends Component {
                         signInExpired ?
                           <FormattedDate value={group.signUpDeadlineDateTime} />
                           :
-                          <FormattedDate value={group.signUpOpenDateTime} />
+                          <span>
+                            <FormattedDate value={group.signUpOpenDateTime} />
+                            <span> o </span>
+                            <FormattedTime value={group.signUpOpenDateTime} />
+                          </span>
                       }
                       {!isFreeCapacity ?
                         <span>
