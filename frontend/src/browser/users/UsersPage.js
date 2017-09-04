@@ -112,13 +112,13 @@ class UsersPage extends Component {
 
     return (
       <span className="action-buttons">
-        {hasPermission('delete_users') ?
+        {/* {hasPermission('delete_users') ?
           <i
             className="fa fa-trash-o trash-group"
             onClick={() => removeUser(user.id)}
           ></i>
           : ''
-        }
+        } */}
 
         <i
           className="fa fa-pencil"
