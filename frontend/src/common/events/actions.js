@@ -1,7 +1,10 @@
-import { SubmissionError } from 'redux-form';
 import download from 'downloadjs';
 import { browserHistory } from 'react-router';
 import format from 'date-fns/format';
+import toastr from 'toastr';
+
+export const TOGGLE_EVENT_TERM = 'TOGGLE_EVENT_TERM';
+export const SAVE_SIGNIN_FORM_DATA = 'SAVE_SIGNIN_FORM_DATA';
 
 export const DOWNLOAD_FORM_ANSWERS = 'DOWNLOAD_FORM_ANSWERS';
 export const DOWNLOAD_FORM_ANSWERS_START = 'DOWNLOAD_FORM_ANSWERS_START';
@@ -134,10 +137,8 @@ export function toggleFutureEvents() {
 }
 
 export function saveEvent(fields) {
-  let data = {
+  const data = {
     ...fields,
-    eventStartDateTime: format(fields.eventStartDateTime, 'YYYY-MM-DD HH:mm:ss'),
-    eventEndDateTime: format(fields.eventEndDateTime, 'YYYY-MM-DD HH:mm:ss'),
     attendeesGroups: fields.attendeesGroups.map(group => ({
       id: group.id,
       maxCapacity: group.maxCapacity,
@@ -151,6 +152,24 @@ export function saveEvent(fields) {
         signedOut: user.get('signedOut') ? format(user.get('signedOut'), 'YYYY-MM-DD HH:mm:ss') : null,
         wontGo: user.get('wontGo') ? format(user.get('wontGo'), 'YYYY-MM-DD HH:mm:ss') : null,
         signedOutReason: user.get('signedOutReason').toString('html'),
+      })),
+    })),
+    terms: fields.terms.get('streams').map(stream => ({
+      id: stream.get('id'),
+      minCapacity: stream.get('minCapacity'),
+      maxCapacity: stream.get('maxCapacity'),
+      hostId: stream.get('hostId'),
+      nxLocationId: stream.get('nxLocationId'),
+      eventStartDateTime: format(stream.get('eventStartDateTime'), 'YYYY-MM-DD HH:mm:ss'),
+      eventEndDateTime: format(stream.get('eventEndDateTime'), 'YYYY-MM-DD HH:mm:ss'),
+      terms: stream.get('terms').map(term => ({
+        id: term.get('id'),
+        minCapacity: term.get('minCapacity'),
+        maxCapacity: term.get('maxCapacity'),
+        hostId: term.get('hostId'),
+        nxLocationId: term.get('nxLocationId'),
+        eventStartDateTime: format(term.get('eventStartDateTime'), 'YYYY-MM-DD HH:mm:ss'),
+        eventEndDateTime: format(term.get('eventEndDateTime'), 'YYYY-MM-DD HH:mm:ss'),
       })),
     })),
     questionForm: fields.questionForm ? fields.questionForm.get('formData') : null,
@@ -191,7 +210,7 @@ export function loadEventList(filters = {}) {
     payload: {
       promise: fetch(`/nxEvents${params}`, {
         credentials: 'same-origin',
-      }).then(response => response.json()),
+      }).then(response => response.json()).then(response => { console.log(response); return response;}),
     },
   });
 }
@@ -275,53 +294,71 @@ export function openEventDetailsDialog(eventId) {
   };
 }
 
-export function attendeeWontGo(eventId, userId, groupId, reason) {
-  const data = { wontGoFlag: true };
-  if (reason) {
-    data.reason = reason;
-  }
+export function attendeeWontGo(viewerId, reason) {
+  return ({ fetch, getState }) => {
+    const data = { wontGoFlag: true };
+    if (reason) {
+      data.reason = reason;
+    }
 
-  return ({ fetch }) => ({
-    type: ATTENDEE_WONT_GO,
-    payload: {
-      promise: fetch(`/nxEvents/${eventId}/users/${userId}`, {
-        method: 'put',
-        credentials: 'same-origin',
-        notifications: 'both',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          groupId,
-          eventId,
-        })),
-    },
-  });
+    data.events = getState().events.getIn(['signInProcess', 'events']);
+
+    return {
+      type: ATTENDEE_WONT_GO,
+      payload: {
+        promise: fetch(`/nxEvents/users/${viewerId}`, {
+          method: 'put',
+          credentials: 'same-origin',
+          notifications: 'both',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+      },
+    };
+  };
 }
 
-export function attendeeSignIn(eventId, viewerId, groupId, choosedEvents, questionForm) {
-  return ({ fetch }) => ({
-    type: ATTENDEE_SIGN_IN,
-    payload: {
-      promise: fetch(`/nxEvents/${eventId}/users/${viewerId}`, {
-        method: 'put',
-        credentials: 'same-origin',
-        notifications: 'both',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          signIn: true,
-          choosedEvents: choosedEvents ? choosedEvents.filter(e => e).keySeq().map(e => e) : null,
-          questionForm,
-        }),
-      }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          groupId,
-          eventId,
-        })),
-    },
-  });
+export function attendeeSignIn(viewerId) {
+  return ({ fetch, getState }) => {
+    const state = getState();
+    const events = state.events.events;
+
+    const shouldExecute = state.events.getIn(['signInProcess', 'events']).every((choosedEvent, key) => {
+      if (!choosedEvent.has('questionForm') && events.getIn([key, 'questionForm'])) {
+        browserHistory.push({
+          pathname: `/events/${key}/questionnaire`,
+          state: { viewerId }
+        });
+
+        return false;
+      }
+      return true;
+    });
+
+    if (!shouldExecute) {
+      return { type: 'ATTENDEE_SIGN_IN_NOT_FINISHED' };
+    }
+
+    return {
+      type: ATTENDEE_SIGN_IN,
+      payload: {
+        promise: fetch(`/nxEvents/users/${viewerId}`, {
+          method: 'put',
+          credentials: 'same-origin',
+          notifications: 'both',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            signIn: true,
+            events: state.events.getIn(['signInProcess', 'events'])
+          }),
+        }).then(response => response.json())
+          .then(response => {
+            browserHistory.push('/events');
+            return response;
+          }),
+      },
+    };
+  };
 }
 
 export function fetchQuestionnaireResults(formId) {
@@ -339,25 +376,26 @@ export function fetchQuestionnaireResults(formId) {
   });
 }
 
-export function attendeeSignOut(signOut) {
+export function attendeeSignOut(signOut, viewerId) {
+  const events = {};
+  events[signOut.eventId] = {
+    termId: signOut.termId,
+  };
+
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_OUT,
     payload: {
-      promise: fetch(`/nxEvents/${signOut.eventId}/users/${signOut.userId}`, {
+      promise: fetch(`/nxEvents/users/${viewerId}`, {
         method: 'put',
         credentials: 'same-origin',
         notifications: 'both',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           signOut: true,
+          events,
           reason: signOut.reason,
         }),
       }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          groupId: signOut.groupId,
-          eventId: signOut.eventId,
-        })),
     },
   });
 }
@@ -404,14 +442,13 @@ export function changeAttendeeFeedbackStatus(eventId, user, groupId) {
   });
 }
 
-export function openSignOutDialog(event, viewer, groupId, type) {
+export function openSignOutDialog(event, type, termId) {
   return {
     type: OPEN_SIGN_OUT_DIALOG,
     payload: {
       eventId: event.id,
-      userId: viewer.id,
       type,
-      groupId,
+      termId,
     },
   };
 }
@@ -551,8 +588,11 @@ export function checkFeedbackFormLink(feedbackFormUrl) {
           feedbackFormUrl
         }),
       }).then(response => response.json()).then(resp => {
-        if (resp.code != 200) {
-          throw new SubmissionError({ feedbackLink: resp.error });
+        if (resp.code !== 200) {
+          toastr.options.closeButton = true;
+          toastr.options.timeOut = 0;
+          toastr.error(resp.error);
+          throw new Error(resp.error);
         }
 
         return resp.publicResponseUrl;
@@ -561,48 +601,44 @@ export function checkFeedbackFormLink(feedbackFormUrl) {
   });
 }
 
-export function signAsStandIn(event, viewer, groupId) {
-  return ({ fetch }) => ({
-    type: ATTENDEE_SIGN_IN_AS_STANDIN,
-    payload: {
-      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
-        method: 'put',
-        credentials: 'same-origin',
-        notifications: 'both',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          standIn: true,
-        }),
-      }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          groupId,
-          eventId: event.id,
-        })),
-    },
-  });
+export function signAsStandIn(viewerId) {
+  return ({ fetch, getState }) => {
+    const data = { standIn: true };
+    data.events = getState().events.getIn(['signInProcess', 'events']);
+
+    return {
+      type: ATTENDEE_SIGN_IN_AS_STANDIN,
+      payload: {
+        promise: fetch(`/nxEvents/users/${viewerId}`, {
+          method: 'put',
+          credentials: 'same-origin',
+          notifications: 'both',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+      },
+    };
+  };
 }
 
-export function signOutAsStandIn(event, viewer, groupId) {
-  return ({ fetch }) => ({
-    type: ATTENDEE_SIGN_OUT_AS_STANDIN,
-    payload: {
-      promise: fetch(`/nxEvents/${event.id}/users/${viewer.id}`, {
-        method: 'put',
-        credentials: 'same-origin',
-        notifications: 'both',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          standIn: false,
-        }),
-      }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          groupId,
-          eventId: event.id,
-        })),
-    },
-  });
+export function signOutAsStandIn(viewerId) {
+  return ({ fetch, getState }) => {
+    const data = { standIn: false };
+    data.events = getState().events.getIn(['signInProcess', 'events']);
+
+    return {
+      type: ATTENDEE_SIGN_OUT_AS_STANDIN,
+      payload: {
+        promise: fetch(`/nxEvents/users/${viewerId}`, {
+          method: 'put',
+          credentials: 'same-origin',
+          notifications: 'both',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+      },
+    };
+  };
 }
 
 export function fetchEmailsStatus(eventId) {
@@ -641,6 +677,28 @@ export function downloadEventAttendeesList(eventId, type) {
       .then(blob => download(blob, 'Účastníci.xls')),
     },
   });
+}
+
+export function toggleEventTerm(termId, eventId, select, noRecursive) {
+  return {
+    type: TOGGLE_EVENT_TERM,
+    payload: {
+      termId,
+      eventId,
+      select,
+      noRecursive,
+    }
+  };
+}
+
+export function saveSignInForm(formData, eventId) {
+  return {
+    type: SAVE_SIGNIN_FORM_DATA,
+    payload: {
+      formData,
+      eventId,
+    }
+  };
 }
 
 export function resetEmailStatus() {

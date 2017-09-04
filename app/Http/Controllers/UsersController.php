@@ -169,7 +169,6 @@ class UsersController extends Controller
         }
 
         $users = User::with('roles')
-            ->with('hostedEvents')
             ->with('student')
             ->with('eventAttendees')
             ->with('eventAttendees.attendeesGroup')

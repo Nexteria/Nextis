@@ -20,13 +20,13 @@ class NxEventAttendeesController extends Controller
     protected $nxEventAttendeeTransformer;
 
     /**
-     * @var \App\Transformers\NxEventTransformer
+     * @var \App\Transformers\Student\NxEventTransformer
      */
     protected $nxEventTransformer;
 
     public function __construct(
         \App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer,
-        \App\Transformers\NxEventTransformer $nxEventTransformer
+        \App\Transformers\Student\NxEventTransformer $nxEventTransformer
     ) {
         $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
         $this->nxEventTransformer = $nxEventTransformer;
@@ -55,9 +55,9 @@ class NxEventAttendeesController extends Controller
             foreach ($attendeesToSignIn as $eventAttendee) {
                 $event = $eventAttendee->attendeesGroup->nxEvent;
                 $canSignIn = $event->canSignInAttendee($eventAttendee);
-                if ($canSignIn !== true) {
+                if ($canSignIn['canSignIn'] !== true) {
                     return response()->json([
-                      'message' => $canSignIn,
+                      'message' => $canSignIn['message'],
                     ]);
                 }
             }
@@ -217,214 +217,288 @@ class NxEventAttendeesController extends Controller
         ], 200);
     }
 
-    public function updateAttendee($eventId, $userId)
+    public function updateAttendee($userId)
     {
-        $attendee = NxEventAttendee::where('userId', '=', $userId)
+        $events = \Input::get('events');
+        $eventIds = [];
+        foreach ($events as $eventId => $data) {
+            $eventIds[] = $eventId;
+            $attendee = NxEventAttendee::where('userId', '=', $userId)
             ->whereHas('attendeesGroup', function ($query) use ($eventId) {
                 $query->where('eventId', '=', $eventId);
             })->first();
 
-        if (!$attendee) {
-            abort(401);
-        }
-
-        $attendee->fill(\Input::all());
-
-        if (\Input::has('standIn')) {
-            if (\Input::get('standIn')) {
-                $attendeesToSign = [$attendee];
-                foreach ($attendeesToSign as $eventAttendee) {
-                    $eventAttendee->standIn = Carbon::now();
-                    $eventAttendee->save();
-                }
-            } else {
-                $attendeesToSign = [$attendee];
-                foreach ($attendeesToSign as $eventAttendee) {
-                    $eventAttendee->standIn = null;
-                    $eventAttendee->save();
-                }
+            if (!$attendee) {
+                abort(401);
             }
-        }
 
-        if (\Input::has('signIn') && \Input::get('signIn')) {
-            if ($attendee->event()->form) {
-                $form = $attendee->event()->form;
-                $answers = $form->getUsersAnswers($userId);
-    
-                if ($answers->count() == 0 && !\Input::has('questionForm')) {
-                    return response()->json([
-                        'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
-                    ], 400);
-                }
-    
-                if ($answers->count() == 0) {
-                    $questionForm = \Input::get('questionForm');
-                    foreach ($questionForm['questions'] as $question) {
-                        if ($question['type'] == 'shortText' || $question['type'] == 'longText') {
-                            $choice = array_shift($question['choices']);
-                            $choice = Choice::findOrFail($choice['id']);
-                            $answer = Answer::create([
-                                'userId' => $userId,
-                                'choiceId' => $choice->id,
-                                'answer' => isset($question['answer']) ? $question['answer'] : '',
-                            ]);
-                        }
-    
-                        if ($question['type'] == 'choiceList' || $question['type'] == 'selectList') {
-                            foreach ($question['choices'] as $chId => $choice) {
-                                $choice = Choice::findOrFail($chId);
+            if (\Input::has('signIn') && \Input::get('signIn')) {
+                if ($attendee->event()->form) {
+                    $form = $attendee->event()->form;
+                    $answers = $form->getUsersAnswers($userId);
+        
+                    if ($answers->count() == 0 && !isset($data['questionForm'])) {
+                        return response()->json([
+                            'error' => 'Pri prihlásení je potrebné vyplniť dotazník!',
+                        ], 400);
+                    }
+        
+                    if ($answers->count() == 0) {
+                        $questionForm = $data['questionForm'];
+                        foreach ($questionForm['questions'] as $question) {
+                            if ($question['type'] == 'shortText' || $question['type'] == 'longText') {
+                                $choice = array_shift($question['choices']);
+                                $choice = Choice::findOrFail($choice['id']);
                                 $answer = Answer::create([
                                     'userId' => $userId,
                                     'choiceId' => $choice->id,
-                                    'answer' => isset($question['answer']) && $chId === $question['answer'] ? 'selected' : '',
+                                    'answer' => isset($question['answer']) ? $question['answer'] : '',
                                 ]);
                             }
-                        }
-    
-                        if ($question['type'] == 'multichoice') {
-                            foreach ($question['choices'] as $choiceId => $value) {
-                                $choice = Choice::findOrFail($choiceId);
-                                $answer = Answer::create([
-                                    'userId' => $userId,
-                                    'choiceId' => $choiceId,
-                                    'answer' => isset($question['answer']) && isset($question['answer'][$choiceId]) ? 'selected' : '',
-                                ]);
+        
+                            if ($question['type'] == 'choiceList' || $question['type'] == 'selectList') {
+                                foreach ($question['choices'] as $chId => $choice) {
+                                    $choice = Choice::findOrFail($chId);
+                                    $answer = Answer::create([
+                                        'userId' => $userId,
+                                        'choiceId' => $choice->id,
+                                        'answer' => isset($question['answer']) && $chId === $question['answer'] ? 'selected' : '',
+                                    ]);
+                                }
+                            }
+        
+                            if ($question['type'] == 'multichoice') {
+                                foreach ($question['choices'] as $choiceId => $value) {
+                                    $choice = Choice::findOrFail($choiceId);
+                                    $answer = Answer::create([
+                                        'userId' => $userId,
+                                        'choiceId' => $choiceId,
+                                        'answer' => isset($question['answer']) && isset($question['answer'][$choiceId]) ? 'selected' : '',
+                                    ]);
+                                }
                             }
                         }
                     }
                 }
-            }
-            
-            $attendeesToSignIn = [$attendee];
-            if (\Input::has('choosedEvents')) {
-                foreach (\Input::get('choosedEvents') as $eId) {
-                    $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
-                      ->whereHas('attendeesGroup', function ($query) use ($eId) {
-                          $query->where('eventId', '=', $eId);
-                      })->first();
 
-                    if (!$eventAttendee) {
-                        abort(401);
+                foreach ($data['terms'] as $termId => $item) {
+                    $term = \App\NxEventTerm::findOrFail($termId);
+                    $canSignIn = $attendee->event()->canSignInAttendee($attendee, $term->id);
+
+                    if ($canSignIn['canSignIn'] !== true) {
+                        return response()->json([
+                        'error' => $canSignIn['message'],
+                        ], 400);
+                    }
+                    
+                    if (!isset($data['noRecursive']) || !$data['noRecursive']) {
+                        // check if can signIn to event
+                        foreach ($term->terms as $nextMeeting) {
+                            $canSignIn = $attendee->event()->canSignInAttendee($attendee, $nextMeeting->id);
+                            if ($canSignIn['canSignIn'] !== true) {
+                                return response()->json([
+                                'error' => $canSignIn['message'],
+                                ], 400);
+                            }
+                        }
                     }
 
-                    $attendeesToSignIn[] = $eventAttendee;
+                    $dataToSync = [];
+                    $dataToSync[$term->id] = [
+                        'signedIn' => Carbon::now(),
+                        'signedOut' => null,
+                        'wontGo' => null,
+                        'standIn' => null,
+                        'signedOutReason' => '',
+                    ];
+                    $attendee->terms()->sync($dataToSync, false);
+
+                    $attendee->update([
+                        'signedIn' => Carbon::now(),
+                        'signedOut' => null,
+                        'wontGo' => null,
+                        'standIn' => null,
+                        'signedOutReason' => '',
+                    ]);
+
+                    if (!isset($data['noRecursive']) || !$data['noRecursive']) {
+                        foreach ($term->terms as $nextMeeting) {
+                            $dataToSync = [];
+                            $dataToSync[$nextMeeting->id] = [
+                                'signedIn' => Carbon::now(),
+                                'signedOut' => null,
+                                'wontGo' => null,
+                                'standIn' => null,
+                                'signedOutReason' => '',
+                            ];
+                            $attendee->terms()->sync($dataToSync, false);
+                        }
+                    }
                 }
             }
+        }
 
-            // check if can signIn to event
-            foreach ($attendeesToSignIn as $eventAttendee) {
-                $event = $eventAttendee->attendeesGroup->nxEvent;
-                $canSignIn = $event->canSignInAttendee($eventAttendee);
-                if ($canSignIn !== true) {
+        foreach ($events as $eventId => $data) {
+            if (\Input::has('standIn')) {
+                $attendee = NxEventAttendee::where('userId', '=', $userId)
+                                            ->whereHas('attendeesGroup', function ($query) use ($eventId) {
+                                                $query->where('eventId', '=', $eventId);
+                                            })->first();
+                $eventIds[] = $eventId;
+
+                if (\Input::get('standIn')) {
+                    $attendeesToSign = [$attendee];
+                    foreach ($attendeesToSign as $eventAttendee) {
+                        $eventAttendee->standIn = Carbon::now();
+                        $eventAttendee->save();
+                    }
+                } else {
+                    $attendeesToSign = [$attendee];
+                    foreach ($attendeesToSign as $eventAttendee) {
+                        $eventAttendee->standIn = null;
+                        $eventAttendee->save();
+                    }
+                }
+            }
+        }
+
+        foreach ($events as $eventId => $data) {
+            if (\Input::has('signOut') && \Input::get('signOut')) {
+                if (!\Input::has('reason')) {
                     return response()->json([
-                      'error' => $canSignIn,
+                    'error' => 'Please provide reason why are you canceling your attendance',
                     ], 400);
                 }
-            }
 
-            foreach ($attendeesToSignIn as $eventAttendee) {
-                $eventAttendee->signedIn = Carbon::now();
-                $eventAttendee->signedOut = null;
-                $eventAttendee->wontGo = null;
-                $eventAttendee->standIn = null;
-                $eventAttendee->signedOutReason = '';
-                $eventAttendee->save();
+                $event = \App\NxEvent::find($eventId);
+                $term = null;
+
+                if (isset($data['termId']) && $data['termId']) {
+                    $term = \App\NxEventTerm::find($data['termId']);
+                }
+
+                $attendee = NxEventAttendee::where('userId', '=', $userId)
+                ->whereHas('attendeesGroup', function ($query) use ($eventId) {
+                    $query->where('eventId', '=', $eventId);
+                })->first();
+
+                $attendeesToSignOut = [$attendee];
+                if ($event->groupedEvents->count() > 0) {
+                    foreach ($event->groupedEvents as $gEvent) {
+                        $eventIds[] = $gEvent->id;
+                        $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
+                        ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
+                            $query->where('eventId', '=', $gEvent->id);
+                        })->first();
+
+                        if (!$eventAttendee) {
+                            abort(401);
+                        }
+
+                        if ($eventAttendee->signedIn === null) {
+                            continue;
+                        }
+
+                        $attendeesToSignOut[] = $eventAttendee;
+                    }
+                }
+
+                // check if event is full
+                $signedIn = 0;
+                foreach ($event->attendeesGroups as $group) {
+                    $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
+                }
+
+                $wasFull = false;
+                if ($signedIn >= $event->maxCapacity) {
+                    $wasFull = true;
+                }
+
+                foreach ($attendeesToSignOut as $eventAttendee) {
+                    $signedTerms = $eventAttendee->terms()->wherePivot('signedIn', '!=', null)->count();
+                    if (!$term || $signedTerms === 1) {
+                        $eventAttendee->signedOut = Carbon::now();
+                        $eventAttendee->signedOutReason = clean(\Input::get('reason'));
+                        $eventAttendee->wontGo = null;
+                        $eventAttendee->signedIn = null;
+                        $eventAttendee->standIn = null;
+
+                        foreach ($eventAttendee->terms as $attendeeTerm) {
+                            $dataToSync = [];
+                            $dataToSync[$attendeeTerm->id] = [
+                                'signedOut' => Carbon::now(),
+                                'signedOutReason' => clean(\Input::get('reason')),
+                                'wontGo' => null,
+                                'signedIn' => null,
+                                'standIn' => null,
+                            ];
+
+                            $eventAttendee->terms()->sync($dataToSync, false);
+                        }
+                    } 
+                    if ($term) {
+                        $dataToSync = [];
+                        $dataToSync[$term->id] = [
+                            'signedOut' => Carbon::now(),
+                            'signedOutReason' => clean(\Input::get('reason')),
+                            'wontGo' => null,
+                            'signedIn' => null,
+                            'standIn' => null,
+                        ];
+                        $eventAttendee->terms()->sync($dataToSync, false);
+                    }
+                    $eventAttendee->save();
+                }
+
+                if ($wasFull) {
+                    event(new EventAttendeePlaceReleased($event));
+                }
             }
         }
 
-        if (\Input::has('signOut') && \Input::get('signOut')) {
-            if (!\Input::has('reason')) {
-                return response()->json([
-                  'error' => 'Please provide reason why are you canceling your attendance',
-                ], 400);
-            }
+        foreach ($events as $eventId => $data) {
+            if (\Input::has('wontGoFlag') && \Input::get('wontGoFlag')) {
+                $event = \App\NxEvent::find($eventId);
+                $eventIds[] = $eventId;
 
-            $event = \App\NxEvent::find($eventId);
-            $attendeesToSignOut = [$attendee];
-            if ($event->groupedEvents->count() > 0) {
-                foreach ($event->groupedEvents as $gEvent) {
-                    $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
-                      ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
-                          $query->where('eventId', '=', $gEvent->id);
-                      })->first();
-
-                    if (!$eventAttendee) {
-                        abort(401);
-                    }
-
-                    if ($eventAttendee->signedIn === null) {
-                        continue;
-                    }
-
-                    $attendeesToSignOut[] = $eventAttendee;
+                if (!\Input::has('reason') && $event->mandatoryParticipation) {
+                    return response()->json([
+                    'error' => 'Please provide reason why you wont be able to attend this event.',
+                    ], 400);
                 }
-            }
 
-            // check if event is full
-            $signedIn = 0;
-            foreach ($event->attendeesGroups as $group) {
-                $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
-            }
+                $attendeesWontGo = [$attendee];
+                if ($event->groupedEvents->count() > 0) {
+                    foreach ($event->groupedEvents as $gEvent) {
+                        $eventIds[] = $gEvent->id;
+                        $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
+                        ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
+                            $query->where('eventId', '=', $gEvent->id);
+                        })->first();
 
-            $wasFull = false;
-            if ($signedIn >= $event->maxCapacity) {
-                $wasFull = true;
-            }
+                        if (!$eventAttendee) {
+                            abort(401);
+                        }
 
-            foreach ($attendeesToSignOut as $eventAttendee) {
-                $eventAttendee->signedOut = Carbon::now();
-                $eventAttendee->signedOutReason = clean(\Input::get('reason'));
-                $eventAttendee->wontGo = null;
-                $eventAttendee->signedIn = null;
-                $eventAttendee->standIn = null;
-                $eventAttendee->save();
-            }
+                        $attendeesWontGo[] = $eventAttendee;
+                    }
+                }
 
-            if ($wasFull) {
-                event(new EventAttendeePlaceReleased($event));
+                foreach ($attendeesWontGo as $eventAttendee) {
+                    $eventAttendee->wontGo = Carbon::now();
+                    $eventAttendee->standIn = null;
+                    $eventAttendee->signedIn = null;
+                    $eventAttendee->signedOut = null;
+                    if (\Input::has('reason')) {
+                        $eventAttendee->signedOutReason = clean(\Input::get('reason'));
+                    }
+
+                    $eventAttendee->save();
+                }
             }
         }
 
-        if (\Input::has('wontGoFlag') && \Input::get('wontGoFlag')) {
-            $event = \App\NxEvent::find($eventId);
-
-            if (!\Input::has('reason') && $event->mandatoryParticipation) {
-                return response()->json([
-                  'error' => 'Please provide reason why you wont be able to attend this event.',
-                ], 400);
-            }
-
-            $attendeesWontGo = [$attendee];
-            if ($event->groupedEvents->count() > 0) {
-                foreach ($event->groupedEvents as $gEvent) {
-                    $eventAttendee = NxEventAttendee::where('userId', '=', $userId)
-                      ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
-                          $query->where('eventId', '=', $gEvent->id);
-                      })->first();
-
-                    if (!$eventAttendee) {
-                        abort(401);
-                    }
-
-                    $attendeesWontGo[] = $eventAttendee;
-                }
-            }
-
-            foreach ($attendeesWontGo as $eventAttendee) {
-                $eventAttendee->wontGo = Carbon::now();
-                $eventAttendee->standIn = null;
-                $eventAttendee->signedIn = null;
-                $eventAttendee->signedOut = null;
-                if (\Input::has('reason')) {
-                    $eventAttendee->signedOutReason = clean(\Input::get('reason'));
-                }
-
-                $eventAttendee->save();
-            }
-        }
-
-        $attendee->save();
-
-        return response()->json($this->nxEventAttendeeTransformer->transform($attendee));
+        $eventsCollection = \App\NxEvent::whereIn('id', $eventIds)->get();
+        return response()->json($this->nxEventTransformer->transformCollection($eventsCollection));
     }
 }

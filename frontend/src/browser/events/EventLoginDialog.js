@@ -8,9 +8,6 @@ import { browserHistory } from 'react-router';
 
 
 import * as actions from '../../common/events/actions';
-import { fields } from '../../common/lib/redux-fields/index';
-import * as fieldsActions from '../../common/lib/redux-fields/actions';
-import './EventLoginDialog.scss';
 
 
 const messages = defineMessages({
@@ -53,27 +50,17 @@ export class EventLoginDialog extends Component {
   static propTypes = {
     events: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
+    choosedEvents: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
-    fields: PropTypes.object.isRequired,
-  }
-
-  componentWillMount() {
-    const { setField, events, params } = this.props;
-
-    const event = events.get(parseInt(params.eventId, 10));
-    const groupedEvents = event.groupedEvents.map(eventId =>
-      events.filter(e => e.id === eventId).first()
-    );
-
-    setField(['EventLoginDialog', 'choosedEvents'], new Map(groupedEvents.map(e => [e.id, false])));
+    toggleEventTerm: PropTypes.func.isRequired,
   }
 
   render() {
-    const { viewer, noRedirect, events, fields, params, attendeeSignIn } = this.props;
+    const { users, viewer, events, choosedEvents, params, attendeeSignIn, toggleEventTerm } = this.props;
+    const { formatMessage } = this.props.intl;
 
     const event = events.get(parseInt(params.eventId, 10));
-    const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
 
     const exclusionaryEvents = event.exclusionaryEvents.map(eventId =>
       events.filter(e => e.id === eventId).first()
@@ -83,19 +70,15 @@ export class EventLoginDialog extends Component {
       events.filter(e => e.id === eventId).first()
     );
 
-    const groupedEventsNumbers = new Map(groupedEvents.map(gEvent => {
-      const attendees = gEvent.attendeesGroups.reduce((reduction, group) =>
-        reduction.merge(group.users)
-      , new Map());
+    const groupedEventsNumbers = new Map(groupedEvents.map(gEvent =>
+      [gEvent.id, {
+        attending: gEvent.attendingNumbers.get('signedIn'),
+        invited: gEvent.attendingNumbers.get('invited'),
+        maxCapacity: gEvent.terms.get('streams').first().get('maxCapacity'),
+      }]
+    ));
 
-      return [gEvent.id, {
-        attending: attendees.filter(user => user.get('signedIn')).size,
-        invited: attendees.size,
-        maxCapacity: gEvent.maxCapacity,
-      }];
-    }));
-
-    const allChoosed = (groupedEvents.size - fields.choosedEvents.value.filter(e => e).size - exclusionaryEvents.size + 1) === 0;
+    const allChoosed = (groupedEvents.size - choosedEvents.size - exclusionaryEvents.size + 2) === 0;
 
     return (
       <Modal
@@ -113,7 +96,7 @@ export class EventLoginDialog extends Component {
         <Body>
           {exclusionaryEvents.size ?
             <div>
-              <label style={{ textAlign: 'center', width: '100%'}}><FormattedMessage {...messages.exclusionaryEvents} /></label>
+              <label style={{ textAlign: 'center', width: '100%' }}><FormattedMessage {...messages.exclusionaryEvents} /></label>
               <ul>
                 {exclusionaryEvents.map(eEvent =>
                   <li>{eEvent.name}</li>
@@ -123,7 +106,9 @@ export class EventLoginDialog extends Component {
             : null
           }
           <div>
-            <label style={{ textAlign: 'center', width: '100%'}}><FormattedMessage {...messages.chooseEvents} />:</label>
+            <label style={{ textAlign: 'center', width: '100%' }}>
+              <FormattedMessage {...messages.chooseEvents} />:
+            </label>
             <div className="box event-login">
               <div className="box-body table-responsive no-padding">
                 <table className="table table-hover">
@@ -139,7 +124,7 @@ export class EventLoginDialog extends Component {
                       const inExclusion = event.exclusionaryEvents.includes(gEvent.id);
                       let canBeSelected = true;
                       if (inExclusion) {
-                        canBeSelected = !groupedEvents.filter(e => fields.choosedEvents.value.get(e.id)).some(e => event.exclusionaryEvents.includes(e.id) && e.id !== gEvent.id) && gEvent.maxCapacity;
+                        canBeSelected = !groupedEvents.filter(e => choosedEvents.get(e.id)).some(e => event.exclusionaryEvents.includes(e.id) && e.id !== gEvent.id) && groupedEventsNumbers.get(gEvent.id).maxCapacity;
                       }
 
                       const maxCapacity = groupedEventsNumbers.get(gEvent.id).maxCapacity;
@@ -155,13 +140,11 @@ export class EventLoginDialog extends Component {
                           <td>{gEvent.name}</td>
                           <td>
                             <input
-                              onChange={() => fields.choosedEvents.onChange({
-                                target: {value: fields.choosedEvents.value.set(gEvent.id, !fields.choosedEvents.value.get(gEvent.id)) }
-                              })}
+                              onChange={() => toggleEventTerm(gEvent.terms.get('streams').first().get('id'), gEvent.id)}
                               name="choosenEvents"
                               type="checkbox"
                               disabled={!canBeSelected}
-                              value={fields.choosedEvents.value.get(gEvent.id)}
+                              checked={choosedEvents.has(gEvent.id)}
                             />
                           </td>
                           <td>{groupedEventsNumbers.get(gEvent.id).attending} / {groupedEventsNumbers.get(gEvent.id).maxCapacity}</td>
@@ -185,10 +168,7 @@ export class EventLoginDialog extends Component {
               className="btn btn-success"
               disabled={!allChoosed}
               onClick={() => {
-                attendeeSignIn(event.get('id'), viewer.id, group.id, fields.choosedEvents.value);
-                if (!noRedirect) {
-                  browserHistory.goBack();
-                }
+                attendeeSignIn(viewer.id);
               }}
             >
               <FormattedMessage {...messages.signInButton} />
@@ -206,20 +186,12 @@ export class EventLoginDialog extends Component {
   }
 }
 
-EventLoginDialog = fields(EventLoginDialog, {
-  path: 'EventLoginDialog',
-  fields: [
-    'choosedEvents',
-  ],
-  getInitialState: () => ({ choosedEvents: new Map() })
-});
-
 EventLoginDialog = injectIntl(EventLoginDialog);
-
-export const EventPublicLoginDialog = connect((state) => ({
-}), { ...fieldsActions, ...actions })(EventLoginDialog);
 
 export default connect((state) => ({
   events: state.events.events,
   viewer: state.users.viewer,
-}), { ...fieldsActions, ...actions })(EventLoginDialog);
+  users: state.users.users,
+  choosedEvents: state.events.getIn(['signInProcess', 'events']),
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
+}), { ...actions })(EventLoginDialog);

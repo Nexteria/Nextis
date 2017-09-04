@@ -38,26 +38,30 @@ class AutogenerateEventReminderMail extends Command
             }
 
             $settings = $event->getSettings();
-            $remainderDate = $event->eventStartDateTime
-                                   ->subDays(1)
-                                   ->format('Y-m-d');
 
-            if ($remainderDate === $today) {
-                $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
+            if ($event->groupedEvents()->count() > 0) {
+                continue;
+            }
 
-                foreach ($event->attendeesGroups as $group) {
-                    $attendees = $group->attendees()->where('signedIn', '>', '')->get();
+            foreach ($event->terms as $term) {
+                $remainderDate = $term->eventStartDateTime
+                                    ->subDays(1)
+                                    ->format('Y-m-d');
 
+                if ($remainderDate === $today) {
+                    $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
+
+                    $attendees = $term->attendees()->wherePivot('signedIn', '!=', null)->get();
                     foreach ($attendees as $attendee) {
-                        $email = new \App\Mail\Events\EventReminderMail($event, $attendee->user, $manager);
+                        $email = new \App\Mail\Events\EventReminderMail($event, $term, $attendee->user, $manager);
                         \Mail::send($email);
                     }
-                }
 
-                $sendCopyToManager = boolval($settings['sentCopyOfAllEventNotificationsToManager']);
-                if ($sendCopyToManager) {
-                    $email = new \App\Mail\Events\EventReminderMail($event, $manager, $manager);
-                    \Mail::send($email);
+                    $sendCopyToManager = boolval($settings['sentCopyOfAllEventNotificationsToManager']);
+                    if ($sendCopyToManager) {
+                        $email = new \App\Mail\Events\EventReminderMail($event, $term, $manager, $manager);
+                        \Mail::send($email);
+                    }
                 }
             }
         }

@@ -1,3 +1,7 @@
+.timeline > li.users-event {
+  margin-bottom: 2em;
+}
+
 .users-event .events-filter-all.timeline-item,
 .events-filter-all {
   background-color: rgba(255, 255, 255, 1);
@@ -137,6 +141,7 @@
 
   .event-details {
     margin-bottom: 0.5em;
+    margin-top: 2em;
   }
 
   .lector-picture {

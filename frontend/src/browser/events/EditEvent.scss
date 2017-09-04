@@ -53,11 +53,12 @@
   max-width: 15em;
 }
 
-.create-attendee-group-modal {
+.create-attendee-group-modal,
+.event-terms-modal {
   width: 85%;
 }
 
-.disabled-host .ReactTags__tagInput {
+.disabled-tag-addition .ReactTags__tagInput {
   display: none;
 }
 

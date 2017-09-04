@@ -70,7 +70,7 @@ class EventsPage extends Component {
   componentDidMount() {
     const { fetchDefaultEventsSettings, loadEventCategories, changeActiveEventCategory } = this.props;
     fetchDefaultEventsSettings();
-    loadEventCategories();
+    loadEventCategories(true);
 
     if (this.props.params.category) {
       changeActiveEventCategory(this.props.params.category);

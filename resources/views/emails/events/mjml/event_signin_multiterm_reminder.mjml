@@ -15,7 +15,7 @@
         <mj-column width="90%" vertical-align="top">
           <mj-text align="center" padding-bottom="0px" line-height="30px">
             <h1>
-              Už zajtra!
+              Reminder na prihlasovanie
             </h1>
           </mj-text>
         </mj-column>
@@ -27,18 +27,35 @@
           </mj-text>
           <mj-text line-height="16px">
             <p>
-              Pripomínam ti, že zajtra sa koná <b>{{ $eventType }} {{ $eventName }}</b>. Príď prosím načas.
-              @if ($hostFirstName) Našim hostom je <b>{{ $hostFirstName }}</b> - v prípade nečakaných komplikácií (nevieš trafiť, meškáš, a pod.) volaj na <b>{{ $hostPhone }}</b>. @endif
+              Ešte si nám nedal vedieť či sa zúčastníš na <b>{{ $eventType }} {{ $eventName }}</b>. Sú ešte voľné miesta, daj nám prosím vedieť či naň prídeš do <b>{{ $eventSignInDeadline }}</b>.
+            </p>
+            <p>
+              Preto, že event je viactermínoví, je možné prihlásiť sa iba priamo v Space-i
             </p>
           </mj-text>
         </mj-column>
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
+          <mj-button font-family="Helvetica" background-color="##007bff" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}">
+            Pozrieť termíny
+          </mj-button>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
           <mj-text line-height="14px">
-              <b>Termín konania:</b> {{ $eventStartTime }}<br>
-              <b>Miesto:</b> <a href="http://www.google.com/maps/place/{{ $eventLocation->latitude }},{{ $eventLocation->longitude }}">{{ $eventLocationName }}</a><br>
+            <b>Lektor:</b> {{ $lectorsFirstName }}<br>
           </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
+          <mj-text line-height="14px">
+            <b>Popis kurzu:</b></br>
+            {!! $eventShortDescription !!}
+          </mj-text>
+          <mj-text>Viac informácií nájdeš na <a href="https://space.nexteria.sk/events/{{ $eventId }}" target="_blank">https://space.nexteria.sk/events/{{ $eventId }}</a></mj-text>
         </mj-column>
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">

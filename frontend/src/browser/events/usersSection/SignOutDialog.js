@@ -44,6 +44,7 @@ export class SignOutDialog extends Component {
     signOut: PropTypes.object.isRequired,
     changeSignOutReason: PropTypes.func.isRequired,
     attendeeWontGo: PropTypes.func.isRequired,
+    viewer: PropTypes.object,
   }
 
   render() {
@@ -53,6 +54,7 @@ export class SignOutDialog extends Component {
       attendeeSignOut,
       changeSignOutReason,
       attendeeWontGo,
+      viewer,
     } = this.props;
 
     return (
@@ -107,7 +109,7 @@ export class SignOutDialog extends Component {
             <button
               className="btn btn-danger"
               onClick={signOut.type === 'SIGN_OUT' ?
-                () => attendeeSignOut(signOut)
+                () => attendeeSignOut(signOut, viewer.id)
                 :
                 () => attendeeWontGo(signOut.eventId, signOut.userId, signOut.groupId, signOut.reason)
               }
@@ -127,5 +129,6 @@ export class SignOutDialog extends Component {
 
 export default connect(state => ({
   signOut: state.events.signOut,
+  viewer: state.users.viewer,
   events: state.events.events,
 }), eventActions)(SignOutDialog);

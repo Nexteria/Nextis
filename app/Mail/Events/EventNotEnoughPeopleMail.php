@@ -20,21 +20,23 @@ class EventNotEnoughPeopleMail extends Mailable
     public $maxCapacity;
     public $minCapacity;
     public $emailTagBase;
+    public $eventTerm;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, $actualCapacity, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, $actualCapacity, \App\User $manager)
     {
         $this->eventName = $event->name;
         $this->eventType = Str::upper($event->eventType);
         $this->actualCapacity = $actualCapacity;
         $this->eventManagerName = $manager->firstName;
         $this->managerEmail = $manager->email;
-        $this->minCapacity = $event->minCapacity;
-        $this->maxCapacity = $event->maxCapacity;
+        $this->minCapacity = $term->minCapacity;
+        $this->maxCapacity = $term->maxCapacity;
+        $this->eventTerm = $term->eventStartDateTime->format('d.m.Y');
         $this->emailTagBase = $event->emailTagBase;
     }
 

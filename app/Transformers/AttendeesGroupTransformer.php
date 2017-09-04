@@ -1,6 +1,5 @@
 <?php namespace App\Transformers;
 
-
 class AttendeesGroupTransformer extends Transformer
 {
 

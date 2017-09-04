@@ -2,14 +2,14 @@ import Component from 'react-pure-render/component';
 import { Map, List } from 'immutable';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedDate, FormattedTime, FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Datetime from 'react-datetime';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Field, FormSection, reduxForm, formValueSelector } from 'redux-form';
 import validator from 'validator';
-import isAfter from 'date-fns/is_after';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 
 
 import { fields } from '../../common/lib/redux-fields/index';
@@ -25,6 +25,7 @@ import InvitedTab from './InvitedTab';
 import EmailsTab from './EmailsTab';
 import EventSettingsTab from './EventSettingsTab';
 import FormResults from '../components/Forms/Results/FormResults';
+import EditTermsDialog, { renderTermPopover } from './EditTermsDialog';
 
 const messages = defineMessages({
   invited: {
@@ -225,10 +226,6 @@ const validate = (values, props) => {
     errors.name = formatMessage(messages.requiredField);
   }
 
-  if (!values.nxLocationId) {
-    errors.nxLocationId = formatMessage(messages.requiredField);
-  }
-
   if (!values.activityPoints) {
     errors.activityPoints = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.activityPoints}`)) {
@@ -249,28 +246,8 @@ const validate = (values, props) => {
     errors.attendeesGroups = formatMessage(messages.noAttendeesGroups);
   }
 
-  if (!values.eventStartDateTime) {
-    errors.eventStartDateTime = formatMessage(messages.requiredField);
-  } else if (values.eventEndDateTime && isAfter(values.eventStartDateTime, values.eventEndDateTime)) {
-    errors.eventStartDateTime = formatMessage(messages.startDateMustBeBeforeEndDate);
-  }
-
-  if (!values.eventEndDateTime) {
-    errors.eventEndDateTime = formatMessage(messages.requiredField);
-  } else if (values.eventStartDateTime && isAfter(values.eventStartDateTime, values.eventEndDateTime)) {
-    errors.eventEndDateTime = formatMessage(messages.endDateMustBeAfterStartDate);
-  }
-
-  if (!values.minCapacity) {
-    errors.minCapacity = formatMessage(messages.requiredField);
-  } else if (values.maxCapacity && parseInt(values.minCapacity) > parseInt(values.maxCapacity)){
-    errors.minCapacity = formatMessage(messages.minCapacityMustBeSE);
-  }
-
-  if (!values.maxCapacity) {
-    errors.maxCapacity = formatMessage(messages.requiredField);
-  } else if (values.minCapacity && parseInt(values.minCapacity) > parseInt(values.maxCapacity)){
-    errors.maxCapacity = formatMessage(messages.maxCapacityMustBeGE);
+  if (!values.terms || values.terms.size < 1) {
+    errors.terms = 'Event musí mať aspoň jeden termín';
   }
 
   const shortDescriptionLength = values.shortDescription ?
@@ -281,20 +258,6 @@ const validate = (values, props) => {
     }
 
   return errors;
-};
-
-const warn = (values, props) => {
-  const { formatMessage } = props.intl;
-  const warnings = {};
-  if (isAfter(new Date(), values.eventEndDateTime) && !values.id) {
-    warnings.eventEndDateTime = formatMessage(messages.dateShouldBeInFuture);
-  }
-
-  if (isAfter(new Date(), values.eventStartDateTime) && !values.id) {
-    warnings.eventStartDateTime = formatMessage(messages.dateShouldBeInFuture);
-  }
-
-  return warnings;
 };
 
 export class EditEvent extends Component {
@@ -325,6 +288,7 @@ export class EditEvent extends Component {
     changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
     downloadEventAttendeesList: PropTypes.func.isRequired,
+    checkFeedbackFormLink: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -406,34 +370,6 @@ export class EditEvent extends Component {
         </div>
       </div>
     );
-  }
-
-  renderHost(data) {
-    const { input, label, users, meta: { touched, error } } = data;
-
-    const user = users.find(user => user.id === input.value);
-
-    return (
-      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
-        <label className="col-sm-2 control-label">
-          {label}
-        </label>
-
-        <div className={`col-sm-10 ${input.value ? 'disabled-host' : ''}`}>
-          <ReactTags
-            id={input.name}
-            placeholder={label}
-            tags={user ? [{id: user.id, text: `${user.firstName} ${user.lastName}`}] : []}
-            suggestions={users.map(user => `${user.firstName} ${user.lastName} (${user.username})`).toArray()}
-            handleDelete={(i) => input.onChange(null)}
-            handleAddition={(tag) => input.onChange(users.find(user => `${user.firstName} ${user.lastName} (${user.username})` === tag).id)}
-          />
-          <div className="has-error col-md-12" style={{paddingLeft: '0px'}}>
-            {touched && error && <label>{error}</label>}
-          </div>
-        </div>
-      </div>
-    )
   }
 
   renderLectors(data) {
@@ -532,29 +468,6 @@ export class EditEvent extends Component {
     );
   }
 
-  renderSelect(data) {
-    const { input, label, children, meta: { touched, error } } = data;
-
-    return (
-      <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
-        <label className="col-sm-2 control-label">
-          {label}
-        </label>
-        <div className="col-sm-10">
-          <select
-            {...input}
-            className="form-control"
-          >
-          {children}
-          </select>
-          <div className="has-error">
-            {touched && error && <label>{error}</label>}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   renderAttendeesGroups(data) {
     const { input, addAttendeesGroup, actualEvent, editAttendeesGroup, emptyLabel, label, meta: { touched, error } } = data;
 
@@ -600,7 +513,97 @@ export class EditEvent extends Component {
             {touched && error && <label>{error}</label>}
           </div>
         </div>
-        <AttendeesGroupsDialog actualEvent={actualEvent} onSave={input.onChange} eventGroups={input.value}/>
+        <AttendeesGroupsDialog actualEvent={actualEvent} onSave={input.onChange} eventGroups={input.value} />
+      </div>
+    );
+  }
+
+  renderTerms(data) {
+    const { input, label, users, isTermsDialogOpen, change, locations, checkFeedbackFormLink } = data;
+
+    const terms = input.value;
+    let maxTerms = terms.get('streams').size > 0 ? 1 : 0;
+    terms.get('streams').forEach(stream => {
+      maxTerms = Math.max(maxTerms, stream.get('terms').size);
+    });
+
+    return (
+      <div className="form-group">
+        <label className="col-sm-2 control-label">
+          {label}
+        </label>
+        <div className="col-sm-10">
+          {isTermsDialogOpen &&
+            <div>
+              <FormSection name="terms">
+                <EditTermsDialog
+                  locations={locations}
+                  terms={terms}
+                  users={users}
+                  closeDialog={() => change('isTermsDialogOpen', false)}
+                  open={isTermsDialogOpen}
+                  onChange={input.onChange}
+                  checkFeedbackFormLink={checkFeedbackFormLink}
+                />
+              </FormSection>
+            </div>
+          }
+          <table className="table table-hover">
+            <thead>
+              <tr>
+              {terms.get('streams').valueSeq().map((v, index) =>
+                <th style={{ textAlign: 'center' }}>Termín #{index + 1}</th>
+              )}
+              </tr>
+            </thead>
+            <tbody style={{ textAlign: 'center' }}>
+              <tr>
+                {terms.get('streams').map(stream =>
+                  <td>
+                    <OverlayTrigger trigger="click" placement="top" overlay={renderTermPopover(stream, users, locations)}>
+                      <span className="label label-success" style={{ cursor: 'pointer' }}>
+                        <FormattedDate value={stream.get('eventStartDateTime')} />
+                        <span> o </span>
+                        <FormattedTime value={stream.get('eventStartDateTime')} />
+                      </span>
+                    </OverlayTrigger>
+                  </td>
+                )}
+              </tr>
+              {[...Array(maxTerms)].map((v, index) =>
+                <tr>
+                  {terms.get('streams').map(stream => {
+                    const term = stream.get('terms').toList().get(index);
+                    return (
+                      <td>
+                        {stream.get('terms').size > index &&
+                          <span>
+                            <OverlayTrigger trigger="click" placement="top" overlay={renderTermPopover(term, users, locations)}>
+                              <span className="label label-success" style={{ cursor: 'pointer' }}>
+                                <FormattedDate value={term.get('eventStartDateTime')} />
+                                <span> o </span>
+                                <FormattedTime value={term.get('eventStartDateTime')} />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        }
+                        {stream.get('terms').size < index && <span>&nbsp;</span>}
+                      </td>
+                    );
+                  })}
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div className="text-center">
+            <button
+              className="btn btn-sm btn-info"
+              type="button"
+              onClick={() => change('isTermsDialogOpen', true)}
+            >Upraviť</button>
+          </div>
+        </div>
+        <div className="clearfix"></div>
       </div>
     );
   }
@@ -648,7 +651,9 @@ export class EditEvent extends Component {
     const {
       saveEvent,
       setField,
+      isTermsDialogOpen,
       handleSubmit,
+      change,
       semesters,
       downloadEventAttendeesList,
       addAttendeesGroup,
@@ -657,6 +662,7 @@ export class EditEvent extends Component {
       createEventCustomSettings,
       changeAttendeeFeedbackStatus,
       changeAttendeePresenceStatus,
+      checkFeedbackFormLink,
     } = this.props;
 
     const { formatMessage } = this.props.intl;
@@ -668,12 +674,6 @@ export class EditEvent extends Component {
     const lectors = users.filter(user => fields.lectors.value.includes(user.id))
       .map(user => ({ id: user.id, text: `${user.firstName} ${user.lastName}` }));
 
-    let host = users.get(fields.hostId.value);
-    if (host) {
-      host = [{ id: host.id, text: `${host.firstName} ${host.lastName}` }];
-    } else {
-      host = [];
-    }
 
     return (
       <div>
@@ -729,28 +729,6 @@ export class EditEvent extends Component {
                           />
 
                           <Field
-                            name="nxLocationId"
-                            component={this.renderSelect}
-                            label={`${formatMessage(messages.eventLocation)}*`}
-                          >
-                            <option readOnly>{formatMessage(messages.chooseEventLocation)}</option>
-                            {locations.valueSeq().map(location =>
-                              <option key={location.id} value={location.id}>
-                              {`${location.name} (${location.addressLine1}`}
-                              {`${location.addressLine2 ? `, ${location.addressLine2}` : ''}`}
-                              {`, ${location.city}, ${location.zipCode}, ${location.countryCode})`}
-                              </option>
-                            )}
-                          </Field>
-
-                          <Field
-                            name="hostId"
-                            component={this.renderHost}
-                            label={`${formatMessage(messages.host)}*`}
-                            users={users}
-                          />
-
-                          <Field
                             name="lectors"
                             component={this.renderLectors}
                             label={`${formatMessage(messages.lectors)}`}
@@ -759,29 +737,14 @@ export class EditEvent extends Component {
                           />
 
                           <Field
-                            name="eventStartDateTime"
-                            component={this.renderDate}
-                            label={`${formatMessage(messages.eventStartDateTime)}*`}
-                            locale={locale}
-                          />
-
-                          <Field
-                            name="eventEndDateTime"
-                            component={this.renderDate}
-                            label={`${formatMessage(messages.eventEndDateTime)}*`}
-                            locale={locale}
-                          />
-
-                          <Field
-                            name="minCapacity"
-                            component={this.renderInput}
-                            label={`${formatMessage(messages.minCapacity)}*`}
-                          />
-
-                          <Field
-                            name="maxCapacity"
-                            component={this.renderInput}
-                            label={`${formatMessage(messages.maxCapacity)}*`}
+                            name="terms"
+                            component={this.renderTerms}
+                            label="Termíny*"
+                            locations={locations}
+                            change={change}
+                            users={users}
+                            checkFeedbackFormLink={checkFeedbackFormLink}
+                            isTermsDialogOpen={actualEvent.get('isTermsDialogOpen')}
                           />
 
                           <Field
@@ -837,19 +800,6 @@ export class EditEvent extends Component {
                             editAttendeesGroup={editAttendeesGroup}
                             emptyLabel={`${formatMessage(messages.noAttendeesGroups)}`}
                             actualEvent={actualEvent}
-                          />
-
-                          <Field
-                            name="feedbackLink"
-                            component={this.renderInput}
-                            label={`${formatMessage(messages.feedbackLink)}*`}
-                          />
-
-                          <Field
-                            name="publicFeedbackLink"
-                            readOnly
-                            component={this.renderInput}
-                            label={`${formatMessage(messages.publicFeedbackLink)}`}
                           />
 
                           <Field
@@ -940,13 +890,8 @@ EditEvent = fields(EditEvent, {
     'id',
     'name',
     'activityPoints',
-    'hostId',
     'lectors',
-    'eventStartDateTime',
-    'eventEndDateTime',
     'attendeesGroups',
-    'minCapacity',
-    'maxCapacity',
     'mandatoryParticipation',
     'description',
     'shortDescription',
@@ -955,7 +900,6 @@ EditEvent = fields(EditEvent, {
     'curriculumLevelId',
     'groupedEvents',
     'feedbackLink',
-    'nxLocationId',
     'exclusionaryEvents',
   ],
 });
@@ -963,22 +907,6 @@ EditEvent = fields(EditEvent, {
 EditEvent = reduxForm({
   form: 'editEvent',
   validate,
-  warn,
-  asyncValidate: (values, dispatch, props) =>
-    props.checkFeedbackFormLink(values.feedbackLink).then(
-      resp => {
-        dispatch(props.change('publicFeedbackLink', resp.action.payload));
-        return {};
-      },
-      resp => {
-        dispatch(props.change('publicFeedbackLink', null));
-        if (values.feedbackLink != '') {
-          return resp.reason.errors;
-        } else {
-          return {};
-        }
-      }),
-  asyncBlurFields: ['feedbackLink'],
 })(EditEvent);
 
 EditEvent = injectIntl(EditEvent);
@@ -990,10 +918,8 @@ export default connect((state) => ({
   semesters: state.semesters.semesters,
   activeSemesterId: state.semesters.activeSemesterId,
   actualEvent: new Map({
-    minCapacity: selector(state, 'minCapacity'),
-    maxCapacity: selector(state, 'maxCapacity'),
-    eventStartDateTime: selector(state, 'eventStartDateTime'),
-    eventEndDateTime: selector(state, 'eventEndDateTime'),
+    terms: selector(state, 'terms'),
+    isTermsDialogOpen: selector(state, 'isTermsDialogOpen'),
     attendeesGroups: new List(selector(state, 'attendeesGroups')),
   }),
   events: state.events.events,

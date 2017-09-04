@@ -26,6 +26,7 @@ export default function renderDate(data) {
           {touched && error && <label>{error}</label>}
         </div>
       </div>
+      <div className="clearfix"></div>
     </div>
   );
 }

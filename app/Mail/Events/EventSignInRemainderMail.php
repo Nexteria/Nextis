@@ -22,6 +22,7 @@ class EventSignInRemainderMail extends Mailable
     public $eventShortDescription;
     public $eventId;
     public $emailTagBase;
+    public $isMultiterm;
 
     public $eventLocation;
     public $eventLocationName;
@@ -36,6 +37,7 @@ class EventSignInRemainderMail extends Mailable
      */
     public function __construct(\App\NxEvent $event, \App\User $user, $signInToken, $eventSignInDeadline, \App\User $manager)
     {
+        $firstTerm = $event->terms()->whereNull('parentTermId')->first();
         $this->userFirstName = $user->firstName;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
@@ -45,10 +47,11 @@ class EventSignInRemainderMail extends Mailable
         $this->eventShortDescription = $event->shortDescription;
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
-        $this->eventLocation = $event->location;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->eventLocation = $firstTerm->location;
+        $this->eventStartTime = $firstTerm->eventStartDateTime->format('j.n.Y H:i');
         $this->eventSignInDeadline = $eventSignInDeadline;
         $this->emailTagBase = $event->emailTagBase;
+        $this->isMultiterm = $event->isMultiterm();
 
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';
@@ -79,9 +82,15 @@ class EventSignInRemainderMail extends Mailable
      */
     public function build()
     {
-        $this->to($this->userEmail)
-                    ->subject('[NLA '.$this->eventType.'] '.$this->eventName.' deadline do '.$this->eventSignInDeadline.' REMAINDER PRIHLASOVANIE')
-                    ->view('emails.events.event_signin_reminder');
+        if ($this->isMultiterm) {
+            $this->to($this->userEmail)
+                        ->subject('[NLA '.$this->eventType.'] '.$this->eventName.' deadline do '.$this->eventSignInDeadline.' REMAINDER PRIHLASOVANIE')
+                        ->view('emails.events.event_signin_multiterm_reminder');
+        } else {
+            $this->to($this->userEmail)
+                ->subject('[NLA '.$this->eventType.'] '.$this->eventName.' deadline do '.$this->eventSignInDeadline.' REMAINDER PRIHLASOVANIE')
+                ->view('emails.events.event_signin_reminder');
+        }
 
         $this->withSwiftMessage(function ($message) {
             $message->getHeaders()

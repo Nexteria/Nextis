@@ -28,6 +28,7 @@ class EventSignInOpeningMail extends Mailable
     public $eventSignInDeadline;
     public $lectorsFirstName;
     public $signInToken;
+    public $isMultiterm;
 
     /**
      * Create a new message instance.
@@ -36,6 +37,7 @@ class EventSignInOpeningMail extends Mailable
      */
     public function __construct(\App\NxEvent $event, \App\User $user, $signInToken, $eventSignInDeadline, \App\User $manager)
     {
+        $firstTerm = $event->terms()->whereNull('parentTermId')->first();
         $this->userFirstName = $user->firstName;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
@@ -45,10 +47,11 @@ class EventSignInOpeningMail extends Mailable
         $this->eventShortDescription = $event->shortDescription;
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
-        $this->eventLocation = $event->location;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->eventLocation = $firstTerm->location;
         $this->eventSignInDeadline = $eventSignInDeadline;
         $this->emailTagBase = $event->emailTagBase;
+        $this->isMultiterm = $event->isMultiterm();
+        $this->eventStartTime = $firstTerm->eventStartDateTime->format('j.n.Y H:i');
 
         $lectors = $event->lectors;
         $this->lectorsFirstName = '';
@@ -79,9 +82,16 @@ class EventSignInOpeningMail extends Mailable
      */
     public function build()
     {
-        $this->to($this->userEmail)
-             ->subject('[NLA '.$this->eventType.'] '.$this->eventName.' deadline do '.$this->eventSignInDeadline.' PRIHLASOVANIE')
-             ->view('emails.events.event_signin_opening');
+        if ($this->isMultiterm) {
+            $this->to($this->userEmail)
+                ->subject('[NLA '.$this->eventType.'] '.$this->eventName.' deadline do '.$this->eventSignInDeadline.' PRIHLASOVANIE')
+                ->view('emails.events.event_signin_multiterm_opening');
+        } else {
+            $this->to($this->userEmail)
+                ->subject('[NLA '.$this->eventType.'] '.$this->eventName.' deadline do '.$this->eventSignInDeadline.' PRIHLASOVANIE')
+                ->view('emails.events.event_signin_opening');
+        }
+        
 
         $this->withSwiftMessage(function ($message) {
             $message->getHeaders()

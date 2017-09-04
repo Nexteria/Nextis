@@ -23,10 +23,6 @@ class NxEvent extends Model implements AuditableContract
     protected $fillable = [
         'name',
         'activityPoints',
-        'eventStartDateTime',
-        'eventEndDateTime',
-        'minCapacity',
-        'maxCapacity',
         'mandatoryParticipation',
         'eventType',
         'feedbackLink',
@@ -42,8 +38,6 @@ class NxEvent extends Model implements AuditableContract
         $event->ownerId = \Auth::user()->id;
         $event->shortDescription = clean($attributes['shortDescription']);
         $event->description = clean($attributes['description']);
-        $event->hostId = User::findOrFail($attributes['hostId'])->id;
-        $event->nxLocationId = NxLocation::findOrFail($attributes['nxLocationId'])->id;
         $event->emailTagBase = \Uuid::generate(4);
         $event->save();
 
@@ -56,6 +50,20 @@ class NxEvent extends Model implements AuditableContract
 
         foreach ($attributes['lectors'] as $lector) {
             $event->lectors()->save(User::findOrFail($lector));
+        }
+
+        foreach ($attributes['terms'] as $term) {
+            $term['userId'] = \Auth::user()->id;
+            $term['eventId'] = $event->id;
+            $newTerm = \App\NxEventTerm::create($term);
+            $event->terms()->save($newTerm);
+            
+            foreach ($term['terms'] as $nestedTerm) {
+                $term['userId'] = \Auth::user()->id;
+                $term['eventId'] = $event->id;
+                $term['parentTermId'] = $newTerm->id;
+                \App\NxEventTerm::create($term);
+            }
         }
 
         if (isset($attributes['curriculumLevelId'])) {
@@ -195,6 +203,37 @@ class NxEvent extends Model implements AuditableContract
             $this->lectors()->sync(User::whereIn('id', $attributes['lectors'])->pluck('id')->toArray());
         }
 
+        $termIds = [];
+        foreach ($attributes['terms'] as $term) {
+            $term['userId'] = \Auth::user()->id;
+            $term['eventId'] = $this->id;
+
+            $newTerm = \App\NxEventTerm::find($term['id']);
+            if ($newTerm) {
+                $newTerm->update($term);
+            } else {
+                $newTerm = \App\NxEventTerm::create($term);
+                $this->terms()->save($newTerm);
+            }
+            $termIds[] = $newTerm->id;
+            
+            foreach ($term['terms'] as $nestedTerm) {
+                $nestedTerm['userId'] = \Auth::user()->id;
+                $nestedTerm['eventId'] = $this->id;
+                $nestedTerm['parentTermId'] = $newTerm->id;
+
+                $newSubTerm = \App\NxEventTerm::find($nestedTerm['id']);
+                if ($newSubTerm) {
+                    $newSubTerm->update($nestedTerm);
+                } else {
+                    $newSubTerm = \App\NxEventTerm::create($nestedTerm);
+                }
+
+                $termIds[] = $newSubTerm->id;
+            }
+        }
+        \App\NxEventTerm::where('eventId', $this->id)->whereNotIn('id', $termIds)->delete();
+
         $groupIdMap = [];
         if (isset($attributes['attendeesGroups'])) {
             $idsMap = [];
@@ -291,7 +330,7 @@ class NxEvent extends Model implements AuditableContract
 
                 $selection = [];
                 foreach ($questionData['groupSelection'] as $key => $value) {
-                    if (isset($groupIdMap[$key])){
+                    if (isset($groupIdMap[$key])) {
                         $selection[] = $groupIdMap[$key];
                     }
                 }
@@ -367,46 +406,91 @@ class NxEvent extends Model implements AuditableContract
         return $settings;
     }
 
-    public function canSignInAttendee($attendee)
+    public function canSignInAttendee($attendee, $termId)
     {
+        if (!$attendee->attendeesGroup) {
+            return [
+                'message' => 'Tvoje pozvanie už vypršalo!',
+                'codename' => 'invite_is_not_valid_anymore',
+                'canSignIn' => false,
+            ];
+        }
+
         $event = $attendee->attendeesGroup->nxEvent;
         if ($this->id !== $event->id) {
             throw new Exception("Attendee: ".$attendee->id." does not belong to the event", 1);
         }
 
-        // check if attendee group max capacity was reached
+        if ($attendee->signedIn && !$termId) {
+            return [
+                'message' => 'Už si raz prihlásený!',
+                'codename' => 'already_signed_in',
+                'canSignIn' => false,
+            ];
+        }
+
         $group = $attendee->attendeesGroup;
         if ($group->signUpDeadlineDateTime->lt(\Carbon\Carbon::now())) {
-            return trans('events.groupSignInExpired', ['eventName' => $this->name]);
+            return [
+                'message' => trans('events.groupSignInExpired', ['eventName' => $this->name]),
+                'codename' => 'group_deadline_reached',
+                'canSignIn' => false,
+            ];
         }
 
-        $signedIn = $group->attendees()->whereNotNull('signedIn')->count();
+        $signedIn = $group->attendees()
+                          ->whereHas('terms', function ($query) {
+                                $query->where('signedIn', '!=', null);
+                          })
+                          ->count();
         if ($signedIn >= $group->maxCapacity) {
-            return trans('events.groupSignInsAreMaxed', ['eventName' => $this->name]);
+            return [
+                'message' => trans('events.groupSignInsAreMaxed', ['eventName' => $this->name]),
+                'codename' => 'group_max_capacity_reached',
+                'canSignIn' => false,
+            ];
         }
 
-        $signedIn = 0;
-        foreach ($this->attendeesGroups as $group) {
-            $signedIn += $group->attendees()->whereNotNull('signedIn')->count();
+        $term = $this->terms()->where('id', $termId)->first();
+        $signedIn = $term->attendees()->wherePivot('signedIn', '!=', null)->count();
+
+        if ($signedIn >= $term->maxCapacity) {
+            return [
+                'message' => 'Kapacita pre daný termín je už vyčerpaná',
+                'codename' => 'term_max_capacity_reached',
+                'canSignIn' => false,
+            ];
         }
 
-        if ($signedIn >= $this->maxCapacity) {
-            return trans('events.eventSignInsAreMaxed', ['eventName' => $this->name]);
+        $signedIn = $term->attendees()->where('attendeeId', $attendee->id)->wherePivot('signedIn', '!=', null)->first();
+        if ($signedIn) {
+            return [
+                'message' => 'Už si raz prihlásený!',
+                'codename' => 'already_signed_in',
+                'canSignIn' => false,
+            ];
         }
 
-        return true;
+        return [
+            'message' => '',
+            'codename' => '',
+            'canSignIn' => true,
+        ];
     }
 
     public static function getArchivedEvents()
     {
-        return NxEvent::where('eventEndDateTime', '<', Carbon::now()->subMonth()->toDateString())
-                        ->where('status', '=', 'published')->get();
+        return NxEvent::whereDoesntHave('terms', function ($query) {
+            $query->where('eventEndDateTime', '>', Carbon::now()->subMonth()->toDateString());
+        })->where('status', '=', 'published')->get();
     }
 
     public static function getPublishedEvents()
     {
         return NxEvent::where('status', '=', 'published')
-                       ->where('eventEndDateTime', '>', Carbon::now()->subMonth()->toDateString())->get();
+                       ->whereHas('terms', function ($query) {
+                            $query->where('eventEndDateTime', '>', Carbon::now()->subMonth()->toDateString());
+                       })->get();
     }
 
     public static function getDraftEvents()
@@ -417,7 +501,9 @@ class NxEvent extends Model implements AuditableContract
     public static function getBeforeSignInOpeningEvents()
     {
         return NxEvent::where('status', '=', 'published')
-                       ->where('eventStartDateTime', '>', Carbon::now()->toDateString())
+                       ->whereDoesntHave('terms', function ($query) {
+                            $query->where('eventStartDateTime', '<', Carbon::now()->toDateString());
+                       })
                        ->whereDoesntHave('attendeesGroups', function ($query) {
                           $query->where('signUpOpenDateTime', '<', Carbon::now()->toDateString());
                        })
@@ -427,7 +513,9 @@ class NxEvent extends Model implements AuditableContract
     public static function getOpenedSignInEvents()
     {
         return NxEvent::where('status', '=', 'published')
-                       ->where('eventStartDateTime', '>', Carbon::now()->toDateString())
+                       ->whereHas('terms', function ($query) {
+                            $query->where('eventStartDateTime', '>', Carbon::now()->toDateString());
+                       })
                        ->whereHas('attendeesGroups', function ($query) {
                           $query->where('signUpOpenDateTime', '<', Carbon::now()->toDateString())
                                 ->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
@@ -438,14 +526,11 @@ class NxEvent extends Model implements AuditableContract
     public static function getClosedSignInEvents()
     {
         return NxEvent::where('status', '=', 'published')
-                       ->where('eventStartDateTime', '>', Carbon::now()->toDateString())
-                       ->whereDoesntHave('attendeesGroups', function ($query) {
-                          $query->where('signUpOpenDateTime', '<', Carbon::now()->toDateString())
-                                ->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
+                       ->whereDoesntHave('terms', function ($query) {
+                           $query->where('eventStartDateTime', '<', Carbon::now()->subMonth()->toDateString());
                        })
                        ->whereDoesntHave('attendeesGroups', function ($query) {
-                          $query->where('signUpOpenDateTime', '>', Carbon::now()->toDateString())
-                                ->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
+                          $query->where('signUpDeadlineDateTime', '>', Carbon::now()->toDateString());
                        })
                        ->get();
     }
@@ -456,19 +541,30 @@ class NxEvent extends Model implements AuditableContract
         $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
 
         $noSettings = NxEvent::where('status', '=', 'published')
-                       ->where('eventEndDateTime', '<', Carbon::now()->toDateString())
+                       ->whereHas('terms', function ($query) use ($fedbackDeadlineDays) {
+                            $query->where('eventEndDateTime', '<', Carbon::now());
+                            $query->where('eventEndDateTime', '>', Carbon::now()->subDays($fedbackDeadlineDays)->toDateString());
+                       })
                        ->doesntHave('settings')
-                       ->where('eventEndDateTime', '>', Carbon::now()->subDays($fedbackDeadlineDays + 1)->toDateString())
                        ->get();
 
         $hasSettings = NxEvent::where('status', '=', 'published')
-                       ->where('eventEndDateTime', '<', Carbon::now()->toDateString())
+                       ->whereHas('terms', function ($query) {
+                            $query->where('eventEndDateTime', '<', Carbon::now());
+                       })
                        ->has('settings')
                        ->get()
                        ->filter(function ($event) {
                           $settings = $event->settings;
                           $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
-                          return $event->eventEndDateTime->gt(Carbon::now()->subDays($fedbackDeadlineDays));
+
+                        foreach ($event->terms as $term) {
+                            if (!$term->eventEndDateTime->lt(Carbon::now()->subDays($fedbackDeadlineDays))){
+                                return false;
+                            }
+                        }
+
+                          return true;
                        });
 
         return $noSettings->merge($hasSettings);
@@ -481,28 +577,48 @@ class NxEvent extends Model implements AuditableContract
 
         $noSettings = NxEvent::where('status', '=', 'published')
                        ->doesntHave('settings')
-                       ->where('eventEndDateTime', '>', Carbon::now()->subDays(30)->toDateString())
-                       ->where('eventEndDateTime', '<', Carbon::now()->subDays($fedbackDeadlineDays)->toDateString())
+                       ->whereDoesntHave('terms', function ($query) use ($fedbackDeadlineDays) {
+                            $query->where('eventEndDateTime', '<', Carbon::now()->subDays(30)->toDateString())
+                                  ->orWhere('eventEndDateTime', '>', Carbon::now()->subDays($fedbackDeadlineDays)->toDateString());
+                       })
                        ->get();
 
         $hasSettings = NxEvent::where('status', '=', 'published')
-                       ->where('eventEndDateTime', '<', Carbon::now()->toDateString())
-                       ->where('eventEndDateTime', '>', Carbon::now()->subDays(30)->toDateString())
-                       ->has('settings')
+                       ->whereDoesntHave('terms', function ($query) {
+                            $query->where('eventEndDateTime', '>', Carbon::now()->toDateString());
+                            $query->orWhere('eventEndDateTime', '<', Carbon::now()->subDays(30)->toDateString());
+                       })
                        ->get()
                        ->filter(function ($event) {
                           $settings = $event->settings;
                           $fedbackDeadlineDays = $settings['feedbackEmailDelay'] + $settings['feedbackDaysToFill'];
-                          return $event->eventEndDateTime->lt(Carbon::now()->subDays($fedbackDeadlineDays));
+
+                        foreach ($event->terms as $term) {
+                            if (!$term->eventEndDateTime->lt(Carbon::now()->subDays($fedbackDeadlineDays))) {
+                                return false;
+                            }
+                        }
+                        return true;
                        });
 
         return $noSettings->merge($hasSettings);
+    }
+
+    public function isMultiterm()
+    {
+        return $this->terms()->whereNull('parentTermId')->count() > 1;
+    }
+
+    public function terms()
+    {
+        return $this->hasMany('App\NxEventTerm', 'eventId');
     }
 
     public function attendeesGroups()
     {
         return $this->hasMany('App\AttendeesGroup', 'eventId');
     }
+    
 
     public function attendees()
     {

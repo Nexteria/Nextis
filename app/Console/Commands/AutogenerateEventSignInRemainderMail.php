@@ -53,7 +53,7 @@ class AutogenerateEventSignInRemainderMail extends Command
                     $attendees = $group->attendees()->whereNull('signedIn')->whereNull('wontGo')->whereNull('signedOut')->get();
                     foreach ($attendees as $attendee) {
                         // ak sa nemoze prihlasit ktokolvek zo skupiny, nemoze sa cela skupina
-                        if ($event->canSignInAttendee($attendee) !== true) {
+                        if ($event->canSignInAttendee($attendee)['canSignIn'] !== true) {
                             break;
                         }
 

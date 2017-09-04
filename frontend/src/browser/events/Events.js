@@ -136,7 +136,11 @@ class Events extends Component {
     }
 
     let filteredEvents = events.valueSeq()
-      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1)
+      .sort((a, b) => {
+        const firstStreamA = a.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
+        const firstStreamB = b.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
+        return isAfter(firstStreamA.get('eventStartDateTime'), firstStreamB.get('eventStartDateTime')) ? 1 : -1;
+      })
       .map(event => event);
 
     if (fields.filter.value) {
@@ -163,15 +167,18 @@ class Events extends Component {
         progressColor = 'red';
       }
 
+      const streams = event.terms.get('streams');
+      const firstStream = streams.sort((a, b) => isAfter(a.get('eventStartDateTime'), b.get('eventStartDateTime')) ? 1 : -1).first();
+
       return {
         id: event.id,
         eventName: event.name,
         questionForm: event.questionForm ? event.questionForm.getIn(['formData', 'id']) : null,
-        eventStarts: <FormattedRelative value={event.eventStartDateTime} />,
-        eventStartDateTime: event.eventStartDateTime,
+        eventStarts: <FormattedRelative value={firstStream.get('eventStartDateTime')} />,
+        eventStartDateTime: firstStream.get('eventStartDateTime'),
         capacity: {
-          maxCapacity: event.maxCapacity,
-          minCapacity: event.minCapacity,
+          maxCapacity: streams.reduce((reduction, value) => reduction + value.get('maxCapacity'), 0),
+          minCapacity: streams.reduce((reduction, value) => reduction + value.get('minCapacity'), 0),
           signedIn: attending.size,
           wontCome: notAttending.size,
           invited: attendees.size,

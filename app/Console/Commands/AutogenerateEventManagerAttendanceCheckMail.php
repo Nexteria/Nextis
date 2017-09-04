@@ -38,13 +38,19 @@ class AutogenerateEventManagerAttendanceCheckMail extends Command
             }
 
             $settings = $event->getSettings();
-            $remainderDate = $event->eventEndDateTime->addHours(1)->format('Y-m-d H:i');
 
-            $settings = $event->getSettings();
-            if ($remainderDate === $now) {
-                $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
-                $email = new \App\Mail\Events\EventManagerAttendanceCheckMail($event, $manager);
-                \Mail::send($email);
+            if ($event->groupedEvents()->count() > 0) {
+                continue;
+            }
+
+            foreach ($event->terms as $term) {
+                $remainderDate = $term->eventEndDateTime->addHours(1)->format('Y-m-d H:i');
+
+                if ($remainderDate === $now) {
+                    $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
+                    $email = new \App\Mail\Events\EventManagerAttendanceCheckMail($event, $term, $manager);
+                    \Mail::send($email);
+                }
             }
         }
     }

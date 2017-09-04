@@ -4,8 +4,8 @@ export default function renderSelect(data) {
   const { input, label, children, meta: { touched, error } } = data;
 
   return (
-    <div className={`form-group ${touched && error ? 'has-error' : ''}`}>
-      <label className="col-sm-12 control-label">
+    <div className={`form-group ${touched && error ? 'has-error' : ''}`} >
+      <label className="col-sm-12 control-label" htmlFor={input.name}>
         {label}
       </label>
       <div className="col-sm-12">

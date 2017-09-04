@@ -30,6 +30,8 @@ class PastEvents extends Component {
     signAsStandIn: PropTypes.func.isRequired,
     signOutAsStandIn: PropTypes.func.isRequired,
     eventsFilter: PropTypes.string,
+    toggleEventTerm: PropTypes.func.isRequired,
+    change: PropTypes.func.isRequired,
   };
 
   render() {
@@ -49,55 +51,16 @@ class PastEvents extends Component {
       closeLocationDetailsDialog,
       openSignOutDialog,
       signAsStandIn,
+      change,
       pastMonthCount,
       signOutAsStandIn,
-      eventsFilter,
+      sortedEvents,
+      toggleEventTerm,
     } = this.props;
 
     if (!events || !nxLocations) {
       return <div></div>;
     }
-
-    const sortedEvents = events.valueSeq()
-      .filter(event => event.status === 'published' && !event.parentEventId)
-      .filter(event => {
-        if (eventsFilter === 'all') {
-          return true;
-        }
-
-        const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
-        const attendee = group ? group.users.get(viewer.id) : null;
-        if (eventsFilter === 'onlyForMe') {
-          if (attendee) {
-            return true;
-          }
-          return false;
-        }
-
-        if (eventsFilter === 'signedIn') {
-          if (attendee && attendee.get('signedIn')) {
-            return true;
-          }
-          return false;
-        }
-
-        if (eventsFilter === 'signedOut') {
-          if (attendee && (attendee.get('signedOut') || attendee.get('wontGo')) && !attendee.get('standIn')) {
-            return true;
-          }
-          return false;
-        }
-
-        if (eventsFilter === 'standIn') {
-          if (attendee && attendee.get('standIn')) {
-            return true;
-          }
-          return false;
-        }
-
-        return true;
-      })
-      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1);
 
     const now = new Date();
     return (
@@ -115,8 +78,10 @@ class PastEvents extends Component {
             </li>
             {sortedEvents.filter(event => {
               const iterationDate = subMonths(now, pastMonthCount - index + 1);
-              const isMonthSame = iterationDate.getMonth() === event.eventStartDateTime.getMonth();
-              const isYearSame = iterationDate.getFullYear() === event.eventStartDateTime.getFullYear();
+              const streams = event.terms.get('streams');
+              const firstStream = streams.sort((a, b) => isAfter(a.get('eventStartDateTime'), b.get('eventStartDateTime')) ? 1 : -1).first();
+              const isMonthSame = iterationDate.getMonth() === firstStream.get('eventStartDateTime').getMonth();
+              const isYearSame = iterationDate.getFullYear() === firstStream.get('eventStartDateTime').getFullYear();
               return isMonthSame && isYearSame;
             }).map(event =>
               <Event
@@ -126,7 +91,7 @@ class PastEvents extends Component {
                 event={event}
                 events={events}
                 viewer={viewer}
-                nxLocation={nxLocations.get(event.nxLocationId)}
+                nxLocations={nxLocations}
                 openEventDetailsDialog={openEventDetailsDialog}
                 openLocationDetailsDialog={openLocationDetailsDialog}
                 closeLocationDetailsDialog={closeLocationDetailsDialog}
@@ -136,6 +101,8 @@ class PastEvents extends Component {
                 toggleEventDetails={toggleEventDetails}
                 signAsStandIn={signAsStandIn}
                 signOutAsStandIn={signOutAsStandIn}
+                change={change}
+                toggleEventTerm={toggleEventTerm}
               />
             )}
           </ul>

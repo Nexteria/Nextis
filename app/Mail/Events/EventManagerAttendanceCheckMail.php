@@ -19,24 +19,26 @@ class EventManagerAttendanceCheckMail extends Mailable
     public $feedbackCheckDay;
     public $managerDeadline;
     public $emailTagBase;
+    public $eventTerm;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, \App\User $manager)
     {
         $this->eventName = $event->name;
-        $this->eventType = Str::upper($event->eventType);
+        $this->eventType = $this->eventType === 'other' ? '' : Str::upper($event->eventType);
         $this->eventId = $event->id;
         $this->eventManagerName = $manager->firstName;
+        $this->eventTerm = $term->eventStartDateTime->format('d.m.Y');
         $this->managerEmail = $manager->email;
         $this->emailTagBase = $event->emailTagBase;
 
         $settings = $event->getSettings();
-        $this->feedbackCheckDay = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('d.m.Y');
-        $this->managerDeadline = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'] - 1)->format('d.m.Y');
+        $this->feedbackCheckDay = $term->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('d.m.Y');
+        $this->managerDeadline = $term->eventEndDateTime->addDays($settings['feedbackEmailDelay'] - 1)->format('d.m.Y');
     }
 
     /**

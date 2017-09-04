@@ -31,7 +31,7 @@ class EventReminderMail extends Mailable
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, \App\User $user, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, \App\User $user, \App\User $manager)
     {
         $this->userFirstName = $user->firstName;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
@@ -39,13 +39,13 @@ class EventReminderMail extends Mailable
         $this->eventName = $event->name;
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
-        $this->eventLocation = $event->location;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->eventLocation = $term->location;
+        $this->eventStartTime = $term->eventStartDateTime->format('j.n.Y H:i');
         $this->emailTagBase = $event->emailTagBase;
 
-        $host = \App\User::findOrFail($event->hostId);
-        $this->hostFirstName = $host->firstName.' '.$host->lastName;
-        $this->hostPhone = $host->phone;
+        $host = \App\User::find($term->hostId);
+        $this->hostFirstName = $host ? $host->firstName.' '.$host->lastName : null;
+        $this->hostPhone = $host ? $host->phone : null;
 
         $eventLocationName = $this->eventLocation->name.' (';
         $eventLocationName .= $this->eventLocation->addressLine1;

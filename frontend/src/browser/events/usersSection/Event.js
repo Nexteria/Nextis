@@ -1,13 +1,42 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { Map } from 'immutable';
-import { browserHistory, Link } from 'react-router';
-import { FormattedMessage, FormattedTime, FormattedDate, defineMessages } from 'react-intl';
-import './Event.scss';
+import { FormattedMessage, FormattedDate, defineMessages } from 'react-intl';
 import isBefore from 'date-fns/is_before';
 import isAfter from 'date-fns/is_after';
 import parse from 'date-fns/parse';
-import format from 'date-fns/format';
+
+import SignInActions from './SignInActions';
+import EventTerms from './EventTerms';
+import EventDescription from './EventDescription';
+import MultiMeetingTerms from './MultiMeetingTerms';
+import EventTypeLabels from './EventTypeLabels';
+import MultiEventsSelection from './MultiEventsSelection';
+import './Event.scss';
+
+const styles = {
+  labelsContainer: {
+    position: 'absolute',
+    right: '0px',
+    top: '-1em',
+    fontSize: '1.5em',
+  },
+  eventCategoryLabel: {
+    borderRadius: '0px',
+  },
+  multiTermEventLabel: {
+    backgroundColor: '#00a65a',
+  },
+  multiMeetingEventLabel: {
+    backgroundColor: '#f39c12',
+  },
+  eventDateLabel: {
+    marginBottom: '0.5em',
+  },
+  signInTermLabel: {
+    fontSize: '0.8em',
+  }
+};
 
 
 const messages = defineMessages({
@@ -30,10 +59,6 @@ const messages = defineMessages({
   eventType_other: {
     defaultMessage: 'Other',
     id: 'event.users.eventType_other',
-  },
-  signIn: {
-    defaultMessage: 'Sign in',
-    id: 'event.users.signIn',
   },
   wontGo: {
     defaultMessage: 'Wont go',
@@ -130,57 +155,57 @@ export default class Event extends Component {
     attendeeSignIn: PropTypes.func.isRequired,
     openSignOutDialog: PropTypes.func.isRequired,
     openLocationDetailsDialog: PropTypes.func.isRequired,
-    nxLocation: PropTypes.object.isRequired,
+    nxLocations: PropTypes.object.isRequired,
     datailsOpen: PropTypes.bool,
     hide: PropTypes.bool.isRequired,
     signAsStandIn: PropTypes.func.isRequired,
     signOutAsStandIn: PropTypes.func.isRequired,
     answerQuestionnaire: PropTypes.func.isRequired,
+    change: PropTypes.func.isRequired,
+    toggleEventTerm: PropTypes.func.isRequired,
   };
 
   render() {
-    const { event, events, viewer, hide, datailsOpen, nxLocation, users } = this.props;
+    const { event, events, viewer, hide, datailsOpen, nxLocations, users } = this.props;
     const {
       toggleEventDetails,
       openLocationDetailsDialog,
+      toggleEventTerm,
       openEventDetailsDialog,
       openSignOutDialog,
       attendeeWontGo,
       attendeeSignIn,
-      answerQuestionnaire,
       signAsStandIn,
       signOutAsStandIn,
+      change,
     } = this.props;
 
     const now = parse(new Date());
-    const oldEvent = isBefore(event.eventStartDateTime, now);
+    const streams = event.terms.get('streams').sort((a, b) =>
+      isAfter(a.get('eventStartDateTime'), b.get('eventStartDateTime')) ? 1 : -1
+    );
+    const firstStream = streams.first();
+    const isBeforeEvent = isBefore(now, firstStream.get('eventStartDateTime'));
     const attendees = event.attendeesGroups.reduce((reduction, group) =>
       reduction.merge(group.users)
     , new Map());
 
-    let isFreeCapacity = true;
-    const attending = attendees.filter(user => user.get('signedIn'));
-    if (attending.size >= event.maxCapacity) {
-      isFreeCapacity = false;
-    }
+    const nxLocation = nxLocations.get(firstStream.get('nxLocationId'));
 
     const standInPeople = attendees.filter(user => user.get('standIn'));
 
     // TODO what if user will be in multiple groups?
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
-    const isSignInOpen = group ?
-      isAfter(now, group.signUpOpenDateTime) && isBefore(now, group.signUpDeadlineDateTime)
+    const eventViewer = event.get('viewer');
+    const isSignInOpen = eventViewer ?
+      isAfter(now, eventViewer.get('signUpOpenDateTime')) && isBefore(now, eventViewer.get('signUpDeadlineDateTime'))
     : false;
 
-    const signInExpired = group ?
-      isAfter(now, group.signUpDeadlineDateTime) : false;
+    const signInExpired = eventViewer ?
+      isAfter(now, eventViewer.get('signUpDeadlineDateTime')) : false;
 
-    const attendee = group ? group.users.get(viewer.id) : null;
-    const groupSignIns = group ? group.users.filter(user => user.get('signedIn')).size : 0;
+    const attendee = event.viewer.get('attendee');
 
-    if (group && groupSignIns >= group.maxCapacity) {
-      isFreeCapacity = false;
-    }
 
     const undecided = attendee && !attendee.get('signedIn') &&
       !attendee.get('wontGo') && !attendee.get('signedOut');
@@ -203,6 +228,10 @@ export default class Event extends Component {
       }
     }
 
+    const choosedStream = event.getIn(['terms', 'streams'])
+      .filter(stream => stream.getIn(['attendee', 'signedIn']))
+      .first();
+
     const choosedGroupedEvents = groupedEvents.filter(ev => {
       const gGroup = ev.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
       const gAttendee = gGroup ? gGroup.users.get(viewer.id) : null;
@@ -210,316 +239,68 @@ export default class Event extends Component {
       return gAttendee && gAttendee.get('signedIn');
     });
 
+    const isMultiTerm = event.getIn(['terms', 'streams']).size > 1;
+    const isMultiMeeting = event.getIn(['terms', 'streams'])
+                                .some(stream => stream.get('terms').size > 0);
+
     return (
       <li className="users-event" style={{ display: hide ? 'none' : '' }}>
         <div className="fa bg-green event-type">
           <FormattedMessage {...messages[`eventType_${event.eventType}`]} />
         </div>
         <div className={`timeline-item col-md-11 col-sm-11 col-xs-9 ${eventColorClass}`}>
+          <EventTypeLabels isMultiMeeting={isMultiMeeting} isMultiTerm={isMultiTerm} />
           <div className="timeline-header">
             <div className="col-md-1 col-sm-2 col-xs-12 event-date">
-              <span className="label label-primary">
-                <FormattedDate value={event.eventStartDateTime} />
-              </span>
+              {streams.map(stream =>
+                <div style={styles.eventDateLabel}>
+                  <span className="label label-primary">
+                    <FormattedDate value={stream.get('eventStartDateTime')} />
+                  </span>
+                </div>
+              )}
             </div>
             <h3 className="col-md-10 col-sm-8 col-xs-12">{event.name}</h3>
             <div className="col-md-1 col-sm-2 col-xs-12 event-details-button">
               <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
             </div>
-            {attendee ?
-              <div>
-                {oldEvent ?
-                  <div>
-                    <div className="event-actions col-md-12 col-sm-12 col-xs-12">
-                      {attending.has(viewer.id) ?
-                        attendee.get('filledFeedback') && attendee.get('filledFeedback') != '' ?
-                          <i className="fa fa-check was-here"></i>
-                        :
-                          attendee.get('wasPresent') ?
-                            <a
-                              className="btn btn-info btn-xs"
-                              target="_blank"
-                              href={event.publicFeedbackLink}
-                            >
-                              <FormattedMessage {...messages.fillFeedback} />
-                            </a>
-                            : null
-                      :
-                        <i className="fa fa-times wasnt-here"></i>
-                      }
-                    </div>
-                  </div>
-                  :
-                  <div>
-                    <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
-                      {isSignInOpen ?
-                        <FormattedMessage {...messages.signInNoteTitle} />
-                        :
-                          signInExpired ?
-                            <FormattedMessage {...messages.signInExpired} />
-                            :
-                            <FormattedMessage {...messages.signInOpenTitle} />
-                      }
-                      <span> </span>
-                      {isSignInOpen ?
-                        <FormattedDate value={group.signUpDeadlineDateTime} />
-                        :
-                        signInExpired ?
-                          <FormattedDate value={group.signUpDeadlineDateTime} />
-                          :
-                          <span>
-                            <FormattedDate value={group.signUpOpenDateTime} />
-                            <span> o </span>
-                            <FormattedTime value={group.signUpOpenDateTime} />
-                          </span>
-                      }
-                      {!isFreeCapacity ?
-                        <span>
-                          , <FormattedMessage {...messages.eventIsFull} />
-                        </span>
-                        : null
-                      }
-                    </div>
-                      {undecided && isSignInOpen && isFreeCapacity ?
-                        <div className="event-actions col-md-12 col-sm-12 col-xs-12">
-                          <button
-                            className="btn btn-success btn-xs"
-                            onClick={() => {
-                              if (event.has('questionForm') && event.get('questionForm')) {
-                                browserHistory.push({
-                                  pathname: `/events/${event.id}/questionnaire`,
-                                  state: { viewerId: viewer.id, groupId: group.id }
-                                });
-                              } else {
-                                groupedEvents.size ?
-                                  browserHistory.push(`/events/${event.id}/login`)
-                                : attendeeSignIn(event.id, viewer.id, group.id)
-                              }
-                            }}
-                          >
-                            {event.has('questionForm') && event.get('questionForm') ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
-                            <FormattedMessage {...messages.signIn} />
-                          </button>
-                          <button
-                            className="btn btn-danger btn-xs"
-                            onClick={event.mandatoryParticipation ?
-                              () => openSignOutDialog(event, viewer, group.id, 'WONT_GO')
-                              :
-                              () => attendeeWontGo(event.id, viewer.id, group.id)
-                            }
-                          >
-                            <FormattedMessage {...messages.wontGo} />
-                          </button>
-                          {attendee.get('standIn') ?
-                            <button
-                              className="btn btn-warning btn-xs"
-                              onClick={() => signOutAsStandIn(event, viewer)}
-                            >
-                              <FormattedMessage {...messages.signOutAsStandIn} />
-                            </button>
-                            : null
-                          }
-                        </div>
-                      :
-                        <div className="event-actions col-md-12 col-sm-12 col-xs-12">
-                          {!attendee.get('wontGo') && !attendee.get('signedOut')
-                            && attendee.get('signedIn') ?
-                            <button
-                              className="btn btn-danger btn-xs"
-                              onClick={() => openSignOutDialog(event, viewer, group.id, 'SIGN_OUT')}
-                            >
-                              <FormattedMessage {...messages.signOut} />
-                            </button>
-                            :
-                              isSignInOpen && isFreeCapacity ?
-                                <button
-                                  className="btn btn-success btn-xs"
-                                  onClick={() => {
-                                    if (groupedEvents.size) {
-                                      browserHistory.push(`/events/${event.id}/login`);
-                                    } else {
-                                      if (event.has('questionForm') && event.get('questionForm') && attendee.get('wontGo')) {
-                                        browserHistory.push({
-                                          pathname: `/events/${event.id}/questionnaire`,
-                                          state: { viewerId: viewer.id, groupId: group.id }
-                                        });
-                                      } else {
-                                        attendeeSignIn(event.id, viewer.id, group.id);
-                                      }
-                                    }
-                                  }}
-                                >
-                                {event.has('questionForm') && event.get('questionForm') && attendee.get('wontGo') ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
-                                  <FormattedMessage {...messages.signIn} />
-                                </button>
-                                : ''
-                          }
-                          {attendee.get('standIn') ?
-                            <button
-                              className="btn btn-warning btn-xs"
-                              onClick={() => signOutAsStandIn(event, viewer)}
-                            >
-                              <FormattedMessage {...messages.signOutAsStandIn} />
-                            </button>
-                            : null
-                          }
-                          {!isFreeCapacity && !attendee.get('signedIn') && !attendee.get('standIn') ?
-                            <button
-                              className="btn btn-info btn-xs"
-                              onClick={() => signAsStandIn(event, viewer)}
-                            >
-                              <FormattedMessage {...messages.signInAsStandIn} />
-                            </button>
-                            : null
-                          }
-                        </div>
-                      }
-                  </div>
-                }
-              </div>
-              :
-              <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
-                <FormattedMessage {...messages.unavailableEvent} />
-              </div>
-            }
+            <SignInActions
+              {...{
+                viewer,
+                event,
+                isSignInOpen,
+                signInExpired,
+                isMultiTerm,
+                change,
+                isBeforeEvent,
+                groupedEvents,
+                attendeeSignIn,
+                attendeeWontGo,
+                openSignOutDialog,
+                signOutAsStandIn,
+                signAsStandIn,
+                toggleEventTerm,
+              }}
+            />
           </div>
           <div
             className="col-md-12 event-details-container"
             style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}
           >
-            <div className="col-md-4 col-sm-12 col-xs-12 event-details">
-              <div className="col-md-12 col-sm-12 col-xs-12">
-                <strong><FormattedMessage {...messages.details} />:</strong>
-              </div>
-              {groupedEvents.size &&
-                <div className="col-md-12 col-sm-12 col-xs-12">
-                  <div className="col-md-2 col-sm-2 col-xs-2">
-                    <i className="fa fa-clock-o"></i>
-                  </div>
-                  <div className="col-md-10 col-sm-10 col-xs-10">
-                    Podľa zvoleného termínu
-                  </div>
-                </div>
-              }
-              {!groupedEvents.size &&
-                <div className="col-md-12 col-sm-12 col-xs-12">
-                  <div className="col-md-2 col-sm-2 col-xs-2">
-                    <i className="fa fa-clock-o"></i>
-                  </div>
-                  <div className="col-md-10 col-sm-10 col-xs-10">
-                    {format(event.eventStartDateTime, 'D.M.YYYY, H:mm')}
-                    <span> - </span>
-                    {format(event.eventEndDateTime, 'D.M.YYYY, H:mm')}
-                  </div>
-                </div>
-              }
-              <div className="col-md-12 col-sm-12 col-xs-12">
-                <div className="col-md-2 col-sm-2 col-xs-2">
-                  <i className="fa fa-usd"></i>
-                </div>
-                <div className="col-md-10 col-sm-10 col-xs-10">
-                  {event.activityPoints} <FormattedMessage {...messages.actionPoints} />
-                </div>
-              </div>
-              {groupedEvents.size &&
-                <div className="col-md-12 col-sm-12 col-xs-12">
-                  <div className="col-md-2 col-sm-2 col-xs-2">
-                    <i className="fa fa-map-marker"></i>
-                  </div>
-                  <div className="col-md-10 col-sm-10 col-xs-10">
-                    Podľa zvoleného termínu
-                  </div>
-                </div>
-              }
-              {!groupedEvents.size &&
-                <div className="col-md-12 col-sm-12 col-xs-12">
-                  <div className="col-md-2 col-sm-2 col-xs-2">
-                    <i className="fa fa-map-marker"></i>
-                  </div>
-                  <div className="col-md-10 col-sm-10 col-xs-10">
-                    <a onClick={() => openLocationDetailsDialog(nxLocation.id)}>{nxLocation.name}</a>
-                  </div>
-                </div>
-              }
-              <div className="col-md-12 col-sm-12 col-xs-12">
-                <div className="col-md-2 col-sm-2 col-xs-2">
-                  <i className="fa fa-group"></i>
-                </div>
-                <div className="col-md-5 col-sm-5 col-xs-5">
-                  <div>
-                    {attending.size} ({event.minCapacity} - {event.maxCapacity})
-                  </div>
-                  <div>
-                    <Link to={`/events/${event.id}/attendees`}>
-                      <FormattedMessage {...messages.signedIn} />
-                    </Link>
-                  </div>
-                </div>
-                <div className="col-md-5 col-sm-5 col-xs-5">
-                  <div>
-                    {attendees.size}
-                  </div>
-                  <div>
-                    <FormattedMessage {...messages.invited} />
-                  </div>
-                </div>
-                <div className="col-md-offset-2 col-sm-offset-2 col-md-5 col-sm-5 col-xs-5">
-                  <div>
-                    {standInPeople.size}
-                  </div>
-                  <div>
-                    <FormattedMessage {...messages.standInPeople} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-8 col-sm-12 col-xs-12">
-              <div><strong><FormattedMessage {...messages.shortDescription} />:</strong></div>
-              <div
-                dangerouslySetInnerHTML={{ __html: event.shortDescription.toString('html') }}
-              >
-              </div>
-              <div><strong><FormattedMessage {...messages.insideEvents} />:</strong></div>
-              <ul>
-              {groupedEvents.map(gEvent =>
-                <li>
-                  <label>
-                    <a href="#" onClick={() => openEventDetailsDialog(gEvent.id)}>{gEvent.name}</a>
-                  </label>
-                </li>
-              )}
-              </ul>
-              <div className="lectors-container">
-                <div>
-                  <strong><FormattedMessage {...messages.lectors} />:</strong>
-                </div>
-                {event.lectors.size === 0 ?
-                  <FormattedMessage {...messages.noLectors} />
-                  :
-                  event.lectors.map(lector =>
-                    <div key={lector}>
-                      <div className="col-md-2 col-sm-2 col-xs-2">
-                        <img
-                          alt="lector"
-                          className="lector-picture"
-                          src={users.get(lector).photo ?
-                            users.get(lector).photo
-                            : '/img/avatar.png'}
-                        />
-                        <div>{users.get(lector).firstName} {users.get(lector).lastName}</div>
-                      </div>
-                      <div
-                        className="col-md-10 col-sm-10 col-xs-10"
-                        dangerouslySetInnerHTML={{
-                          __html: users.get(lector).lectorDescription.toString('html')
-                        }}
-                      >
-                      </div>
-                    </div>
-                  )
-                }
-              </div>
-            </div>
+            {groupedEvents.size === 0 && <EventTerms event={event} />}
+            <EventDescription
+              {...{
+                event,
+                firstStream,
+                openLocationDetailsDialog,
+                nxLocation,
+                attendees,
+                standInPeople,
+                groupedEvents,
+                openEventDetailsDialog,
+                users,
+              }}
+            />
           </div>
           {choosedGroupedEvents.size ?
             <div className="col-md-12 col-sm-12 col-xs-12">
@@ -529,6 +310,31 @@ export default class Event extends Component {
             : null
           }
         </div>
+        <div className="clearfix"></div>
+        {choosedStream && groupedEvents.size === 0 &&
+          <MultiMeetingTerms
+            choosedStream={choosedStream}
+            openLocationDetailsDialog={openLocationDetailsDialog}
+            openSignOutDialog={openSignOutDialog}
+            toggleEventTerm={toggleEventTerm}
+            attendeeSignIn={attendeeSignIn}
+            viewerId={viewer.id}
+            event={event}
+            nxLocations={nxLocations}
+            isBeforeEvent={isBeforeEvent}
+          />
+        }
+        {attendee.get('signedIn') && groupedEvents.size > 0 &&
+          <MultiEventsSelection
+            nxLocations={nxLocations}
+            openLocationDetailsDialog={openLocationDetailsDialog}
+            groupedEvents={groupedEvents}
+            openSignOutDialog={openSignOutDialog}
+            attendeeSignIn={attendeeSignIn}
+            toggleEventTerm={toggleEventTerm}
+            viewerId={viewer.id}
+          />
+        }
       </li>
     );
   }

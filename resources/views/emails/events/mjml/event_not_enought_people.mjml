@@ -27,7 +27,7 @@
           </mj-text>
           <mj-text line-height="16px">
             <p>
-              Na evente <b>{{ $eventType }} {{ $eventName }}</b>. je aktuálne obsadených len <b>{{ $actualCapacity }}</b> miest z celkového počtu <b>{{ $maxCapacity }} (min. {{ $minCapacity }})</b>.
+              Na evente <b>{{ $eventType }} {{ $eventName }} (Termín: {{ $eventTerm }})</b>. je aktuálne obsadených len <b>{{ $actualCapacity }}</b> miest z celkového počtu <b>{{ $maxCapacity }} (min. {{ $minCapacity }})</b>.
             </p>
             <p>Pozri sa na to prosím</p>
           </mj-text>

@@ -76,6 +76,11 @@ class NxEventAttendee extends Authenticatable implements AuditableContract
         return $this->belongsTo('App\AttendeesGroup', 'attendeesGroupId');
     }
 
+    public function terms()
+    {
+        return $this->belongsToMany('App\NxEventTerm', 'nx_event_attendees_nx_event_terms', 'attendeeId', 'termId');
+    }
+
     public function event()
     {
         $result = [];

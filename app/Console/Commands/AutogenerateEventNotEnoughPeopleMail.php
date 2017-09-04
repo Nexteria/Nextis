@@ -39,7 +39,6 @@ class AutogenerateEventNotEnoughPeopleMail extends Command
             $lastSignInCloseDate = Carbon::now()->subYears(10);
             $actualSignInCount = 0;
             foreach ($event->attendeesGroups as $group) {
-                $actualSignInCount += $group->attendees()->where('signedIn', '>', '')->count();
                 if ($group->signUpDeadlineDateTime->format('Y-m-d') > $today) {
                     $isSignInClosed = false;
                 }
@@ -50,12 +49,16 @@ class AutogenerateEventNotEnoughPeopleMail extends Command
             }
 
             $isTimeForNotification = $lastSignInCloseDate->addDays(1)->format('Y-m-d') == $today;
-            $isLowSigninCount = $event->minCapacity > $actualSignInCount;
-            if ($isSignInClosed && $isTimeForNotification && $isLowSigninCount) {
-                $settings = $event->getSettings();
-                $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
-                $email = new \App\Mail\Events\EventNotEnoughPeopleMail($event, $actualSignInCount, $manager);
-                \Mail::send($email);
+
+            foreach ($event->terms as $term) {
+                $actualSignInCount = $term->attendees()->wherePivot('signedIn', '>', '')->count();
+
+                $isLowSigninCount = $term->minCapacity > $actualSignInCount;
+                if ($isSignInClosed && $isTimeForNotification && $isLowSigninCount) {
+                    $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
+                    $email = new \App\Mail\Events\EventNotEnoughPeopleMail($event, $term, $actualSignInCount, $manager);
+                    \Mail::send($email);
+                }
             }
         }
     }

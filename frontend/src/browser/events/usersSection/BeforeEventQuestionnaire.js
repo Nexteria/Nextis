@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
-import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
+import Modal, { Header, Body, Footer } from 'react-bootstrap/lib/Modal';
 
 
 import Form from '../../components/Forms/Questionnaire/Form';
@@ -23,6 +23,7 @@ export class BeforeEventQuestionnaire extends Component {
     handleSubmit: PropTypes.func.isRequired,
     formData: PropTypes.object,
     submitFunc: PropTypes.func,
+    saveSignInForm: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
@@ -62,6 +63,7 @@ export class BeforeEventQuestionnaire extends Component {
       actualEvent,
       formData,
       submitFunc,
+      saveSignInForm,
     } = this.props;
 
     if (!formData) {
@@ -71,8 +73,9 @@ export class BeforeEventQuestionnaire extends Component {
     const { viewerId, groupId } = location.state;
 
     let submitFunction = (data) => {
-      attendeeSignIn(actualEvent.get('id'), viewerId, groupId, null, data.formData);
-      browserHistory.goBack();
+      saveSignInForm(data.formData, actualEvent.get('id'));
+      attendeeSignIn(viewerId);
+      browserHistory.push(`/events/${actualEvent.get('id')}`);
     };
 
     if (submitFunc) {
@@ -128,7 +131,7 @@ export class BeforeEventQuestionnaire extends Component {
               }
               <button
                 className="btn btn-danger"
-                onClick={() => browserHistory.goBack()}
+                onClick={() => browserHistory.push('/events')}
                 type="button"
               >
                 Zavrieť

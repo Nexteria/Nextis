@@ -13,7 +13,7 @@ export default function renderInput(data) {
       <label className={`col-sm-${labelColumn} control-label`} htmlFor={input.name}>
         {label}
       </label>
-      <div className={`col-sm-${contentColumn} input-group ${asyncValidating ? 'async-validating' : ''}`}>
+      <div className={`col-sm-${contentColumn} ${icon ? 'input-group' : ''} ${asyncValidating ? 'async-validating' : ''}`}>
         {icon && <span className="input-group-addon">{icon}</span>}
         <input
           {...input}

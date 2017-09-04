@@ -21,16 +21,23 @@ class NxEventsController extends Controller
     protected $nxEventTransformer;
 
     /**
+     * @var \App\Transformers\Student\NxEventTransformer
+     */
+    protected $nxEventStudentTransformer;
+
+    /**
      * @var \App\Transformers\NxEventsSettingsTransformer
      */
     protected $nxEventsSettingsTransformer;
 
     public function __construct(
         \App\Transformers\NxEventTransformer $nxEventTransformer,
+        \App\Transformers\Student\NxEventTransformer $nxEventStudentTransformer,
         \App\Transformers\NxEventsSettingsTransformer $nxEventsSettingsTransformer,
         \App\Transformers\BeforeEventQuestionnaireTransformer $beforeEventQuestionnaireTransformer
     ){
         $this->nxEventTransformer = $nxEventTransformer;
+        $this->nxEventStudentTransformer = $nxEventStudentTransformer;
         $this->nxEventsSettingsTransformer = $nxEventsSettingsTransformer;
         $this->beforeEventQuestionnaireTransformer = $beforeEventQuestionnaireTransformer;
     }
@@ -74,18 +81,14 @@ class NxEventsController extends Controller
             $query = $query->where($key, $item);
         });
         
-        $events = $query->with('attendeesGroups')
-                        ->with('attendeesGroups.attendees')
-                        ->with('attendeesGroups.attendees.user')
+        $events = $query
                         ->with('lectors')
                         ->with('semester')
-                        ->with('groupedEvents')
-                        ->with('exclusionaryEvents')
                         ->with('form.questions.choices')
                         ->with('form.questions.attendeesGroups')
                         ->get();
 
-        return response()->json($this->nxEventTransformer->transformCollection($events));
+        return response()->json($this->nxEventStudentTransformer->transformCollection($events));
     }
 
     public function deleteNxEvent($eventId)

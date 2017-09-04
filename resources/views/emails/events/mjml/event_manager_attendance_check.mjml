@@ -26,7 +26,7 @@
             <b>Ahoj {{ $eventManagerName }},</b>
           </mj-text>
           <mj-text line-height="16px">
-            <p>Hostovi bol odoslaný remainder o vyplnení prezenčky v Nexteria Space-e k eventu <b>{{ $eventType }} {{ $eventName }}</b>.</p>
+            <p>Hostovi bol odoslaný remainder o vyplnení prezenčky v Nexteria Space-e k eventu <b>{{ $eventType }} {{ $eventName }} (termín: {{ $eventTerm }})</b>.</p>
             <p>Hromadný email na vyplnenie feedbacku sa bude posielať {{ $feedbackCheckDay }} iba ľuďom zaznačeným v systéme ako prítomný na evente.</p>
             <p>Skontrolovať to môžeš tu: <a href="https://space.nexteria.sk/host/events/{{ $eventId }}" target="_blank">https://space.nexteria.sk/host/events/{{ $eventId }}</a></p>
           </mj-text>

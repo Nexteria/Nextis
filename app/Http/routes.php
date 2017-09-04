@@ -93,7 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/nxEvents/settings', 'NxEventsController@getDefaultEventsSettings');
         Route::post('/nxEvents/settings', 'NxEventsController@updateDefaultEventsSettings');
 
-        Route::put('/nxEvents/{eventId}/users/{userId}', 'NxEventAttendeesController@updateAttendee');
+        Route::put('/nxEvents/users/{userId}', 'NxEventAttendeesController@updateAttendee');
         Route::get('/nxEvents/{eventId}/settings', 'NxEventsController@getNxEventSettings');
         Route::post('/nxEvents/{eventId}/settings', 'NxEventsController@updateNxEventSettings');
 

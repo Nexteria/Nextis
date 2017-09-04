@@ -15,6 +15,7 @@ import LocationDetailsDialog from './LocationDetailsDialog';
 import PastEvents from './PastEvents';
 import FutureEvents from './FutureEvents';
 import PresentEvents from './PresentEvents';
+import ChooseTermStreamDialog from '../attendance/ChooseTermStreamDialog';
 
 
 const messages = defineMessages({
@@ -88,6 +89,8 @@ class EventsPage extends Component {
     signOutAsStandIn: PropTypes.func.isRequired,
     eventsFilter: PropTypes.string,
     change: PropTypes.func.isRequired,
+    toggleEventTerm: PropTypes.func.isRequired,
+    chooseStreamEventId: PropTypes.number.isRequired,
   };
 
   render() {
@@ -118,8 +121,10 @@ class EventsPage extends Component {
       togglePastEvents,
       toggleFutureEvents,
       signAsStandIn,
+      toggleEventTerm,
       signOutAsStandIn,
       eventsFilter,
+      chooseStreamEventId,
       change,
     } = this.props;
 
@@ -141,14 +146,14 @@ class EventsPage extends Component {
         const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
         const attendee = group ? group.users.get(viewer.id) : null;
         if (eventsFilter === 'onlyForMe') {
-          if (attendee) {
+          if (event.viewer.get('isInvited')) {
             return true;
           }
           return false;
         }
 
         if (eventsFilter === 'signedIn') {
-          if (attendee && attendee.get('signedIn')) {
+          if (event.viewer.getIn(['attendee', 'signedIn'])) {
             return true;
           }
           return false;
@@ -168,7 +173,11 @@ class EventsPage extends Component {
           return false;
         }
       })
-      .sort((a, b) => isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1);
+      .sort((a, b) => {
+        const firstStreamA = a.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
+        const firstStreamB = b.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
+        return isAfter(firstStreamA.get('eventStartDateTime'), firstStreamB.get('eventStartDateTime')) ? 1 : -1;
+      });
 
     return (
         eventId ?
@@ -190,7 +199,7 @@ class EventsPage extends Component {
                         event={event}
                         events={events}
                         viewer={viewer}
-                        nxLocation={nxLocations.get(event.nxLocationId)}
+                        nxLocations={nxLocations}
                         openEventDetailsDialog={openEventDetailsDialog}
                         openLocationDetailsDialog={openLocationDetailsDialog}
                         closeLocationDetailsDialog={closeLocationDetailsDialog}
@@ -201,6 +210,8 @@ class EventsPage extends Component {
                         signAsStandIn={signAsStandIn}
                         signOutAsStandIn={signOutAsStandIn}
                         datailsOpen
+                        change={change}
+                        toggleEventTerm={toggleEventTerm}
                       />
                     )}
                   </ul>
@@ -212,10 +223,7 @@ class EventsPage extends Component {
               : ''
             }
 
-            {signOut.eventId && signOut.userId && signOut.groupId ?
-              <SignOutDialog />
-              : ''
-            }
+            {signOut.eventId && <SignOutDialog />}
 
             {locationDetailsId ?
               <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
@@ -279,6 +287,8 @@ class EventsPage extends Component {
                         pastMonthCount,
                         signAsStandIn,
                         signOutAsStandIn,
+                        change,
+                        sortedEvents,
                       }}
                     />
                     : ''
@@ -297,6 +307,8 @@ class EventsPage extends Component {
                       togglePastEvents,
                       visibleFutureEvents,
                       visiblePastEvents,
+                      change,
+                      sortedEvents,
                     }}
                   />
                   {visibleFutureEvents ?
@@ -313,6 +325,8 @@ class EventsPage extends Component {
                         futureMonthCount,
                         presentMonthCount,
                         signOutAsStandIn,
+                        change,
+                        sortedEvents,
                       }}
                     />
                     : ''
@@ -332,9 +346,16 @@ class EventsPage extends Component {
             : ''
           }
 
-          {signOut.eventId && signOut.userId && signOut.groupId ?
-            <SignOutDialog />
-            : ''
+          {signOut.eventId && <SignOutDialog />}
+
+          {chooseStreamEventId &&
+            <ChooseTermStreamDialog
+              open
+              viewerId={viewer.id}
+              closeDialog={() => change('chooseStreamEventId', null)}
+              terms={events.getIn([chooseStreamEventId, 'terms'])}
+              event={events.get(chooseStreamEventId)}
+            />
           }
 
           {locationDetailsId ?
@@ -366,4 +387,5 @@ export default connect(state => ({
   locationDetailsId: state.events.locationDetailsId,
   nxLocations: state.nxLocations.locations,
   initialValues: { eventsFilter: 'onlyForMe' },
+  chooseStreamEventId: selector(state, 'chooseStreamEventId'),
 }), eventsActions)(EventsPage);
