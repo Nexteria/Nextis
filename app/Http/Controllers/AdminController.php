@@ -282,21 +282,27 @@ class AdminController extends Controller
 
         foreach ($thirdLevel->students()->where('status', 'active')->get() as $student) {
             $thirdLevel->userGroup->users()->detach($student->userId);
-            $alumniLevel->userGroup->users()->attach($student->userId);
+            if (!$alumniLevel->userGroup->users->contains($student->userId)) {
+                $alumniLevel->userGroup->users()->attach($student->userId);
+            }
             $student->studentLevelId = $alumniLevel->id;
             $student->save();
         }
 
         foreach ($secondLevel->students()->where('status', 'active')->get() as $student) {
             $secondLevel->userGroup->users()->detach($student->userId);
-            $thirdLevel->userGroup->users()->attach($student->userId);
+            if (!$thirdLevel->userGroup->users->contains($student->userId)) {
+                $thirdLevel->userGroup->users()->attach($student->userId);
+            }
             $student->studentLevelId = $thirdLevel->id;
             $student->save();
         }
 
         foreach ($firstLevel->students()->where('status', 'active')->get() as $student) {
             $firstLevel->userGroup->users()->detach($student->userId);
-            $secondLevel->userGroup->users()->attach($student->userId);
+            if (!$secondLevel->userGroup->users->contains($student->userId)) {
+                $secondLevel->userGroup->users()->attach($student->userId);
+            }
             $student->studentLevelId = $secondLevel->id;
             $student->save();
         }
