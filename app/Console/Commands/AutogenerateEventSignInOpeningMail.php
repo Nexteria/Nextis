@@ -40,7 +40,7 @@ class AutogenerateEventSignInOpeningMail extends Command
             $eventSignInDeadline = '';
             foreach ($event->attendeesGroups as $group) {
                 if ($group->signUpOpenDateTime->format('Y-m-d H:i') === $now) {
-                    $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y h:i');
+                    $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y H:i');
 
                     foreach ($group->attendees as $attendee) {
                         $email = new \App\Mail\Events\EventSignInOpeningMail($event, $attendee->user, $attendee->signInToken, $eventSignInDeadline, $manager);
