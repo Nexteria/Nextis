@@ -39,7 +39,7 @@ class AutogenerateEventNotEnoughPeopleMail extends Command
             $lastSignInCloseDate = Carbon::now()->subYears(10);
             $actualSignInCount = 0;
             foreach ($event->attendeesGroups as $group) {
-                $actualSignInCount = $group->attendees()->where('signedIn', '>', '')->count();
+                $actualSignInCount += $group->attendees()->where('signedIn', '>', '')->count();
                 if ($group->signUpDeadlineDateTime->format('Y-m-d') > $today) {
                     $isSignInClosed = false;
                 }
