@@ -42,7 +42,7 @@ class AutogenerateEventSignInRemainderMail extends Command
             foreach ($event->attendeesGroups as $group) {
                 $notificationTime = $group->signUpDeadlineDateTime->subDays($settings['eventSignInRemainderDaysBefore'])->format('Y-m-d');
                 if ($notificationTime === $today) {
-                    $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y h:i');
+                    $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y H:i');
 
                     $attendees = $group->attendees()->whereNull('signedIn')->whereNull('wontGo')->whereNull('signedOut')->get();
                     foreach ($attendees as $attendee) {
