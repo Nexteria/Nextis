@@ -39,9 +39,11 @@ class AutogenerateEventSignInRemainderMail extends Command
 
             $isRemainderTime = false;
             $eventSignInDeadline = '';
+            $isEventMaxOut = $event->attendees()->whereNotNull('signedIn')->count() >= $event->maxCapacity;
             foreach ($event->attendeesGroups as $group) {
                 $notificationTime = $group->signUpDeadlineDateTime->subDays($settings['eventSignInRemainderDaysBefore'])->format('Y-m-d');
-                if ($notificationTime === $today) {
+                $isGroupMaxOut = $group->attendees()->whereNotNull('signedIn')->count() >= $group->maxCapacity;
+                if ($notificationTime === $today && !$isEventMaxOut && !$isGroupMaxOut) {
                     $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y H:i');
 
                     $attendees = $group->attendees()->whereNull('signedIn')->whereNull('wontGo')->whereNull('signedOut')->get();

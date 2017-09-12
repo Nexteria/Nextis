@@ -35,7 +35,7 @@ class SendEventAteendeePlaceReleasedNotification
         $settings = $event->nxEvent->getSettings();
         $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
         foreach ($standInAttendees as $attendee) {
-            if ($event->nxEvent->canSignInAttendee($attendee)) {
+            if ($event->nxEvent->canSignInAttendee($attendee) === true) {
                 $email = new \App\Mail\Events\EventFreePlaceMail($event->nxEvent, $attendee->signInToken, $attendee->user, $manager);
                 \Mail::send($email);
             }
