@@ -454,9 +454,9 @@ export default class Event extends Component {
                   <div>
                     <i className="fa fa-clock-o"></i>
                     <span> </span>
-                    {format(event.eventStartDateTime, 'D.M.YYYY, H:mm')}
+                    {format(gEvent.eventStartDateTime, 'D.M.YYYY, H:mm')}
                     <span> - </span>
-                    {format(event.eventEndDateTime, 'D.M.YYYY, H:mm')}
+                    {format(gEvent.eventEndDateTime, 'D.M.YYYY, H:mm')}
                     <span>,</span>
                   </div>
                   <div
