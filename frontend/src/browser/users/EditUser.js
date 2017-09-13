@@ -581,7 +581,9 @@ export class EditUser extends Component {
                     {roles.includes(rolesList.get('LECTOR').id) ?
                       <Field
                         name="lectorDescription"
-                        component={this.renderEditor}
+                        contentCol={10}
+                        labelCol={2}
+                        component={TextEditor}
                         label={`${formatMessage(messages.lectorDescription)}`}
                       />
                       : ''
@@ -592,7 +594,9 @@ export class EditUser extends Component {
                         name="buddyDescription"
                         type="text"
                         readOnly
-                        component={this.renderEditor}
+                        contentCol={10}
+                        labelCol={2}
+                        component={TextEditor}
                         label={`${formatMessage(messages.buddyDescription)}`}
                       />
                       : ''
