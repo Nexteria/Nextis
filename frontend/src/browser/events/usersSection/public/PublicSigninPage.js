@@ -8,6 +8,7 @@ import * as actions from '../../../../common/public/actions';
 import Dialog from '../../../components/Dialog';
 import TextArea from '../../../components/TextArea';
 import BeforeEventQuestionnaire from '../BeforeEventQuestionnaire';
+import { EventPublicLoginDialog } from '../../EventLoginDialog';
 
 
 const validate = values => {
@@ -43,7 +44,8 @@ class PublicSigninPage extends Component {
         eventWontGo(params.signInToken);
       }
 
-      if ((!data.value.signinFormId || madeDecision) && params.action === 'signIn') {
+      if ((!data.value.signinFormId || madeDecision) &&
+        params.action === 'signIn' && !data.value.groupedEvents.length) {
         attendeeSignIn(params.signInToken);
       }
     });
@@ -63,6 +65,7 @@ class PublicSigninPage extends Component {
       params,
       attendeeSignIn,
       message,
+      groupedEvents,
       actionIsDone,
       handleSubmit,
       eventWontGo,
@@ -98,6 +101,16 @@ class PublicSigninPage extends Component {
               }
             }}
             submitFunc={(data) => attendeeSignIn(params.signInToken, data)}
+          />
+        }
+
+        {(action === 'signIn' && !isSigned && !signinFormId && groupedEvents.size) &&
+          <EventPublicLoginDialog
+            events={groupedEvents}
+            params={{ eventId }}
+            viewer={{ id: viewerId }}
+            noRedirect
+            attendeeSignIn={(e,v,g,f) => attendeeSignIn(params.signInToken, null, f)}
           />
         }
 
@@ -161,4 +174,5 @@ export default connect(state => ({
   message: state.publicSignin.message,
   actionIsDone: state.publicSignin.actionIsDone,
   eventId: state.publicSignin.eventId,
+  groupedEvents: state.publicSignin.groupedEvents,
 }), actions)(PublicSigninPage);

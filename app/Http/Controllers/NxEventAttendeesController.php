@@ -19,9 +19,17 @@ class NxEventAttendeesController extends Controller
      */
     protected $nxEventAttendeeTransformer;
 
-    public function __construct(\App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer)
-    {
+    /**
+     * @var \App\Transformers\NxEventTransformer
+     */
+    protected $nxEventTransformer;
+
+    public function __construct(
+        \App\Transformers\NxEventAttendeeTransformer $nxEventAttendeeTransformer,
+        \App\Transformers\NxEventTransformer $nxEventTransformer
+    ) {
         $this->nxEventAttendeeTransformer = $nxEventAttendeeTransformer;
+        $this->nxEventTransformer = $nxEventTransformer;
     }
 
     public function updateSignInByToken($signInToken)
@@ -139,6 +147,8 @@ class NxEventAttendeesController extends Controller
             'eventId' => $attendee->event()->id,
             'viewerId' => $attendee->userId,
             'groupId' => $attendee->attendeesGroupId,
+            'groupedEvents' => $this->nxEventTransformer->transformCollection($attendee->event()->groupedEvents),
+            'event' => $this->nxEventTransformer->transform($attendee->event()),
         ], 200);
     }
 

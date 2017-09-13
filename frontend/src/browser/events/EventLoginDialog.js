@@ -1,17 +1,16 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Map, List } from 'immutable';
+import { Map } from 'immutable';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
-import Tabs from 'react-bootstrap/lib/Tabs';
-import Tab from 'react-bootstrap/lib/Tab';
 import { browserHistory } from 'react-router';
 
 
 import * as actions from '../../common/events/actions';
 import { fields } from '../../common/lib/redux-fields/index';
 import * as fieldsActions from '../../common/lib/redux-fields/actions';
+import './EventLoginDialog.scss';
 
 
 const messages = defineMessages({
@@ -71,8 +70,7 @@ export class EventLoginDialog extends Component {
   }
 
   render() {
-    const { users, viewer, events, fields, params, attendeeSignIn } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { viewer, noRedirect, events, fields, params, attendeeSignIn } = this.props;
 
     const event = events.get(parseInt(params.eventId, 10));
     const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
@@ -148,8 +146,12 @@ export class EventLoginDialog extends Component {
                       const attending = groupedEventsNumbers.get(gEvent.id).attending;
                       canBeSelected = canBeSelected && (maxCapacity > attending);
 
+                      let className = '';
+                      if (!canBeSelected) {
+                        className = 'strikeout';
+                      }
                       return (
-                        <tr key={gEvent.get('id')} className={`${canBeSelected ? null : 'strikeout'}`}>
+                        <tr key={gEvent.id} className={className}>
                           <td>{gEvent.name}</td>
                           <td>
                             <input
@@ -183,8 +185,10 @@ export class EventLoginDialog extends Component {
               className="btn btn-success"
               disabled={!allChoosed}
               onClick={() => {
-                attendeeSignIn(event, viewer, group.id, fields.choosedEvents.value);
-                browserHistory.goBack();
+                attendeeSignIn(event.get('id'), viewer.id, group.id, fields.choosedEvents.value);
+                if (!noRedirect) {
+                  browserHistory.goBack();
+                }
               }}
             >
               <FormattedMessage {...messages.signInButton} />
@@ -212,9 +216,10 @@ EventLoginDialog = fields(EventLoginDialog, {
 
 EventLoginDialog = injectIntl(EventLoginDialog);
 
+export const EventPublicLoginDialog = connect((state) => ({
+}), { ...fieldsActions, ...actions })(EventLoginDialog);
+
 export default connect((state) => ({
   events: state.events.events,
   viewer: state.users.viewer,
-  users: state.users.users,
-  hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), {...fieldsActions, ...actions})(EventLoginDialog);
+}), { ...fieldsActions, ...actions })(EventLoginDialog);

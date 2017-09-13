@@ -43,7 +43,7 @@ export function eventWontGo(token, reason) {
   });
 }
 
-export function attendeeSignIn(token, qForm) {
+export function attendeeSignIn(token, qForm, choosedEvents) {
   let questionForm = null;
   if (qForm) {
     questionForm = qForm.formData;
@@ -59,6 +59,7 @@ export function attendeeSignIn(token, qForm) {
         body: JSON.stringify({
           signIn: true,
           questionForm,
+          choosedEvents: choosedEvents ? choosedEvents.filter(e => e).keySeq().map(e => e) : null,
         }),
       }).then(response => response.json())
     },
