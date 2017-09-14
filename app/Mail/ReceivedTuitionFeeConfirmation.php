@@ -67,6 +67,20 @@ class ReceivedTuitionFeeConfirmation extends Mailable
         });
 
         $isAfterDeadline = (($kreditAmount - $debetAmountAfterDL - $this->payment->amount) < 0);
+        if ($isAfterDeadline) {
+            $debetAmount = ($kreditAmount - $debetAmountAfterDL - $this->payment->amount);
+            foreach ($debetPayments->sortByDesc('created_at') as $debetPayment) {
+                if (!$debetPayment->deadline_at) {
+                    continue;
+                }
+
+                $debetAmount += $debetPayment->amount;
+                if ($debetAmount >= 0) {
+                    $oldestDeadline = Carbon::createFromFormat('Y-m-d', $debetPayment->deadline_at);
+                    break;
+                }
+            }
+        }
         $this->debtAmount = $debetAmountAfterDL - $kreditAmount;
 
         Carbon::setLocale('sk');
