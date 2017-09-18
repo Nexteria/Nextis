@@ -450,25 +450,12 @@ export default class Event extends Component {
               <ul>
               {groupedEvents.map(gEvent =>
                 <li>
-                  <label>{gEvent.name}</label>
-                  <div>
-                    <i className="fa fa-clock-o"></i>
-                    <span> </span>
-                    {format(gEvent.eventStartDateTime, 'D.M.YYYY, H:mm')}
-                    <span> - </span>
-                    {format(gEvent.eventEndDateTime, 'D.M.YYYY, H:mm')}
-                    <span>,</span>
-                  </div>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: gEvent.shortDescription.toString('html') }}
-                  >
-                  </div>
+                  <label>
+                    <a href="#" onClick={() => openEventDetailsDialog(gEvent.id)}>{gEvent.name}</a>
+                  </label>
                 </li>
               )}
               </ul>
-              <span className="pull-right" onClick={() => openEventDetailsDialog(event.id)}>
-                <a><FormattedMessage {...messages.showMoreInfo} /></a>
-              </span>
               <div className="lectors-container">
                 <div>
                   <strong><FormattedMessage {...messages.lectors} />:</strong>
