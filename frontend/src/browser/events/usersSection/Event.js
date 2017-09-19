@@ -382,16 +382,28 @@ export default class Event extends Component {
               <div className="col-md-12 col-sm-12 col-xs-12">
                 <strong><FormattedMessage {...messages.details} />:</strong>
               </div>
-              <div className="col-md-12 col-sm-12 col-xs-12">
-                <div className="col-md-2 col-sm-2 col-xs-2">
-                  <i className="fa fa-clock-o"></i>
+              {groupedEvents.size &&
+                <div className="col-md-12 col-sm-12 col-xs-12">
+                  <div className="col-md-2 col-sm-2 col-xs-2">
+                    <i className="fa fa-clock-o"></i>
+                  </div>
+                  <div className="col-md-10 col-sm-10 col-xs-10">
+                    Podľa zvoleného projektu
+                  </div>
                 </div>
-                <div className="col-md-10 col-sm-10 col-xs-10">
-                  {format(event.eventStartDateTime, 'D.M.YYYY, H:mm')}
-                  <span> - </span>
-                  {format(event.eventEndDateTime, 'D.M.YYYY, H:mm')}
+              }
+              {!groupedEvents.size &&
+                <div className="col-md-12 col-sm-12 col-xs-12">
+                  <div className="col-md-2 col-sm-2 col-xs-2">
+                    <i className="fa fa-clock-o"></i>
+                  </div>
+                  <div className="col-md-10 col-sm-10 col-xs-10">
+                    {format(event.eventStartDateTime, 'D.M.YYYY, H:mm')}
+                    <span> - </span>
+                    {format(event.eventEndDateTime, 'D.M.YYYY, H:mm')}
+                  </div>
                 </div>
-              </div>
+              }
               <div className="col-md-12 col-sm-12 col-xs-12">
                 <div className="col-md-2 col-sm-2 col-xs-2">
                   <i className="fa fa-usd"></i>
@@ -400,14 +412,26 @@ export default class Event extends Component {
                   {event.activityPoints} <FormattedMessage {...messages.actionPoints} />
                 </div>
               </div>
-              <div className="col-md-12 col-sm-12 col-xs-12">
-                <div className="col-md-2 col-sm-2 col-xs-2">
-                  <i className="fa fa-map-marker"></i>
+              {groupedEvents.size &&
+                <div className="col-md-12 col-sm-12 col-xs-12">
+                  <div className="col-md-2 col-sm-2 col-xs-2">
+                    <i className="fa fa-map-marker"></i>
+                  </div>
+                  <div className="col-md-10 col-sm-10 col-xs-10">
+                    Podľa zvoleného projektu
+                  </div>
                 </div>
-                <div className="col-md-10 col-sm-10 col-xs-10">
-                  <a onClick={() => openLocationDetailsDialog(nxLocation.id)}>{nxLocation.name}</a>
+              }
+              {!groupedEvents.size &&
+                <div className="col-md-12 col-sm-12 col-xs-12">
+                  <div className="col-md-2 col-sm-2 col-xs-2">
+                    <i className="fa fa-map-marker"></i>
+                  </div>
+                  <div className="col-md-10 col-sm-10 col-xs-10">
+                    <a onClick={() => openLocationDetailsDialog(nxLocation.id)}>{nxLocation.name}</a>
+                  </div>
                 </div>
-              </div>
+              }
               <div className="col-md-12 col-sm-12 col-xs-12">
                 <div className="col-md-2 col-sm-2 col-xs-2">
                   <i className="fa fa-group"></i>
