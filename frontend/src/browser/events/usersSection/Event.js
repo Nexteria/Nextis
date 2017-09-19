@@ -388,7 +388,7 @@ export default class Event extends Component {
                     <i className="fa fa-clock-o"></i>
                   </div>
                   <div className="col-md-10 col-sm-10 col-xs-10">
-                    Podľa zvoleného projektu
+                    Podľa zvoleného termínu
                   </div>
                 </div>
               }
@@ -418,7 +418,7 @@ export default class Event extends Component {
                     <i className="fa fa-map-marker"></i>
                   </div>
                   <div className="col-md-10 col-sm-10 col-xs-10">
-                    Podľa zvoleného projektu
+                    Podľa zvoleného termínu
                   </div>
                 </div>
               }
