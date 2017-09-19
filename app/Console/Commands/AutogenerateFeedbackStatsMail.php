@@ -33,6 +33,10 @@ class AutogenerateFeedbackStatsMail extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
+            if ($event->getParentEvent()) {
+                continue;
+            }
+
             $settings = $event->getSettings();
             $feedbackDeadline = $event->eventEndDateTime
                                       ->addDays($settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1)

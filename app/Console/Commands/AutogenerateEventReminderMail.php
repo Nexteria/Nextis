@@ -33,6 +33,10 @@ class AutogenerateEventReminderMail extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
+            if ($event->getParentEvent()) {
+                continue;
+            }
+
             $settings = $event->getSettings();
             $remainderDate = $event->eventStartDateTime
                                    ->subDays(1)

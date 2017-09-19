@@ -33,6 +33,10 @@ class AutogenerateEventSignInOpeningMail extends Command
         $now = Carbon::now('Europe/Bratislava')->format('Y-m-d H:i');
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
+            if ($event->getParentEvent()) {
+                continue;
+            }
+
             $settings = $event->getSettings();
             $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
 

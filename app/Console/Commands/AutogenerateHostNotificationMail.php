@@ -33,6 +33,10 @@ class AutogenerateHostNotificationMail extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
+            if ($event->getParentEvent()) {
+                continue;
+            }
+
             $settings = $event->getSettings();
             $notificationDate = $event->eventStartDateTime
                                       ->subDays($settings['hostInstructionEmailDaysBefore'])
