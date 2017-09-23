@@ -203,6 +203,13 @@ export default class Event extends Component {
       }
     }
 
+    const choosedGroupedEvents = groupedEvents.filter(ev => {
+      const gGroup = ev.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
+      const gAttendee = gGroup ? gGroup.users.get(viewer.id) : null;
+
+      return gAttendee && gAttendee.get('signedIn');
+    });
+
     return (
       <li className="users-event" style={{ display: hide ? 'none' : '' }}>
         <div className="fa bg-green event-type">
@@ -512,6 +519,13 @@ export default class Event extends Component {
               </div>
             </div>
           </div>
+          {choosedGroupedEvents.size ?
+            <div className="col-md-12 col-sm-12 col-xs-12">
+              <label>Zvolené termíny:</label>
+              {choosedGroupedEvents.map(ev => <span>{ev.get('name')}</span>)}
+            </div>
+            : null
+          }
         </div>
       </li>
     );
