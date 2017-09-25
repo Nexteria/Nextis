@@ -168,8 +168,19 @@ class UsersController extends Controller
             return response()->json($this->userTransformer->transform(User::findOrFail($userId)->fresh(['roles'], ['gainedActivityPoints', 'potentialActivityPoints'])));
         }
 
-        $users = User::with(['roles'])->get();
-        return response()->json($this->userTransformer->transformCollection($users, ['gainedActivityPoints', 'potentialActivityPoints']));
+        $users = User::with('roles')
+            ->with('hostedEvents')
+            ->with('student')
+            ->with('eventAttendees')
+            ->with('eventAttendees.attendeesGroup')
+            ->with('eventAttendees.attendeesGroup.nxEvent')
+            ->get();
+
+        if (\Auth::user()->hasRole('ADMIN')) {
+            return response()->json($this->userTransformer->transformCollection($users, ['gainedActivityPoints', 'potentialActivityPoints']));
+        }
+
+        return response()->json($this->userTransformer->transformCollection($users, []));
     }
 
     public function deleteUser($userId)

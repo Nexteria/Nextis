@@ -31,7 +31,7 @@ class QuestionTransformer extends Transformer
             'maxSelection' => $question->maxSelection,
             'choices' => $choices,
             'dependentOn' => $dependentOn,
-            'groupSelection' => $question->attendeesGroups()->pluck('attendees_groups.id'),
+            'groupSelection' => $question->attendeesGroups->pluck('attendees_groups.id'),
         ];
     }
 }

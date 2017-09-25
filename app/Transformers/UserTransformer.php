@@ -36,7 +36,7 @@ class UserTransformer extends Transformer
             'state' => $user->state,
             'iban' => $user->iban,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
-            'hostedEvents' => array_map('intval', $user->hostedEvents()->pluck('id')->toArray()),
+            'hostedEvents' => array_map('intval', $user->hostedEvents->pluck('id')->toArray()),
             'created_at' => $user->created_at ? $user->created_at->__toString() : null,
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
             'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,

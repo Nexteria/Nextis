@@ -75,9 +75,14 @@ class NxEventsController extends Controller
         });
         
         $events = $query->with('attendeesGroups')
+                        ->with('attendeesGroups.attendees')
+                        ->with('attendeesGroups.attendees.user')
                         ->with('lectors')
+                        ->with('semester')
                         ->with('groupedEvents')
                         ->with('exclusionaryEvents')
+                        ->with('form.questions.choices')
+                        ->with('form.questions.attendeesGroups')
                         ->get();
 
         return response()->json($this->nxEventTransformer->transformCollection($events));
