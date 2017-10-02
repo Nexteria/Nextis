@@ -13,6 +13,8 @@ import ChangeStudentLevelAction from './actions/ChangeStudentLevelAction';
 import ChangeTuitionFeeAction from './actions/ChangeTuitionFeeAction';
 import AddNoteAction from './actions/AddNoteAction';
 import ExportStudentsProfilesAction from './actions/ExportStudentsProfilesAction';
+import ChangeActivityPointsAction from './actions/ChangeActivityPointsAction';
+
 import * as actions from '../../../common/students/actions';
 
 class StudentsActionsContainer extends Component {
@@ -36,6 +38,7 @@ class StudentsActionsContainer extends Component {
       add_student_note: <AddNoteAction {...{ selectedStudents }} />,
       export_students_profiles: <ExportStudentsProfilesAction {...{ selectedStudents }} />,
       change_tuition_fee: <ChangeTuitionFeeAction {...{ selectedStudents }} />,
+      change_activity_point: <ChangeActivityPointsAction {...{ selectedStudents }} />,
     });
 
     return (
@@ -60,6 +63,7 @@ class StudentsActionsContainer extends Component {
                       <option value="add_student_note">Pridať študentom poznámku</option>
                       <option value="export_students_profiles">Export študentských profilov</option>
                       <option value="change_tuition_fee">Zmena výšky školného</option>
+                      <option value="change_activity_point">Zmena základu aktivity bodov</option>
                     )}
                     </Field>
                   </div>

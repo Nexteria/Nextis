@@ -4,6 +4,11 @@ export const FETCH_ADMIN_STUDENTS_START = 'FETCH_ADMIN_STUDENTS_START';
 export const FETCH_ADMIN_STUDENTS_SUCCESS = 'FETCH_ADMIN_STUDENTS_SUCCESS';
 export const FETCH_ADMIN_STUDENTS_ERROR = 'FETCH_ADMIN_STUDENTS_ERROR';
 
+export const CHANGE_STUDENTS_ACTIVITY_POINTS = 'CHANGE_STUDENTS_ACTIVITY_POINTS';
+export const CHANGE_STUDENTS_ACTIVITY_POINTS_START = 'CHANGE_STUDENTS_ACTIVITY_POINTS_START';
+export const CHANGE_STUDENTS_ACTIVITY_POINTS_SUCCESS = 'CHANGE_STUDENTS_ACTIVITY_POINTS_SUCCESS';
+export const CHANGE_STUDENTS_ACTIVITY_POINTS_ERROR = 'CHANGE_STUDENTS_ACTIVITY_POINTS_ERROR';
+
 export const CHANGE_TUITION_FEE = 'CHANGE_TUITION_FEE';
 export const CHANGE_TUITION_FEE_START = 'CHANGE_TUITION_FEE_START';
 export const CHANGE_TUITION_FEE_ERROR = 'CHANGE_TUITION_FEE_ERROR';
@@ -250,6 +255,25 @@ export function updateNoteComment(title, body, commentId) {
         body: JSON.stringify({
           title,
           body: body.toString('html'),
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function changeStudentActivityPoints(data, selectedStudents) {
+  return ({ fetch }) => ({
+    type: CHANGE_STUDENTS_ACTIVITY_POINTS,
+    payload: {
+      promise: fetch('/admin/students/points', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'put',
+        notifications: 'both',
+        body: JSON.stringify({
+          activityPointsBaseNumber: data.activityPointsBaseNumber,
+          minimumSemesterActivityPoints: data.minimumSemesterActivityPoints,
+          selectedStudents
         }),
       }).then(response => response.json()),
     },

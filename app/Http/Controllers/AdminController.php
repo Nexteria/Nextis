@@ -273,6 +273,50 @@ class AdminController extends Controller
         }
     }
 
+    public function changeActivityPoints(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+          'activityPointsBaseNumber' => 'required|numeric|min:0',
+          'minimumSemesterActivityPoints' => 'required|numeric|min:0',
+          'selectedStudents' => 'required|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $data = $request->all();
+
+        $studentsCount = Student::whereIn('id', $data['selectedStudents'])
+                                ->whereHas('semesters', function ($query) {
+                                    $query->where('semesterId', DefaultSystemSettings::get('activeSemesterId'));
+                                })
+                                ->count();
+
+        if ($studentsCount !== count($data['selectedStudents'])) {
+            return response()->json(['error' => 'Nemôžem aplikovať nové body, niektorí študenti nemajú priradený aktuálny semester.'], 400);
+        }
+
+        $semester = Semester::find(DefaultSystemSettings::get('activeSemesterId'));
+        foreach ($data['selectedStudents'] as $studentId) {
+            $student = Student::findOrFail($studentId);
+            $studentActiveSemester = $student->getActiveSemester();
+            $studentData = [
+                'activityPointsBaseNumber' => $data['activityPointsBaseNumber'],
+                'minimumSemesterActivityPoints' => $data['minimumSemesterActivityPoints'],
+            ];
+
+            $semester->students()->updateExistingPivot($studentId, $studentData);
+        }
+
+        return $this->getStudents();
+    }
+
     public function endSchoolYear()
     {
         $firstLevel = \App\StudentLevel::where('codename', '1_level')->first();

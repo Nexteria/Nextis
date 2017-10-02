@@ -182,6 +182,7 @@ export default class InvitedTab extends Component {
               <option value={'signedOut'}>Odhlásených</option>
               <option value={'wontGo'}>Neprídu</option>
               <option value={'wasPresent'}>Prítomných</option>
+              <option value={'standIn'}>Náhradníkov</option>
             </select>
           </div>
           <div className="clearfix"></div>

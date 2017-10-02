@@ -235,13 +235,15 @@ export default class Event extends Component {
                         attendee.get('filledFeedback') ?
                           <i className="fa fa-check was-here"></i>
                         :
-                          <a
-                            className="btn btn-info btn-xs"
-                            target="_blank"
-                            href={event.publicFeedbackLink}
-                          >
-                            <FormattedMessage {...messages.fillFeedback} />
-                          </a>
+                          attendee.get('wasPresent') ?
+                            <a
+                              className="btn btn-info btn-xs"
+                              target="_blank"
+                              href={event.publicFeedbackLink}
+                            >
+                              <FormattedMessage {...messages.fillFeedback} />
+                            </a>
+                            : null
                       :
                         <i className="fa fa-times wasnt-here"></i>
                       }
