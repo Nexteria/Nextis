@@ -12,8 +12,12 @@ use App\Models\QuestionForm\FormDescription;
 use App\Models\QuestionForm\Question;
 use App\Models\QuestionForm\Choice;
 
-class NxEvent extends Model
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+
+class NxEvent extends Model implements AuditableContract
 {
+    use Auditable;
     use SoftDeletes;
 
     protected $fillable = [
