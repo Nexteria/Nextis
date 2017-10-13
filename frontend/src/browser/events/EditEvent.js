@@ -245,10 +245,6 @@ const validate = (values, props) => {
     errors.hostId = formatMessage(messages.requiredField);
   }
 
-  if (!values.feedbackLink) {
-    errors.feedbackLink = formatMessage(messages.requiredField);
-  }
-
   if (!values.attendeesGroups || values.attendeesGroups.size === 0) {
     errors.attendeesGroups = formatMessage(messages.noAttendeesGroups);
   }
@@ -976,7 +972,11 @@ EditEvent = reduxForm({
       },
       resp => {
         dispatch(props.change('publicFeedbackLink', null));
-        return resp.reason.errors;
+        if (values.feedbackLink != '') {
+          return resp.reason.errors;
+        } else {
+          return {};
+        }
       }),
   asyncBlurFields: ['feedbackLink'],
 })(EditEvent);

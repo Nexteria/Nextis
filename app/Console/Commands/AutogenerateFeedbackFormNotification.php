@@ -33,7 +33,7 @@ class AutogenerateFeedbackFormNotification extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         foreach (NxEvent::where('status', 'published')->get() as $event) {
-            if ($event->getParentEvent()) {
+            if ($event->feedbackLink == '') {
                 continue;
             }
 

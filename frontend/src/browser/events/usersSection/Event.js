@@ -232,7 +232,7 @@ export default class Event extends Component {
                   <div>
                     <div className="event-actions col-md-12 col-sm-12 col-xs-12">
                       {attending.has(viewer.id) ?
-                        attendee.get('filledFeedback') ?
+                        attendee.get('filledFeedback') && attendee.get('filledFeedback') != '' ?
                           <i className="fa fa-check was-here"></i>
                         :
                           attendee.get('wasPresent') ?

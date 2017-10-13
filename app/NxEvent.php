@@ -78,14 +78,18 @@ class NxEvent extends Model implements AuditableContract
         if (isset($attributes['feedbackLink'])) {
             $response = \FeedbackForms::validate($attributes['feedbackLink']);
 
-            if ($response['code'] != 200) {
-                return response()->json([
-                  'code' => 500,
-                  'error' => $response['error'],
-                ]);
-            }
+            if ($attributes['feedbackLink'] != '') {
+                if ($response['code'] != 200) {
+                    return response()->json([
+                    'code' => 500,
+                    'error' => $response['error'],
+                    ]);
+                }
 
-            $event->publicFeedbackLink = $response['publicResponseUrl'];
+                $event->publicFeedbackLink = $response['publicResponseUrl'];
+            } else {
+                $event->publicFeedbackLink = '';
+            }
         }
 
         if (isset($attributes['semester']) && $attributes['semester']) {
@@ -217,14 +221,22 @@ class NxEvent extends Model implements AuditableContract
         if (isset($attributes['feedbackLink'])) {
             $response = \FeedbackForms::validate($attributes['feedbackLink']);
 
-            if ($response['code'] != 200) {
-                return response()->json([
-                  'code' => 500,
-                  'error' => $response['error'],
-                ]);
-            }
+            if ($attributes['feedbackLink'] != '') {
+                if ($response['code'] != 200) {
+                    return response()->json([
+                    'code' => 500,
+                    'error' => $response['error'],
+                    ]);
+                }
 
-            $this->publicFeedbackLink = $response['publicResponseUrl'];
+                $this->publicFeedbackLink = $response['publicResponseUrl'];
+            } else {
+                $this->publicFeedbackLink = '';
+                $this->feedbackLink = '';
+            }
+        } else {
+            $this->publicFeedbackLink = '';
+            $this->feedbackLink = '';
         }
 
         if (isset($attributes['semester']) && $attributes['semester']) {
