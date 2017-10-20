@@ -9,6 +9,7 @@ use App\NxEvent as NxEvent;
 use App\Semester;
 use App\Student;
 use App\StudentLevel;
+use App\NxEventAttendee;
 use App\User;
 use App\Role;
 use App\DefaultSystemSettings;
@@ -841,5 +842,23 @@ class AdminController extends Controller
                 $sheet->loadView('exports.student_profiles', ['users' => $users]);
             });
         })->download('xls');
+    }
+
+    public function getStudentsReports($reportType)
+    {
+        if ($reportType === 'signed-didnt-come') {
+            $attendees = NxEventAttendee::whereNotNull('signedIn')->where(function ($query) {
+                $query->whereNull('wasPresent')->orWhere('wasPresent', false);
+            })->with(['user', 'attendeesGroup.nxEvent'])->get();
+
+            return \Excel::create('Zoznam prihlásených, ktorí neprišli', function ($excel) use ($attendees) {
+                $excel->sheet('Študenti', function ($sheet) use ($attendees) {
+                    $sheet->loadView('exports.signed_didnt_come_overview', ['attendees' => $attendees]);
+                });
+                $excel->sheet('Dáta', function ($sheet) use ($attendees) {
+                    $sheet->loadView('exports.signed_didnt_come_data', ['attendees' => $attendees]);
+                });
+            })->download('xls');
+        }
     }
 }

@@ -279,3 +279,17 @@ export function changeStudentActivityPoints(data, selectedStudents) {
     },
   });
 }
+
+export function downloadStudentsReport(data) {
+  return ({ fetch }) => ({
+    type: EXPORT_STUDENT_PROFILES,
+    payload: {
+      promise: fetch(`/admin/students/reports/${data.reportType}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
+      }).then(response => response.blob())
+      .then(blob => download(blob, `${data.reportType}.xls`)),
+    },
+  });
+}

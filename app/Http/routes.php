@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
             Route::post('/students/profile', 'AdminController@exportStudentProfiles');
             Route::put('/students/points', 'AdminController@changeActivityPoints');
+            Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
 
             Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
             Route::put('/comments/{commentId}', 'AdminController@updateComment');
