@@ -6,6 +6,7 @@ Homestead.json
 .env
 frontend/src/common/config.js
 public/build
+resources/views/emails/*.php
 
 !public
 public/uploads/*
