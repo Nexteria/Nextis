@@ -846,19 +846,43 @@ class AdminController extends Controller
 
     public function getStudentsReports($reportType)
     {
-        if ($reportType === 'signed-didnt-come') {
-            $attendees = NxEventAttendee::whereNotNull('signedIn')->where(function ($query) {
-                $query->whereNull('wasPresent')->orWhere('wasPresent', false);
-            })->with(['user', 'attendeesGroup.nxEvent'])->get();
+        $title;
+        $attendees;
+        $overview_mapper;
+        $data_mapper;
 
-            return \Excel::create('Zoznam prihlásených, ktorí neprišli', function ($excel) use ($attendees) {
-                $excel->sheet('Študenti', function ($sheet) use ($attendees) {
-                    $sheet->loadView('exports.signed_didnt_come_overview', ['attendees' => $attendees]);
-                });
-                $excel->sheet('Dáta', function ($sheet) use ($attendees) {
-                    $sheet->loadView('exports.signed_didnt_come_data', ['attendees' => $attendees]);
-                });
-            })->download('xls');
+        switch ($reportType) {
+            case 'signed-didnt-come':
+                $title = 'Zoznam prihlásených, ktorí neprišli';
+                $attendees = NxEventAttendee::whereNotNull('signedIn')
+                    ->where(function ($query) {
+                        $query->whereNull('wasPresent')->orWhere('wasPresent', false);
+                    })
+                    ->with(['user', 'attendeesGroup.nxEvent'])
+                    ->get();
+                $overview_mapper = 'exports.signed_didnt_come_overview';
+                $data_mapper = 'exports.signed_didnt_come_data';
+                break;
+
+            case 'late-unsigning':
+                $title = 'Zoznam neskoro sa odhlasujúcich';
+                $attendees = NxEventAttendee::whereNotNull('signedOut')
+                    ->whereHas('attendeesGroup', function ($query) {
+                        $query->whereRaw('signUpDeadlineDateTime < signedOut');
+                    })
+                    ->with(['user', 'attendeesGroup.nxEvent'])->get();
+                $overview_mapper = 'exports.late_unsigning_overview';
+                $data_mapper = 'exports.late_unsigning_data';
+                break;
         }
+
+        return \Excel::create($title, function ($excel) use ($attendees, $overview_mapper, $data_mapper) {
+            $excel->sheet('Študenti', function ($sheet) use ($attendees, $overview_mapper) {
+                $sheet->loadView($overview_mapper, ['attendees' => $attendees]);
+            });
+            $excel->sheet('Dáta', function ($sheet) use ($attendees, $data_mapper) {
+                $sheet->loadView($data_mapper, ['attendees' => $attendees]);
+            });
+        })->download('xls');
     }
 }

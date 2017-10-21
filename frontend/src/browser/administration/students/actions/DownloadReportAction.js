@@ -42,6 +42,7 @@ class DownloadReportAction extends Component {
                 >
                   <option disabled></option>
                   <option value={'signed-didnt-come'}>Zoznam prihlásených, ktorí neprišli</option>
+                  <option value={'late-unsigning'}>Zoznam neskoro sa odhlasujúcich</option>
                 )}
                 </Field>
               </div>
