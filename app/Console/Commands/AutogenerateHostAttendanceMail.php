@@ -35,7 +35,7 @@ class AutogenerateHostAttendanceMail extends Command
 
         foreach (NxEventTerm::whereRaw('eventEndDateTime < NOW()')->whereNotNull('hostId')->get() as $term) {
             $event = $term->event;
-            if ($event->status !== 'published') {
+            if (!$event || $event->status !== 'published') {
                 continue;
             }
 

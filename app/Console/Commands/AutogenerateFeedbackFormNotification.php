@@ -35,7 +35,7 @@ class AutogenerateFeedbackFormNotification extends Command
 
         foreach (NxEventTerm::whereRaw('eventEndDateTime < NOW()')->get() as $term) {
             $event = $term->event;
-            if ($term->feedbackLink == '' || $event->status !== 'published') {
+            if (!$event || $term->feedbackLink == '' || $event->status !== 'published') {
                 continue;
             }
 

@@ -35,7 +35,7 @@ class AutogenerateHostNotificationMail extends Command
 
         foreach (NxEventTerm::whereRaw('eventStartDateTime > NOW()')->whereNotNull('hostId')->get() as $term) {
             $event = $term->event;
-            if ($event->status !== 'published') {
+            if (!$event || $event->status !== 'published') {
                 continue;
             }
 
