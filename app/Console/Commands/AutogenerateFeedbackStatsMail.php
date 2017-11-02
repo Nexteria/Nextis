@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
 use App\NxEvent;
+use App\NxEventTerm;
 
 class AutogenerateFeedbackStatsMail extends Command
 {
