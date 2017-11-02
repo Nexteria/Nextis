@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
 use App\NxEvent;
+use App\NxEventTerm;
 
 class AutogenerateHostNotificationMail extends Command
 {
@@ -33,12 +34,12 @@ class AutogenerateHostNotificationMail extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         foreach (NxEventTerm::whereRaw('eventStartDateTime > NOW()')->whereNotNull('hostId')->get() as $term) {
-            if ($event->getParentEvent()) {
+            $event = $term->event;
+            if ($event->status !== 'published') {
                 continue;
             }
 
-            $event = $term->event;
-            if ($event->status !== 'published') {
+            if ($event->getParentEvent()) {
                 continue;
             }
 
