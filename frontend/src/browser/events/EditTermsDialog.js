@@ -171,6 +171,8 @@ export default class EditTermsDialog extends Component {
                               minCapacity: stream.get('minCapacity'),
                               maxCapacity: stream.get('maxCapacity'),
                               nxLocationId: stream.get('nxLocationId'),
+                              feedbackLink: stream.get('feedbackLink'),
+                              publicFeedbackLink: stream.get('publicFeedbackLink'),
                               hostId: stream.get('hostId'),
                             })))}
                           ></i>

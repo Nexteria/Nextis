@@ -25,6 +25,8 @@ class NxEventTerm extends Model
         'eventEndDateTime',
         'minCapacity',
         'maxCapacity',
+        'publicFeedbackLink',
+        'feedbackLink',
         'parentTermId',
     ];
 

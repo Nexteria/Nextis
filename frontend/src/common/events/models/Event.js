@@ -107,8 +107,6 @@ export function parseEvent(data) {
       attendingNumbers: new Map(event.attendingNumbers),
       viewer: new Map({
         ...event.viewer,
-        signUpDeadlineDateTime: parse(event.viewer.signUpDeadlineDateTime),
-        signUpOpenDateTime: parse(event.viewer.signUpOpenDateTime),
         attendee: new Map({
           ...event.viewer.attendee,
         })

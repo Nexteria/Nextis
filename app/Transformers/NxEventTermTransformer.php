@@ -28,6 +28,8 @@ class NxEventTermTransformer extends Transformer
             'userId' => (int) $term->userId,
             'nxLocationId' => (int) $term->nxLocationId,
             'parentTermId' => (int) $term->parentTermId,
+            'feedbackLink' => $term->feedbackLink,
+            'publicFeedbackLink' => $term->publicFeedbackLink,
             'terms' => $this->transformCollection($term->terms),
             'attendees' => $users,
          ];
