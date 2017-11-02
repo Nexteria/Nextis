@@ -101,10 +101,10 @@
         <tr>
           <td style="vertical-align:top;width:600px;">
       <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-bottom:5px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;"><b>Ahoj {{ $hostFirstName }},</b></div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:16px;text-align:left;"><p>
-              Ďakujme, že si bol hostom na evente <b>{{ $eventType }} {{ $eventName }}</b>.
+              Ďakujme, že si bol hostom na evente <b>{{ $eventType }} {{ $eventName }} {{ $eventStartTime }}</b>.
             </p>
-            <p>Prosím zaznač v Nexteria Space-e kto sa eventu zúčastnil <b>ešte dnes ({{ $todayDate }})</b>.</p>
-            <p>Urobiť tak môžeš tu: <a href="https://space.nexteria.sk/host/events/{{ $eventId }}" target="_blank">https://space.nexteria.sk/host/events/{{ $eventId }}</a></p></div></td></tr></tbody></table></div><!--[if mso | IE]>
+            <p>Prosím, zaznač v Nexteria Space-e, kto sa eventu zúčastnil <b>ešte dnes ({{ $todayDate }})</b>.</p>
+            <p>Urobiť tak môžeš tu: <a href="https://space.nexteria.sk/host/events/{{ $eventId }}" target="_blank">https://space.nexteria.sk/host/events/{{ $eventId }}/terms/{{ $termId }}</a></p></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>

@@ -21,13 +21,15 @@ class EventHostAttendanceMail extends Mailable
     public $eventManagerName;
     public $eventManagerPhone;
     public $emailTagBase;
+    public $eventStartTime;
+    public $termId;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, \App\User $host, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, \App\User $host, \App\User $manager)
     {
         $this->eventName = $event->name;
         $this->eventType = Str::upper($event->eventType);
@@ -38,6 +40,8 @@ class EventHostAttendanceMail extends Mailable
         $this->eventManagerPhone = $manager->phone;
         $this->todayDate = \Carbon\Carbon::now()->format('d.m.Y');
         $this->emailTagBase = $event->emailTagBase;
+        $this->eventStartTime = $term->eventStartDateTime->format('j.n.Y H:i');
+        $this->termId = $term->id;
     }
 
     /**

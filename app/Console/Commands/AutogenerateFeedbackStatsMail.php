@@ -32,13 +32,14 @@ class AutogenerateFeedbackStatsMail extends Command
     {
         $today = Carbon::now()->format('Y-m-d');
 
-        foreach (NxEvent::where('status', 'published')->get() as $event) {
-            if ($event->feedbackLink == '') {
+        foreach (NxEventTerm::whereRaw('eventEndDateTime < NOW()')->get() as $term) {
+            $event = $term->event;
+            if ($term->feedbackLink == '' || $event->status !== 'published') {
                 continue;
             }
 
             $settings = $event->getSettings();
-            $feedbackDeadline = $event->eventEndDateTime
+            $feedbackDeadline = $term->eventEndDateTime
                                       ->addDays($settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1)
                                       ->format('Y-m-d');
 
@@ -47,7 +48,7 @@ class AutogenerateFeedbackStatsMail extends Command
                 $maxRetries = 50;
                 while ($maxRetries > 0) {
                     try {
-                        $respondentsEmails = \FeedbackForms::getRespondents($event->feedbackLink)['respondents'];
+                        $respondentsEmails = \FeedbackForms::getRespondents($term->feedbackLink)['respondents'];
                     } catch (\Exception $e) {
                         \Log::error($e->getMessage());
                         $maxRetries = $maxRetries - 1;
@@ -60,26 +61,25 @@ class AutogenerateFeedbackStatsMail extends Command
                 $actualFilledCount = 0;
 
                 $userIds = \App\User::whereIn('email', $respondentsEmails)->pluck('id');
-                foreach ($event->attendeesGroups as $group) {
-                    $attendees = $group->attendees()->where(function ($query) use ($userIds) {
-                        $query->whereIn('userId', $userIds);
-                        $query->orWhere('filledFeedback', '=', true);
-                    })->get();
 
-                    foreach ($attendees as $attendee) {
-                        $attendee->filledFeedback = true;
-                        $attendee->save();
-                    }
+                $attendees = $term->attendees()->where(function ($query) use ($userIds) {
+                    $query->whereIn('userId', $userIds);
+                    $query->orWhere('filledFeedback', '=', true);
+                })->get();
 
-                    $actualFilledCount += $group->attendees()->where('wasPresent', '=', true)
-                                                             ->where('filledFeedback', '=', true)
-                                                             ->count();
-
-                    $expectedFilledCount += $group->attendees()->where('wasPresent', '=', true)->count();
+                foreach ($attendees as $attendee) {
+                    $attendee->filledFeedback = true;
+                    $attendee->save();
                 }
 
+                $actualFilledCount += $term->attendees()->where('wasPresent', '=', true)
+                                                            ->where('filledFeedback', '=', true)
+                                                            ->count();
+
+                $expectedFilledCount += $term->attendees()->where('wasPresent', '=', true)->count();
+
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
-                $email = new \App\Mail\Events\EventFeedbackStatsMail($event, $expectedFilledCount, $actualFilledCount, $manager);
+                $email = new \App\Mail\Events\EventFeedbackStatsMail($event, $term, $expectedFilledCount, $actualFilledCount, $manager);
                 \Mail::send($email);
             }
         }

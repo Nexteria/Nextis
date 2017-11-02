@@ -47,6 +47,15 @@ const InitialState = Record({
 
 export default function eventsReducer(state = new InitialState, action) {
   switch (action.type) {
+    case actions.FETCH_EVENT_ATTENDEES_SUCCESS: {
+      const { eventId, type } = action.meta;
+
+      return state.setIn(
+        ['events', eventId, 'attendees', type],
+        new List(action.payload.map(user => parseInt(user.id, 10)))
+      );
+    }
+
     case actions.TOGGLE_PAST_EVENTS: {
       return state.update('visiblePastEvents', visiblePastEvents => !visiblePastEvents);
     }
@@ -286,7 +295,7 @@ export default function eventsReducer(state = new InitialState, action) {
       ], user => user.set('standIn', parse(response.standIn)));
     }
 
-    case actions.CHANGE_ATTENDEE_FEEDBACK_STATUS_SUCCESS: {
+    case actions.CHANGE_ATTENDEE_FEEDBACK_STATUS: {
       const response = action.payload;
       const groupIndex = state.events.get(response.eventId).attendeesGroups
         .findIndex(group => group.id === response.groupId);
@@ -301,7 +310,7 @@ export default function eventsReducer(state = new InitialState, action) {
       ], user => user.set('filledFeedback', response.filledFeedback));
     }
 
-    case actions.CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS: {
+    case actions.CHANGE_ATTENDEE_PRESENCE_STATUS: {
       const response = action.payload;
       const groupIndex = state.events.get(response.eventId).attendeesGroups
         .findIndex(group => group.id === response.groupId);

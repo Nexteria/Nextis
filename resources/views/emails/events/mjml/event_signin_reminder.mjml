@@ -27,7 +27,7 @@
           </mj-text>
           <mj-text line-height="16px">
             <p>
-              Ešte si nám nedal vedieť či sa zúčastníš na <b>{{ $eventType }} {{ $eventName }}</b>. Sú ešte voľné miesta, daj nám prosím vedieť či naň prídeš do <b>{{ $eventSignInDeadline }}</b>.
+              Ešte si nám nedal vedieť či sa zúčastníš na <b>{{ $eventType }} {{ $eventName }}</b>. Sú ešte voľné miesta, daj nám, prosím, vedieť či naň prídeš do <b>{{ $eventSignInDeadline }}</b>.
             </p>
           </mj-text>
         </mj-column>

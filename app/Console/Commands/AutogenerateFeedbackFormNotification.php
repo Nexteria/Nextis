@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
 use App\NxEvent;
+use App\NxEventTerm;
 
 class AutogenerateFeedbackFormNotification extends Command
 {
@@ -32,28 +33,27 @@ class AutogenerateFeedbackFormNotification extends Command
     {
         $today = Carbon::now()->format('Y-m-d');
 
-        foreach (NxEvent::where('status', 'published')->get() as $event) {
-            if ($event->feedbackLink == '') {
+        foreach (NxEventTerm::whereRaw('eventEndDateTime < NOW()')->get() as $term) {
+            $event = $term->event;
+            if ($term->feedbackLink == '' || $event->status !== 'published') {
                 continue;
             }
 
             $settings = $event->getSettings();
-            $notificationDate = $event->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('Y-m-d');
+            $notificationDate = $term->eventEndDateTime->addDays($settings['feedbackEmailDelay'])->format('Y-m-d');
             if ($notificationDate === $today) {
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
 
-                foreach ($event->attendeesGroups as $group) {
-                    foreach ($group->attendees as $attendee) {
-                        if ($attendee->wasPresent) {
-                            $email = new \App\Mail\Events\EventFeedbackMail($event, $attendee->user, $manager);
-                            \Mail::send($email);
-                        }
+                foreach ($term->attendees as $attendee) {
+                    if ($attendee->wasPresent) {
+                        $email = new \App\Mail\Events\EventFeedbackMail($event, $term, $attendee->user, $manager);
+                        \Mail::send($email);
                     }
                 }
 
                 $sendCopyToManager = boolval($settings['sentCopyOfAllEventNotificationsToManager']);
                 if ($sendCopyToManager) {
-                    $email = new \App\Mail\Events\EventFeedbackMail($event, $manager, $manager);
+                    $email = new \App\Mail\Events\EventFeedbackMail($event, $term, $manager, $manager);
                     \Mail::send($email);
                 }
             }

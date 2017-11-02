@@ -213,6 +213,14 @@ export default class EditTermsDialog extends Component {
               >
               Pridať ďalšiu možnosť
               </button>
+              <button
+                className="btn btn-success"
+                style={{ marginLeft: '1em' }}
+                type="button"
+                onClick={closeDialog}
+              >
+              Uložiť
+              </button>
             </div>
           }
           {terms.get('newTerm') &&
@@ -280,7 +288,7 @@ export default class EditTermsDialog extends Component {
               </div>
               <div className="col-md-6">
                 <SelectComponent
-                  label="Nadradení termín"
+                  label="Nadradený termín"
                   input={{
                     value: terms.getIn(['newTerm', 'parentTermId']),
                     onChange: e => onChange(terms.setIn(['newTerm', 'parentTermId'], parseInt(e.target.value, 10))),

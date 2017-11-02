@@ -12,6 +12,7 @@ import EventDescription from './EventDescription';
 import MultiMeetingTerms from './MultiMeetingTerms';
 import EventTypeLabels from './EventTypeLabels';
 import MultiEventsSelection from './MultiEventsSelection';
+import EventDetails from './EventDetails';
 import './Event.scss';
 
 const styles = {
@@ -288,12 +289,21 @@ export default class Event extends Component {
             style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}
           >
             {groupedEvents.size === 0 && <EventTerms event={event} />}
+            <EventDetails
+              {...{
+                users,
+                groupedEvents,
+                openLocationDetailsDialog,
+                nxLocation,
+                event,
+                isMultiTerm,
+                isMultiMeeting,
+              }}
+            />
             <EventDescription
               {...{
                 event,
                 firstStream,
-                openLocationDetailsDialog,
-                nxLocation,
                 attendees,
                 standInPeople,
                 groupedEvents,

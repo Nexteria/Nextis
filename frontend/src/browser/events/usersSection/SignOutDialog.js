@@ -6,7 +6,6 @@ import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 
 
 import * as eventActions from '../../../common/events/actions';
-import TextEditor from '../../components/TextEditor';
 
 const messages = defineMessages({
   closeButton: {
@@ -57,6 +56,8 @@ export class SignOutDialog extends Component {
       viewer,
     } = this.props;
 
+    const isTermSignOut = signOut.get('termId');
+
     return (
       <Modal
         show
@@ -66,36 +67,59 @@ export class SignOutDialog extends Component {
       >
         <Header closeButton>
           <Title>
-            {signOut.type === 'SIGN_OUT' ?
-              <FormattedMessage
-                {...messages.signOutQuestion}
-                values={{ eventName: events.get(signOut.get('eventId')).name }}
-              />
+            {signOut.type === 'SIGN_OUT' && isTermSignOut ?
+              <span>Skutočne sa chceš odhlásiť zo stretnutia?</span>
               :
+              <span>Chceš sa odhlásiť z eventu: {events.get(signOut.get('eventId')).name}?</span>
+            }
+
+            {signOut.type !== 'SIGN_OUT' ?
               <FormattedMessage
                 {...messages.signOutQuestionWonGo}
                 values={{ eventName: events.get(signOut.get('eventId')).name }}
               />
+              : null
             }
           </Title>
         </Header>
 
         <Body>
-          <div className="form-group">
-            <label htmlFor="signoutReason" className="col-sm-2 control-label">
-              <FormattedMessage {...messages.reasonDescription} />
-            </label>
+          {signOut.type === 'SIGN_OUT' && isTermSignOut ?
+            <div className="col-md-12">
+              <div className="form-group">
+                <label className="col-sm-12 control-label">
+                  Pri odhlásení mysli aj na
+                </label>
+                <div className="col-sm-12">
+                  <ul>
+                    <li>zabezpeč si poznámky, aby si vedel o čom sa na stretnutí hovorilo</li>
+                    <li>neúčasť na stretnutí môže mať za následok, že nebudeš môcť kurz dokončiť
+                      (ak si si nie istý, over si to)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            : null
+          }
+          <div className="col-md-12">
+            <div className="form-group">
+              <label htmlFor="signoutReason" className="col-sm-12 control-label">
+                <FormattedMessage {...messages.reasonDescription} />
+              </label>
 
-            <div className="col-sm-10">
-              <textarea
-                style={{ width: '100%', height: '8em' }}
-                value={signOut.reason}
-                onChange={(e) => changeSignOutReason(e.target.value)}
-                id="signoutReason"
-                placeholder="Enter reason ..."
-              />
+              <div className="col-sm-12">
+                <textarea
+                  style={{ width: '100%', height: '8em' }}
+                  value={signOut.reason}
+                  onChange={(e) => changeSignOutReason(e.target.value)}
+                  id="signoutReason"
+                  placeholder="Enter reason ..."
+                />
+              </div>
             </div>
           </div>
+          <div className="clearfix" />
         </Body>
 
         <Footer>

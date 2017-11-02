@@ -25,7 +25,6 @@ class NxEvent extends Model implements AuditableContract
         'activityPoints',
         'mandatoryParticipation',
         'eventType',
-        'feedbackLink',
         'status',
     ];
 
@@ -80,23 +79,6 @@ class NxEvent extends Model implements AuditableContract
         if (isset($attributes['exclusionaryEvents'])) {
             foreach ($attributes['exclusionaryEvents'] as $eventId) {
                 $event->exclusionaryEvents()->save(NxEvent::findOrFail($eventId));
-            }
-        }
-
-        if (isset($attributes['feedbackLink'])) {
-            $response = \FeedbackForms::validate($attributes['feedbackLink']);
-
-            if ($attributes['feedbackLink'] != '') {
-                if ($response['code'] != 200) {
-                    return response()->json([
-                    'code' => 500,
-                    'error' => $response['error'],
-                    ]);
-                }
-
-                $event->publicFeedbackLink = $response['publicResponseUrl'];
-            } else {
-                $event->publicFeedbackLink = '';
             }
         }
 
@@ -257,27 +239,6 @@ class NxEvent extends Model implements AuditableContract
             }
         }
 
-        if (isset($attributes['feedbackLink'])) {
-            $response = \FeedbackForms::validate($attributes['feedbackLink']);
-
-            if ($attributes['feedbackLink'] != '') {
-                if ($response['code'] != 200) {
-                    return response()->json([
-                    'code' => 500,
-                    'error' => $response['error'],
-                    ]);
-                }
-
-                $this->publicFeedbackLink = $response['publicResponseUrl'];
-            } else {
-                $this->publicFeedbackLink = '';
-                $this->feedbackLink = '';
-            }
-        } else {
-            $this->publicFeedbackLink = '';
-            $this->feedbackLink = '';
-        }
-
         if (isset($attributes['semester']) && $attributes['semester']) {
             $semester = \App\Semester::findOrFail($attributes['semester']);
             $this->semesterId = $semester->id;
@@ -418,7 +379,7 @@ class NxEvent extends Model implements AuditableContract
 
         $event = $attendee->attendeesGroup->nxEvent;
         if ($this->id !== $event->id) {
-            throw new Exception("Attendee: ".$attendee->id." does not belong to the event", 1);
+            throw new \Exception("Attendee: ".$attendee->id." does not belong to the event", 1);
         }
 
         if ($attendee->signedIn && !$termId) {

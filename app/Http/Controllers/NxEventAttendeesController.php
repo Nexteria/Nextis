@@ -366,7 +366,7 @@ class NxEventAttendeesController extends Controller
             if (\Input::has('signOut') && \Input::get('signOut')) {
                 if (!\Input::has('reason')) {
                     return response()->json([
-                    'error' => 'Please provide reason why are you canceling your attendance',
+                    'error' => 'Dobrý pokus! Prosím napíš nám dôvod prečo sa nezúčastníš.',
                     ], 400);
                 }
 
@@ -500,5 +500,28 @@ class NxEventAttendeesController extends Controller
 
         $eventsCollection = \App\NxEvent::whereIn('id', $eventIds)->get();
         return response()->json($this->nxEventTransformer->transformCollection($eventsCollection));
+    }
+
+    public function updateAttendance(Request $request, $termId, $attendeeId)
+    {
+        \App\NxEventTerm::findOrFail($termId);
+        $attendee = NxEventAttendee::findOrFail($attendeeId);
+
+        $dataToSync = [];
+        if ($request->has('wasPresent')) {
+            $dataToSync[$termId] = [
+                'wasPresent' => $request->get('wasPresent'),
+            ];
+        }
+
+        if ($request->has('filledFeedback')) {
+            $dataToSync[$termId] = [
+                'filledFeedback' => $request->get('filledFeedback'),
+            ];
+        }
+
+        $attendee->terms()->sync($dataToSync, false);
+
+        return response()->json($this->nxEventAttendeeTransformer->transform($attendee));
     }
 }

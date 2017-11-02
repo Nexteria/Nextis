@@ -32,25 +32,30 @@ class AutogenerateHostNotificationMail extends Command
     {
         $today = Carbon::now()->format('Y-m-d');
 
-        foreach (NxEvent::where('status', 'published')->get() as $event) {
+        foreach (NxEventTerm::whereRaw('eventStartDateTime > NOW()')->whereNotNull('hostId')->get() as $term) {
             if ($event->getParentEvent()) {
                 continue;
             }
 
+            $event = $term->event;
+            if ($event->status !== 'published') {
+                continue;
+            }
+
             $settings = $event->getSettings();
-            $notificationDate = $event->eventStartDateTime
+            $notificationDate = $term->eventStartDateTime
                                       ->subDays($settings['hostInstructionEmailDaysBefore'])
                                       ->format('Y-m-d');
 
             if ($notificationDate === $today) {
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
-                $host = \App\User::findOrFail($event->hostId);
-                $email = new \App\Mail\Events\HostNotificationMail($event, $host, $manager);
+                $host = \App\User::findOrFail($term->hostId);
+                $email = new \App\Mail\Events\HostNotificationMail($event, $term, $host, $manager);
                 \Mail::send($email);
 
                 $sendCopyToManager = boolval($settings['sentCopyOfAllEventNotificationsToManager']);
                 if ($sendCopyToManager) {
-                    $email = new \App\Mail\Events\HostNotificationMail($event, $manager, $manager);
+                    $email = new \App\Mail\Events\HostNotificationMail($event, $term, $manager, $manager);
                     \Mail::send($email);
                 }
             }

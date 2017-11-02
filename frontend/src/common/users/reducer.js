@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import * as paymentsActions from '../payments/actions';
+import * as eventActions from '../events/actions';
 import { Record, Map, List } from 'immutable';
 import RichTextEditor from 'react-rte';
 import parse from 'date-fns/parse';
@@ -168,6 +169,23 @@ export default function usersReducer(state = new InitialState, action) {
       return state.set('studentLevels', new Map(action.payload.map(level =>
         [level.id, new StudentLevel(level)]
       )));
+    }
+
+    case eventActions.FETCH_EVENT_ATTENDEES_SUCCESS: {
+      const newUsers = new Map(action.payload.map(user =>
+        [user.id, new User({
+          ...user,
+          dateOfBirth: parse(user.dateOfBirth),
+          hostedEvents: new List(user.hostedEvents),
+          roles: new List(user.roles.map(role => role.id)),
+          personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
+          guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
+          lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+          buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
+        })]
+      ));
+
+      return state.update('users', users => users.merge(newUsers));
     }
 
     case actions.LOAD_USERS_LIST_SUCCESS: {

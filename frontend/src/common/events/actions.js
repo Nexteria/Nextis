@@ -6,6 +6,11 @@ import toastr from 'toastr';
 export const TOGGLE_EVENT_TERM = 'TOGGLE_EVENT_TERM';
 export const SAVE_SIGNIN_FORM_DATA = 'SAVE_SIGNIN_FORM_DATA';
 
+export const FETCH_EVENT_ATTENDEES = 'FETCH_EVENT_ATTENDEES';
+export const FETCH_EVENT_ATTENDEES_START = 'FETCH_EVENT_ATTENDEES_START';
+export const FETCH_EVENT_ATTENDEES_SUCCESS = 'FETCH_EVENT_ATTENDEES_SUCCESS';
+export const FETCH_EVENT_ATTENDEES_ERROR = 'FETCH_EVENT_ATTENDEES_ERROR';
+
 export const DOWNLOAD_FORM_ANSWERS = 'DOWNLOAD_FORM_ANSWERS';
 export const DOWNLOAD_FORM_ANSWERS_START = 'DOWNLOAD_FORM_ANSWERS_START';
 export const DOWNLOAD_FORM_ANSWERS_SUCCESS = 'DOWNLOAD_FORM_ANSWERS_SUCCESS';
@@ -210,7 +215,7 @@ export function loadEventList(filters = {}) {
     payload: {
       promise: fetch(`/nxEvents${params}`, {
         credentials: 'same-origin',
-      }).then(response => response.json()).then(response => { console.log(response); return response;}),
+      }).then(response => response.json()).then(response => { return response;}),
     },
   });
 }
@@ -382,6 +387,11 @@ export function attendeeSignOut(signOut, viewerId) {
     termId: signOut.termId,
   };
 
+  let reason = signOut.reason;
+  if ((/(.)\1{3,}/i).test(reason) || reason.length < 10) {
+    reason = '';
+  }
+
   return ({ fetch }) => ({
     type: ATTENDEE_SIGN_OUT,
     payload: {
@@ -393,18 +403,18 @@ export function attendeeSignOut(signOut, viewerId) {
         body: JSON.stringify({
           signOut: true,
           events,
-          reason: signOut.reason,
+          reason,
         }),
       }).then(response => response.json())
     },
   });
 }
 
-export function changeAttendeePresenceStatus(eventId, user, groupId) {
+export function changeAttendeePresenceStatus(eventId, user, termId) {
   return ({ fetch }) => ({
     type: CHANGE_ATTENDEE_PRESENCE_STATUS,
     payload: {
-      promise: fetch(`/nxEvents/${eventId}/users/${user.get('id')}`, {
+      promise: fetch(`/nxEventTerms/${termId}/attendees/${user.get('attendeeTableId')}`, {
         method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
@@ -414,18 +424,17 @@ export function changeAttendeePresenceStatus(eventId, user, groupId) {
       }).then(response => response.json())
         .then(response => ({
           ...response,
-          groupId,
           eventId,
         })),
     },
   });
 }
 
-export function changeAttendeeFeedbackStatus(eventId, user, groupId) {
+export function changeAttendeeFeedbackStatus(eventId, user, termId) {
   return ({ fetch }) => ({
     type: CHANGE_ATTENDEE_FEEDBACK_STATUS,
     payload: {
-      promise: fetch(`/nxEvents/${eventId}/users/${user.get('id')}`, {
+      promise: fetch(`/nxEventTerms/${termId}/attendees/${user.get('attendeeTableId')}`, {
         method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
@@ -435,7 +444,6 @@ export function changeAttendeeFeedbackStatus(eventId, user, groupId) {
       }).then(response => response.json())
         .then(response => ({
           ...response,
-          groupId,
           eventId,
         })),
     },
@@ -705,4 +713,20 @@ export function resetEmailStatus() {
   return {
     type: RESET_EVENT_EMAILS_STATUS,
   };
+}
+
+export function fetchEventAttendees(eventId, attendeesType) {
+  return ({ fetch }) => ({
+    type: FETCH_EVENT_ATTENDEES,
+    meta: {
+      eventId,
+      type: attendeesType,
+    },
+    payload: {
+      promise: fetch(`/nxEvents/${eventId}/attendees?type=${attendeesType}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => response.json()),
+    },
+  });
 }

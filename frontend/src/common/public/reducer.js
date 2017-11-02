@@ -34,19 +34,6 @@ export default function publicSigninReducer(state = new InitialState, action) {
           exclusionaryEvents: new List(event.exclusionaryEvents),
           eventStartDateTime: parse(event.eventStartDateTime),
           eventEndDateTime: parse(event.eventEndDateTime),
-          attendeesGroups: new List(event.attendeesGroups.map(group => new AttendeesGroup({
-            ...group,
-            signUpDeadlineDateTime: parse(group.signUpDeadlineDateTime),
-            signUpOpenDateTime: parse(group.signUpOpenDateTime),
-            users: new Map(group.users.map(user => [user.id, new Map({
-              ...user,
-              id: user.id,
-              signedIn: user.signedIn ? parse(user.signedIn) : null,
-              signedOut: user.signedOut ? parse(user.signedOut) : null,
-              wontGo: user.wontGo ? parse(user.wontGo) : null,
-              signedOutReason: user.signedOutReason,
-            })])),
-          }))),
         })]
       ));
 
@@ -69,19 +56,6 @@ export default function publicSigninReducer(state = new InitialState, action) {
           exclusionaryEvents: new List(event.exclusionaryEvents),
           eventStartDateTime: parse(event.eventStartDateTime),
           eventEndDateTime: parse(event.eventEndDateTime),
-          attendeesGroups: new List(event.attendeesGroups.map(group => new AttendeesGroup({
-            ...group,
-            signUpDeadlineDateTime: parse(group.signUpDeadlineDateTime),
-            signUpOpenDateTime: parse(group.signUpOpenDateTime),
-            users: new Map(group.users.map(user => [user.id, new Map({
-              ...user,
-              id: user.id,
-              signedIn: user.signedIn ? parse(user.signedIn) : null,
-              signedOut: user.signedOut ? parse(user.signedOut) : null,
-              wontGo: user.wontGo ? parse(user.wontGo) : null,
-              signedOutReason: user.signedOutReason,
-            })])),
-          }))),
         }))
         .set('dataLoaded', true);
     }

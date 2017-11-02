@@ -58,45 +58,58 @@ class HostedEventsPage extends Component {
     events: PropTypes.object,
     fields: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
   };
 
   getEventRow(event) {
-    const attendees = event.attendeesGroups.reduce((reduction, group) =>
-      reduction.merge(group.users)
-    , new Map());
-
-    const attending = attendees.filter(user => user.get('signedIn'));
-    const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
-
     return (
-      <tr key={event.id} style={{ cursor: 'pointer' }} onClick={() => browserHistory.push(`/host/events/${event.id}`)}>
+      <tr
+        key={event.termId}
+        style={{ cursor: 'pointer' }}
+        onClick={() => browserHistory.push(`/host/events/${event.id}/terms/${event.termId}`)}
+      >
         <td>{`${event.name}`}</td>
         <td>
           <FormattedDate value={event.eventStartDateTime} />
           <span> </span>
           <FormattedTime value={event.eventStartDateTime} />
         </td>
-        <td>{`${event.minCapacity}`}</td>
-        <td>{`${event.maxCapacity}`}</td>
-        <td>{`${attending.size}`}</td>
-        <td>{`${notAttending.size}`}</td>
-        <td>{`${attendees.size}`}</td>
       </tr>
     );
   }
 
   render() {
     const { events, viewer, fields } = this.props;
-    const { hasPermission } = this.props;
 
     if (!events) {
       return <div></div>;
     }
 
-    let filteredEvents = viewer.hostedEvents.filter(eventId => events.get(eventId)).map(eventId => events.get(eventId));
+    let filteredEventsTerms = viewer.hostedEvents.filter(item => events.get(item.eventId)).map(item => {
+      const event = events.get(item.eventId);
+
+      let termStartTime = null;
+      event.getIn(['terms', 'streams']).forEach(stream => {
+        if (stream.get('id') === item.termId) {
+          termStartTime = stream.get('eventStartDateTime');
+        } else {
+          stream.get('terms').forEach(term => {
+            if (term.get('id') === item.termId) {
+              termStartTime = term.get('eventStartDateTime');
+            }
+          });
+        }
+      });
+
+      return {
+        name: event.get('name'),
+        id: item.eventId,
+        termId: item.termId,
+        eventStartDateTime: termStartTime,
+      };
+    });
+
     if (fields.filter.value) {
-      filteredEvents = events.valueSeq().filter(event =>
+      filteredEventsTerms = events.valueSeq().filter(event =>
         diacritics.remove(`${event.name}`).toLowerCase()
           .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
@@ -139,14 +152,9 @@ class HostedEventsPage extends Component {
                       <tr>
                         <th><FormattedMessage {...messages.eventName} /></th>
                         <th><FormattedMessage {...messages.eventDate} /></th>
-                        <th><FormattedMessage {...messages.minCapacity} /></th>
-                        <th><FormattedMessage {...messages.maxCapacity} /></th>
-                        <th><FormattedMessage {...messages.signedIn} /></th>
-                        <th><FormattedMessage {...messages.wontCome} /></th>
-                        <th><FormattedMessage {...messages.invited} /></th>
                       </tr>
-                      {filteredEvents ?
-                        filteredEvents.map(event => this.getEventRow(event))
+                      {filteredEventsTerms ?
+                        filteredEventsTerms.map(event => this.getEventRow(event))
                         :
                         <tr>
                           <td colSpan="2" style={{ textAlign: 'center' }}>
@@ -176,5 +184,4 @@ HostedEventsPage = fields(HostedEventsPage, {
 export default connect(state => ({
   events: state.events.events,
   viewer: state.users.viewer,
-  hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(HostedEventsPage);

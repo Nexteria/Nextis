@@ -26,13 +26,13 @@ class EventFeedbackStatsMail extends Mailable
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, $expectedFilledCount, $actualFiledCount, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, $expectedFilledCount, $actualFiledCount, \App\User $manager)
     {
         $this->eventManagerFirstName = $manager->firstName;
         $this->eventManagerEmail = $manager->email;
         $this->eventName = $event->name;
         $this->eventType = Str::upper($event->eventType);
-        $this->formLink = $event->feedbackLink;
+        $this->formLink = $term->feedbackLink;
         $this->actualFiledCount = $actualFiledCount;
         $this->expectedFilledCount = $expectedFilledCount;
         $this->emailTagBase = $event->emailTagBase;

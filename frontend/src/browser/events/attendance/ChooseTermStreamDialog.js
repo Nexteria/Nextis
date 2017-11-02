@@ -1,12 +1,12 @@
 import Component from 'react-pure-render/component';
 import { FormattedTime, FormattedDate } from 'react-intl';
-import { browserHistory } from 'react-router';
 import React, { PropTypes } from 'react';
 import Modal, { Header, Title, Body } from 'react-bootstrap/lib/Modal';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 
 import SelectComponent from '../../components/Select';
+import EventTerms from '../usersSection/EventTerms';
 import * as eventActions from '../../../common/events/actions';
 
 const styles = {
@@ -26,6 +26,7 @@ export class ChooseTermStreamDialog extends Component {
     toggleEventTerm: PropTypes.func.isRequired,
     attendeeSignIn: PropTypes.func.isRequired,
     event: PropTypes.object.isRequired,
+    viewerId: PropTypes.number.isRequired,
   }
 
   render() {
@@ -61,68 +62,24 @@ export class ChooseTermStreamDialog extends Component {
               component={SelectComponent}
               normalize={value => parseInt(value, 10)}
             >
-              <option disabled value="">Vyberte termín</option>
+              <option disabled value="">Vyberte alternatívu</option>
               {terms.get('streams').valueSeq().map((v, index) =>
                 <option
                   key={index}
                   value={v.get('id')}
                   disabled={v.get('signedInAttendeesCount') >= v.get('maxCapacity')}
                 >
-                Termín #{index + 1} {v.get('signedInAttendeesCount') >= v.get('maxCapacity') && ' - plne obsadené'}
+                Alternatíva #{index + 1} {v.get('signedInAttendeesCount') >= v.get('maxCapacity') && ' - plne obsadené'}
                 </option>
               )}
             </Field>
           </div>
-          <div className="col-md-12">
-            <table className="table table-hover text-center">
-              <thead>
-                <tr>
-                  <td>Stretnutia:</td>
-                </tr>
-              </thead>
-              <tbody style={{ textAlign: 'center' }}>
-                {choosedStream &&
-                  <tr>
-                    <td>
-                      <div>
-                        <span
-                          className="label label-success"
-                          style={styles.signInTermLabel}
-                        >
-                          <FormattedDate value={stream.get('eventStartDateTime')} />
-                          <span> o </span>
-                          <FormattedTime value={stream.get('eventStartDateTime')} />
-                          <span> - </span>
-                          <FormattedDate value={stream.get('eventEndDateTime')} />
-                          <span> o </span>
-                          <FormattedTime value={stream.get('eventEndDateTime')} />
-                        </span>
-                      </div>
-                      {stream.get('terms').valueSeq().map(term =>
-                        <span
-                          className="label label-success"
-                          style={styles.signInTermLabel}
-                        >
-                          <FormattedDate value={term.get('eventStartDateTime')} />
-                          <span> o </span>
-                          <FormattedTime value={term.get('eventStartDateTime')} />
-                          <span> - </span>
-                          <FormattedDate value={term.get('eventEndDateTime')} />
-                          <span> o </span>
-                          <FormattedTime value={term.get('eventEndDateTime')} />
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-            {isTermMultiMeeting &&
-              <div className="text-center text-danger">
-                Tento termín je viacdielny. Budeš automaticky prihlásený na všetky stretnutia.
-              </div>
-            }
-          </div>
+          <EventTerms event={event} selectedTermId={stream ? stream.get('id') : null} />
+          {isTermMultiMeeting &&
+            <div className="text-center text-danger">
+              Tento termín je viacdielny. Budeš automaticky prihlásený na všetky stretnutia.
+            </div>
+          }
           <div className="text-center">
             <button
               type="button"

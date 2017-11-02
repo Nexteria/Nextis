@@ -26,7 +26,7 @@ class HostNotificationMail extends Mailable
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, \App\User $host, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, \App\User $host, \App\User $manager)
     {
         $this->eventName = $event->name;
         $this->eventType = Str::upper($event->eventType);
@@ -34,7 +34,7 @@ class HostNotificationMail extends Mailable
         $this->hostEmail = $host->email;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
+        $this->eventStartTime = $term->eventStartDateTime->format('j.n.Y H:i');
         $this->emailTagBase = $event->emailTagBase;
     }
 

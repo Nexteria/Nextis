@@ -13,12 +13,16 @@ export default class EventTerms extends Component {
 
   static propTypes = {
     event: PropTypes.object.isRequired,
+    selectedTermId: PropTypes.number,
   }
 
   render() {
     const {
       event,
+      selectedTermId,
     } = this.props;
+
+    const numberOfTerms = event.getIn(['terms', 'streams']).size;
 
     return (
       <div>
@@ -26,8 +30,17 @@ export default class EventTerms extends Component {
           <thead>
             <tr>
             {event.getIn(['terms', 'streams']).valueSeq().map((v, index) =>
-              <th style={{ textAlign: 'center' }}>
-                <span>Termín #{index + 1}</span>
+              <th
+                style={{
+                  textAlign: 'center',
+                  backgroundColor: selectedTermId === v.get('id') ? '#2196f32b' : 'transparent'
+                }}
+              >
+                {numberOfTerms === 1 ?
+                  <span>Termín</span>
+                  :
+                  <span>Alternatíva #{index + 1}</span>
+                }
                 <span> ({`${v.get('signedInAttendeesCount')}/${v.get('maxCapacity')}`})</span>
               </th>
             )}
@@ -36,7 +49,11 @@ export default class EventTerms extends Component {
           <tbody style={{ textAlign: 'center' }}>
             <tr>
               {event.getIn(['terms', 'streams']).map(stream =>
-                <td>
+                <td
+                  style={{
+                    backgroundColor: selectedTermId === stream.get('id') ? '#2196f32b' : 'transparent'
+                  }}
+                >
                   <div>
                     <span
                       className="label label-success"

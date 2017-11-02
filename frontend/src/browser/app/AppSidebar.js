@@ -141,7 +141,7 @@ export default class AppSideBar extends Component {
               </li>
               : null
             }
-            {viewer.hostedEvents.filter(eventId => events.get(eventId)).size > 0 ?
+            {viewer.hostedEvents.filter(item => events.get(item.eventId)).size > 0 ?
               <li>
                 <Link activeStyle={styles.activeLinkStyle} to="/host/events">
                   <i className="fa fa-support"></i>

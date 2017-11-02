@@ -27,7 +27,7 @@ class EventFeedbackMail extends Mailable
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, \App\User $user, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, \App\User $user, \App\User $manager)
     {
         $this->userFirstName = $user->firstName;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
@@ -35,12 +35,12 @@ class EventFeedbackMail extends Mailable
         $this->eventName = $event->name;
         $this->userEmail = $user->email;
         $this->eventType = Str::upper($event->eventType);
-        $this->feedbackLink = $event->publicFeedbackLink;
+        $this->feedbackLink = $term->publicFeedbackLink;
         $this->emailTagBase = $event->emailTagBase;
 
         $settings = $event->getSettings();
         $daysToDeadlineFromStart = $settings['feedbackDaysToFill'] + $settings['feedbackEmailDelay'] + 1;
-        $this->feedbackDeadline = $event->eventEndDateTime->addDays($daysToDeadlineFromStart)->format('d.m.Y');
+        $this->feedbackDeadline = $term->eventEndDateTime->addDays($daysToDeadlineFromStart)->format('d.m.Y');
     }
 
     /**

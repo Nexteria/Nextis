@@ -27,7 +27,7 @@
           </mj-text>
           <mj-text line-height="16px">
             <p>
-              Dnes sa otvorilo prihlasovanie na <b>{{ $eventType }} {{ $eventName }}</b>. Daj nám prosím vedieť do <b>{{ $eventSignInDeadline }}</b>, či sa ho zúčastníš.
+              Dnes sa otvorilo prihlasovanie na <b>{{ $eventType }} {{ $eventName }}</b>. Daj nám, prosím, vedieť do <b>{{ $eventSignInDeadline }}</b>, či sa ho zúčastníš.
             </p>
           </mj-text>
         </mj-column>

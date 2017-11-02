@@ -36,7 +36,7 @@ class UserTransformer extends Transformer
             'state' => $user->state,
             'iban' => $user->iban,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
-            'hostedEvents' => array_map('intval', $user->hostedEventsQuery()->pluck('nx_events.id')->toArray()),
+            'hostedEvents' => $user->hostedEventsQuery()->select('nx_events.id as eventId', 'nx_event_terms.id as termId')->get()->toArray(),
             'created_at' => $user->created_at ? $user->created_at->__toString() : null,
             'updated_at' => $user->updated_at ? $user->updated_at->__toString() : null,
             'confirmedPrivacyPolicy' => $user->confirmedPrivacyPolicy,

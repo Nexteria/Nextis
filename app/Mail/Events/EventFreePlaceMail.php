@@ -17,8 +17,8 @@ class EventFreePlaceMail extends Mailable
     public $signInToken;
     public $eventType;
 
-    public $eventLocation;
-    public $eventLocationName;
+    public $eventId;
+    public $isMultiterm;
     public $eventStartTime;
     public $eventManagerPhone;
     public $eventManagerName;
@@ -33,24 +33,13 @@ class EventFreePlaceMail extends Mailable
     {
         $this->user = $user;
         $this->eventName = $event->name;
+        $this->eventId = $event->id;
         $this->eventType = Str::upper($event->eventType);
-        $this->eventStartTime = $event->eventStartDateTime->format('j.n.Y H:i');
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;
         $this->eventManagerPhone = $manager->phone;
-        $this->eventLocation = $event->location;
         $this->signInToken = $signInToken;
+        $this->isMultiterm = $event->isMultiterm();
         $this->emailTagBase = $event->emailTagBase;
-
-        $eventLocationName = $this->eventLocation->name.' (';
-        $eventLocationName .= $this->eventLocation->addressLine1;
-        if ($this->eventLocation->addressLine2) {
-            $eventLocationName .= ', '.$this->eventLocation->addressLine2;
-        }
-
-        $eventLocationName .= $this->eventLocation->city;
-        $eventLocationName .= ', '.$this->eventLocation->zipCode;
-        $eventLocationName .= $this->eventLocation->countryCode.')';
-        $this->eventLocationName = $eventLocationName;
     }
 
     /**

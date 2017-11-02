@@ -30,13 +30,20 @@ class NxEventsController extends Controller
      */
     protected $nxEventsSettingsTransformer;
 
+    /**
+     * @var \App\Transformers\UserTransformer
+     */
+    protected $userTransformer;
+
     public function __construct(
         \App\Transformers\NxEventTransformer $nxEventTransformer,
         \App\Transformers\Student\NxEventTransformer $nxEventStudentTransformer,
         \App\Transformers\NxEventsSettingsTransformer $nxEventsSettingsTransformer,
-        \App\Transformers\BeforeEventQuestionnaireTransformer $beforeEventQuestionnaireTransformer
-    ){
+        \App\Transformers\BeforeEventQuestionnaireTransformer $beforeEventQuestionnaireTransformer,
+        \App\Transformers\UserTransformer $userTransformer
+    ) {
         $this->nxEventTransformer = $nxEventTransformer;
+        $this->userTransformer = $userTransformer;
         $this->nxEventStudentTransformer = $nxEventStudentTransformer;
         $this->nxEventsSettingsTransformer = $nxEventsSettingsTransformer;
         $this->beforeEventQuestionnaireTransformer = $beforeEventQuestionnaireTransformer;
@@ -89,6 +96,38 @@ class NxEventsController extends Controller
                         ->get();
 
         return response()->json($this->nxEventStudentTransformer->transformCollection($events));
+    }
+
+    public function getEventAttendees(Request $request, $eventId)
+    {
+        $event = NxEvent::findOrFail($eventId);
+        $attendeesType = $request->get('type');
+
+        switch ($attendeesType) {
+            case 'signedIn':
+                $attendeesIds = $event->attendees()->whereNotNull('signedIn')->pluck('userId');
+                break;
+            
+            case 'signedOut':
+                $attendeesIds = $event->attendees()->whereNotNull('signedOut')->pluck('userId');
+                break;
+
+            case 'wontGo':
+                $attendeesIds = $event->attendees()->whereNotNull('wontGo')->pluck('userId');
+                break;
+            
+            case 'standIn':
+                $attendeesIds = $event->attendees()->whereNotNull('standIn')->pluck('userId');
+                break;
+            
+            default:
+                $attendeesIds = $event->attendees()->pluck('userId');
+                break;
+        }
+
+        $users = \App\User::whereIn('id', $attendeesIds)->get();
+
+        return $this->userTransformer->transformCollection($users, []);
     }
 
     public function deleteNxEvent($eventId)

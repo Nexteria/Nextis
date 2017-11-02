@@ -1,14 +1,11 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
 
 
 export default class EventDescription extends Component {
 
   static propTypes = {
     event: PropTypes.object.isRequired,
-    openLocationDetailsDialog: PropTypes.func.isRequired,
-    nxLocation: PropTypes.object.isRequired,
     groupedEvents: PropTypes.object,
     openEventDetailsDialog: PropTypes.func.isRequired,
     users: PropTypes.object.isRequired,
@@ -17,8 +14,6 @@ export default class EventDescription extends Component {
   render() {
     const {
       event,
-      openLocationDetailsDialog,
-      nxLocation,
       groupedEvents,
       openEventDetailsDialog,
       users,
@@ -76,48 +71,6 @@ export default class EventDescription extends Component {
                   </div>
                 )
               }
-            </div>
-          }
-        </div>
-        <div className="col-md-12 col-sm-12 col-xs-12 event-details">
-          <div>
-            <strong>Detaily:</strong>
-          </div>
-          <div className="col-md-4 col-sm-12 col-xs-12">
-            <div className="col-md-2 col-sm-2 col-xs-2">
-              <i className="fa fa-usd"></i>
-            </div>
-            <div className="col-md-10 col-sm-10 col-xs-10">
-              {event.activityPoints} aktivity body
-            </div>
-          </div>
-          {groupedEvents.size === 0 &&
-            <div className="col-md-4 col-sm-12 col-xs-12">
-              <div className="col-md-2 col-sm-2 col-xs-2">
-                <i className="fa fa-map-marker"></i>
-              </div>
-              <div className="col-md-10 col-sm-10 col-xs-10">
-                {nxLocation ?
-                  <a onClick={() => openLocationDetailsDialog(nxLocation.id)}>{nxLocation.name}</a>
-                  : null
-                }
-              </div>
-            </div>
-          }
-          {groupedEvents.size === 0 &&
-            <div className="col-md-4 col-sm-12 col-xs-12">
-              <div className="col-md-2 col-sm-2 col-xs-2">
-                <i className="fa fa-group"></i>
-              </div>
-              <div className="col-md-10 col-sm-5 col-xs-5">
-                <div>
-                  <Link to={`/events/${event.id}/attendees`}>
-                    Prihlásení {event.attendingNumbers.get('signedIn')}
-                  </Link>
-                  , Pozvaných: {event.attendingNumbers.get('invited')}
-                  , Náhradníci: {event.attendingNumbers.get('standIns')}
-                </div>
-              </div>
             </div>
           }
         </div>

@@ -552,7 +552,10 @@ export class EditEvent extends Component {
             <thead>
               <tr>
               {terms.get('streams').valueSeq().map((v, index) =>
-                <th style={{ textAlign: 'center' }}>Termín #{index + 1}</th>
+                terms.get('streams').size > 1 ?
+                  <th style={{ textAlign: 'center' }}>Alternatíva #{index + 1}</th>
+                  :
+                  <th style={{ textAlign: 'center' }}>Termín</th>
               )}
               </tr>
             </thead>

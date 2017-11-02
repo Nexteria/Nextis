@@ -1,12 +1,11 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import isAfter from 'date-fns/is_after';
-import parse from 'date-fns/parse';
-import { Map } from 'immutable';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
+
+import * as actions from '../../common/events/actions';
 
 
 const messages = defineMessages({
@@ -42,7 +41,15 @@ export class EventAttendeesDialog extends Component {
     events: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
-    fields: PropTypes.object.isRequired,
+    fetchEventAttendees: PropTypes.func.isRequired,
+  }
+
+  componentDidMount() {
+    const { fetchEventAttendees, params } = this.props;
+
+    const eventId = parseInt(params.eventId, 10);
+
+    fetchEventAttendees(eventId, 'signedIn');
   }
 
   render() {
@@ -50,12 +57,11 @@ export class EventAttendeesDialog extends Component {
 
     const event = events.get(parseInt(params.eventId, 10));
 
-    const attendees = event.attendeesGroups.reduce((reduction, group) =>
-      reduction.merge(group.users)
-    , new Map());
+    const attendees = event.getIn(['attendees', 'signedIn']);
 
-    const attending = attendees.filter(user => user.get('signedIn'))
-                               .sort((a, b) => isAfter(parse(a.get('signedIn')), parse(b.get('signedIn'))) ? 1 : -1);
+    if (!attendees) {
+      return <div></div>;
+    }
 
     return (
       <Modal
@@ -77,15 +83,15 @@ export class EventAttendeesDialog extends Component {
                     <th><FormattedMessage {...messages.email} /></th>
                     <th><FormattedMessage {...messages.phone} /></th>
                   </tr>
-                  {attending.size ?
-                    attending.valueSeq().map(user =>
-                      <tr key={user.get('id')}>
+                  {attendees.size ?
+                    attendees.valueSeq().map(userId =>
+                      <tr key={userId}>
                         <td>
-                          {`${users.get(user.get('id')).firstName}`}
-                          {` ${users.get(user.get('id')).lastName}`}
+                          {`${users.get(userId).firstName}`}
+                          {` ${users.get(userId).lastName}`}
                         </td>
-                        <td>{users.get(user.get('id')).email}</td>
-                        <td>{users.get(user.get('id')).phone}</td>
+                        <td>{users.get(userId).email}</td>
+                        <td>{users.get(userId).phone}</td>
                       </tr>
                     )
                     :
@@ -121,5 +127,4 @@ EventAttendeesDialog = injectIntl(EventAttendeesDialog);
 export default connect((state) => ({
   events: state.events.events,
   users: state.users.users,
-  hasPermission: (permission) => state.users.hasPermission(permission, state),
-}))(EventAttendeesDialog);
+}), actions)(EventAttendeesDialog);

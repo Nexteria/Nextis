@@ -24,7 +24,7 @@ class NxEventTransformer extends Transformer
                                                 ->first();
 
             if ($attedeeModel) {
-                $term['attendee'] = $attendeeTransformer->transform($attedeeModel, ['pivot' => true]);
+                $term['attendee'] = $attendeeTransformer->transform($attedeeModel, []);
                 $canViewerSignIn = $event->canSignInAttendee($attedeeModel, $term['id']);
 
                 if ($term['attendee']['signedIn']) {
@@ -48,8 +48,6 @@ class NxEventTransformer extends Transformer
             'id' => (int) $event->id,
             'name' => $event->name,
             'eventType' => $event->eventType,
-            'feedbackLink' => $event->feedbackLink,
-            'publicFeedbackLink' => $event->publicFeedbackLink,
             'description' => $event->description,
             'shortDescription' => $event->shortDescription,
             'activityPoints' => (int) $event->activityPoints,

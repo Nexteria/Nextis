@@ -402,7 +402,7 @@ export default [
   },
   {
     "id": "event.users.detail.signOutQuestion",
-    "defaultMessage": "Ćhcete sa odhlásiť z eventu: {eventName} ?"
+    "defaultMessage": "Chcete sa odhlásiť z eventu: {eventName} ?"
   },
   {
     "id": "event.users.details",
@@ -1747,7 +1747,7 @@ export default [
     id: 'events.manage.settings.sentCopyOfAllEventNotificationsToManager',
   },
   {
-    defaultMessage: 'Prihásiť ako náhradník',
+    defaultMessage: 'Prihlásiť ako náhradník',
     id: 'event.users.signInAsStandIn',
   },
   {

@@ -63,7 +63,7 @@ export class EventAttendanceDialog extends Component {
     fields: PropTypes.object.isRequired,
   }
 
-  getUsersTable(usersList, event, type) {
+  getUsersTable(usersList, event, termId, type) {
     const { users, hasPermission } = this.props;
     const {
       changeAttendeePresenceStatus,
@@ -88,12 +88,12 @@ export class EventAttendanceDialog extends Component {
                 }
               </tr>
               {usersList ?
-                usersList.valueSeq().map(user =>
-                  <tr key={user.get('id')}>
-                    <td>{`${users.get(user.get('id')).firstName} ${users.get(user.get('id')).lastName} (${users.get(user.get('id')).username})`}</td>
+                usersList.map(user =>
+                  <tr key={user.id}>
+                    <td>{`${users.get(user.id).firstName} ${users.get(user.id).lastName} (${users.get(user.id).username})`}</td>
                     {type === 'notAttending' && hasPermission('set_filled_feedback_flag') ?
                       <td>
-                        <span dangerouslySetInnerHTML={{ __html: user.get('signedOutReason') }}></span>
+                        <span dangerouslySetInnerHTML={{ __html: user.signedOutReason }}></span>
                       </td>
                       : null
                     }
@@ -101,12 +101,12 @@ export class EventAttendanceDialog extends Component {
                       onClick={() =>
                         changeAttendeePresenceStatus(
                           event.id,
-                          user,
-                          event.attendeesGroups.filter(group => group.users.has(user.get('id'))).first().id
+                          new Map(user),
+                          termId
                         )
                       }
                     >
-                      {user.get('wasPresent') ?
+                      {user.wasPresent ?
                         <i className="fa fa-check"></i>
                         :
                         <i className="fa fa-times"></i>
@@ -117,12 +117,12 @@ export class EventAttendanceDialog extends Component {
                         onClick={() =>
                           changeAttendeeFeedbackStatus(
                             event.id,
-                            user,
-                            event.attendeesGroups.filter(group => group.users.has(user.get('id'))).first().id
+                            new Map(user),
+                            termId
                           )
                         }
                       >
-                        {user.get('filledFeedback') ?
+                        {user.filledFeedback ?
                           <i className="fa fa-check"></i>
                           :
                           <i className="fa fa-times"></i>
@@ -150,15 +150,26 @@ export class EventAttendanceDialog extends Component {
     const { users, events, params } = this.props;
     const { formatMessage } = this.props.intl;
 
-    const event = events.get(parseInt(params.eventId, 10));
+    const eventId = parseInt(params.eventId, 10);
+    const termId = parseInt(params.termId, 10);
+    const event = events.get(eventId);
 
-    const attendees = event.attendeesGroups.reduce((reduction, group) =>
-      reduction.merge(group.users)
-    , new Map());
+    let attendees = null;
+    event.getIn(['terms', 'streams']).forEach(stream => {
+      if (stream.get('id') === termId) {
+        attendees = stream.get('attendees');
+      } else {
+        stream.get('terms').forEach(term => {
+          if (term.get('id') === termId) {
+            attendees = term.get('attendees');
+          }
+        });
+      }
+    });
 
-    const attending = attendees.filter(user => user.get('signedIn'));
-    const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
-    const undecided = attendees.filter(user => !user.get('wontGo') && !user.get('signedOut') && !user.get('signedIn'));
+    const attending = attendees.filter(user => user.signedIn);
+    const notAttending = attendees.filter(user => user.wontGo || user.signedOut);
+    const undecided = attendees.filter(user => !user.wontGo && !user.signedOut && !user.signedIn);
 
     return (
       <Modal
@@ -173,13 +184,13 @@ export class EventAttendanceDialog extends Component {
         <Body>
           <Tabs defaultActiveKey={1} id="attendance-table-tabs" className="nav-tabs-custom">
             <Tab eventKey={1} title={formatMessage(messages.attending)}>
-              {this.getUsersTable(attending, event, 'attending')}
+              {this.getUsersTable(attending, event, termId, 'attending')}
             </Tab>
             <Tab eventKey={2} title={formatMessage(messages.notAttending)}>
-              {this.getUsersTable(notAttending, event, 'notAttending')}
+              {this.getUsersTable(notAttending, event, termId, 'notAttending')}
             </Tab>
             <Tab eventKey={3} title={formatMessage(messages.undecided)}>
-              {this.getUsersTable(undecided, event, 'undecided')}
+              {this.getUsersTable(undecided, event, termId, 'undecided')}
             </Tab>
           </Tabs>
         </Body>

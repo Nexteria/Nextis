@@ -30,16 +30,20 @@
               Práve sa uvoľnilo miesto na <b>{{ $eventType }} {{ $eventName }}</b>.
             </p>
             <p>Na tomto evente si v roli “náhradníka”, preto si jedným z tých, ktorým sme odoslali o uvoľnení miesta info. Miesto je však len jedno, preto sa prihlás čím skôr. Platí princíp <b>First Come First Served</b>.</p>
-            <b>Termín konania:</b> {{ $eventStartTime }}</br>
-            <b>Miesto:</b> <a href="http://www.google.com/maps/place/{{ $eventLocation->latitude }},{{ $eventLocation->longitude }}">{{ $eventLocationName }}</a></br>
           </mj-text>
         </mj-column>
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
-          <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn">
-            Prihlásiť sa
-          </mj-button>
+          @if($isMultiterm)
+            <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}">
+              Prihlásiť sa
+            </mj-button>
+          @else
+            <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn">
+              Prihlásiť sa
+            </mj-button>
+          @endif
         </mj-column>
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">

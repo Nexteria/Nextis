@@ -30,6 +30,9 @@ class EventSignInRemainderMail extends Mailable
     public $eventSignInDeadline;
     public $lectorsFirstName;
 
+    public $terms = [];
+    public $maxMeetings = 0;
+
     /**
      * Create a new message instance.
      *
@@ -73,6 +76,22 @@ class EventSignInRemainderMail extends Mailable
         $eventLocationName .= ', '.$this->eventLocation->zipCode;
         $eventLocationName .= $this->eventLocation->countryCode.')';
         $this->eventLocationName = $eventLocationName;
+
+        if ($this->isMultiterm) {
+            $terms = $event->terms()->whereNull('parentTermId')->get();
+            foreach ($terms as $term) {
+                $dates = [
+                    $term->eventStartDateTime->format('j.n.Y H:i'),
+                ];
+
+                $nestedTerms = $term->terms()->orderBy('eventStartDateTime')->get();
+                foreach ($nestedTerms as $nestedTerm) {
+                    $dates[] = $nestedTerm->eventStartDateTime->format('j.n.Y H:i');
+                }
+                $this->terms[] = $dates;
+                $this->maxMeetings = max(count($dates), $this->maxMeetings);
+            }
+        }
     }
 
     /**

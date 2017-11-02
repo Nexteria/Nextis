@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
 use App\NxEvent;
+use App\NxEventTerm;
 
 class AutogenerateHostAttendanceMail extends Command
 {
@@ -32,19 +33,19 @@ class AutogenerateHostAttendanceMail extends Command
     {
         $now = Carbon::now('Europe/Bratislava')->format('Y-m-d H:i');
 
-        foreach (NxEvent::where('status', 'published')->get() as $event) {
-            if ($event->getParentEvent()) {
+        foreach (NxEventTerm::whereRaw('eventEndDateTime < NOW()')->whereNotNull('hostId')->get() as $term) {
+            $event = $term->event;
+            if ($event->status !== 'published') {
                 continue;
             }
 
             $settings = $event->getSettings();
-            $remainderDate = $event->eventEndDateTime->addHours(1)->format('Y-m-d H:i');
+            $remainderDate = $term->eventEndDateTime->addHours(1)->format('Y-m-d H:i');
 
-            $settings = $event->getSettings();
             if ($remainderDate === $now) {
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
-                $host = \App\User::findOrFail($event->hostId);
-                $email = new \App\Mail\Events\EventHostAttendanceMail($event, $host, $manager);
+                $host = \App\User::findOrFail($term->hostId);
+                $email = new \App\Mail\Events\EventHostAttendanceMail($event, $term, $host, $manager);
                 \Mail::send($email);
             }
         }

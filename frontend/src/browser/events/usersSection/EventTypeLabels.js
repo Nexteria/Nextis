@@ -39,7 +39,7 @@ export default class MultiMeetingTerms extends Component {
           <span
             style={{ ...styles.eventCategoryLabel, ...styles.multiTermEventLabel }}
             className="label"
-          >Viactermínový</span>
+          >Vyber si termín</span>
         }
         {isMultiMeeting &&
           <span

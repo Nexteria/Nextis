@@ -30,6 +30,7 @@ const Event = Record({
   visibleDetails: false,
   exclusionaryEvents: new List(),
   viewer: null,
+  attendees: new Map(),
 });
 
 export default Event;

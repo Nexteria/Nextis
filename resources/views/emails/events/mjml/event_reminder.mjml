@@ -27,7 +27,7 @@
           </mj-text>
           <mj-text line-height="16px">
             <p>
-              Pripomínam ti, že zajtra sa koná <b>{{ $eventType }} {{ $eventName }}</b>. Príď prosím načas.
+              Pripomínam Ti, že zajtra sa koná <b>{{ $eventType }} {{ $eventName }}</b>. Príď prosím načas.
               @if ($hostFirstName) Našim hostom je <b>{{ $hostFirstName }}</b> - v prípade nečakaných komplikácií (nevieš trafiť, meškáš, a pod.) volaj na <b>{{ $hostPhone }}</b>. @endif
             </p>
           </mj-text>

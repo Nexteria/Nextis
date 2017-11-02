@@ -27,18 +27,39 @@
           </mj-text>
           <mj-text line-height="16px">
             <p>
-              Dnes sa otvorilo prihlasovanie na <b>{{ $eventType }} {{ $eventName }}</b>. Daj nám prosím vedieť do <b>{{ $eventSignInDeadline }}</b>, či sa ho zúčastníš.
+              Dnes sa otvorilo prihlasovanie na <b>{{ $eventType }} {{ $eventName }}</b>. Daj nám, prosím, vedieť do <b>{{ $eventSignInDeadline }}</b>, či sa ho zúčastníš.
             </p>
             <p>
-              Preto, že event je viactermínoví, je možné prihlásiť sa iba priamo v Space-i
+              Preto, že event je viactermínový, je možné prihlásiť sa iba priamo v Space-i
             </p>
           </mj-text>
         </mj-column>
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
-          <mj-button font-family="Helvetica" background-color="##007bff" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}">
-            Pozrieť termíny
+          <mj-table>
+            <tr>
+              @for ($x = 0; $x < count($terms); $x++)
+                <td style="text-align: center;"><b>Alternatíva #{{ $x + 1 }}</b></td>
+              @endfor
+            </tr>
+            @for ($y = 0; $y < $maxMeetings; $y++)
+              <tr>
+                @for ($x = 0; $x < count($terms); $x++)
+                <td style="text-align: center;">{{ $terms[$x][$y] ? $terms[$x][$y] : '' }}</td>
+                @endfor
+              </tr>
+            @endfor
+          </mj-table>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
+          <mj-button font-family="Helvetica" background-color="##00a65a" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}">
+            Vybrať termín
+          </mj-button>
+          <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/wontGo">
+            Nezúčastním sa
           </mj-button>
         </mj-column>
       </mj-section>

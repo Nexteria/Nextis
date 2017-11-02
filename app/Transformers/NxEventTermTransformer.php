@@ -9,7 +9,7 @@ class NxEventTermTransformer extends Transformer
         $users = [];
         $viewer = [];
         foreach ($term->attendees as $attendee) {
-            $user = $transformer->transform($attendee, ['pivot' => true]);
+            $user = $transformer->transform($attendee, []);
             $users[] = $user;
             if ($attendee->userId === \Auth::user()->id) {
                 $viewer = $user;

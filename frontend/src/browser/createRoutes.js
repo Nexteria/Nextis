@@ -56,7 +56,7 @@ export default function createRoutes() {
       <Route component={Payments} path="payments" />
       <Route component={Settings} path="/users/me/settings" />
       <Route component={HostedEventsPage} path="host/events" />
-      <Route component={EventAttendanceDialog} path="host/events/:eventId" />
+      <Route component={EventAttendanceDialog} path="host/events/:eventId/terms/:termId" />
       <Route component={UserProfileDialog} path="users/:userId" />
 
       <Route component={AdminApp} path="admin">
