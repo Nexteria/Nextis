@@ -677,7 +677,6 @@ export class EditEvent extends Component {
     const lectors = users.filter(user => fields.lectors.value.includes(user.id))
       .map(user => ({ id: user.id, text: `${user.firstName} ${user.lastName}` }));
 
-
     return (
       <div>
         <section className="content-header">
@@ -846,6 +845,7 @@ export class EditEvent extends Component {
                 <Tab eventKey={2} title={formatMessage(messages.invited)}>
                   <InvitedTab
                     eventId={actualEventId}
+                    event={events.get(actualEventId)}
                     intl={this.props.intl}
                     users={users}
                     downloadEventAttendeesList={downloadEventAttendeesList}

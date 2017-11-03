@@ -206,12 +206,14 @@ export default function eventsReducer(state = new InitialState, action) {
               [stream.id, new Map({
                 ...stream,
                 attendee: new Map(stream.attendee),
+                attendees: new Map(stream.attendees.map(attendee => [attendee.id, new Map(attendee)])),
                 eventStartDateTime: parse(stream.eventStartDateTime),
                 eventEndDateTime: parse(stream.eventEndDateTime),
                 terms: new Map(stream.terms.map(term =>
                   [term.id, new Map({
                     ...term,
                     attendee: new Map(term.attendee),
+                    attendees: new Map(term.attendees.map(attendee => [attendee.id, new Map(attendee)])),
                     eventStartDateTime: parse(term.eventStartDateTime),
                     eventEndDateTime: parse(term.eventEndDateTime)
                   })]
@@ -307,16 +309,41 @@ export default function eventsReducer(state = new InitialState, action) {
         'streams',
       ]);
 
+      if (termId === null) {
+        const groups = state.getIn([
+          'events',
+          eventId,
+          'attendeesGroups',
+        ]);
+
+        let newState = state;
+        groups.some((group, index) => {
+          if (group.hasIn(['users', response.id])) {
+            newState = newState.setIn([
+              'events',
+              eventId,
+              'attendeesGroups',
+              index,
+              'users',
+              response.id
+            ], new Map(response));
+            return true;
+          }
+          return false;
+        });
+        return newState;
+      }
+
       let resultStreams = streams;
 
       streams.some(stream => {
         if (stream.get('id') == termId) {
-          stream.get('attendees').some((attendee, index) => {
-            if (attendee.attendeeTableId === response.attendeeTableId) {
-              resultStreams = streams.updateIn([stream.get('id'), 'attendees'], attendees => {
-                attendees[index] = response;
-                return attendees;
-              });
+          stream.get('attendees').some((attendee) => {
+            if (attendee.get('attendeeTableId') === response.attendeeTableId) {
+              resultStreams = streams.updateIn(
+                [stream.get('id'), 'attendees'],
+                attendees => attendees.set(attendee.get('id'), new Map(response))
+              );
               return true;
             }
             return false;
@@ -326,12 +353,12 @@ export default function eventsReducer(state = new InitialState, action) {
 
         const found = stream.get('terms').some(term => {
           if (term.get('id') == termId) {
-            term.get('attendees').some((attendee, index) => {
-              if (attendee.attendeeTableId === response.attendeeTableId) {
-                resultStreams = streams.updateIn([stream.get('id'), 'terms', term.get('id'), 'attendees'], attendees => {
-                  attendees[index] = response;
-                  return attendees;
-                });
+            term.get('attendees').some((attendee) => {
+              if (attendee.get('attendeeTableId') === response.attendeeTableId) {
+                resultStreams = streams.updateIn(
+                  [stream.get('id'), 'terms', term.get('id'), 'attendees'],
+                  attendees => attendees.set(attendee.get('id'), new Map(response))
+                );
                 return true;
               }
               return false;
@@ -477,12 +504,14 @@ export default function eventsReducer(state = new InitialState, action) {
               [stream.id, new Map({
                 ...stream,
                 attendee: new Map(stream.attendee),
+                attendees: new Map(stream.attendees.map(attendee => [attendee.id, new Map(attendee)])),
                 eventStartDateTime: parse(stream.eventStartDateTime),
                 eventEndDateTime: parse(stream.eventEndDateTime),
                 terms: new Map(stream.terms.map(term =>
                   [term.id, new Map({
                     ...term,
                     attendee: new Map(term.attendee),
+                    attendees: new Map(term.attendees.map(attendee => [attendee.id, new Map(attendee)])),
                     eventStartDateTime: parse(term.eventStartDateTime),
                     eventEndDateTime: parse(term.eventEndDateTime)
                   })]

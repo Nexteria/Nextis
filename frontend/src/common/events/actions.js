@@ -415,6 +415,11 @@ export function attendeeSignOut(signOut, viewerId) {
 }
 
 export function changeAttendeePresenceStatus(eventId, user, termId) {
+  let urlBase = `/nxEventTerms/${termId}`;
+  if (!termId) {
+    urlBase = `/nxEvents/${eventId}`;
+  }
+
   return ({ fetch }) => ({
     type: CHANGE_ATTENDEE_PRESENCE_STATUS,
     meta: {
@@ -422,7 +427,7 @@ export function changeAttendeePresenceStatus(eventId, user, termId) {
       termId,
     },
     payload: {
-      promise: fetch(`/nxEventTerms/${termId}/attendees/${user.get('attendeeTableId')}`, {
+      promise: fetch(`${urlBase}/attendees/${user.get('attendeeTableId')}`, {
         method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },

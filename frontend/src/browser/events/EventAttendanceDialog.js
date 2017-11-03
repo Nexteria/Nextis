@@ -89,11 +89,11 @@ export class EventAttendanceDialog extends Component {
               </tr>
               {usersList ?
                 usersList.map(user =>
-                  <tr key={user.id}>
-                    <td>{`${users.get(user.id).firstName} ${users.get(user.id).lastName} (${users.get(user.id).username})`}</td>
+                  <tr key={user.get('id')}>
+                    <td>{`${users.get(user.get('id')).firstName} ${users.get(user.get('id')).lastName} (${users.get(user.get('id')).username})`}</td>
                     {type === 'notAttending' && hasPermission('set_filled_feedback_flag') ?
                       <td>
-                        <span dangerouslySetInnerHTML={{ __html: user.signedOutReason }}></span>
+                        <span dangerouslySetInnerHTML={{ __html: user.get('signedOutReason') }}></span>
                       </td>
                       : null
                     }
@@ -106,7 +106,7 @@ export class EventAttendanceDialog extends Component {
                         )
                       }
                     >
-                      {user.wasPresent ?
+                      {user.get('wasPresent') ?
                         <i className="fa fa-check"></i>
                         :
                         <i className="fa fa-times"></i>
@@ -122,7 +122,7 @@ export class EventAttendanceDialog extends Component {
                           )
                         }
                       >
-                        {user.filledFeedback ?
+                        {user.get('filledFeedback') ?
                           <i className="fa fa-check"></i>
                           :
                           <i className="fa fa-times"></i>
@@ -167,9 +167,9 @@ export class EventAttendanceDialog extends Component {
       }
     });
 
-    const attending = attendees.filter(user => user.signedIn);
-    const notAttending = attendees.filter(user => user.wontGo || user.signedOut);
-    const undecided = attendees.filter(user => !user.wontGo && !user.signedOut && !user.signedIn);
+    const attending = attendees.filter(user => user.get('signedIn'));
+    const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
+    const undecided = attendees.filter(user => !user.get('wontGo') && !user.get('signedOut') && !user.get('signedIn'));
 
     return (
       <Modal

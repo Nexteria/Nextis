@@ -59,6 +59,7 @@ export default class InvitedTab extends Component {
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
     eventId: PropTypes.number,
     downloadEventAttendeesList: PropTypes.func.isRequired,
+    event: PropTypes.object.isRequired,
   }
 
   reasonFormater(cell) {
@@ -70,14 +71,14 @@ export default class InvitedTab extends Component {
   }
 
   booleanFormater(cell, row, formatExtraData) {
-    const { onClickFunction, eventId } = formatExtraData;
+    const { onClickFunction, eventId, termId } = formatExtraData;
 
     return (<Icon
       onClick={() =>
         onClickFunction(
           eventId,
           new Map(row),
-          row.groupId,
+          termId,
         )
       }
       type={cell ? 'check' : 'close'}
@@ -92,87 +93,138 @@ export default class InvitedTab extends Component {
       downloadEventAttendeesList,
       changeAttendeeFeedbackStatus,
       changeAttendeePresenceStatus,
+      event,
     } = this.props;
 
     if (!attendeesGroups) {
       return <div></div>;
     }
 
-    const groups = attendeesGroups.map(group =>
-      group.users.map(user => {
+    let eventAttendees = [];
+    attendeesGroups.forEach(group => {
+      eventAttendees = group.users.map(user => {
         const person = user.toObject();
         person.firstName = users.getIn([user.get('id'), 'firstName']);
         person.lastName = users.getIn([user.get('id'), 'lastName']);
         person.signedOutReason = person.signedOutReason.toString('html');
         person.groupId = group.get('id');
         return person;
-      }).toArray()
-    );
+      }).toArray().concat(eventAttendees);
+    });
+
+    const data = [{
+      type: 'event',
+      date: null,
+      termId: null,
+      attendees: eventAttendees,
+    }];
+
+    event.getIn(['terms', 'streams']).forEach(stream => {
+      const streamData = stream.get('attendees').map(attendee => {
+        const person = attendee.toObject();
+        person.firstName = users.getIn([person.id, 'firstName']);
+        person.lastName = users.getIn([person.id, 'lastName']);
+        person.signedOutReason = person.signedOutReason.toString('html');
+        return person;
+      });
+      data.push({
+        type: 'meeting',
+        date: stream.get('eventStartDateTime'),
+        termId: stream.get('id'),
+        attendees: streamData,
+      });
+
+      stream.get('terms').forEach(term => {
+        const termData = term.get('attendees').map(attendee => {
+          const person = attendee.toObject();
+          person.firstName = users.getIn([person.id, 'firstName']);
+          person.lastName = users.getIn([person.id, 'lastName']);
+          person.signedOutReason = person.signedOutReason.toString('html');
+          return person;
+        });
+        data.push({
+          type: 'meeting',
+          date: term.get('eventStartDateTime'),
+          termId: term.get('id'),
+          attendees: termData,
+        });
+      });
+    });
+
 
     const { formatMessage } = this.props.intl;
 
     return (
       <div className="row">
         <div className="col-md-12">
-          {groups.map((group, index) =>
-            <BootstrapTable
-              key={index}
-              data={group}
-              striped
-              hover
-              height="300px"
-              containerStyle={{ height: '320px' }}
-            >
-              <TableHeaderColumn isKey hidden dataField="id" />
-
-              <TableHeaderColumn dataField="firstName" dataSort>
-                {formatMessage(messages.firstName)}
-              </TableHeaderColumn>
-
-              <TableHeaderColumn dataField="lastName" dataSort>
-                {formatMessage(messages.lastName)}
-              </TableHeaderColumn>
-
-              <TableHeaderColumn dataField="signedIn" dataSort dataFormat={this.dateFormater}>
-                {formatMessage(messages.signedIn)}
-              </TableHeaderColumn>
-
-              <TableHeaderColumn dataField="signedOut" dataSort dataFormat={this.dateFormater}>
-                {formatMessage(messages.signedOut)}
-              </TableHeaderColumn>
-
-              <TableHeaderColumn dataField="wontGo" dataSort dataFormat={this.dateFormater}>
-                {formatMessage(messages.wontGo)}
-              </TableHeaderColumn>
-
-              <TableHeaderColumn dataField="signedOutReason" dataSort dataFormat={this.reasonFormater} tdStyle={{ whiteSpace: 'normal' }}>
-                {formatMessage(messages.signedOutReason)}
-              </TableHeaderColumn>
-
-              <TableHeaderColumn
-                dataField="wasPresent"
-                dataSort
-                dataFormat={this.booleanFormater}
-                formatExtraData={{
-                  eventId,
-                  onClickFunction: changeAttendeePresenceStatus,
-                }}
+          {data.map((meetingData, index) =>
+            <div>
+              {meetingData.type === 'event' ?
+                <label>Účasť za celý event</label>
+                :
+                <label>Stretnutie: {format(parse(meetingData.date), 'D.M.YYYY, H:mm')}</label>
+              }
+              <BootstrapTable
+                key={index}
+                data={meetingData.attendees}
+                striped
+                hover
+                height="300px"
+                containerStyle={{ height: '320px' }}
               >
-                {formatMessage(messages.wasPresent)}
-              </TableHeaderColumn>
+                <TableHeaderColumn isKey hidden dataField="id" />
 
-              <TableHeaderColumn
-                dataField="filledFeedback"
-                dataSort
-                dataFormat={this.booleanFormater}
-                formatExtraData={{
-                  eventId,
-                  onClickFunction: changeAttendeeFeedbackStatus,
-                }}
-              >
-                {formatMessage(messages.filledFeedback)}
-              </TableHeaderColumn>
-            </BootstrapTable>
+                <TableHeaderColumn dataField="firstName" dataSort>
+                  {formatMessage(messages.firstName)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="lastName" dataSort>
+                  {formatMessage(messages.lastName)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="signedIn" dataSort dataFormat={this.dateFormater}>
+                  {formatMessage(messages.signedIn)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="signedOut" dataSort dataFormat={this.dateFormater}>
+                  {formatMessage(messages.signedOut)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="wontGo" dataSort dataFormat={this.dateFormater}>
+                  {formatMessage(messages.wontGo)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn dataField="signedOutReason" dataSort dataFormat={this.reasonFormater} tdStyle={{ whiteSpace: 'normal' }}>
+                  {formatMessage(messages.signedOutReason)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  dataField="wasPresent"
+                  dataSort
+                  dataFormat={this.booleanFormater}
+                  formatExtraData={{
+                    eventId,
+                    termId: meetingData.termId,
+                    onClickFunction: changeAttendeePresenceStatus,
+                  }}
+                >
+                  {formatMessage(messages.wasPresent)}
+                </TableHeaderColumn>
+
+                <TableHeaderColumn
+                  dataField="filledFeedback"
+                  dataSort
+                  dataFormat={this.booleanFormater}
+                  formatExtraData={{
+                    eventId,
+                    termId: meetingData.termId,
+                    onClickFunction: changeAttendeeFeedbackStatus,
+                  }}
+                >
+                  {formatMessage(messages.filledFeedback)}
+                </TableHeaderColumn>
+              </BootstrapTable>
+            </div>
           )}
           <div className="form-group">
             <label>Stiahnuť zoznam:</label>

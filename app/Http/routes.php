@@ -98,7 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/nxEvents/{eventId}/settings', 'NxEventsController@updateNxEventSettings');
         
         Route::put('/nxEventTerms/{termId}/attendees/{attendeeId}', 'NxEventAttendeesController@updateTermAttendance');
-        Route::put('/nxEvent/{eventId}/attendees/{attendeeId}', 'NxEventAttendeesController@updateEventAttendance');
+        Route::put('/nxEvents/{eventId}/attendees/{attendeeId}', 'NxEventAttendeesController@updateEventAttendance');
 
         Route::get('/nxEvents/{eventId}/emails', 'NxEventsController@getEmailsStats');
         Route::get('/nxEvents/{eventId}/attendees', 'NxEventsController@getEventAttendees');

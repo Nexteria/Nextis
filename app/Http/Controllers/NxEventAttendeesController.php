@@ -505,7 +505,7 @@ class NxEventAttendeesController extends Controller
     public function updateEventAttendance(Request $request, $eventId, $attendeeId)
     {
         $event = \App\NxEvent::findOrFail($eventId);
-        $attendee = $event->attendees()->where('attendeeId', $attendeeId)->first();
+        $attendee = $event->attendees()->where('nx_event_attendees.id', $attendeeId)->first();
 
         if ($request->has('wasPresent')) {
             $attendee->wasPresent = $request->get('wasPresent');
@@ -514,6 +514,8 @@ class NxEventAttendeesController extends Controller
         if ($request->has('filledFeedback')) {
             $attendee->filledFeedback = $request->get('filledFeedback');
         }
+
+        $attendee->save();
 
         return response()->json($this->nxEventAttendeeTransformer->transform($attendee));
     }
