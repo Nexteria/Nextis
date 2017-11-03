@@ -417,6 +417,10 @@ export function attendeeSignOut(signOut, viewerId) {
 export function changeAttendeePresenceStatus(eventId, user, termId) {
   return ({ fetch }) => ({
     type: CHANGE_ATTENDEE_PRESENCE_STATUS,
+    meta: {
+      eventId,
+      termId,
+    },
     payload: {
       promise: fetch(`/nxEventTerms/${termId}/attendees/${user.get('attendeeTableId')}`, {
         method: 'put',
@@ -425,31 +429,31 @@ export function changeAttendeePresenceStatus(eventId, user, termId) {
         body: JSON.stringify({
           wasPresent: !user.get('wasPresent'),
         }),
-      }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          eventId,
-        })),
+      }).then(response => response.json()),
     },
   });
 }
 
 export function changeAttendeeFeedbackStatus(eventId, user, termId) {
+  let urlBase = `/nxEventTerms/${termId}`;
+  if (!termId) {
+    urlBase = `/nxEvents/${eventId}`;
+  }
   return ({ fetch }) => ({
     type: CHANGE_ATTENDEE_FEEDBACK_STATUS,
+    meta: {
+      eventId,
+      termId,
+    },
     payload: {
-      promise: fetch(`/nxEventTerms/${termId}/attendees/${user.get('attendeeTableId')}`, {
+      promise: fetch(`${urlBase}/attendees/${user.get('attendeeTableId')}`, {
         method: 'put',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           filledFeedback: !user.get('filledFeedback'),
         }),
-      }).then(response => response.json())
-        .then(response => ({
-          ...response,
-          eventId,
-        })),
+      }).then(response => response.json()),
     },
   });
 }

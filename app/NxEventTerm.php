@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Carbon\Carbon;
 
 use App\User;
@@ -12,9 +14,10 @@ use App\Models\QuestionForm\FormDescription;
 use App\Models\QuestionForm\Question;
 use App\Models\QuestionForm\Choice;
 
-class NxEventTerm extends Model
+class NxEventTerm extends Model implements AuditableContract
 {
     use SoftDeletes;
+    use Auditable;
 
     protected $fillable = [
         'hostId',

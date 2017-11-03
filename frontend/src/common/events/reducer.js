@@ -295,34 +295,60 @@ export default function eventsReducer(state = new InitialState, action) {
       ], user => user.set('standIn', parse(response.standIn)));
     }
 
-    case actions.CHANGE_ATTENDEE_FEEDBACK_STATUS: {
+    case actions.CHANGE_ATTENDEE_FEEDBACK_STATUS_SUCCESS:
+    case actions.CHANGE_ATTENDEE_PRESENCE_STATUS_SUCCESS: {
       const response = action.payload;
-      const groupIndex = state.events.get(response.eventId).attendeesGroups
-        .findIndex(group => group.id === response.groupId);
+      const { termId, eventId } = action.meta;
 
-      return state.updateIn([
+      const streams = state.getIn([
         'events',
-        response.eventId,
-        'attendeesGroups',
-        groupIndex,
-        'users',
-        response.id,
-      ], user => user.set('filledFeedback', response.filledFeedback));
-    }
+        eventId,
+        'terms',
+        'streams',
+      ]);
 
-    case actions.CHANGE_ATTENDEE_PRESENCE_STATUS: {
-      const response = action.payload;
-      const groupIndex = state.events.get(response.eventId).attendeesGroups
-        .findIndex(group => group.id === response.groupId);
+      let resultStreams = streams;
 
-      return state.updateIn([
+      streams.some(stream => {
+        if (stream.get('id') == termId) {
+          stream.get('attendees').some((attendee, index) => {
+            if (attendee.attendeeTableId === response.attendeeTableId) {
+              resultStreams = streams.updateIn([stream.get('id'), 'attendees'], attendees => {
+                attendees[index] = response;
+                return attendees;
+              });
+              return true;
+            }
+            return false;
+          });
+          return true;
+        }
+
+        const found = stream.get('terms').some(term => {
+          if (term.get('id') == termId) {
+            term.get('attendees').some((attendee, index) => {
+              if (attendee.attendeeTableId === response.attendeeTableId) {
+                resultStreams = streams.updateIn([stream.get('id'), 'terms', term.get('id'), 'attendees'], attendees => {
+                  attendees[index] = response;
+                  return attendees;
+                });
+                return true;
+              }
+              return false;
+            });
+            return true;
+          }
+          return false;
+        });
+        return found;
+      });
+
+      return state.setIn([
         'events',
-        response.eventId,
-        'attendeesGroups',
-        groupIndex,
-        'users',
-        response.id,
-      ], user => user.set('wasPresent', response.wasPresent));
+        eventId,
+        'terms',
+        'streams',
+      ], resultStreams);
     }
 
     case actions.OPEN_SIGN_OUT_DIALOG: {

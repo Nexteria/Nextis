@@ -502,10 +502,28 @@ class NxEventAttendeesController extends Controller
         return response()->json($this->nxEventTransformer->transformCollection($eventsCollection));
     }
 
-    public function updateAttendance(Request $request, $termId, $attendeeId)
+    public function updateEventAttendance(Request $request, $eventId, $attendeeId)
     {
-        \App\NxEventTerm::findOrFail($termId);
-        $attendee = NxEventAttendee::findOrFail($attendeeId);
+        $event = \App\NxEvent::findOrFail($eventId);
+        $attendee = $event->attendees()->where('attendeeId', $attendeeId)->first();
+
+        if ($request->has('wasPresent')) {
+            $attendee->wasPresent = $request->get('wasPresent');
+        }
+
+        if ($request->has('filledFeedback')) {
+            $attendee->filledFeedback = $request->get('filledFeedback');
+        }
+
+        return response()->json($this->nxEventAttendeeTransformer->transform($attendee));
+    }
+
+    public function updateTermAttendance(Request $request, $termId, $attendeeId)
+    {
+        $term = \App\NxEventTerm::findOrFail($termId);
+        $attendee = $term->attendees()
+                         ->where('attendeeId', $attendeeId)
+                         ->first();
 
         $dataToSync = [];
         if ($request->has('wasPresent')) {
@@ -521,6 +539,10 @@ class NxEventAttendeesController extends Controller
         }
 
         $attendee->terms()->sync($dataToSync, false);
+
+        $attendee = $term->attendees()
+                         ->where('attendeeId', $attendeeId)
+                         ->first();
 
         return response()->json($this->nxEventAttendeeTransformer->transform($attendee));
     }
