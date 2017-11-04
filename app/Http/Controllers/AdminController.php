@@ -10,6 +10,7 @@ use App\Semester;
 use App\Student;
 use App\StudentLevel;
 use App\NxEventAttendee;
+use App\NxEventTerm;
 use App\User;
 use App\Role;
 use App\DefaultSystemSettings;
@@ -844,7 +845,7 @@ class AdminController extends Controller
         })->download('xls');
     }
 
-    public function getStudentsReports($reportType)
+    public function getStudentsReports(Request $request, $reportType)
     {
         $title;
         $attendees;
@@ -854,23 +855,60 @@ class AdminController extends Controller
         switch ($reportType) {
             case 'signed-didnt-come':
                 $title = 'Zoznam prihlásených, ktorí neprišli';
-                $attendees = NxEventAttendee::whereNotNull('signedIn')
-                    ->where(function ($query) {
-                        $query->whereNull('wasPresent')->orWhere('wasPresent', false);
-                    })
-                    ->with(['user', 'attendeesGroup.nxEvent'])
-                    ->get();
+                $events = NxEvent::where('status', 'published')->get();
+                $attendees = collect([]);
+                foreach ($events as $event) {
+                    $terms = $event->terms()->whereRaw('eventEndDateTime < NOW()')->get();
+                    foreach ($terms as $term) {
+                        $termAttendees = $term->attendees()->wherePivot('signedIn', '!=', null)
+                            ->where(function ($query) use ($term) {
+                                $query->whereNull($term->attendees()->getTable().'.wasPresent');
+                                $query->orWhere($term->attendees()->getTable().'.wasPresent', false);
+                            })
+                            ->with(['user'])
+                            ->get()
+                            ->map(function ($attendee) use ($event, $term) {
+                                $attendee['eventName'] = $event->name;
+                                $attendee['eventTerm'] = $term->eventStartDateTime->format('Y-m-d H:i');
+                                return $attendee;
+                            });
+                        $attendees->push($termAttendees);
+                    }
+                }
+
+                $attendees = $attendees->flatten(1);
+
                 $overview_mapper = 'exports.signed_didnt_come_overview';
                 $data_mapper = 'exports.signed_didnt_come_data';
                 break;
 
             case 'late-unsigning':
                 $title = 'Zoznam neskoro sa odhlasujúcich';
-                $attendees = NxEventAttendee::whereNotNull('signedOut')
-                    ->whereHas('attendeesGroup', function ($query) {
-                        $query->whereRaw('signUpDeadlineDateTime < signedOut');
-                    })
-                    ->with(['user', 'attendeesGroup.nxEvent'])->get();
+                $events = NxEvent::where('status', 'published')->get();
+                $attendees = collect([]);
+                foreach ($events as $event) {
+                    $terms = $event->terms()->whereRaw('eventEndDateTime < NOW()')->get();
+                    foreach ($terms as $term) {
+                        $termAttendees = $term->attendees()->wherePivot('signedOut', '!=', null)
+                            ->whereHas('attendeesGroup', function ($query) use ($term, $request) {
+                                $query->whereRaw(
+                                    $term->attendees()->getTable().'.signedOut > "'.
+                                    $term->eventStartDateTime->subHours($request->get('hoursBeforeEvent'))->format('Y-m-d H:i:s').'"'
+                                );
+                            })
+                            ->with(['user'])
+                            ->get()
+                            ->map(function ($attendee) use ($event, $term) {
+                                $attendee['eventName'] = $event->name;
+                                $attendee['eventTerm'] = $term->eventStartDateTime->format('Y-m-d H:i');
+                                return $attendee;
+                            });
+                        $attendees->push($termAttendees);
+                    }
+                }
+
+                $attendees = $attendees->flatten(1);
+
                 $overview_mapper = 'exports.late_unsigning_overview';
                 $data_mapper = 'exports.late_unsigning_data';
                 break;

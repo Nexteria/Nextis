@@ -6,7 +6,7 @@
         <th height="50" align="center" valign="middle">Priezvisko</th>
         <th height="50" align="center" valign="middle">Email</th>
         <th height="50" align="center" valign="middle">Event</th>
-        <th height="50" align="center" valign="middle">Dátum deadline-u na prihlasovanie</th>
+        <th height="50" align="center" valign="middle">Dátum konania eventu</th>
         <th height="50" align="center" valign="middle">Dátum odhlásenia</th>
       </tr>
     </thead>
@@ -17,9 +17,9 @@
                 <td>{{ $attendee['user']['firstName'] }}</td>
                 <td>{{ $attendee['user']['lastName'] }}</td>
                 <td>{{ $attendee['user']['email'] }}</td>
-                <td>{{ $attendee['attendees_group']['nx_event']['name'] }}</td>
-                <td>{{ $attendee['attendees_group']['signUpDeadlineDateTime'] }}</td>
-                <td>{{ $attendee['signedOut'] }}</td>
+                <td>{{ $attendee['eventName'] }}</td>
+                <td>{{ $attendee['eventTerm'] }}</td>
+                <td>{{ $attendee['pivot']['signedOut'] }}</td>
             </tr>
             @endforeach
         @endforeach

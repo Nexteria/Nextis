@@ -16,8 +16,8 @@
                 <td>{{ $attendee['user']['firstName'] }}</td>
                 <td>{{ $attendee['user']['lastName'] }}</td>
                 <td>{{ $attendee['user']['email'] }}</td>
-                <td>{{ $attendee['attendees_group']['nx_event']['name'] }}</td>
-                <td>{{ $attendee['attendees_group']['nx_event']['eventStartDateTime'] }}</td>
+                <td>{{ $attendee['eventName'] }}</td>
+                <td>{{ $attendee['eventTerm'] }}</td>
             </tr>
             @endforeach
         @endforeach

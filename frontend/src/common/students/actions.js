@@ -281,10 +281,15 @@ export function changeStudentActivityPoints(data, selectedStudents) {
 }
 
 export function downloadStudentsReport(data) {
+  let options = '';
+  if (data.reportType === 'late-unsigning') {
+    options = `${options}&hoursBeforeEvent=${data.hoursBeforeEvent}`;
+  }
+
   return ({ fetch }) => ({
     type: EXPORT_STUDENT_PROFILES,
     payload: {
-      promise: fetch(`/admin/students/reports/${data.reportType}`, {
+      promise: fetch(`/admin/students/reports/${data.reportType}?${options}`, {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
