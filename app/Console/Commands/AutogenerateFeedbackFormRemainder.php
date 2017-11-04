@@ -61,18 +61,18 @@ class AutogenerateFeedbackFormRemainder extends Command
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
 
                 
-                $attendees = $term->attendees()->where(function ($query) use ($userIds) {
+                $attendees = $term->attendees()->where(function ($query) use ($userIds, $term) {
                     $query->whereIn('userId', $userIds);
-                    $query->orWhere('filledFeedback', '=', true);
+                    $query->orWhere($term->attendees()->getTable().'.filledFeedback', '=', true);
                 })->get();
                 foreach ($attendees as $attendee) {
                     $attendee->pivot->filledFeedback = true;
                     $attendee->save();
                 }
 
-                $attendees = $term->attendees()->where('wasPresent', '=', true)->where(function ($query) {
-                    $query->where('filledFeedback', '=', false);
-                    $query->orWhereNull('filledFeedback');
+                $attendees = $term->attendees()->wherePivot('wasPresent', '=', true)->where(function ($query) use ($term) {
+                    $query->where($term->attendees()->getTable().'.filledFeedback', '=', false);
+                    $query->orWhere($term->attendees()->getTable().'.filledFeedback', '=', null);
                 })->get();
 
                 foreach ($attendees as $attendee) {

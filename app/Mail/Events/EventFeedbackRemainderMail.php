@@ -26,7 +26,7 @@ class EventFeedbackRemainderMail extends Mailable
      *
      * @return void
      */
-    public function __construct(\App\NxEvent $event, \App\NxEvent $term, \App\User $user, \App\User $manager)
+    public function __construct(\App\NxEvent $event, \App\NxEventTerm $term, \App\User $user, \App\User $manager)
     {
         $this->userFirstName = $user->firstName;
         $this->eventManagerName = $manager->firstName.' '.$manager->lastName;

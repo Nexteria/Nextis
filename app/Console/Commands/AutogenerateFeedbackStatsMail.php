@@ -63,9 +63,9 @@ class AutogenerateFeedbackStatsMail extends Command
 
                 $userIds = \App\User::whereIn('email', $respondentsEmails)->pluck('id');
 
-                $attendees = $term->attendees()->where(function ($query) use ($userIds) {
+                $attendees = $term->attendees()->where(function ($query) use ($userIds, $term) {
                     $query->whereIn('userId', $userIds);
-                    $query->orWhere('filledFeedback', '=', true);
+                    $query->orWhere($term->attendees()->getTable().'.filledFeedback', '=', true);
                 })->get();
 
                 foreach ($attendees as $attendee) {
@@ -73,11 +73,11 @@ class AutogenerateFeedbackStatsMail extends Command
                     $attendee->save();
                 }
 
-                $actualFilledCount += $term->attendees()->where('wasPresent', '=', true)
-                                                            ->where('filledFeedback', '=', true)
-                                                            ->count();
+                $actualFilledCount += $term->attendees()->wherePivot('wasPresent', '=', true)
+                                                        ->wherePivot('filledFeedback', '=', true)
+                                                        ->count();
 
-                $expectedFilledCount += $term->attendees()->where('wasPresent', '=', true)->count();
+                $expectedFilledCount += $term->attendees()->wherePivot('wasPresent', '=', true)->count();
 
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
                 $email = new \App\Mail\Events\EventFeedbackStatsMail($event, $term, $expectedFilledCount, $actualFilledCount, $manager);
