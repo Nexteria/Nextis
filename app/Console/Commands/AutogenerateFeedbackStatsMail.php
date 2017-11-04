@@ -69,7 +69,7 @@ class AutogenerateFeedbackStatsMail extends Command
                 })->get();
 
                 foreach ($attendees as $attendee) {
-                    $attendee->filledFeedback = true;
+                    $attendee->pivot->filledFeedback = true;
                     $attendee->save();
                 }
 

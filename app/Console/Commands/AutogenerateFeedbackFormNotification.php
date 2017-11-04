@@ -45,7 +45,7 @@ class AutogenerateFeedbackFormNotification extends Command
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
 
                 foreach ($term->attendees as $attendee) {
-                    if ($attendee->wasPresent) {
+                    if ($attendee->pivot->wasPresent) {
                         $email = new \App\Mail\Events\EventFeedbackMail($event, $term, $attendee->user, $manager);
                         \Mail::send($email);
                     }

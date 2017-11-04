@@ -66,7 +66,7 @@ class AutogenerateFeedbackFormRemainder extends Command
                     $query->orWhere('filledFeedback', '=', true);
                 })->get();
                 foreach ($attendees as $attendee) {
-                    $attendee->filledFeedback = true;
+                    $attendee->pivot->filledFeedback = true;
                     $attendee->save();
                 }
 
