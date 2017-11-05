@@ -773,7 +773,7 @@ export class EditEvent extends Component {
                           />
 
                           <Field
-                            name="curriculumLevel"
+                            name="curriculumLevelId"
                             component={this.renderSelect}
                             label={`${formatMessage(messages.curriculumLevel)}`}
                           >
