@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import diacritics from 'diacritics';
 import { browserHistory } from 'react-router';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import UserProfileDialog from './UserProfileDialog';
@@ -50,10 +51,11 @@ class ContactList extends Component {
     fields: PropTypes.object,
     user: PropTypes.number,
     intl: PropTypes.object.isRequired,
+    studentLevels: PropTypes.object.isRequired,
   };
 
   render() {
-    const { users, rolesList, fields, user } = this.props;
+    const { users, rolesList, studentLevels, fields, user } = this.props;
     const { formatMessage } = this.props.intl;
 
     let students = users;
@@ -68,12 +70,15 @@ class ContactList extends Component {
       }
     }
 
+    const phoneUtil = PhoneNumberUtil.getInstance();
+
     const contactsData = students.valueSeq().map(student => ({
       id: student.id,
       firstName: student.firstName,
       lastName: student.lastName,
       email: student.email,
-      phone: student.phone,
+      phone: phoneUtil.format(phoneUtil.parse(student.phone), PhoneNumberFormat.INTERNATIONAL),
+      level: studentLevels.getIn([student.studentLevelId, 'name']),
     })).toArray();
 
     return (
@@ -135,6 +140,10 @@ class ContactList extends Component {
                       {formatMessage(messages.email)}
                     </TableHeaderColumn>
 
+                    <TableHeaderColumn dataField="level" dataSort>
+                      Level
+                    </TableHeaderColumn>
+
                     <TableHeaderColumn dataField="phone" dataSort>
                       {formatMessage(messages.phone)}
                     </TableHeaderColumn>
@@ -164,4 +173,5 @@ export default connect(state => ({
   users: state.users.users,
   user: state.users.user,
   rolesList: state.users.rolesList,
+  studentLevels: state.users.studentLevels,
 }), actions)(ContactList);
