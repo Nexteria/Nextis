@@ -127,7 +127,7 @@ class ContactList extends Component {
                       {formatMessage(messages.firstName)}
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="lastName">
+                    <TableHeaderColumn dataField="lastName" dataSort>
                       {formatMessage(messages.lastName)}
                     </TableHeaderColumn>
 
