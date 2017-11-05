@@ -23,6 +23,7 @@ class NxEvent extends Model implements AuditableContract
     protected $fillable = [
         'name',
         'activityPoints',
+        'curriculumLevelId',
         'mandatoryParticipation',
         'eventType',
         'status',

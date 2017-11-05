@@ -280,10 +280,14 @@ export function changeStudentActivityPoints(data, selectedStudents) {
   });
 }
 
-export function downloadStudentsReport(data) {
+export function downloadStudentsReport(data, selectedStudents) {
   let options = '';
   if (data.reportType === 'late-unsigning') {
     options = `${options}&hoursBeforeEvent=${data.hoursBeforeEvent}`;
+  }
+
+  if (data.reportType === 'student-semesters-points') {
+    options = `${options}&studentId=${selectedStudents.first()}`;
   }
 
   return ({ fetch }) => ({

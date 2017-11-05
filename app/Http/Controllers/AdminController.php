@@ -17,6 +17,7 @@ use App\DefaultSystemSettings;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Comment;
+use App\Models\Report;
 use App\Models\QuestionForm\Form;
 use App\Models\QuestionForm\Answer;
 use App\Models\QuestionForm\Question;
@@ -847,80 +848,23 @@ class AdminController extends Controller
 
     public function getStudentsReports(Request $request, $reportType)
     {
-        $title;
-        $attendees;
-        $overview_mapper;
-        $data_mapper;
-
+        $report = null;
         switch ($reportType) {
             case 'signed-didnt-come':
-                $title = 'Zoznam prihlásených, ktorí neprišli';
-                $events = NxEvent::where('status', 'published')->get();
-                $attendees = collect([]);
-                foreach ($events as $event) {
-                    $terms = $event->terms()->whereRaw('eventEndDateTime < NOW()')->get();
-                    foreach ($terms as $term) {
-                        $termAttendees = $term->attendees()->wherePivot('signedIn', '!=', null)
-                            ->where(function ($query) use ($term) {
-                                $query->whereNull($term->attendees()->getTable().'.wasPresent');
-                                $query->orWhere($term->attendees()->getTable().'.wasPresent', false);
-                            })
-                            ->with(['user'])
-                            ->get()
-                            ->map(function ($attendee) use ($event, $term) {
-                                $attendee['eventName'] = $event->name;
-                                $attendee['eventTerm'] = $term->eventStartDateTime->format('Y-m-d H:i');
-                                return $attendee;
-                            });
-                        $attendees->push($termAttendees);
-                    }
-                }
-
-                $attendees = $attendees->flatten(1);
-
-                $overview_mapper = 'exports.signed_didnt_come_overview';
-                $data_mapper = 'exports.signed_didnt_come_data';
+                $report = Report::getSignedDidnComeStudentsExcel();
                 break;
 
             case 'late-unsigning':
-                $title = 'Zoznam neskoro sa odhlasujúcich';
-                $events = NxEvent::where('status', 'published')->get();
-                $attendees = collect([]);
-                foreach ($events as $event) {
-                    $terms = $event->terms()->whereRaw('eventEndDateTime < NOW()')->get();
-                    foreach ($terms as $term) {
-                        $termAttendees = $term->attendees()->wherePivot('signedOut', '!=', null)
-                            ->whereHas('attendeesGroup', function ($query) use ($term, $request) {
-                                $query->whereRaw(
-                                    $term->attendees()->getTable().'.signedOut > "'.
-                                    $term->eventStartDateTime->subHours($request->get('hoursBeforeEvent'))->format('Y-m-d H:i:s').'"'
-                                );
-                            })
-                            ->with(['user'])
-                            ->get()
-                            ->map(function ($attendee) use ($event, $term) {
-                                $attendee['eventName'] = $event->name;
-                                $attendee['eventTerm'] = $term->eventStartDateTime->format('Y-m-d H:i');
-                                return $attendee;
-                            });
-                        $attendees->push($termAttendees);
-                    }
-                }
-
-                $attendees = $attendees->flatten(1);
-
-                $overview_mapper = 'exports.late_unsigning_overview';
-                $data_mapper = 'exports.late_unsigning_data';
+                $hoursBeforeEvent = $request->get('hoursBeforeEvent');
+                $report = Report::getLateUnsigningStudentsExcel($hoursBeforeEvent);
+                break;
+            
+            case 'student-semesters-points':
+                $studentId = $request->get('studentId');
+                $report = Report::getStudentSemesterPointsExcel($studentId);
                 break;
         }
 
-        return \Excel::create($title, function ($excel) use ($attendees, $overview_mapper, $data_mapper) {
-            $excel->sheet('Študenti', function ($sheet) use ($attendees, $overview_mapper) {
-                $sheet->loadView($overview_mapper, ['attendees' => $attendees]);
-            });
-            $excel->sheet('Dáta', function ($sheet) use ($attendees, $data_mapper) {
-                $sheet->loadView($data_mapper, ['attendees' => $attendees]);
-            });
-        })->download('xls');
+        return $report->download('xls');
     }
 }

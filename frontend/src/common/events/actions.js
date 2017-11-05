@@ -186,11 +186,10 @@ export function saveEvent(fields) {
     shortDescription: fields.shortDescription.toString('html'),
   };
 
-  if (fields.curriculumLevelId) {
-    data.curriculumLevelId = fields.curriculumLevelId;
-  } else {
-    delete data['curriculumLevelId'];
+  if (fields.curriculumLevel) {
+    data.curriculumLevelId = fields.curriculumLevel;
   }
+  delete data['curriculumLevel'];
 
   return ({ fetch }) => ({
     type: 'SAVE_EVENT',
