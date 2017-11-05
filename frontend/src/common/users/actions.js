@@ -1,5 +1,8 @@
 import { browserHistory } from 'react-router';
 import format from 'date-fns/format';
+import download from 'downloadjs';
+
+export const DOWNLOAD_CONTACTS = 'DOWNLOAD_CONTACTS';
 
 export const LOAD_VIEWER_START = 'LOAD_VIEWER_START';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
@@ -402,4 +405,16 @@ export function closeUserDetail() {
   };
 }
 
-
+export function downloadContacts() {
+  return ({ fetch }) => ({
+    type: DOWNLOAD_CONTACTS,
+    payload: {
+      promise: fetch('/contacts', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
+      }).then(response => response.blob())
+      .then(blob => download(blob, 'kontakty.vcf')),
+    },
+  });
+}

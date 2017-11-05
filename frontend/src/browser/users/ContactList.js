@@ -52,10 +52,11 @@ class ContactList extends Component {
     user: PropTypes.number,
     intl: PropTypes.object.isRequired,
     studentLevels: PropTypes.object.isRequired,
+    downloadContacts: PropTypes.func.isRequired,
   };
 
   render() {
-    const { users, rolesList, studentLevels, fields, user } = this.props;
+    const { users, rolesList, downloadContacts, studentLevels, fields, user } = this.props;
     const { formatMessage } = this.props.intl;
 
     let students = users;
@@ -153,6 +154,16 @@ class ContactList extends Component {
               </div>
             </div>
           </div>
+          <div className="col-md-12 text-right">
+            <button
+              type="button"
+              className="btn btn-xs btn-info"
+              onClick={downloadContacts}
+            >
+              Stiahnuť vo formáte vCard
+            </button>
+          </div>
+          <div className="clearfix" />
         </section>
         {user ? <UserProfileDialog user={users.get(user)} /> : null}
       </div>

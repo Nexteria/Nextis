@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Role as Role;
-use App\Image as Image;
-use App\User as User;
-use App\Payment as Payment;
-use App\UserPaymentsSettings as UserPaymentsSettings;
+use App\Role;
+use App\Image;
+use App\User;
+use App\Payment;
+use App\UserPaymentsSettings;
+use App\Student;
 
 class UsersController extends Controller
 {
@@ -300,5 +301,12 @@ class UsersController extends Controller
         }
 
         return response()->json([], 200);
+    }
+
+    public function getContacts()
+    {
+        $students = Student::where('status', 'active')->get();
+
+        return view('exports.student_contacts')->with(['students' => $students]);
     }
 }
