@@ -368,7 +368,7 @@ class NxEvent extends Model implements AuditableContract
         return $settings;
     }
 
-    public function canSignInAttendee($attendee, $termId)
+    public function canSignInAttendee($attendee, $termId = null)
     {
         if (!$attendee->attendeesGroup) {
             return [
@@ -413,24 +413,26 @@ class NxEvent extends Model implements AuditableContract
             ];
         }
 
-        $term = $this->terms()->where('id', $termId)->first();
-        $signedIn = $term->attendees()->wherePivot('signedIn', '!=', null)->count();
+        if ($termId) {
+            $term = $this->terms()->where('id', $termId)->first();
+            $signedIn = $term->attendees()->wherePivot('signedIn', '!=', null)->count();
 
-        if ($signedIn >= $term->maxCapacity) {
-            return [
-                'message' => 'Kapacita pre daný termín je už vyčerpaná',
-                'codename' => 'term_max_capacity_reached',
-                'canSignIn' => false,
-            ];
-        }
+            if ($signedIn >= $term->maxCapacity) {
+                return [
+                    'message' => 'Kapacita pre daný termín je už vyčerpaná',
+                    'codename' => 'term_max_capacity_reached',
+                    'canSignIn' => false,
+                ];
+            }
 
-        $signedIn = $term->attendees()->where('attendeeId', $attendee->id)->wherePivot('signedIn', '!=', null)->first();
-        if ($signedIn) {
-            return [
-                'message' => 'Už si raz prihlásený!',
-                'codename' => 'already_signed_in',
-                'canSignIn' => false,
-            ];
+            $signedIn = $term->attendees()->where('attendeeId', $attendee->id)->wherePivot('signedIn', '!=', null)->first();
+            if ($signedIn) {
+                return [
+                    'message' => 'Už si raz prihlásený!',
+                    'codename' => 'already_signed_in',
+                    'canSignIn' => false,
+                ];
+            }
         }
 
         return [
