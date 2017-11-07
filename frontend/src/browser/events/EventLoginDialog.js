@@ -188,6 +188,13 @@ export class EventLoginDialog extends Component {
 
 EventLoginDialog = injectIntl(EventLoginDialog);
 
+export const EventPublicLoginDialog = connect((state) => ({
+  viewer: state.users.viewer,
+  users: state.users.users,
+  choosedEvents: state.events.getIn(['signInProcess', 'events']),
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
+}), { ...actions })(EventLoginDialog);
+
 export default connect((state) => ({
   events: state.events.events,
   viewer: state.users.viewer,
