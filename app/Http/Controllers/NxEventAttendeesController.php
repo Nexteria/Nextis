@@ -111,6 +111,7 @@ class NxEventAttendeesController extends Controller
                 }
             }
 
+            $term = $group->nxEvent->terms()->first();
             $attendeesToSignIn = [$attendee];
             foreach ($attendeesToSignIn as $eventAttendee) {
                 $eventAttendee->signedIn = Carbon::now();
@@ -119,6 +120,16 @@ class NxEventAttendeesController extends Controller
                 $eventAttendee->wontGo = null;
                 $eventAttendee->signedOutReason = '';
                 $eventAttendee->save();
+
+                $dataToSync = [];
+                $dataToSync[$term->id] = [
+                    'signedIn' => Carbon::now(),
+                    'signedOut' => null,
+                    'wontGo' => null,
+                    'standIn' => null,
+                    'signedOutReason' => '',
+                ];
+                $eventAttendee->terms()->sync($dataToSync, false);
             }
 
             return response()->json([
