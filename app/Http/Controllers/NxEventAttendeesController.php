@@ -138,6 +138,8 @@ class NxEventAttendeesController extends Controller
             return response()->json([], 404);
         }
 
+        \Auth::loginUsingId($attendee->user->id);
+
         return response()->json([
             'isSigned' => !is_null($attendee->signedIn),
             'isSignedOut' => !is_null($attendee->signedOut),
