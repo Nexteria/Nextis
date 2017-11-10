@@ -16,7 +16,7 @@ class NxEventTransformer extends Transformer
 
         $signedIn = false;
         $attendeeTransformer = new NxEventAttendeeTransformer();
-        $terms = $terms->map(function ($term) use ($event, $attendeeTransformer) {
+        $terms = $terms->map(function ($term) use ($event, $attendeeTransformer, $attendee) {
             $term['canViewerSignIn'] = false;
             $attedeeModel = \App\NxEventTerm::find($term['id'])
                                                 ->attendees()
@@ -30,13 +30,19 @@ class NxEventTransformer extends Transformer
                 if ($term['attendee']['signedIn']) {
                     $signedIn = true;
                 }
-
-                $term['canViewerSignIn'] = $canViewerSignIn['canSignIn'];
-                $term['canViewerSignInMessageCodename'] = $canViewerSignIn['codename'];
             } else {
-                $term['canViewerSignIn'] = true;
-                $term['canViewerSignInMessageCodename'] = '';
+                if ($attendee) {
+                    $canViewerSignIn = $event->canSignInAttendee($attendee, $term['id']);
+                } else {
+                    $canViewerSignIn = [
+                        'canSignIn' => false,
+                        'codename' => 'not_invited'
+                    ];
+                }
             }
+
+            $term['canViewerSignIn'] = $canViewerSignIn['canSignIn'];
+            $term['canViewerSignInMessageCodename'] = $canViewerSignIn['codename'];
 
             return $term;
         });
