@@ -69,8 +69,7 @@ class AutogenerateFeedbackStatsMail extends Command
                 })->get();
 
                 foreach ($attendees as $attendee) {
-                    $attendee->pivot->filledFeedback = true;
-                    $attendee->save();
+                    $term->attendees()->updateExistingPivot($attendee->id, ['filledFeedback' => true]);
                 }
 
                 $actualFilledCount += $term->attendees()->wherePivot('wasPresent', '=', true)
