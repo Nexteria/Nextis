@@ -75,7 +75,7 @@ class App extends Component {
     loadViewer();
     loadUserGroups();
     loadRolesList();
-    loadEventList({ status: 'all', semesterId: 'all' });
+    loadEventList({ status: 'all', dateFrom: '2017-01-01', dateTo: '2017-12-31' });
     loadStudentLevelsList();
     loadLocationsList();
     loadConstants();
