@@ -414,7 +414,7 @@ export function downloadContacts() {
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
       }).then(response => response.blob())
-      .then(blob => download(blob, 'kontakty.vcf')),
+      .then(blob => download(blob, 'kontakty.vcf', 'text/vcard')),
     },
   });
 }

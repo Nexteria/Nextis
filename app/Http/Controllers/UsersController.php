@@ -307,6 +307,8 @@ class UsersController extends Controller
     {
         $students = Student::where('status', 'active')->get();
 
-        return view('exports.student_contacts')->with(['students' => $students]);
+        return response()
+            ->view('exports.student_contacts', ['students' => $students], 200)
+            ->header('Content-Type', 'text/vcard');
     }
 }
