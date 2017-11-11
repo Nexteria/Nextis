@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\NxEvent as NxEvent;
 use App\UserGroup as UserGroup;
 use App\User as User;
+use Carbon\Carbon;
 use App\DefaultSystemSettings;
 use App\NxEventsSettings;
 use Illuminate\Support\Str;
@@ -66,6 +67,22 @@ class NxEventsController extends Controller
 
     public function getNxEvents(Request $request)
     {
+        $validator = \Validator::make($request->all(), [
+            'semesterId' => 'numeric',
+            'status' => 'string',
+            'dateFrom' => 'date',
+            'dateTo' => 'date|after:dateFrom',
+          ]);
+  
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
         $filters = collect([
             'semesterId' => DefaultSystemSettings::get('activeSemesterId'),
             'status' => 'published',
@@ -87,6 +104,18 @@ class NxEventsController extends Controller
         })->each(function ($item, $key) use ($query) {
             $query = $query->where($key, $item);
         });
+
+        if ($request->has('dateFrom')) {
+            $query = $query->whereHas('terms', function ($termsQuery) use ($request) {
+                $termsQuery->where('eventStartDateTime', '>=', $request->get('dateFrom'));
+            });
+        }
+
+        if ($request->has('dateTo')) {
+            $query = $query->whereHas('terms', function ($termsQuery) use ($request) {
+                $termsQuery->where('eventStartDateTime', '<=', $request->get('dateTo'));
+            });
+        }
         
         $events = $query
                         ->with('lectors')
