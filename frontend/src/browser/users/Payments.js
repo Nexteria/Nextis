@@ -195,7 +195,6 @@ export default connect(state => ({
   viewer: state.users.viewer,
   viewerRolesData: state.users.viewerRolesData,
   userPayments: state.payments.userPayments,
-  users: state.users.users,
   studentLevels: state.users.studentLevels,
   rolesList: state.users.rolesList,
 }), actions)(Payments);

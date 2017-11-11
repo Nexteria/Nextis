@@ -61,15 +61,23 @@ export class UserProfileDialog extends Component {
     users: PropTypes.object.isRequired,
     closeUserDetail: PropTypes.func.isRequired,
     studentLevels: PropTypes.object,
+    loadUser: PropTypes.func.isRequired,
     params: PropTypes.object
+  }
+
+  componentWillMount() {
+    const { users, params, loadUser } = this.props
+    if (!(users && users.get(params.userId))) {
+      loadUser(params.userId);
+    }
   }
 
   render() {
     const { users, closeUserDetail, studentLevels, params } = this.props;
 
-    const user = users.get(parseInt(params.userId));
+    const user = users && users.get(parseInt(params.userId));
 
-    return (
+    return user && (
       <Modal
         show
         bsSize="small"

@@ -10,6 +10,7 @@ import { browserHistory } from 'react-router';
 
 
 import * as actions from '../../common/events/actions';
+import * as usersActions from '../../common/users/actions';
 import { fields } from '../../common/lib/redux-fields/index';
 import './EventAttendanceDialog.scss';
 
@@ -56,11 +57,18 @@ export class EventAttendanceDialog extends Component {
 
   static propTypes = {
     events: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
+    users: PropTypes.object,
     params: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
+    loadUsers: PropTypes.func.isRequired,
+    changeAttendeeFeedbackStatus: PropTypes.func.isRequired,
+    hasPermission: PropTypes.func.isRequired,
+  }
+
+  componentWillMount() {
+    this.props.loadUsers();
   }
 
   getUsersTable(usersList, event, termId, type) {
@@ -84,16 +92,19 @@ export class EventAttendanceDialog extends Component {
                 <th><FormattedMessage {...messages.wasPresent} /></th>
                 {hasPermission('set_filled_feedback_flag') ?
                   <th><FormattedMessage {...messages.filledFeedback} /></th>
-                  : ''
+                  : null
                 }
               </tr>
               {usersList ?
-                usersList.map(user =>
+                usersList.valueSeq().map(user =>
                   <tr key={user.get('id')}>
-                    <td>{`${users.get(user.get('id')).firstName} ${users.get(user.get('id')).lastName} (${users.get(user.get('id')).username})`}</td>
+                    <td>
+                      {`${users.get(user.get('id')).firstName} ${users.get(user.get('id')).lastName}
+                      (${users.get(user.get('id')).username})`}
+                    </td>
                     {type === 'notAttending' && hasPermission('set_filled_feedback_flag') ?
                       <td>
-                        <span dangerouslySetInnerHTML={{ __html: user.get('signedOutReason') }}></span>
+                        <span dangerouslySetInnerHTML={{ __html: user.get('signedOutReason') }} />
                       </td>
                       : null
                     }
@@ -128,7 +139,7 @@ export class EventAttendanceDialog extends Component {
                           <i className="fa fa-times"></i>
                         }
                       </td>
-                      : ''
+                      : null
                     }
                   </tr>
                 )
@@ -150,6 +161,10 @@ export class EventAttendanceDialog extends Component {
     const { users, events, params } = this.props;
     const { formatMessage } = this.props.intl;
 
+    if (!users) {
+      return null;
+    }
+
     const eventId = parseInt(params.eventId, 10);
     const termId = parseInt(params.termId, 10);
     const event = events.get(eventId);
@@ -169,7 +184,9 @@ export class EventAttendanceDialog extends Component {
 
     const attending = attendees.filter(user => user.get('signedIn'));
     const notAttending = attendees.filter(user => user.get('wontGo') || user.get('signedOut'));
-    const undecided = attendees.filter(user => !user.get('wontGo') && !user.get('signedOut') && !user.get('signedIn'));
+    const undecided = attendees.filter(user =>
+      !user.get('wontGo') && !user.get('signedOut') && !user.get('signedIn')
+    );
 
     return (
       <Modal
@@ -223,4 +240,4 @@ export default connect((state) => ({
   events: state.events.events,
   users: state.users.users,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), actions)(EventAttendanceDialog);
+}), { ...actions, ...usersActions })(EventAttendanceDialog);

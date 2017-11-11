@@ -41,7 +41,7 @@ class App extends Component {
     location: locationShape,
     viewer: PropTypes.object,
     users: PropTypes.object,
-    loadUsers: PropTypes.func.isRequired,
+    loadViewer: PropTypes.func.isRequired,
     loadUserGroups: PropTypes.func.isRequired,
     loadRolesList: PropTypes.func.isRequired,
     loadStudentLevelsList: PropTypes.func.isRequired,
@@ -59,7 +59,7 @@ class App extends Component {
 
   componentWillMount() {
     const {
-      loadUsers,
+      loadViewer,
       currentLocale,
       loadLocationsList,
       loadEventList,
@@ -71,7 +71,7 @@ class App extends Component {
       toggleSidebar,
     } = this.props;
 
-    loadUsers();
+    loadViewer();
     loadUserGroups();
     loadRolesList();
     loadEventList({ status: 'all', semesterId: 'all' });
@@ -102,11 +102,10 @@ class App extends Component {
       location,
       events,
       viewer,
-      users,
       toggleSidebar,
     } = this.props;
 
-    if (!viewer || users === null || events === null || !rolesList) {
+    if (!viewer || !rolesList || events === null) {
       return <div></div>;
     }
 
@@ -160,7 +159,6 @@ export default connect(state => ({
   currentLocale: state.intl.currentLocale,
   viewer: state.users.viewer,
   events: state.events.events,
-  users: state.users.users,
   loading: state.app.loading,
   isMobileSidebarOpen: state.app.isMobileSidebarOpen,
   rolesList: state.users.rolesList,

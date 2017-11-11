@@ -66,7 +66,6 @@ class EventsPage extends Component {
   static propTypes = {
     events: PropTypes.object,
     viewer: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
     eventDetailsId: PropTypes.number,
     toggleEventDetails: PropTypes.func.isRequired,
     openEventDetailsDialog: PropTypes.func.isRequired,
@@ -90,7 +89,7 @@ class EventsPage extends Component {
     eventsFilter: PropTypes.string,
     change: PropTypes.func.isRequired,
     toggleEventTerm: PropTypes.func.isRequired,
-    chooseStreamEventId: PropTypes.number.isRequired,
+    chooseStreamEventId: PropTypes.number,
   };
 
   render() {
@@ -100,7 +99,6 @@ class EventsPage extends Component {
       locationDetailsId,
       viewer,
       signOut,
-      users,
       params,
       eventDetailsId,
       visiblePastEvents,
@@ -196,7 +194,6 @@ class EventsPage extends Component {
                       <Event
                         hide={false}
                         key={event.id}
-                        users={users}
                         event={event}
                         events={events}
                         viewer={viewer}
@@ -373,7 +370,6 @@ export default connect(state => ({
   eventDetailsId: state.events.eventDetailsId,
   viewer: state.users.viewer,
   signOut: state.events.signOut,
-  users: state.users.users,
   locationDetailsId: state.events.locationDetailsId,
   nxLocations: state.nxLocations.locations,
   initialValues: { eventsFilter: 'onlyForMe' },

@@ -10,6 +10,7 @@ import { browserHistory } from 'react-router';
 
 
 import * as actions from '../../common/events/actions';
+import * as usersActions from '../../common/users/actions';
 import './EventEmailsDialog.scss';
 
 const messages = defineMessages({
@@ -46,8 +47,12 @@ export class EventEmailsDialog extends Component {
     users: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
+    loadUsers: PropTypes.func.isRequired,
   }
 
+  componentWillMount() {
+    this.props.loadUsers();
+  }
 
   render() {
     const { users, events, params } = this.props;
@@ -137,4 +142,4 @@ EventEmailsDialog = injectIntl(EventEmailsDialog);
 export default connect((state) => ({
   events: state.events.events,
   users: state.users.users,
-}), actions)(EventEmailsDialog);
+}), { ...actions, ...usersActions })(EventEmailsDialog);

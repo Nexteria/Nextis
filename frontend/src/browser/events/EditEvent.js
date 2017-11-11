@@ -18,6 +18,7 @@ import FormBuilder, { createInitialState } from '../components/Forms/Builder/For
 import * as fieldsActions from '../../common/lib/redux-fields/actions';
 import * as attendeesGroupActions from '../../common/attendeesGroup/actions';
 import * as eventActions from '../../common/events/actions';
+import * as usersActions from '../../common/users/actions';
 import './EditEvent.scss';
 import Event from '../../common/events/models/Event';
 import AttendeesGroupsDialog from './attendeesGroups/AttendeesGroupsDialog';
@@ -289,6 +290,7 @@ export class EditEvent extends Component {
     changeAttendeePresenceStatus: PropTypes.func.isRequired,
     downloadEventAttendeesList: PropTypes.func.isRequired,
     checkFeedbackFormLink: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -300,6 +302,7 @@ export class EditEvent extends Component {
       event,
       params,
       loadEventCustomSettings,
+      loadUsers,
     } = this.props;
 
     const eventId = params ? parseInt(params.eventId, 10) : null;
@@ -314,6 +317,7 @@ export class EditEvent extends Component {
     setField(['editEvent'], activeEvent ? activeEvent : newEvent);
     initialize(activeEvent ? activeEvent.toObject() : newEvent.toObject());
     loadEventCustomSettings(eventId);
+    loadUsers();
   }
 
   componentWillUnmount() {
@@ -670,7 +674,7 @@ export class EditEvent extends Component {
 
     const { formatMessage } = this.props.intl;
 
-    if (!fields.description.value || !rolesList) {
+    if (!fields.description.value || !rolesList || !users) {
       return <div></div>;
     }
 
@@ -933,4 +937,4 @@ export default connect((state) => ({
   locations: state.nxLocations.locations,
   eventSettings: state.events.eventSettings,
   actualEventId: selector(state, 'id'),
-}), { ...fieldsActions, ...attendeesGroupActions, ...eventActions })(EditEvent);
+}), { ...fieldsActions, ...attendeesGroupActions, ...eventActions, ...usersActions })(EditEvent);

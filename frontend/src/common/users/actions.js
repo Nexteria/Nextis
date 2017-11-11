@@ -14,6 +14,10 @@ export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const LOAD_VIEWER_ERROR = 'LOAD_VIEWER_ERROR';
 export const LOAD_VIEWER = 'LOAD_VIEWER';
 
+export const LOAD_USER = 'LOAD_USER';
+export const LOAD_USER_START = 'LOAD_USER_START';
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+
 export const LOAD_ROLES_LIST = 'LOAD_ROLES_LIST';
 export const LOAD_ROLES_LIST_START = 'LOAD_ROLES_LIST_START';
 export const LOAD_ROLES_LIST_SUCCESS = 'LOAD_ROLES_LIST_SUCCESS';
@@ -36,6 +40,7 @@ export const LOAD_STUDENT_LEVELS_LIST_START = 'LOAD_STUDENT_LEVELS_LIST_START';
 export const LOAD_USERS_LIST = 'LOAD_USERS_LIST';
 export const LOAD_USERS_LIST_START = 'LOAD_USERS_LIST_ERROR';
 export const LOAD_USERS_LIST_SUCCESS = 'LOAD_USERS_LIST_SUCCESS';
+export const LOAD_USERS_LIST_DEPRECATED = 'LOAD_USERS_LIST_DEPRECATED';
 
 export const SAVE_USER = 'SAVE_USER';
 export const SAVE_USER_SUCCESS = 'SAVE_USER_SUCCESS';
@@ -83,6 +88,17 @@ export function loadViewer() {
     type: 'LOAD_VIEWER',
     payload: {
       promise: fetch('/users/me', {
+        credentials: 'same-origin',
+      }).then(response => response.json()),
+    }
+  });
+}
+
+export function loadUser(id) {
+  return ({ fetch }) => ({
+    type: LOAD_USER,
+    payload: {
+      promise: fetch(`/users/${id}`, {
         credentials: 'same-origin',
       }).then(response => response.json()),
     }
@@ -322,14 +338,20 @@ export function loadStudentLevelsList() {
 }
 
 export function loadUsers() {
-  return ({ fetch }) => ({
-    type: LOAD_USERS_LIST,
-    payload: {
-      promise: fetch('/users', {
-        credentials: 'same-origin',
-      }).then(response => response.json()),
-    },
-  });
+  return ({ fetch, getState }) => (
+    getState().users.allUsersLoaded
+      ? ({
+        type: LOAD_USERS_LIST_DEPRECATED,
+      })
+      : ({
+        type: LOAD_USERS_LIST,
+        payload: {
+          promise: fetch('/users', {
+            credentials: 'same-origin',
+          }).then(response => response.json()),
+        },
+      })
+  );
 }
 
 export function loadUserGroups() {

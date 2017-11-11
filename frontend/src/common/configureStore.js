@@ -25,7 +25,11 @@ export default function configureStore(options) {
     createStore(
       reducer,
       initialState,
-      compose(applyMiddleware(...middleware), window.devToolsExtension())
+      compose(
+        applyMiddleware(...middleware),
+        // window.devToolsExtension(),
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+      )
     )
     :
     createStore(

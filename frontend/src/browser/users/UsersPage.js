@@ -64,8 +64,13 @@ class UsersPage extends Component {
     fields: PropTypes.object.isRequired,
     removeUser: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
+
+  componentWillMount() {
+    this.props.loadUsers();
+  }
 
   editUser(userId) {
     browserHistory.push(`/admin/users/${userId}`);

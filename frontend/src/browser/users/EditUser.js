@@ -313,16 +313,18 @@ export class EditUser extends Component {
     roles: PropTypes.object,
     userStates: PropTypes.object.isRequired,
     locale: PropTypes.string.isRequired,
+    loadUser: PropTypes.func.isRequired,
   }
 
-  componentWillMount() {
-    const { setField, initialize, users, user, params } = this.props;
+  async componentWillMount() {
+    const { setField, initialize, user, params, loadUser } = this.props;
 
     const userId = params ? params.userId : null;
     let activeUser = user;
 
     if (userId) {
-      activeUser = users.get(parseInt(userId, 10));
+      await loadUser(parseInt(userId, 10));
+      activeUser = this.props.users.get(parseInt(userId, 10));
     }
 
     setField(['editUser'], activeUser || new User());

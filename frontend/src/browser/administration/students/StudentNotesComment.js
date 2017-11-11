@@ -18,20 +18,19 @@ export default class StudentNotesComment extends Component {
 
   static propTypes = {
     comment: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
     deleteComment: PropTypes.func.isRequired,
   };
 
   render() {
-    const { comment, users, deleteComment } = this.props;
+    const { comment, user, deleteComment } = this.props;
 
     return (
       <div className="box-comment">
         <Avatar />
         <div className="comment-text">
           <span className="username">
-            {users.getIn([comment.get('creatorId'), 'firstName'])}
-            {` ${users.getIn([comment.get('creatorId'), 'lastName'])}`}
+            {`${user.get('firstName')} ${user.get('lastName')}`}
             <span className="text-muted pull-right">
               {format(comment.get('createdAt'), 'D.M.YYYY HH:mm')}
               <i

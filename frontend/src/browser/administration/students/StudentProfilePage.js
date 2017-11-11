@@ -129,8 +129,7 @@ class StudentProfilePage extends Component {
                 <Tab
                   eventKey={'feed'}
                   title="Feed"
-                >
-                </Tab>
+                />
                 <Tab
                   eventKey={'notes'}
                   title="Poznámky"

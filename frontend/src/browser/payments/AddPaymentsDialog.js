@@ -129,11 +129,14 @@ export class AddPaymentsDialog extends Component {
     changeUserGroupName: PropTypes.func.isRequired,
     addUserGroup: PropTypes.func.isRequired,
     closeUserGroupDialog: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
-    const { addUserGroup } = this.props;
+    const { addUserGroup, loadUsers } = this.props;
+    
+    loadUsers();
     addUserGroup();
   }
 
@@ -262,7 +265,7 @@ export class AddPaymentsDialog extends Component {
 
     const { formatMessage } = this.props.intl;
 
-    if (!userGroup) {
+    if (!userGroup || !users) {
       return <div></div>;
     }
 
@@ -370,4 +373,4 @@ export default connect((state) => ({
   locale: state.intl.currentLocale,
   groups: state.users.groups,
   userGroup: state.users.editingUserGroup,
-}), {...actions, ...paymentAction})(AddPaymentsDialog);
+}), { ...actions, ...paymentAction })(AddPaymentsDialog);

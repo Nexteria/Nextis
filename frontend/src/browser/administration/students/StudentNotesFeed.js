@@ -42,11 +42,13 @@ class StudentNotesFeed extends Component {
     change: PropTypes.func.isRequired,
     formValues: PropTypes.object,
     updateNoteComment: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    const { studentId, fetchStudentComments } = this.props;
+    const { studentId, fetchStudentComments, loadUsers } = this.props;
 
+    loadUsers();
     fetchStudentComments(studentId);
   }
 
@@ -181,8 +183,8 @@ class StudentNotesFeed extends Component {
                         <div className="box-footer box-comments">
                           {comment.get('children')
                             .sort((a, b) => isAfter(a.createdAt, b.createdAt) ? 1 : -1)
-                            .map(children =>
-                              <StudentNotesComment users={users} comment={comments.get(children)} deleteComment={deleteComment} />
+                            .map(child =>
+                              <StudentNotesComment user={users.get(comments.getIn([child, 'creatorId']))} comment={comments.get(child)} deleteComment={deleteComment} />
                           )}
                         </div>
                         : null
@@ -214,7 +216,7 @@ StudentNotesFeed = reduxForm({
 export default connect(state => ({
   comments: state.students.getIn(['admin', 'activeStudentComments']),
   users: state.users.get('users'),
-  initialValues: { comments: {}},
+  initialValues: { comments: {} },
   formValues: getFormValues('StudentNotesFeed')(state),
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...actions, ...usersActions })(StudentNotesFeed);

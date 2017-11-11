@@ -40,6 +40,7 @@ export default class EventTerms extends Component {
       <div style={styles.alternativesContainer}>
         {event.getIn(['terms', 'streams']).valueSeq().map((stream, index) =>
           <div
+            key={index}
             style={{
               textAlign: 'center',
               margin: '1em',

@@ -49,7 +49,6 @@ export class EventLoginDialog extends Component {
 
   static propTypes = {
     events: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
     choosedEvents: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
@@ -57,7 +56,7 @@ export class EventLoginDialog extends Component {
   }
 
   render() {
-    const { users, viewer, events, choosedEvents, params, attendeeSignIn, toggleEventTerm } = this.props;
+    const { viewer, events, choosedEvents, params, attendeeSignIn, toggleEventTerm } = this.props;
     const { formatMessage } = this.props.intl;
 
     const event = events.get(parseInt(params.eventId, 10));
@@ -198,7 +197,6 @@ export const EventPublicLoginDialog = connect((state) => ({
 export default connect((state) => ({
   events: state.events.events,
   viewer: state.users.viewer,
-  users: state.users.users,
   choosedEvents: state.events.getIn(['signInProcess', 'events']),
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...actions })(EventLoginDialog);

@@ -26,6 +26,7 @@ const InitialState = Record({
   viewerSemesters: null,
   viewerRolesData: new Map(),
   users: null,
+  allUsersLoaded: false,
   rolesList: null,
   groups: null,
   editingUserGroup: null,
@@ -61,6 +62,24 @@ export default function usersReducer(state = new InitialState, action) {
       }
 
       return newState.set('viewer', viewer);
+    }
+
+    case actions.LOAD_USER_SUCCESS: {
+      const user = action.payload;
+      return state
+          .update('users', users => {
+            const newUsers = users || new Map({});
+            return newUsers.set(user.id, new User({
+              ...user,
+              dateOfBirth: parse(user.dateOfBirth),
+              hostedEvents: new List(user.hostedEvents),
+              roles: new List(user.roles.map(role => role.id)),
+              personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
+              guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
+              lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+              buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
+            }));
+          });
     }
 
     case actions.GET_USER_SEMESTERS_SUCCESS: {
@@ -189,18 +208,20 @@ export default function usersReducer(state = new InitialState, action) {
     }
 
     case actions.LOAD_USERS_LIST_SUCCESS: {
-      return state.set('users', new Map(action.payload.map(user =>
-        [user.id, new User({
-          ...user,
-          dateOfBirth: parse(user.dateOfBirth),
-          hostedEvents: new List(user.hostedEvents),
-          roles: new List(user.roles.map(role => role.id)),
-          personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
-          guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
-          lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
-          buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
-        })]
-      )));
+      return state
+          .set('users', new Map(action.payload.map(user =>
+            [user.id, new User({
+              ...user,
+              dateOfBirth: parse(user.dateOfBirth),
+              hostedEvents: new List(user.hostedEvents),
+              roles: new List(user.roles.map(role => role.id)),
+              personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
+              guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
+              lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+              buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
+            })]
+          )))
+          .set('allUsersLoaded', true);
     }
 
     case actions.LOAD_USER_GROUPS_LIST_SUCCESS: {

@@ -8,6 +8,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 
 
 import * as actions from '../../common/events/actions';
+import * as usersActions from '../../common/users/actions';
 
 const messages = defineMessages({
   feedbackRemainderDaysBefore: {
@@ -131,7 +132,12 @@ class EventsDefaultSettings extends Component {
     EventsDefaultSettings: PropTypes.object,
     fetchDefaultEventsSettings: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+    loadUsers: PropTypes.func.isRequired,
   };
+
+  componentWillMount() {
+    this.props.loadUsers();
+  }
 
   renderInput(data) {
     const { input, label, type, meta: { asyncValidating, touched, error, pristine } } = data;
@@ -285,4 +291,4 @@ EventsDefaultSettings = injectIntl(EventsDefaultSettings);
 export default connect(state => ({
   initialValues: state.events.defaultSettings.toObject(),
   users: state.users.users,
-}), actions)(EventsDefaultSettings);
+}), { ...actions, ...usersActions })(EventsDefaultSettings);

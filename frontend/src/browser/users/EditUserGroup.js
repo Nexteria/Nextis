@@ -42,12 +42,14 @@ export class EditUserGroup extends Component {
     changeUserGroupName: PropTypes.func.isRequired,
     addUserGroup: PropTypes.func.isRequired,
     closeUserGroupDialog: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
-    const { addUserGroup, params } = this.props;
+    const { addUserGroup, loadUsers, params } = this.props;
 
+    loadUsers();
     if (params.groupId) {
       addUserGroup(parseInt(params.groupId, 10));
     } else {

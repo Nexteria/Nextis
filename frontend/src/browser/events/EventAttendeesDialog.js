@@ -6,6 +6,7 @@ import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
 
 import * as actions from '../../common/events/actions';
+import * as usersActions from '../../common/users/actions';
 
 
 const messages = defineMessages({
@@ -42,14 +43,16 @@ export class EventAttendeesDialog extends Component {
     users: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     fetchEventAttendees: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    const { fetchEventAttendees, params } = this.props;
+    const { fetchEventAttendees, loadUsers, params } = this.props;
 
     const eventId = parseInt(params.eventId, 10);
 
     fetchEventAttendees(eventId, 'signedIn');
+    loadUsers();
   }
 
   render() {
@@ -59,7 +62,7 @@ export class EventAttendeesDialog extends Component {
 
     const attendees = event.getIn(['attendees', 'signedIn']);
 
-    if (!attendees) {
+    if (!attendees || !users) {
       return <div></div>;
     }
 
@@ -127,4 +130,4 @@ EventAttendeesDialog = injectIntl(EventAttendeesDialog);
 export default connect((state) => ({
   events: state.events.events,
   users: state.users.users,
-}), actions)(EventAttendeesDialog);
+}), { ...actions, ...usersActions })(EventAttendeesDialog);

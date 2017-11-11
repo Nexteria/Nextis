@@ -13,6 +13,7 @@ import { Map } from 'immutable';
 import GroupMembers from './GroupMembers';
 import UsersPool from './UsersPool';
 import * as actions from '../../../common/attendeesGroup/actions';
+import * as usersActions from '../../../common/users/actions';
 
 const messages = defineMessages({
   createAttendeeGroup: {
@@ -140,6 +141,11 @@ export class AttendeesGroupsDialog extends Component {
     changeSignUpDeadlineDateTime: PropTypes.func.isRequired,
     changeAttendeeGroupMinCapacity: PropTypes.func.isRequired,
     changeAttendeeGroupMaxCapacity: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
+  }
+
+  componentWillMount() {
+    this.props.loadUsers();
   }
 
   renderInput(data) {
@@ -358,4 +364,4 @@ export default connect((state) => ({
   attendeesGroup: state.attendeesGroup.group,
   initialValues: state.attendeesGroup.group ? state.attendeesGroup.group.toObject() : null,
   attendeesGroupIndex: state.attendeesGroup.groupIndex,
-}), actions)(AttendeesGroupsDialog);
+}), { ...actions, ...usersActions })(AttendeesGroupsDialog);

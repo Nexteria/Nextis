@@ -60,8 +60,9 @@ class UsersPayments extends Component {
   };
 
   componentWillMount() {
-    const { loadUsersPayments } = this.props;
+    const { loadUsersPayments, loadUsers } = this.props;
     loadUsersPayments();
+    loadUsers();
   }
 
   getUserActions(user) {

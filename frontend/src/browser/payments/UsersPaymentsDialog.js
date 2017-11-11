@@ -75,7 +75,6 @@ const messages = defineMessages({
 export class UsersPaymentsDialog extends Component {
 
   static propTypes = {
-    users: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     userPayments: PropTypes.object,
     loadUsersPayments: PropTypes.func.isRequired,
@@ -161,7 +160,6 @@ export class UsersPaymentsDialog extends Component {
 }
 
 export default connect(state => ({
-  users: state.users.users,
   userPaymentsSettings: state.users.paymentsSettings,
   userPayments: state.payments.userPayments,
 }), paymentsActions)(UsersPaymentsDialog);

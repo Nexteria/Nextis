@@ -53,7 +53,12 @@ class ContactList extends Component {
     intl: PropTypes.object.isRequired,
     studentLevels: PropTypes.object.isRequired,
     downloadContacts: PropTypes.func.isRequired,
+    loadUsers: PropTypes.func.isRequired,
   };
+
+  componentWillMount() {
+    this.props.loadUsers();
+  }
 
   render() {
     const { users, rolesList, downloadContacts, studentLevels, fields, user } = this.props;
@@ -73,7 +78,7 @@ class ContactList extends Component {
 
     const phoneUtil = PhoneNumberUtil.getInstance();
 
-    const contactsData = students.valueSeq().map(student => ({
+    const contactsData = students && students.valueSeq().map(student => ({
       id: student.id,
       firstName: student.firstName,
       lastName: student.lastName,

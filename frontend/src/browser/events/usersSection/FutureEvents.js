@@ -16,7 +16,6 @@ class FutureEvents extends Component {
   static propTypes = {
     events: PropTypes.object,
     viewer: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
     eventDetailsId: PropTypes.number,
     toggleEventDetails: PropTypes.func.isRequired,
     openEventDetailsDialog: PropTypes.func.isRequired,
@@ -40,8 +39,7 @@ class FutureEvents extends Component {
     const {
       events,
       nxLocations,
-      viewer,
-      users,
+      viewer
     } = this.props;
 
     const {
@@ -90,7 +88,6 @@ class FutureEvents extends Component {
               <Event
                 hide={false}
                 key={event.id}
-                users={users}
                 event={event}
                 events={events}
                 viewer={viewer}
@@ -121,7 +118,6 @@ export default connect(state => ({
   events: state.events.events,
   viewer: state.users.viewer,
   signOut: state.events.signOut,
-  users: state.users.users,
   nxLocations: state.nxLocations.locations,
   eventsFilter: selector(state, 'eventsFilter'),
 }), eventsActions)(FutureEvents);

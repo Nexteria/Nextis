@@ -10,7 +10,6 @@ export default class EventDetails extends Component {
     nxLocation: PropTypes.object,
     groupedEvents: PropTypes.object,
     openLocationDetailsDialog: PropTypes.func.isRequired,
-    users: PropTypes.object.isRequired,
     isMultiTerm: PropTypes.bool.isRequired,
     isMultiMeeting: PropTypes.bool.isRequired,
   }

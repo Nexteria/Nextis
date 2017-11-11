@@ -1,14 +1,24 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
+import * as actions from '../../../common/users/actions';
 
-export default class EventDescription extends Component {
+class EventDescription extends Component {
 
   static propTypes = {
     event: PropTypes.object.isRequired,
     groupedEvents: PropTypes.object,
     openEventDetailsDialog: PropTypes.func.isRequired,
-    users: PropTypes.object.isRequired,
+    users: PropTypes.object,
+    loadUser: PropTypes.func,
+  }
+
+  componentWillMount = async () => {
+    const { event, users } = this.props;
+    await Promise.all(event.lectors.map(lector =>
+      !(users && users.get(lector)) && this.props.loadUser(lector)
+    ));
   }
 
   render() {
@@ -47,17 +57,15 @@ export default class EventDescription extends Component {
                 <strong>Lektori:</strong>
               </div>
               {event.lectors.size === 0 ?
-                'Žiadny lektori'
+                'Žiadni lektori'
                 :
-                event.lectors.map(lector =>
+                event.lectors.map(lector => users && users.get(lector) &&
                   <div key={lector}>
                     <div className="col-md-2 col-sm-2 col-xs-2">
                       <img
                         alt="lector"
                         className="lector-picture"
-                        src={users.get(lector).photo ?
-                          users.get(lector).photo
-                          : '/img/avatar.png'}
+                        src={users.get(lector).photo ? users.get(lector).photo : '/img/avatar.png'}
                       />
                       <div>{users.get(lector).firstName} {users.get(lector).lastName}</div>
                     </div>
@@ -78,3 +86,7 @@ export default class EventDescription extends Component {
     );
   }
 }
+
+export default connect(state => ({
+  users: state.users.users,
+}), actions)(EventDescription);

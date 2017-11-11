@@ -74,6 +74,5 @@ class PaymentsImportExport extends Component {
 }
 
 export default connect(state => ({
-  users: state.users.users,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...paymentsActions, ...usersActions })(PaymentsImportExport);

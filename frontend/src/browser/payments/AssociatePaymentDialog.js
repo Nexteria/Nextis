@@ -7,6 +7,7 @@ import Typeahead from 'react-bootstrap-typeahead';
 
 
 import * as paymentsActions from '../../common/payments/actions';
+import * as usersActions from '../../common/users/actions';
 
 const messages = defineMessages({
   closeButton: {
@@ -37,6 +38,11 @@ export class UnassociatedPaymentsDialog extends Component {
     changeAssociationUserId: PropTypes.func.isRequired,
     associateUserId: PropTypes.number,
     associationPaymentId: PropTypes.number,
+    loadUsers: PropTypes.func.isRequired,
+  }
+
+  componentWillMount() {
+    this.props.loadUsers();
   }
 
   render() {
@@ -97,4 +103,4 @@ export default connect(state => ({
   showPaymentAssociationDialog: state.payments.showPaymentAssociationDialog,
   associationPaymentId: state.payments.associationPaymentId,
   associateUserId: state.payments.associateUserId,
-}), paymentsActions)(UnassociatedPaymentsDialog);
+}), { ...paymentsActions, ...usersActions })(UnassociatedPaymentsDialog);

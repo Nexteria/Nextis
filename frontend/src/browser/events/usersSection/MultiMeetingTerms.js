@@ -32,6 +32,7 @@ export default class MultiMeetingTerms extends Component {
     attendeeSignIn: PropTypes.func.isRequired,
     viewerId: PropTypes.number.isRequired,
     nxLocations: PropTypes.object.isRequired,
+    event: PropTypes.object,
   }
 
   render() {
@@ -75,7 +76,7 @@ export default class MultiMeetingTerms extends Component {
                 const isBeforeTerm = isBefore(now, term.get('eventStartDateTime'));
 
                 return (
-                  <tr>
+                  <tr key={i}>
                     <td style={styles.rowsCells}>{i + 1}</td>
                     <td style={styles.rowsCells}>
                       <span>

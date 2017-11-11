@@ -75,6 +75,7 @@ class ActivityPointsPage extends Component {
     students: PropTypes.object,
     hasPermission: PropTypes.func.isRequired,
     fetchEventActivityDetails: PropTypes.func.isRequired,
+    loadUser: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -85,7 +86,7 @@ class ActivityPointsPage extends Component {
       activeSemesterId,
       loadUserSemesters,
       fetchStudent,
-      users,
+      loadUser,
     } = this.props;
     let userId = viewer.id;
 
@@ -93,11 +94,12 @@ class ActivityPointsPage extends Component {
       userId = parseInt(params.userId, 10);
     }
 
-    const activeUser = users.get(userId);
-
+    loadUser(userId).then((user) => {
+      fetchStudent(user.value.studentId, activeSemesterId);
+      return user;
+    });
     loadUserSemesters(userId);
     getEventsAttendeesForUser(userId, activeSemesterId);
-    fetchStudent(activeUser.get('studentId'), activeSemesterId);
   }
 
   render() {
@@ -115,18 +117,16 @@ class ActivityPointsPage extends Component {
       hasPermission,
     } = this.props;
 
-    if (!users || !attendees || !viewerSemesters) {
+    if (!attendees || !viewerSemesters) {
       return <div></div>;
     }
 
-    let activeUser = viewer;
+    const paramsUser = params && params.userId && users && users.get(parseInt(params.userId, 10));
+    const activeUser = paramsUser || viewer;
 
-    if (params && params.userId) {
-      activeUser = users.get(parseInt(params.userId, 10));
-    }
-
-    const activeSemester = viewerSemesters.get(parseInt(fields.semesterId.value, 10));
     const student = students.get(activeUser.get('studentId'));
+    const activeSemester = viewerSemesters.get(parseInt(fields.semesterId.value, 10));
+
 
     return (
       <div>
@@ -172,7 +172,10 @@ class ActivityPointsPage extends Component {
               }}
             >
               {viewerSemesters.valueSeq().map(semester =>
-                <option key={semester.get('id')} value={semester.get('id')}>{semester.get('name')}</option>
+                <option
+                  key={semester.get('id')}
+                  value={semester.get('id')}
+                >{semester.get('name')}</option>
               )}
             </select>
           </div>
