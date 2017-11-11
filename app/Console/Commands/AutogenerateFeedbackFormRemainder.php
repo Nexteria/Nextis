@@ -67,6 +67,14 @@ class AutogenerateFeedbackFormRemainder extends Command
                 })->get();
                 foreach ($attendees as $attendee) {
                     $term->attendees()->updateExistingPivot($attendee->id, ['filledFeedback' => true]);
+                    $isLast = !$attendee->terms()->where(function ($query) use ($attendee) {
+                        $query->where($attendee->terms()->getTable().'.filledFeedback', '=', null);
+                        $query->orWhere($attendee->terms()->getTable().'.filledFeedback', '=', false);
+                    })->exists();
+                    if ($isLast) {
+                        $attendee->filledFeedback = true;
+                        $attendee->save();
+                    }
                 }
 
                 $attendees = $term->attendees()->wherePivot('wasPresent', '=', true)->where(function ($query) use ($term) {

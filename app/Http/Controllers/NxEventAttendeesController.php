@@ -555,6 +555,28 @@ class NxEventAttendeesController extends Controller
 
         $attendee->terms()->sync($dataToSync, false);
 
+        if ($request->has('wasPresent')) {
+            $isLast = !$attendee->terms()->where(function ($query) use ($attendee) {
+                $query->where($attendee->terms()->getTable().'.wasPresent', '=', null);
+                $query->orWhere($attendee->terms()->getTable().'.wasPresent', '=', false);
+            })->exists();
+            if ($isLast) {
+                $attendee->wasPresent = true;
+                $attendee->save();
+            }
+        }
+
+        if ($request->has('filledFeedback')) {
+            $isLast = !$attendee->terms()->where(function ($query) use ($attendee) {
+                $query->where($attendee->terms()->getTable().'.filledFeedback', '=', null);
+                $query->orWhere($attendee->terms()->getTable().'.filledFeedback', '=', false);
+            })->exists();
+            if ($isLast) {
+                $attendee->filledFeedback = true;
+                $attendee->save();
+            }
+        }
+
         $attendee = $term->attendees()
                          ->where('attendeeId', $attendeeId)
                          ->first();
