@@ -69,8 +69,12 @@ export class SignOutDialog extends Component {
           <Title>
             {signOut.type === 'SIGN_OUT' && isTermSignOut ?
               <span>Skutočne sa chceš odhlásiť zo stretnutia?</span>
-              :
+              : null
+            }
+
+            {signOut.type === 'SIGN_OUT' && !isTermSignOut ?
               <span>Chceš sa odhlásiť z eventu: {events.get(signOut.get('eventId')).name}?</span>
+              : null
             }
 
             {signOut.type !== 'SIGN_OUT' ?
