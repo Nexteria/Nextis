@@ -135,7 +135,7 @@ export class SignOutDialog extends Component {
               onClick={signOut.type === 'SIGN_OUT' ?
                 () => attendeeSignOut(signOut, viewer.id)
                 :
-                () => attendeeWontGo(signOut.eventId, signOut.userId, signOut.groupId, signOut.reason)
+                () => attendeeWontGo(viewer.id, signOut.reason)
               }
             >
               {signOut.type === 'SIGN_OUT' ?
