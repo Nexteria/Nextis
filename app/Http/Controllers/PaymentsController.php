@@ -34,7 +34,7 @@ class PaymentsController extends Controller
     {
         $payment = Payment::parse(\Input::get('body-plain'));
 
-        if ($payment->user) {
+        if ($payment->user && $payment->user->hasRole('STUDENT')) {
             $email = null;
             if ($payment->user->student && $payment->variableSymbol == $payment->user->student->tuitionFeeVariableSymbol) {
                 $email = new \App\Mail\ReceivedTuitionFeeConfirmation($payment);
