@@ -1,4 +1,5 @@
 import Raven from 'raven-js';
+import * as userActions from './users/actions';
 
 // bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events
 const register = unhandledRejection => unhandledRejection(event => {
@@ -29,13 +30,17 @@ const setRavenUserContext = authData => {
     return;
   }
   Raven.setUserContext({
-    email: authData.token.email,
+    email: authData.email,
     id: authData.id
   });
 };
 
 const reportingMiddleware = () => next => action => {
   // TODO: Use Raven.setExtraContext for last 10 actions and limited app state.
+  if (action.type === userActions.LOAD_VIEWER_SUCCESS) {
+    setRavenUserContext(action.payload.user);
+  }
+
   return next(action);
 };
 
