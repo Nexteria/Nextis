@@ -556,10 +556,17 @@ class NxEventAttendeesController extends Controller
         $attendee->terms()->sync($dataToSync, false);
 
         if ($request->has('wasPresent')) {
-            $isLast = !$attendee->terms()->where(function ($query) use ($attendee) {
+            $isLast = !$attendee->terms()->where(function ($query) use ($term) {
+                $query->where('parentTermId', '=', $term->id);
+                if ($term->parentTermId) {
+                    $query->orWhere('parentTermId', '=', $term->parentTermId);
+                    $query->orWhere($term->getTable().'.id', '=', $term->parentTermId);
+                }
+            })->where(function ($query) use ($attendee) {
                 $query->where($attendee->terms()->getTable().'.wasPresent', '=', null);
                 $query->orWhere($attendee->terms()->getTable().'.wasPresent', '=', false);
             })->exists();
+
             if ($isLast) {
                 $attendee->wasPresent = true;
                 $attendee->save();
@@ -567,10 +574,17 @@ class NxEventAttendeesController extends Controller
         }
 
         if ($request->has('filledFeedback')) {
-            $isLast = !$attendee->terms()->where(function ($query) use ($attendee) {
+            $isLast = !$attendee->terms()->where(function ($query) use ($term) {
+                $query->where('parentTermId', '=', $term->id);
+                if ($term->parentTermId) {
+                    $query->orWhere('parentTermId', '=', $term->parentTermId);
+                    $query->orWhere($term->getTable().'.id', '=', $term->parentTermId);
+                }
+            })->where(function ($query) use ($attendee) {
                 $query->where($attendee->terms()->getTable().'.filledFeedback', '=', null);
                 $query->orWhere($attendee->terms()->getTable().'.filledFeedback', '=', false);
             })->exists();
+
             if ($isLast) {
                 $attendee->filledFeedback = true;
                 $attendee->save();

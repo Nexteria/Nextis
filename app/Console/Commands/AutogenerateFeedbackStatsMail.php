@@ -70,10 +70,17 @@ class AutogenerateFeedbackStatsMail extends Command
 
                 foreach ($attendees as $attendee) {
                     $term->attendees()->updateExistingPivot($attendee->id, ['filledFeedback' => true]);
-                    $isLast = !$attendee->terms()->where(function ($query) use ($attendee) {
+                    $isLast = !$attendee->terms()->where(function ($query) use ($term) {
+                        $query->where('parentTermId', '=', $term->id);
+                        if ($term->parentTermId) {
+                            $query->orWhere('parentTermId', '=', $term->parentTermId);
+                            $query->orWhere($term->getTable().'.id', '=', $term->parentTermId);
+                        }
+                    })->where(function ($query) use ($attendee) {
                         $query->where($attendee->terms()->getTable().'.filledFeedback', '=', null);
                         $query->orWhere($attendee->terms()->getTable().'.filledFeedback', '=', false);
                     })->exists();
+
                     if ($isLast) {
                         $attendee->filledFeedback = true;
                         $attendee->save();
