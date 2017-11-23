@@ -180,7 +180,8 @@ class EventsPage extends Component {
       });
 
     return (
-        eventId ?
+      <div>
+        {eventId ?
           <div className="user-events-page">
             <section className="content-header">
               <h1>
@@ -218,18 +219,6 @@ class EventsPage extends Component {
                 </div>
               </div>
             </section>
-            {eventDetailsId ?
-              <DetailsDialog event={events.get(eventDetailsId)} />
-              : ''
-            }
-
-            {signOut.eventId && <SignOutDialog />}
-
-            {locationDetailsId ?
-              <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
-              : ''
-            }
-            {children}
           </div>
         :
           <div className="user-events-page">
@@ -340,31 +329,32 @@ class EventsPage extends Component {
                 </div>
               </div>
             </section>
-
-          {eventDetailsId ?
-            <DetailsDialog event={events.get(eventDetailsId)} />
-            : ''
-          }
-
-          {signOut.eventId && <SignOutDialog />}
-
-          {chooseStreamEventId &&
-            <ChooseTermStreamDialog
-              open
-              viewerId={viewer.id}
-              closeDialog={() => change('chooseStreamEventId', null)}
-              terms={events.getIn([chooseStreamEventId, 'terms'])}
-              event={events.get(chooseStreamEventId)}
-            />
-          }
-
-          {locationDetailsId ?
-            <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
-            : ''
-          }
-
-          {children}
           </div>
+        }
+
+        {eventDetailsId ?
+          <DetailsDialog event={events.get(eventDetailsId)} />
+          : ''
+        }
+
+        {signOut.eventId && <SignOutDialog />}
+
+        {chooseStreamEventId &&
+          <ChooseTermStreamDialog
+            open
+            viewerId={viewer.id}
+            closeDialog={() => change('chooseStreamEventId', null)}
+            terms={events.getIn([chooseStreamEventId, 'terms'])}
+            event={events.get(chooseStreamEventId)}
+          />
+        }
+
+        {locationDetailsId ?
+          <LocationDetailsDialog nxLocation={nxLocations.get(locationDetailsId)} />
+          : ''
+        }
+        {children}
+      </div>
     );
   }
 }
