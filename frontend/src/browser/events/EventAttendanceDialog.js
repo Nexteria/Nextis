@@ -199,7 +199,7 @@ export class EventAttendanceDialog extends Component {
           <div className="col-md-12">
             <button
               className="btn btn-primary"
-              onClick={() => browserHistory.goBack()}
+              onClick={() => browserHistory.push('/host/events')}
             >
               <FormattedMessage {...messages.closeButton} />
             </button>

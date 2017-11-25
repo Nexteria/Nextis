@@ -104,7 +104,7 @@
               Ďakujme, že si bol hostom na evente <b>{{ $eventType }} {{ $eventName }} {{ $eventStartTime }}</b>.
             </p>
             <p>Prosím, zaznač v Nexteria Space-e, kto sa eventu zúčastnil <b>ešte dnes ({{ $todayDate }})</b>.</p>
-            <p>Urobiť tak môžeš tu: <a href="https://space.nexteria.sk/host/events/{{ $eventId }}" target="_blank">https://space.nexteria.sk/host/events/{{ $eventId }}/terms/{{ $termId }}</a></p></div></td></tr></tbody></table></div><!--[if mso | IE]>
+            <p>Urobiť tak môžeš tu: <a href="https://space.nexteria.sk/host/events/{{ $eventId }}/terms/{{ $termId }}" target="_blank">https://space.nexteria.sk/host/events/{{ $eventId }}/terms/{{ $termId }}</a></p></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
