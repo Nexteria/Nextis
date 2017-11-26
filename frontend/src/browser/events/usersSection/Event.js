@@ -311,6 +311,7 @@ export default class Event extends Component {
                 users,
               }}
             />
+            <div className="clearfix" />
           </div>
           {choosedGroupedEvents.size ?
             <div className="col-md-12 col-sm-12 col-xs-12">
