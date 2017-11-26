@@ -226,7 +226,7 @@ const validate = (values, props) => {
     errors.name = formatMessage(messages.requiredField);
   }
 
-  if (!values.activityPoints) {
+  if (!values.activityPoints && values.activityPoints !== 0) {
     errors.activityPoints = formatMessage(messages.requiredField);
   } else if (!validator.isDecimal(`${values.activityPoints}`)) {
     errors.activityPoints = formatMessage(messages.mustBeValidNumber);
