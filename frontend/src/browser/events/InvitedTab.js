@@ -6,6 +6,8 @@ import parse from 'date-fns/parse';
 import format from 'date-fns/format';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './react-bootstrap-table.css';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 import Icon from '../components/Icon';
 
 
@@ -85,12 +87,32 @@ export default class InvitedTab extends Component {
     />);
   }
 
+  renderStudentsDownloadButton(termId) {
+    const { downloadEventAttendeesList, eventId } = this.props;
+
+    return (
+      <DropdownButton
+        bsSize="xsmall"
+        bsStyle="primary"
+        title="Stiahnuť"
+        style={{ marginLeft: '1em' }}
+        id={`download-student-list-${termId}`}
+        onSelect={(key) => downloadEventAttendeesList(eventId, termId, key)}
+      >
+        <MenuItem eventKey="signedIn">Prihlásených</MenuItem>
+        <MenuItem eventKey="signedOut">Odhlásených</MenuItem>
+        <MenuItem eventKey="wontGo">Neprídu</MenuItem>
+        <MenuItem eventKey="wasPresent">Prítomných</MenuItem>
+        <MenuItem eventKey="standIn">Náhradníkov</MenuItem>
+      </DropdownButton>
+    );
+  }
+
   render() {
     const {
       attendeesGroups,
       users,
       eventId,
-      downloadEventAttendeesList,
       changeAttendeeFeedbackStatus,
       changeAttendeePresenceStatus,
       event,
@@ -158,12 +180,13 @@ export default class InvitedTab extends Component {
       <div className="row">
         <div className="col-md-12">
           {data.map((meetingData, index) =>
-            <div>
+            <div key={index}>
               {meetingData.type === 'event' ?
                 <label>Účasť za celý event</label>
                 :
                 <label>Stretnutie: {format(parse(meetingData.date), 'D.M.YYYY, H:mm')}</label>
               }
+              {this.renderStudentsDownloadButton(meetingData.termId)}
               <BootstrapTable
                 key={index}
                 data={meetingData.attendees}
@@ -226,17 +249,6 @@ export default class InvitedTab extends Component {
               </BootstrapTable>
             </div>
           )}
-          <div className="form-group">
-            <label>Stiahnuť zoznam:</label>
-            <select onChange={(e) => downloadEventAttendeesList(eventId, e.target.value)} className="form-control">
-              <option readOnly>Vyberte možnosť</option>
-              <option value={'signedIn'}>Prihlásených</option>
-              <option value={'signedOut'}>Odhlásených</option>
-              <option value={'wontGo'}>Neprídu</option>
-              <option value={'wasPresent'}>Prítomných</option>
-              <option value={'standIn'}>Náhradníkov</option>
-            </select>
-          </div>
           <div className="clearfix"></div>
         </div>
       </div>

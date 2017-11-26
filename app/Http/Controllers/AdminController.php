@@ -829,11 +829,22 @@ class AdminController extends Controller
         })->download('xls');
     }
 
-    public function getAttendeesList($eventId, $type)
+    public function getEventAttendeesList($eventId, $type)
+    {
+        return $this->getTermAttendeesList($eventId, null, $type);
+    }
+
+    public function getTermAttendeesList($eventId, $termId, $type)
     {
         $event = NxEvent::findOrFail($eventId);
 
-        $attendees = $event->attendees()->whereNotNull($type)->get();
+        if ($termId) {
+            $term = $event->terms()->where('id', $termId)->first();
+            $attendees = $term->attendees()->whereNotNull($term->attendees()->getTable().'.'.$type)->get();
+        } else {
+            $attendees = $event->attendees()->whereNotNull($type)->get();
+        }
+
         $users = [];
         foreach ($attendees as $attendee) {
             $users[] = $attendee->user;

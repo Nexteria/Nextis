@@ -685,11 +685,16 @@ export function downloadAnswers(formId) {
   });
 }
 
-export function downloadEventAttendeesList(eventId, type) {
+export function downloadEventAttendeesList(eventId, termId, type) {
+  let termsUrl = 'terms';
+  if (termId) {
+    termsUrl = `terms/${termId}`;
+  }
+
   return ({ fetch }) => ({
     type: DOWNLOAD_EVENT_ATTENDEES_LIST,
     payload: {
-      promise: fetch(`/admin/nxEvents/${eventId}/attendees/${type}`, {
+      promise: fetch(`/admin/nxEvents/${eventId}/${termsUrl}/attendees/${type}`, {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
       }).then(response => response.blob())
