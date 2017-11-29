@@ -104,14 +104,14 @@ export class BeforeEventQuestionnaire extends Component {
         show
         bsSize="large"
         dialogClassName="event-details-dialog"
-        onHide={null}
+        onHide={() => {}}
       >
         <Header style={{ display: 'none' }} />
-        <Body>
-          <form
-            id="beforeEventQuestionnaire"
-            onSubmit={handleSubmit((data) => submitFunction(data))}
-          >
+        <form
+          id="beforeEventQuestionnaire"
+          onSubmit={handleSubmit((data) => submitFunction(data))}
+        >
+          <Body>
             <div className="row">
               <Field
                 name="formData"
@@ -119,34 +119,33 @@ export class BeforeEventQuestionnaire extends Component {
                 component={this.renderFormComponent}
               />
             </div>
-          </form>
-        </Body>
+          </Body>
 
-        <Footer>
-          <div className="row">
-            <div className="col-md-12">
-              {!isFormValid ?
-                <div className="pull-left text-danger">Prosím vyplň všetky povinné otázky</div>
-                : null
-              }
-              <button
-                className="btn btn-danger"
-                onClick={() => browserHistory.push('/events')}
-                type="button"
-              >
-                Zavrieť
-              </button>
-              <button
-                className="btn btn-success"
-                type="submit"
-                form="beforeEventQuestionnaire"
-                disabled={!isFormValid}
-              >
-                Prihlásiť
-              </button>
+          <Footer>
+            <div className="row">
+              <div className="col-md-12">
+                {!isFormValid ?
+                  <div className="pull-left text-danger">Prosím vyplň všetky povinné otázky</div>
+                  : null
+                }
+                <button
+                  className="btn btn-danger"
+                  onClick={() => browserHistory.push('/events')}
+                  type="button"
+                >
+                  Zavrieť
+                </button>
+                <button
+                  className="btn btn-success"
+                  type="submit"
+                  disabled={!isFormValid}
+                >
+                  Prihlásiť
+                </button>
+              </div>
             </div>
-          </div>
-        </Footer>
+          </Footer>
+        </form>
       </Modal>
     );
   }

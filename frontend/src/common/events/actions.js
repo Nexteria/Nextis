@@ -390,7 +390,7 @@ export function attendeeSignOut(signOut, viewerId) {
   };
 
   let reason = signOut.reason;
-  if ((/(.)\1{3,}/i).test(reason) || reason.length < 10) {
+  if ((/(.)\1{6,}/i).test(reason) || reason.length < 10) {
     reason = '';
   }
 
