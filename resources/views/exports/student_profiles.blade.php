@@ -5,6 +5,7 @@
         <th height="50" align="center" valign="middle">Meno</th>
         <th height="50" align="center" valign="middle">Priezvisko</th>
         <th height="50" align="center" valign="middle">Email</th>
+        <th height="50" align="center" valign="middle">Nexteria level</th>
         <th height="50" align="center" valign="middle">Vek</th>
         <th height="50" align="center" valign="middle">Škola</th>
         <th height="50" align="center" valign="middle">Štúdijný program</th>
@@ -18,6 +19,7 @@
             <td>{{ $user->firstName }}</td>
             <td>{{ $user->lastName }}</td>
             <td>{{ $user->email }}</td>
+            <td>{{ $user->student ? $user->student->level->name : '' }}</td>
             <td>{{ $user->dateOfBirth ? $user->dateOfBirth->age : '' }}</td>
             <td>{{ $user->school }}</td>
             <td>{{ $user->studyProgram }}</td>
