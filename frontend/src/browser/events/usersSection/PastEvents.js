@@ -77,7 +77,7 @@ class PastEvents extends Component {
               </span>
             </li>
             {sortedEvents.filter(event => {
-              const iterationDate = subMonths(now, pastMonthCount - index + 1);
+              const iterationDate = subMonths(now, pastMonthCount - index);
               const streams = event.terms.get('streams');
               const firstStream = streams.sort((a, b) => isAfter(a.get('eventStartDateTime'), b.get('eventStartDateTime')) ? 1 : -1).first();
               const isMonthSame = iterationDate.getMonth() === firstStream.get('eventStartDateTime').getMonth();
