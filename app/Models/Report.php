@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use \App\NxEvent;
 use \App\Student;
+use \App\DefaultSystemSettings;
 
 class Report
 {
@@ -125,6 +126,60 @@ class Report
                 $sheet->loadView('exports.student_semesters_points', [
                     'semesters' => $data,
                     'studentName' => $student->firstName.' '.$student->lastName,
+                ]);
+            });
+        });
+    }
+
+    public static function getStudentsActiveSemesterPointsExcel()
+    {
+        $students = Student::all();
+
+        $data = [];
+        foreach ($students as $student) {
+            $semester = $student->semesters()
+                                ->where('semesterId', DefaultSystemSettings::get('activeSemesterId'))
+                                ->first();
+            if (!$semester) {
+                continue;
+            }
+
+            $points = $student->user->computeActivityPoints($semester->id);
+            $basePoints = $semester->pivot->activityPointsBaseNumber;
+
+            // list of student`s level events which he/she missed
+            $events = NxEvent::where('semesterId', $semester->id)
+                             ->where('status', 'published')
+                             ->get();
+
+            $possiblePoints = 0;
+            foreach ($events as $event) {
+                $attendee = $event->attendees()
+                               ->where('nx_event_attendees.userId', $student->user->id)
+                               ->first();
+
+                if ($attendee && $attendee->wasPresent && !$attendee->filledFeedback) {
+                    $possiblePoints += $event->activityPoints;
+                }
+            }
+
+            $data[] = [
+                'firstName' => $student->firstName,
+                'lastName' => $student->lastName,
+                'email' => $student->user->email,
+                'gainedPointsPercentage' => $points['sumGainedPoints'] / $basePoints * 100,
+                'basePoints' => $basePoints,
+                'minimumSemesterActivityPoints' => $semester->pivot->minimumSemesterActivityPoints,
+                'gainedPoints' => $points['sumGainedPoints'],
+                'level' => $student->level->name,
+                'possiblePoints' => $possiblePoints,
+            ];
+        }
+
+        return \Excel::create('Prehľad bodov študentov', function ($excel) use ($data, $student) {
+            $excel->sheet('Data', function ($sheet) use ($data, $student) {
+                $sheet->loadView('exports.students_active_semesters_points', [
+                    'data' => $data,
                 ]);
             });
         });

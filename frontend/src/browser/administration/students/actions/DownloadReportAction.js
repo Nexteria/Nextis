@@ -59,6 +59,21 @@ const studentSemesterPointsDescription = (
   </div>
 );
 
+const studentsActiveSemesterPointsDescription = (
+  <div>
+    <span>Report obsahuje pre aktívny semester, pre každého študenta tieto informácie:</span>
+    <ul>
+      <li>meno, priezvisko, level, email</li>
+      <li>bodový základ</li>
+      <li>bodové minimum</li>
+      <li>počet bodov</li>
+      <li>počet potencionálnych bodov - eventy na, ktorých študent má zaznačenú prítomnosť,
+         ale nemá vyplnený feedback
+      </li>
+    </ul>
+  </div>
+);
+
 class DownloadReportAction extends Component {
 
   static propTypes = {
@@ -107,6 +122,7 @@ class DownloadReportAction extends Component {
                   <option value={'signed-didnt-come'}>Zoznam prihlásených, ktorí neprišli</option>
                   <option value={'late-unsigning'}>Zoznam neskoro sa odhlasujúcich</option>
                   <option value={'student-semesters-points'}>Prehľad aktivít študenta</option>
+                  <option value={'students-active-semester-points'}>Prehľad bodov študentov</option>
                 )}
                 </Field>
                 {reportType === 'late-unsigning' ?
@@ -139,6 +155,8 @@ class DownloadReportAction extends Component {
               {reportType === 'signed-didnt-come' ? signedDidntComeDescription : null}
               {reportType === 'late-unsigning' ? lateUnsigningDescription : null}
               {reportType === 'student-semesters-points' ? studentSemesterPointsDescription : null}
+              {reportType === 'students-active-semester-points' ? studentsActiveSemesterPointsDescription : null}
+              
             </div>
           </form>
           <div className="clearfix"></div>

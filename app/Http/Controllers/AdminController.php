@@ -874,6 +874,10 @@ class AdminController extends Controller
                 $studentId = $request->get('studentId');
                 $report = Report::getStudentSemesterPointsExcel($studentId);
                 break;
+            
+            case 'students-active-semester-points':
+                $report = Report::getStudentsActiveSemesterPointsExcel();
+                break;
         }
 
         return $report->download('xls');
