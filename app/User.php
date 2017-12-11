@@ -165,7 +165,7 @@ class User extends Authenticatable implements AuditableContract
 
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
-            if ($event != null) {
+            if ($event != null && !$event->getParentEvent()) {
                 if ($event->semesterId == $semesterId) {
                     if ($attendee->filledFeedback && $attendee->wasPresent) {
                         $sumGainedPoints += $event->activityPoints;

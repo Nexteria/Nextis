@@ -216,7 +216,7 @@ class UsersController extends Controller
         }
 
         $attendees = $attendees->filter(function ($attendee, $key) use ($semesterId) {
-            if (!$attendee->event()) {
+            if (!$attendee->event() || $attendee->event()->getParentEvent()) {
                 return false;
             }
 
