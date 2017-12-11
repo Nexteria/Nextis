@@ -26,7 +26,7 @@
             <b>Ahoj {{ $userFirstName }},</b>
           </mj-text>
           <mj-text>
-            Už zajtra ({{ $feedbackDeadline }}) je deadline na vyplnenie feedbacku na <b>{{ $eventType }} {{ $eventName }}</b>.
+            Už zajtra ({{ $feedbackDeadline }}) o 2:00 ráno, je deadline na vyplnenie feedbacku na <b>{{ $eventType }} {{ $eventName }}</b>.
           </mj-text>
           <mj-text>
           Nájdi si, prosím, čas na jeho vyplnenie. Feedback nám pomôže správne nastavovať program NLA.
