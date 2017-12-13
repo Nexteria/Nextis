@@ -41,4 +41,36 @@ class Semester extends Model
                       'minimumSemesterActivityPoints'
                     ]);
     }
+
+    public function getSignedOutStudentsCount()
+    {
+        $eventIds = $this->events()->where('status', 'published')->pluck('id');
+        $termIds = NxEventTerm::whereIn('eventId', $eventIds)
+            ->whereRaw('eventEndDateTime < NOW()')
+            ->pluck('id');
+        $signedOutAttendeesCount = \DB::table('nx_event_attendees_nx_event_terms')
+            ->whereIn('termId', $termIds)
+            ->whereNotNull('signedOut')
+            ->count();
+        
+        return $signedOutAttendeesCount;
+    }
+
+    public function getDidNotComeStudentsCount()
+    {
+        $eventIds = $this->events()->where('status', 'published')->pluck('id');
+        $termIds = NxEventTerm::whereIn('eventId', $eventIds)
+            ->whereRaw('eventEndDateTime < NOW()')
+            ->pluck('id');
+        $didNotComeAttendeesCount = \DB::table('nx_event_attendees_nx_event_terms')
+            ->whereIn('termId', $termIds)
+            ->whereNotNull('signedIn')
+            ->where(function ($query) {
+                $query->whereNull('wasPresent');
+                $query->orWhere('wasPresent', false);
+            })
+            ->count();
+        
+        return $didNotComeAttendeesCount;
+    }
 }

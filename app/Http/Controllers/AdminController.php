@@ -125,6 +125,8 @@ class AdminController extends Controller
               'endDate' => $semester->endDate->toDateTimeString(),
               'events' => $semester->events()->where('status', 'published')->get()->pluck('id'),
               'activeStudents' => $students,
+              'signedOutStudentsCount' => $semester->getSignedOutStudentsCount(),
+              'didNotComeStudentsCount' => $semester->getDidNotComeStudentsCount(),
             ];
         }
 

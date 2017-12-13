@@ -54,6 +54,10 @@ const messages = defineMessages({
   },
 });
 
+const styles = {
+  tableHeader: { whiteSpace: 'normal' },
+};
+
 class SemestersPage extends Component {
 
   static propTypes = {
@@ -82,6 +86,8 @@ class SemestersPage extends Component {
         endDate: format(parse(semester.get('endDate')), 'D.M.YYYY'),
         events: semester.get('events').length,
         activeStudents: semester.get('activeStudents').length,
+        signedOutStudentsCount: semester.get('signedOutStudentsCount'),
+        didNotComeStudentsCount: semester.get('didNotComeStudentsCount'),
       };
     });
 
@@ -111,26 +117,34 @@ class SemestersPage extends Component {
                     striped
                     hover
                   >
-                    <TableHeaderColumn isKey hidden dataField="id" />
+                    <TableHeaderColumn isKey hidden dataField="id" thStyle={styles.tableHeader} />
 
-                    <TableHeaderColumn dataField="name" dataSort>
+                    <TableHeaderColumn dataField="name" dataSort thStyle={styles.tableHeader}>
                       Názov
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="startDate" dataSort dataFormat={x => x}>
+                    <TableHeaderColumn dataField="startDate" dataSort dataFormat={x => x} thStyle={styles.tableHeader}>
                       Začiatok
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="endDate" dataSort dataFormat={x => x}>
+                    <TableHeaderColumn dataField="endDate" dataSort dataFormat={x => x} thStyle={styles.tableHeader}>
                       Koniec
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="events" dataSort>
+                    <TableHeaderColumn dataField="events" dataSort thStyle={styles.tableHeader}>
                       Počet publikovaných eventov
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn dataField="activeStudents" dataSort>
+                    <TableHeaderColumn dataField="activeStudents" dataSort thStyle={styles.tableHeader}>
                       Počet aktívnych študentov
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="signedOutStudentsCount" dataSort thStyle={styles.tableHeader}>
+                      Počet odhlásených študentov z eventov
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn dataField="didNotComeStudentsCount" dataSort thStyle={styles.tableHeader}>
+                      Počet prihlásených študentov, čo neprišli
                     </TableHeaderColumn>
                   </BootstrapTable>
                   <div className="clearfix"></div>
