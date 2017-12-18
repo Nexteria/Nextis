@@ -21,6 +21,7 @@ class UserTransformer extends Transformer
             'tuitionFeeVariableSymbol' => $user->student ? $user->student->tuitionFeeVariableSymbol : null,
             'studentLevelId' => $user->student ? $user->student->studentLevelId : null,
             'facebookLink' => $user->facebookLink,
+            'studentId' => $user->student ? $user->student->id : null,
             'linkedinLink' => $user->linkedinLink,
             'personalDescription' => $user->personalDescription ? $user->personalDescription : '',
             'photo' => $user->photo,

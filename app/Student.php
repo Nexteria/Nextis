@@ -49,6 +49,11 @@ class Student extends Model
                     ]);
     }
 
+    public function activityPoints()
+    {
+        return $this->hasMany('\App\Models\ActivityPoints', 'studentId');
+    }
+
     public function getTuitionFeeBalance()
     {
         $accountBalance = 0;

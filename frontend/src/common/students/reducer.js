@@ -1,7 +1,9 @@
-import { Record, Map } from 'immutable';
+import { Record, Map, List } from 'immutable';
 import parse from 'date-fns/parse';
 
 import * as actions from './actions';
+import * as userActions from '../users/actions';
+import Student from './models/Student';
 
 const InitialState = Record({
   admin: new Map({
@@ -20,8 +22,31 @@ export default function studentsReducer(state = new InitialState, action) {
     case actions.CHANGE_TUITION_FEE_SUCCESS:
     case actions.FETCH_ADMIN_STUDENTS_SUCCESS: {
       return state.setIn(['admin', 'students'], new Map(action.payload.map(student =>
-        [student.id, new Map(student)]
+        [student.id, new Map(new Student({
+          ...student,
+          activityPoints: new List(student.activityPoints.map(activity => new Map(activity))),
+        }))]
       )));
+    }
+
+    case userActions.FETCH_STUDENT_SUCCESS: {
+      const { studentId } = action.meta;
+      return state.setIn(['admin', 'students', studentId], new Map(new Student({
+        ...action.payload,
+        activityPoints: new List(action.payload.activityPoints.map(activity => new Map(activity))),
+      })));
+    }
+
+    case actions.FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS: {
+      const { studentId, eventId } = action.meta;
+
+      return state.updateIn(['admin', 'students'], students => {
+        const activityIndex = students.getIn([studentId, 'activityPoints']).findIndex(activity =>
+          activity.get('activityType') === 'event' && activity.get('activityModelId') === eventId
+        );
+
+        return students.setIn([studentId, 'activityPoints', activityIndex, 'details'], new Map(action.payload));
+      });
     }
 
     case actions.FETCH_STUDENT_COMMENTS_SUCCESS: {

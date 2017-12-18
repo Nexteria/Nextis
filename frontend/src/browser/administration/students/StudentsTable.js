@@ -87,7 +87,6 @@ export default class StudentsTable extends React.PureComponent {
       activityPointsBaseNumber: student.get('activityPointsBaseNumber'),
       minimumSemesterActivityPoints: student.get('minimumSemesterActivityPoints'),
       sumGainedPoints: student.get('sumGainedPoints'),
-      sumPotentialPoints: student.get('sumPotentialPoints'),
       pointsSummary: this.getStudentPointsComponent(student),
       tuitionFeeBalance: this.getTuitionFeeBalanceComponent(student.get('tuitionFeeBalance')),
       tuitionFeeBalanceNumber: student.get('tuitionFeeBalance'),
@@ -118,6 +117,7 @@ export default class StudentsTable extends React.PureComponent {
         data={studentsData}
         multiColumnSort={3}
         striped
+        search
         options={{
           onRowClick: row => browserHistory.push(`/admin/students/${row.id}`),
         }}
@@ -149,7 +149,9 @@ export default class StudentsTable extends React.PureComponent {
           tdStyle={styles.rowTd}
           dataField="studentLevelName"
           dataSort
+          searchable={false}
           dataFormat={x => x}
+          filter={{ type: 'TextFilter' }}
         >
             Level
         </TableHeaderColumn>
@@ -158,6 +160,7 @@ export default class StudentsTable extends React.PureComponent {
           tdStyle={styles.rowTd}
           dataField="pointsSummary"
           dataSort
+          searchable={false}
           dataFormat={x => x}
         >
             Aktuálne získané body
@@ -167,6 +170,7 @@ export default class StudentsTable extends React.PureComponent {
           tdStyle={styles.rowTd}
           dataField="activityPointsBaseNumber"
           dataSort
+          searchable={false}
         >
             Bodový základ
         </TableHeaderColumn>
@@ -177,6 +181,7 @@ export default class StudentsTable extends React.PureComponent {
           dataSort
           sortFunc={this.sortTuitionFeeFunction}
           dataFormat={x => x}
+          searchable={false}
         >
             Školné
         </TableHeaderColumn>
@@ -185,6 +190,8 @@ export default class StudentsTable extends React.PureComponent {
           tdStyle={styles.rowTd}
           dataField="status"
           dataSort
+          searchable={false}
+          filter={{ type: 'TextFilter' }}
         >
             Status
         </TableHeaderColumn>

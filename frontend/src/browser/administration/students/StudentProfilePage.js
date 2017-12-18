@@ -13,6 +13,8 @@ import InputComponent from '../../components/Input';
 import SelectComponent from '../../components/Select';
 import StudentNotesTab from './StudentNotesTab';
 import StudentNotesFeed from './StudentNotesFeed';
+import StudentActivityPointsTab from './StudentActivityPointsTab';
+import StudentAttendanceTab from './StudentAttendanceTab';
 
 class StudentProfilePage extends Component {
 
@@ -27,20 +29,32 @@ class StudentProfilePage extends Component {
     initialized: PropTypes.bool.isRequired,
     createStudentComment: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    loadUserSemesters: PropTypes.func.isRequired,
+    activeSemesterId: PropTypes.number,
   };
 
   componentDidMount() {
-    const { initialize, params, students } = this.props;
+    const { initialize, params, loadUserSemesters, students } = this.props;
     const studentId = params ? params.studentId : null;
     const student = students.get(parseInt(studentId, 10));
 
     initialize({
       ...student.toObject(),
     });
+    loadUserSemesters(student.get('userId'));
   }
 
   render() {
-    const { params, handleSubmit, children, initialized, students, studentStates, studentLevels } = this.props;
+    const {
+      params,
+      handleSubmit,
+      children,
+      initialized,
+      students,
+      studentStates,
+      studentLevels,
+      activeSemesterId,
+    } = this.props;
 
     if (!initialized) {
       return <div></div>;
@@ -122,6 +136,22 @@ class StudentProfilePage extends Component {
                 >
                   <StudentNotesTab student={student} />
                 </Tab>
+                <Tab
+                  eventKey={'activityPoints'}
+                  title="Aktivity body"
+                  mountOnEnter
+                >
+                  <StudentActivityPointsTab student={student} />
+                </Tab>
+                <Tab
+                  eventKey={'attendance'}
+                  title="Účasť"
+                  mountOnEnter
+                >
+                  {activeSemesterId ?
+                    <StudentAttendanceTab userId={student.get('userId')} /> : null
+                  }
+                </Tab>
               </Tabs>
             </div>
             {activeTab === 'notes' && <StudentNotesFeed studentId={studentId} />}
@@ -140,5 +170,6 @@ export default connect(state => ({
   students: state.students.getIn(['admin', 'students']),
   studentStates: state.app.constants.studentStates,
   studentLevels: state.users.studentLevels,
+  activeSemesterId: state.semesters.activeSemesterId,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...actions, ...usersActions })(StudentProfilePage);

@@ -34,6 +34,7 @@ const User = Record({
   newPassword: '',
   oldPassword: '',
   payments: null,
+  studentId: null,
   hostedEvents: null,
   confirmationPassword: '',
   confirmedPrivacyPolicy: false,

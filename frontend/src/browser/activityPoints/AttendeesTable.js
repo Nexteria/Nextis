@@ -137,8 +137,8 @@ class AttendeesTable extends Component {
         data={attendeeData}
         multiColumnSort={3}
         striped
+        search
         hover
-        height="250px"
       >
         <TableHeaderColumn isKey hidden dataField="id" />
 
@@ -148,14 +148,6 @@ class AttendeesTable extends Component {
 
         <TableHeaderColumn dataField="eventName" dataSort tdStyle={{ whiteSpace: 'normal' }}>
           {formatMessage(messages.eventName)}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="eventType" dataSort>
-          {formatMessage(messages.eventType)}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="date" dataSort tdStyle={{ whiteSpace: 'normal' }}>
-          {formatMessage(messages.date)}
         </TableHeaderColumn>
 
         <TableHeaderColumn dataField="amountOfPoints" dataSort>

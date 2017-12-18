@@ -4,6 +4,11 @@ import download from 'downloadjs';
 
 export const DOWNLOAD_CONTACTS = 'DOWNLOAD_CONTACTS';
 
+export const FETCH_STUDENT = 'FETCH_STUDENT';
+export const FETCH_STUDENT_START = 'FETCH_STUDENT_START';
+export const FETCH_STUDENT_SUCCESS = 'FETCH_STUDENT_SUCCESS';
+export const FETCH_STUDENT_ERROR = 'FETCH_STUDENT_ERROR';
+
 export const LOAD_VIEWER_START = 'LOAD_VIEWER_START';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const LOAD_VIEWER_ERROR = 'LOAD_VIEWER_ERROR';
@@ -415,6 +420,21 @@ export function downloadContacts() {
         notifications: 'both',
       }).then(response => response.blob())
       .then(blob => download(blob, 'kontakty.vcf', 'text/vcard')),
+    },
+  });
+}
+
+export function fetchStudent(studentId, semesterId) {
+  return ({ fetch }) => ({
+    type: FETCH_STUDENT,
+    meta: {
+      studentId,
+    },
+    payload: {
+      promise: fetch(`/semesters/${semesterId}/students/${studentId}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => response.json())
     },
   });
 }

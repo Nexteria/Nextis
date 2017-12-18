@@ -1,4 +1,10 @@
 import download from 'downloadjs';
+
+export const FETCH_EVENT_ACTIVITY_DETAILS = 'FETCH_EVENT_ACTIVITY_DETAILS';
+export const FETCH_EVENT_ACTIVITY_DETAILS_START = 'FETCH_EVENT_ACTIVITY_DETAILS_START';
+export const FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS = 'FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS';
+export const FETCH_EVENT_ACTIVITY_DETAILS_ERROR = 'FETCH_EVENT_ACTIVITY_DETAILS_ERROR';
+
 export const FETCH_ADMIN_STUDENTS = 'FETCH_ADMIN_STUDENTS';
 export const FETCH_ADMIN_STUDENTS_START = 'FETCH_ADMIN_STUDENTS_START';
 export const FETCH_ADMIN_STUDENTS_SUCCESS = 'FETCH_ADMIN_STUDENTS_SUCCESS';
@@ -299,6 +305,23 @@ export function downloadStudentsReport(data, selectedStudents) {
         notifications: 'both',
       }).then(response => response.blob())
       .then(blob => download(blob, `${data.reportType}.xls`)),
+    },
+  });
+}
+
+export function fetchEventActivityDetails(studentId, eventId) {
+  return ({ fetch }) => ({
+    type: FETCH_EVENT_ACTIVITY_DETAILS,
+    meta: {
+      studentId,
+      eventId,
+    },
+    payload: {
+      promise: fetch(`/students/${studentId}/activities/events/${eventId}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'error-only',
+      }).then(response => response.json()),
     },
   });
 }

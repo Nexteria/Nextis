@@ -2,14 +2,18 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 
 import * as eventsActions from '../../common/events/actions';
 import * as usersActions from '../../common/users/actions';
+import * as studentsActions from '../../common/students/actions';
 import * as attendeesGroupActions from '../../common/attendeesGroup/actions';
 
 import { fields } from '../../common/lib/redux-fields/index';
 import OverviewTable from './OverviewTable';
 import AttendeesTable from './AttendeesTable';
+import ActivityPointsTable from './ActivityPointsTable';
 
 const messages = defineMessages({
   title: {
@@ -67,6 +71,9 @@ class ActivityPointsPage extends Component {
     activeSemesterId: PropTypes.number.isRequired,
     viewerSemesters: PropTypes.object,
     loadUserSemesters: PropTypes.func.isRequired,
+    fetchStudent: PropTypes.func.isRequired,
+    students: PropTypes.object,
+    fetchEventActivityDetails: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -76,6 +83,8 @@ class ActivityPointsPage extends Component {
       getEventsAttendeesForUser,
       activeSemesterId,
       loadUserSemesters,
+      fetchStudent,
+      users,
     } = this.props;
     let userId = viewer.id;
 
@@ -83,8 +92,11 @@ class ActivityPointsPage extends Component {
       userId = parseInt(params.userId, 10);
     }
 
+    const activeUser = users.get(userId);
+
     loadUserSemesters(userId);
     getEventsAttendeesForUser(userId, activeSemesterId);
+    fetchStudent(activeUser.get('studentId'), activeSemesterId);
   }
 
   render() {
@@ -96,6 +108,9 @@ class ActivityPointsPage extends Component {
       getEventsAttendeesForUser,
       params,
       viewerSemesters,
+      students,
+      fetchEventActivityDetails,
+      fetchStudent,
     } = this.props;
 
     if (!users || !attendees || !viewerSemesters) {
@@ -108,7 +123,8 @@ class ActivityPointsPage extends Component {
       activeUser = users.get(parseInt(params.userId, 10));
     }
 
-    const activeSemester = viewerSemesters.get(parseInt(fields.semesterId.value));
+    const activeSemester = viewerSemesters.get(parseInt(fields.semesterId.value, 10));
+    const student = students.get(activeUser.get('studentId'));
 
     return (
       <div>
@@ -150,6 +166,7 @@ class ActivityPointsPage extends Component {
               onChange={(e) => {
                 fields.semesterId.onChange(e);
                 getEventsAttendeesForUser(activeUser.get('id'), e.target.value);
+                fetchStudent(activeUser.get('studentId'), e.target.value);
               }}
             >
               {viewerSemesters.valueSeq().map(semester =>
@@ -161,37 +178,34 @@ class ActivityPointsPage extends Component {
         <div className="row">
           <div className="col-xs-12">
             <div className="box">
-              <div className="box-header">
-                <h3 className="box-title"><FormattedMessage {...messages.attendees} />:</h3>
-                <div className="box-tools">
-                  <div className="input-group input-group-sm" style={{ width: '150px' }}>
-                    <input
-                      type="text"
-                      name="table_search"
-                      className="form-control pull-right"
-                      placeholder="Search"
-                      {...fields.attendeesFilter}
-                    />
-                    <div className="input-group-btn">
-                      <button type="submit" className="btn btn-default">
-                        <i className="fa fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="box-body table-responsive no-padding">
-                <div className="col-md-12">
-                  <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                    {!attendees ?
-                      <div><FormattedMessage {...messages.loadingAttendees} /></div>
-                    :
-                      <AttendeesTable {...{ attendees }} />
-                    }
-                    <div className="clearfix"></div>
-                  </div>
-                </div>
-              </div>
+              <Tabs
+                id="users-points-tabs"
+                className="nav-tabs-custom"
+              >
+                <Tab
+                  eventKey={'activityPoints'}
+                  title="Aktivity body"
+                  mountOnEnter
+                >
+                  {student ?
+                    <ActivityPointsTable
+                      fetchEventActivityDetails={fetchEventActivityDetails}
+                      student={student}
+                    /> : null
+                  }
+                </Tab>
+                <Tab
+                  eventKey={'attendance'}
+                  title="Účasť"
+                  mountOnEnter
+                >
+                  {!attendees ?
+                    <div><FormattedMessage {...messages.loadingAttendees} /></div>
+                  :
+                    <AttendeesTable {...{ attendees }} />
+                  }
+                </Tab>
+              </Tabs>
             </div>
           </div>
         </div>
@@ -212,6 +226,7 @@ ActivityPointsPage = fields(ActivityPointsPage, {
 
 export default connect(state => ({
   events: state.events.events,
+  students: state.students.getIn(['admin', 'students']),
   studentLevels: state.users.studentLevels,
   viewer: state.users.viewer,
   viewerSemesters: state.users.viewerSemesters,
@@ -219,4 +234,4 @@ export default connect(state => ({
   semesters: state.semesters.semesters,
   activeSemesterId: state.semesters.activeSemesterId,
   attendees: state.events.attendees,
-}), { ...attendeesGroupActions, ...usersActions, ...eventsActions })(ActivityPointsPage);
+}), { ...attendeesGroupActions, ...studentsActions, ...usersActions, ...eventsActions })(ActivityPointsPage);

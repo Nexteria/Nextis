@@ -136,6 +136,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/users/me/privacyPolicy', 'UsersController@confirmPrivacyPolicy');
 
         Route::get('/semesters', 'SemestersController@getSemesters');
+        Route::get('/semesters/{semesterId}/students/{studentId}', 'StudentsController@getSemesterStudent');
+
+        Route::get('/students/{studentId}/activities/events/{eventId}', 'StudentsController@getStudentEventDetails');
         
         Route::get('/users/{userId}/activityPoints', 'UsersController@getActivityPoints');
         Route::get('/users/{userId}/semesters', 'UsersController@getSemesters');
