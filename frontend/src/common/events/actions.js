@@ -246,7 +246,8 @@ export function loadEventCategories() {
 
 export function changeActiveEventCategory(codename) {
   return ({ fetch, getState }) => {
-    const eventIds = getState().events.categories.getIn([codename, 'events']);
+    const categories = getState().events.categories;
+    const eventIds = categories ? categories.getIn([codename, 'events']) : [];
 
     return {
       type: CHANGE_ACTIVE_EVENT_CATEGORY,

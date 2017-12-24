@@ -37,7 +37,8 @@ const InitialState = Record({
     data: null,
   }),
   emails: null,
-  categories: new Map(),
+  categories: null,
+  activeEventsCategory: 'published',
   actualEvent: new Map(),
   signInProcess: new Map({
     events: new Map(),
@@ -446,12 +447,17 @@ export default function eventsReducer(state = new InitialState, action) {
 
     case actions.LOAD_EVENT_CATEGORIES_LIST_SUCCESS: {
       return state.set('categories', new Map(action.payload.map(category =>
-        [category.codename, new Map(category)]
+        [category.codename, new Map({
+          ...category,
+          events: new Map(category.events.map(eventId => [eventId, eventId]))
+        })]
       )));
     }
 
     case actions.CHANGE_ACTIVE_EVENT_CATEGORY_SUCCESS: {
-      return state.set('events', new Map(action.payload.map(event => {
+      let newState = state;
+
+      action.payload.forEach(event => {
         let questionForm = event.questionForm;
         if (questionForm) {
           let choicesList = new Map();
@@ -492,7 +498,7 @@ export default function eventsReducer(state = new InitialState, action) {
           });
         }
 
-        return [event.id, new Event({
+        newState = newState.setIn(['events', event.id], new Event({
           ...event,
           lectors: new List(event.lectors),
           groupedEvents: new List(event.groupedEvents),
@@ -534,8 +540,10 @@ export default function eventsReducer(state = new InitialState, action) {
             })])),
           }))) : new List(),
           questionForm,
-        })];
-      })));
+        }));
+      });
+
+      return newState.set('activeEventsCategory', action.meta.codename);
     }
 
     case actions.FETCH_EVENT_EMAILS_STATUS_SUCCESS: {

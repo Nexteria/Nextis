@@ -127,15 +127,17 @@ class Events extends Component {
   }
 
   render() {
-    const { events, fields, children } = this.props;
+    const { events, fields, children, activeEventsCategory, eventCategories } = this.props;
     const { hasPermission } = this.props;
     const { formatMessage } = this.props.intl;
 
-    if (!events) {
+    if (!events || !eventCategories) {
       return <div></div>;
     }
 
-    let filteredEvents = events.valueSeq()
+    const category = eventCategories.get(activeEventsCategory);
+
+    let filteredEvents = events.filter(event => category.get('events').has(event.get('id'))).valueSeq()
       .sort((a, b) => {
         const firstStreamA = a.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
         const firstStreamB = b.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
@@ -273,5 +275,7 @@ Events = injectIntl(Events);
 
 export default connect(state => ({
   events: state.events.events,
+  activeEventsCategory: state.events.activeEventsCategory,
+  eventCategories: state.events.categories,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), actions)(Events);

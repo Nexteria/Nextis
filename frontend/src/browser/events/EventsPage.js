@@ -81,7 +81,7 @@ class EventsPage extends Component {
     const { changeActiveEventCategory, eventCategories } = this.props;
     const category = this.props.params.category;
 
-    if (eventCategories.has(nextProps.params.category) && category !== nextProps.params.category) {
+    if (eventCategories && eventCategories.has(nextProps.params.category) && category !== nextProps.params.category) {
       changeActiveEventCategory(nextProps.params.category);
     }
   }
@@ -93,14 +93,18 @@ class EventsPage extends Component {
       children,
     } = this.props;
 
+    if (!eventCategories) {
+      return <div></div>;
+    }
+
     const activeCategoryCodename = this.props.params.category;
 
     let totalEventsCount = 0;
     if (eventCategories.has('drafts') && eventCategories.has('published') &&
       eventCategories.has('archived')) {
-      totalEventsCount = eventCategories.getIn(['drafts', 'events']).length +
-      eventCategories.getIn(['published', 'events']).length +
-      eventCategories.getIn(['archived', 'events']).length;
+      totalEventsCount = eventCategories.getIn(['drafts', 'events']).size +
+      eventCategories.getIn(['published', 'events']).size +
+      eventCategories.getIn(['archived', 'events']).size;
     }
 
     return (
@@ -139,7 +143,7 @@ class EventsPage extends Component {
                         <Link to={`/admin/events/category/${category.get('codename')}`}>
                           <FormattedMessage {...messages[category.get('codename')]} />
                           <span className="pull-right badge bg-blue">
-                            {category.get('events').length}
+                            {category.get('events').size}
                           </span>
                         </Link>
                       </li>
