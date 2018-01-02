@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
+use App\DefaultSystemSettings;
 use App\User;
 use App\AttendeesGroup;
+use App\Models\ActivityPoints;
 
 class NxEventAttendee extends Authenticatable implements AuditableContract
 {
@@ -81,6 +83,11 @@ class NxEventAttendee extends Authenticatable implements AuditableContract
         return $this->belongsToMany('App\NxEventTerm', 'nx_event_attendees_nx_event_terms', 'attendeeId', 'termId');
     }
 
+    public function student()
+    {
+        return $this->user->student();
+    }
+
     public function event()
     {
         $result = [];
@@ -94,5 +101,22 @@ class NxEventAttendee extends Authenticatable implements AuditableContract
         }
 
         return null;
+    }
+
+    public function grantStudentPoints($gainedPoints = null, $note = null)
+    {
+        $event = $this->event();
+        $activityPoints = ActivityPoints::firstOrCreate([
+            'studentId' => $this->student->id,
+            'activityType' => 'event',
+            'activityModelId' => $event->id,
+        ], [
+            'gainedPoints' => $gainedPoints ?? $event->activityPoints,
+            'maxPossiblePoints' => $event->activityPoints,
+            'semesterId' => DefaultSystemSettings::get('activeSemesterId'),
+            'activityName' => $event->name,
+            'note' => $note,
+            'addedByUserId' => \Auth::user() ? \Auth::user()->id : null,
+        ]);
     }
 }

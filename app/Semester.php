@@ -52,7 +52,7 @@ class Semester extends Model
             ->whereIn('termId', $termIds)
             ->whereNotNull('signedOut')
             ->count();
-        
+
         return $signedOutAttendeesCount;
     }
 
@@ -70,7 +70,7 @@ class Semester extends Model
                 $query->orWhere('wasPresent', false);
             })
             ->count();
-        
+
         return $didNotComeAttendeesCount;
     }
 }

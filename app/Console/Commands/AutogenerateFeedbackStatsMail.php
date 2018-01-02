@@ -84,6 +84,10 @@ class AutogenerateFeedbackStatsMail extends Command
                     if ($isLast) {
                         $attendee->filledFeedback = true;
                         $attendee->save();
+
+                        if ($attendee->filledFeedback && $attendee->wasPresent) {
+                            $attendee->grantStudentPoints();
+                        }
                     }
                 }
 

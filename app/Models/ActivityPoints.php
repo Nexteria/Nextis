@@ -8,6 +8,18 @@ class ActivityPoints extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'gainedPoints',
+        'maxPossiblePoints',
+        'semesterId',
+        'activityName',
+        'note',
+        'addedByUserId',
+        'studentId',
+        'activityType',
+        'activityModelId',
+    ];
+
     public function student()
     {
         return $this->belongsTo('App\Student', 'studentId');
