@@ -73,6 +73,7 @@ class ActivityPointsPage extends Component {
     loadUserSemesters: PropTypes.func.isRequired,
     fetchStudent: PropTypes.func.isRequired,
     students: PropTypes.object,
+    hasPermission: PropTypes.func.isRequired,
     fetchEventActivityDetails: PropTypes.func.isRequired,
   };
 
@@ -111,6 +112,7 @@ class ActivityPointsPage extends Component {
       students,
       fetchEventActivityDetails,
       fetchStudent,
+      hasPermission,
     } = this.props;
 
     if (!users || !attendees || !viewerSemesters) {
@@ -191,6 +193,7 @@ class ActivityPointsPage extends Component {
                     <ActivityPointsTable
                       fetchEventActivityDetails={fetchEventActivityDetails}
                       student={student}
+                      hasPermission={hasPermission}
                     /> : null
                   }
                 </Tab>
@@ -234,4 +237,10 @@ export default connect(state => ({
   semesters: state.semesters.semesters,
   activeSemesterId: state.semesters.activeSemesterId,
   attendees: state.events.attendees,
-}), { ...attendeesGroupActions, ...studentsActions, ...usersActions, ...eventsActions })(ActivityPointsPage);
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
+}), {
+  ...attendeesGroupActions,
+  ...studentsActions,
+  ...usersActions,
+  ...eventsActions,
+})(ActivityPointsPage);

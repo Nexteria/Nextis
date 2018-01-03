@@ -37,6 +37,20 @@ export default function studentsReducer(state = new InitialState, action) {
       })));
     }
 
+    case actions.DELETE_ACTIVITY_POINTS_SUCCESS: {
+      const { studentId, activityPointsId } = action.meta;
+
+      return state.updateIn(['admin', 'students'], students => {
+        const activityIndex = students.getIn([studentId, 'activityPoints']).findIndex(activity =>
+          activity.get('id') === activityPointsId
+        );
+
+        return students.updateIn(
+          [studentId, 'activityPoints'],
+          points => points.delete(activityIndex));
+      });
+    }
+
     case actions.FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS: {
       const { studentId, eventId } = action.meta;
 
@@ -45,19 +59,25 @@ export default function studentsReducer(state = new InitialState, action) {
           activity.get('activityType') === 'event' && activity.get('activityModelId') === eventId
         );
 
-        return students.setIn([studentId, 'activityPoints', activityIndex, 'details'], new Map(action.payload));
+        return students.setIn(
+          [studentId, 'activityPoints', activityIndex, 'details'],
+          new Map(action.payload)
+        );
       });
     }
 
     case actions.FETCH_STUDENT_COMMENTS_SUCCESS: {
-      let newState = state.setIn(['admin', 'activeStudentComments'], new Map(action.payload.map(comment =>
-        [comment.id, new Map({
-          ...comment,
-          createdAt: parse(comment.createdAt),
-          updatedAt: parse(comment.updatedAt),
-          children: new Map(),
-        })]
-      )));
+      let newState = state.setIn(
+        ['admin', 'activeStudentComments'],
+        new Map(action.payload.map(comment =>
+          [comment.id, new Map({
+            ...comment,
+            createdAt: parse(comment.createdAt),
+            updatedAt: parse(comment.updatedAt),
+            children: new Map(),
+          })]
+        )
+      ));
 
       action.payload.forEach(comment => {
         if (comment.parentId) {

@@ -1,5 +1,10 @@
 import download from 'downloadjs';
 
+export const DELETE_ACTIVITY_POINTS = 'DELETE_ACTIVITY_POINTS';
+export const DELETE_ACTIVITY_POINTS_START = 'DELETE_ACTIVITY_POINTS_START';
+export const DELETE_ACTIVITY_POINTS_SUCCESS = 'DELETE_ACTIVITY_POINTS_SUCCESS';
+export const DELETE_ACTIVITY_POINTS_ERROR = 'DELETE_ACTIVITY_POINTS_ERROR';
+
 export const FETCH_EVENT_ACTIVITY_DETAILS = 'FETCH_EVENT_ACTIVITY_DETAILS';
 export const FETCH_EVENT_ACTIVITY_DETAILS_START = 'FETCH_EVENT_ACTIVITY_DETAILS_START';
 export const FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS = 'FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS';
@@ -321,6 +326,24 @@ export function fetchEventActivityDetails(studentId, eventId) {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         notifications: 'error-only',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function deleteActivityPoints(activityPointsId, studentId) {
+  return ({ fetch }) => ({
+    type: DELETE_ACTIVITY_POINTS,
+    meta: {
+      studentId,
+      activityPointsId,
+    },
+    payload: {
+      promise: fetch(`/students/${studentId}/activityPoints/${activityPointsId}`, {
+        credentials: 'same-origin',
+        method: 'delete',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
       }).then(response => response.json()),
     },
   });

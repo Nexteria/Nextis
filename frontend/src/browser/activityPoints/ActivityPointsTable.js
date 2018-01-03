@@ -4,6 +4,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import EventActivityDetail from './EventActivityDetail';
 import './ActivityPointsTable.scss';
+import confirmAction from '../components/ConfirmAction';
 
 const styles = {
   rowTd: {
@@ -30,6 +31,7 @@ export default class ActivityPointsTable extends React.PureComponent {
 
   static propTypes = {
     student: PropTypes.object.isRequired,
+    deleteActivityPoints: PropTypes.func,
   };
 
   expandActivityComponent(row) {
@@ -54,12 +56,37 @@ export default class ActivityPointsTable extends React.PureComponent {
     }
   }
 
+  renderActions(cell, row, deleteActivityPoints) {
+    return (
+      <span>
+        {row.actions.delete_activity_points ?
+          <i
+            className="fa fa-trash-o trash-group"
+            onClick={() => confirmAction(
+              'Naozaj chcete zmazať aktivity body?',
+              () => deleteActivityPoints(row.id, row.studentId),
+              null
+            )}
+          ></i>
+          : null
+        }
+      </span>
+    );
+  }
+
   render() {
-    const { student } = this.props;
+    const { student, hasPermission, deleteActivityPoints } = this.props;
+
+    const actions = {
+      delete_activity_points: hasPermission('delete_activity_points'),
+      change_activity_points: hasPermission('change_activity_points'),
+    };
 
     let maxPossiblePoints = 0;
+    let gainedPoints = 0;
     const activitiesData = student.get('activityPoints').map(activity => {
       maxPossiblePoints += activity.get('maxPossiblePoints');
+      gainedPoints += activity.get('gainedPoints');
 
       return {
         id: activity.get('id'),
@@ -70,6 +97,7 @@ export default class ActivityPointsTable extends React.PureComponent {
         studentId: activity.get('studentId'),
         activityModelId: activity.get('activityModelId'),
         details: activity.get('details'),
+        actions,
       };
     }).toArray();
 
@@ -77,11 +105,12 @@ export default class ActivityPointsTable extends React.PureComponent {
       id: -1,
       activityName: <b>Spolu:</b>,
       activityType: '',
-      points: <b>{`${student.get('sumGainedPoints')} / ${maxPossiblePoints}`}</b>,
+      points: <b>{`${gainedPoints} / ${maxPossiblePoints}`}</b>,
       note: '',
       studentId: null,
       activityModelId: null,
       details: null,
+      actions: {}
     });
 
     const options = {
@@ -139,6 +168,21 @@ export default class ActivityPointsTable extends React.PureComponent {
         >
             Poznámka
         </TableHeaderColumn>
+
+        {hasPermission('delete_activity_points') ?
+          <TableHeaderColumn
+            tdStyle={styles.rowTd}
+            dataField="actions"
+            searchable={false}
+            dataFormat={(cell, row) =>
+              this.renderActions(cell, row, deleteActivityPoints)
+            }
+            width={'5em'}
+          >
+              Akcie
+          </TableHeaderColumn>
+          : null
+        }
       </BootstrapTable>
     );
   }

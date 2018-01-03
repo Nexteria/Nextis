@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Student;
 use App\NxEvent;
+use App\Models\ActivityPoints;
 
 class StudentsController extends Controller
 {
@@ -44,5 +45,13 @@ class StudentsController extends Controller
             'tuitionFeeBalance' => $student->getTuitionFeeBalance(),
             'status' => $student->status,
         ];
+    }
+
+    public function deleteActivityPoints($studentId, $activityPointsId)
+    {
+        $points = ActivityPoints::where('id', $activityPointsId)->where('studentId', $studentId)->first();
+        $points->delete();
+
+        return response()->json();
     }
 }

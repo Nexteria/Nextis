@@ -139,6 +139,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/semesters/{semesterId}/students/{studentId}', 'StudentsController@getSemesterStudent');
 
         Route::get('/students/{studentId}/activities/events/{eventId}', 'StudentsController@getStudentEventDetails');
+        Route::delete('/students/{studentId}/activityPoints/{activityPointsId}', ['middleware' => ['permission:delete_activity_points'], 'uses' => 'StudentsController@deleteActivityPoints']);
         
         Route::get('/users/{userId}/activityPoints', 'UsersController@getActivityPoints');
         Route::get('/users/{userId}/semesters', 'UsersController@getSemesters');

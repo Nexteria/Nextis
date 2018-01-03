@@ -31,10 +31,23 @@ class StudentActivityPointsTab extends Component {
     initialized: PropTypes.bool.isRequired,
     fetchStudent: PropTypes.func.isRequired,
     semesters: PropTypes.object,
+    deleteActivityPoints: PropTypes.func.isRequired,
   };
 
   render() {
-    const { student, semesters, fetchStudent, fetchEventActivityDetails } = this.props;
+    const {
+      student,
+      semesters,
+      fetchStudent,
+      fetchEventActivityDetails,
+      hasPermission,
+      deleteActivityPoints,
+    } = this.props;
+
+    let gainedPoints = 0;
+    student.get('activityPoints').forEach(activity => {
+      gainedPoints += activity.get('gainedPoints');
+    });
 
     return (
       <div>
@@ -42,7 +55,7 @@ class StudentActivityPointsTab extends Component {
           <div className="box-body no-padding text-center" style={{ fontSize: '2em' }}>
             <div>Počet bodov:</div>
             <span>
-              {student.get('sumGainedPoints')} z {student.get('activityPointsBaseNumber')}
+              {gainedPoints} z {student.get('activityPointsBaseNumber')}
             </span>
             <div className="form-group">
               <Field
@@ -65,6 +78,8 @@ class StudentActivityPointsTab extends Component {
         <ActivityPointsTable
           fetchEventActivityDetails={fetchEventActivityDetails}
           student={student}
+          hasPermission={hasPermission}
+          deleteActivityPoints={deleteActivityPoints}
         />
       </div>
     );
@@ -81,4 +96,5 @@ export default connect((state) => ({
   students: state.students.getIn(['admin', 'students']),
   semesterId: selector(state, 'semesterId'),
   semesters: state.semesters.semesters,
+  hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...actions, ...usersActions })(StudentActivityPointsTab);
