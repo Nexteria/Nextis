@@ -17,6 +17,7 @@ import ChangeActivityPointsAction from './actions/ChangeActivityPointsAction';
 import DownloadReportAction from './actions/DownloadReportAction';
 
 import * as actions from '../../../common/students/actions';
+import AddActivityPoints from './actions/AddActivityPoints';
 
 class StudentsActionsContainer extends Component {
 
@@ -41,6 +42,7 @@ class StudentsActionsContainer extends Component {
       change_tuition_fee: <ChangeTuitionFeeAction {...{ selectedStudents }} />,
       change_activity_point: <ChangeActivityPointsAction {...{ selectedStudents }} />,
       download_students_reports: <DownloadReportAction {...{ selectedStudents }} />,
+      add_activity_points: <AddActivityPoints {...{ selectedStudents }} />,
     });
 
     return (
@@ -67,6 +69,7 @@ class StudentsActionsContainer extends Component {
                       <option value="change_tuition_fee">Zmena výšky školného</option>
                       <option value="change_activity_point">Zmena základu aktivity bodov</option>
                       <option value="download_students_reports">Stiahnuť reporty</option>
+                      <option value="add_activity_points">Pridať aktivity body</option>
                     )}
                     </Field>
                   </div>

@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
             Route::post('/students/profile', 'AdminController@exportStudentProfiles');
             Route::put('/students/points', 'AdminController@changeActivityPoints');
+            Route::post('/students/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@addActivityPoints']);
             Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
 
             Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
@@ -107,6 +108,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/nxEvents/{eventId}/attendees', 'NxEventsController@getEventAttendees');
 
         Route::get('/nxEvents', 'NxEventsController@getNxEvents');
+        Route::get('/nxEvents/list', 'NxEventsController@getNxEventsList');
         Route::post('/nxEvents', ['middleware' => ['permission:create_events'], 'uses' => 'NxEventsController@createNxEvent']);
         Route::put('/nxEvents/{eventId}', ['middleware' => ['permission:update_events'], 'uses' => 'NxEventsController@updateNxEvent']);
         Route::delete('/nxEvents/{eventId}', ['middleware' => ['permission:delete_events'], 'uses' => 'NxEventsController@deleteNxEvent'])

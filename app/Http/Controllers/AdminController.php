@@ -17,6 +17,7 @@ use App\DefaultSystemSettings;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Comment;
+use App\Models\ActivityPoints;
 use App\Models\Report;
 use App\Models\QuestionForm\Form;
 use App\Models\QuestionForm\Answer;
@@ -885,5 +886,50 @@ class AdminController extends Controller
         }
 
         return $report->download('xls');
+    }
+
+    public function addActivityPoints(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'semesterId' => 'required|numeric',
+            'activityType' => 'required|string|min:1',
+            'gainedPoints' => 'required|numeric|min:0',
+            'maxPossiblePoints' => 'required|numeric|min:0',
+            'name' => 'required|string|min:0',
+            'selectedStudents' => 'required|min:1',
+            'notes' => 'string',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $points = [];
+        foreach ($request->get('selectedStudents') as $studentId) {
+            $data = [
+                'gainedPoints' => $request->get('gainedPoints'),
+                'maxPossiblePoints' => $request->get('maxPossiblePoints'),
+                'studentId' => $studentId,
+                'semesterId' => $request->get('semesterId'),
+                'activityName' => $request->get('name'),
+                'activityType' => $request->get('activityType'),
+                'note' => $request->get('note'),
+                'activityModelId' => null,
+                'addedByUserId' => \Auth::user()->id,
+            ];
+
+            if ($request->get('activityType') === 'event') {
+                $data['activityModelId'] = $request->get('activityModelId');
+            }
+
+            $points[] = ActivityPoints::create($data);
+        }
+
+        return response()->json($points);
     }
 }

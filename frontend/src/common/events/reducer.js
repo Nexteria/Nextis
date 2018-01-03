@@ -44,6 +44,7 @@ const InitialState = Record({
     events: new Map(),
     action: null,
   }),
+  eventsDropdownList: new Map(),
 }, 'events');
 
 export default function eventsReducer(state = new InitialState, action) {
@@ -63,6 +64,10 @@ export default function eventsReducer(state = new InitialState, action) {
 
     case actions.TOGGLE_FUTURE_EVENTS: {
       return state.update('visibleFutureEvents', visibleFutureEvents => !visibleFutureEvents);
+    }
+
+    case actions.FETCH_EVENTS_DROPDOWN_LIST_SUCCESS: {
+      return state.set('eventsDropdownList', new List(action.payload));
     }
 
     case actions.LOAD_QUESTIONNAIRE_SUCCESS: {

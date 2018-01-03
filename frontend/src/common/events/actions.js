@@ -6,6 +6,11 @@ import toastr from 'toastr';
 export const TOGGLE_EVENT_TERM = 'TOGGLE_EVENT_TERM';
 export const SAVE_SIGNIN_FORM_DATA = 'SAVE_SIGNIN_FORM_DATA';
 
+export const FETCH_EVENTS_DROPDOWN_LIST = 'FETCH_EVENTS_DROPDOWN_LIST';
+export const FETCH_EVENTS_DROPDOWN_LIST_START = 'FETCH_EVENTS_DROPDOWN_LIST_START';
+export const FETCH_EVENTS_DROPDOWN_LIST_SUCCESS = 'FETCH_EVENTS_DROPDOWN_LIST_SUCCESS';
+export const FETCH_EVENTS_DROPDOWN_LIST_ERROR = 'FETCH_EVENTS_DROPDOWN_LIST_ERROR';
+
 export const FETCH_EVENT_ATTENDEES = 'FETCH_EVENT_ATTENDEES';
 export const FETCH_EVENT_ATTENDEES_START = 'FETCH_EVENT_ATTENDEES_START';
 export const FETCH_EVENT_ATTENDEES_SUCCESS = 'FETCH_EVENT_ATTENDEES_SUCCESS';
@@ -741,6 +746,18 @@ export function fetchEventAttendees(eventId, attendeesType) {
     },
     payload: {
       promise: fetch(`/nxEvents/${eventId}/attendees?type=${attendeesType}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function fetchEventsDropdownList() {
+  return ({ fetch }) => ({
+    type: FETCH_EVENTS_DROPDOWN_LIST,
+    payload: {
+      promise: fetch('/nxEvents/list', {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
       }).then(response => response.json()),

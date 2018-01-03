@@ -296,4 +296,10 @@ class NxEventsController extends Controller
 
         return response()->json($this->beforeEventQuestionnaireTransformer->transform($event));
     }
+
+    public function getNxEventsList()
+    {
+        $events = NxEvent::select('id', 'name', 'semesterId', 'activityPoints')->get();
+        return response()->json($events);
+    }
 }

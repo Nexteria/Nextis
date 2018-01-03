@@ -20,6 +20,15 @@ class ActivityPoints extends Model
         'activityModelId',
     ];
 
+    protected $casts = [
+        'gainedPoints' => 'integer',
+        'maxPossiblePoints' => 'integer',
+        'semesterId' => 'integer',
+        'addedByUserId' => 'integer',
+        'studentId' => 'integer',
+        'activityModelId' => 'integer',
+    ];
+
     public function student()
     {
         return $this->belongsTo('App\Student', 'studentId');

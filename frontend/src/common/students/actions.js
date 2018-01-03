@@ -5,6 +5,11 @@ export const DELETE_ACTIVITY_POINTS_START = 'DELETE_ACTIVITY_POINTS_START';
 export const DELETE_ACTIVITY_POINTS_SUCCESS = 'DELETE_ACTIVITY_POINTS_SUCCESS';
 export const DELETE_ACTIVITY_POINTS_ERROR = 'DELETE_ACTIVITY_POINTS_ERROR';
 
+export const ADD_ACTIVITY_POINTS = 'ADD_ACTIVITY_POINTS';
+export const ADD_ACTIVITY_POINTS_START = 'ADD_ACTIVITY_POINTS_START';
+export const ADD_ACTIVITY_POINTS_SUCCESS = 'ADD_ACTIVITY_POINTS_SUCCESS';
+export const ADD_ACTIVITY_POINTS_ERROR = 'ADD_ACTIVITY_POINTS_ERROR';
+
 export const FETCH_EVENT_ACTIVITY_DETAILS = 'FETCH_EVENT_ACTIVITY_DETAILS';
 export const FETCH_EVENT_ACTIVITY_DETAILS_START = 'FETCH_EVENT_ACTIVITY_DETAILS_START';
 export const FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS = 'FETCH_EVENT_ACTIVITY_DETAILS_SUCCESS';
@@ -344,6 +349,25 @@ export function deleteActivityPoints(activityPointsId, studentId) {
         method: 'delete',
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function addActivityPoints(data, selectedStudents) {
+  return ({ fetch }) => ({
+    type: ADD_ACTIVITY_POINTS,
+    payload: {
+      promise: fetch('/admin/students/points', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+          note: data.note.toString('html'),
+          selectedStudents
+        }),
       }).then(response => response.json()),
     },
   });

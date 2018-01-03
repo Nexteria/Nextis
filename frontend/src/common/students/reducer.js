@@ -29,6 +29,21 @@ export default function studentsReducer(state = new InitialState, action) {
       )));
     }
 
+    case actions.ADD_ACTIVITY_POINTS_SUCCESS: {
+      const activities = action.payload;
+      return state.updateIn(['admin', 'students'], students => {
+        let newStudents = students;
+        activities.forEach(activity => {
+          newStudents = newStudents.updateIn(
+            [activity.studentId, 'activityPoints'],
+            points => points.push(new Map(activity))
+          );
+        });
+
+        return newStudents;
+      });
+    }
+
     case userActions.FETCH_STUDENT_SUCCESS: {
       const { studentId } = action.meta;
       return state.setIn(['admin', 'students', studentId], new Map(new Student({
