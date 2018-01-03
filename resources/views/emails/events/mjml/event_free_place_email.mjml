@@ -35,15 +35,15 @@
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
-          @if($isMultiterm)
+          <mj-raw>@if($isMultiterm)</mj-raw>
             <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}">
               Prihlásiť sa
             </mj-button>
-          @else
+          <mj-raw>@else</mj-raw>
             <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn">
               Prihlásiť sa
             </mj-button>
-          @endif
+          <mj-raw>@endif</mj-raw>
         </mj-column>
       </mj-section>
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
