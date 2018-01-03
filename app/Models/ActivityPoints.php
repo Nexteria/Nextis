@@ -3,9 +3,12 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
-class ActivityPoints extends Model
+class ActivityPoints extends Model implements AuditableContract
 {
+    use Auditable;
     use SoftDeletes;
 
     protected $fillable = [

@@ -5,6 +5,11 @@ export const DELETE_ACTIVITY_POINTS_START = 'DELETE_ACTIVITY_POINTS_START';
 export const DELETE_ACTIVITY_POINTS_SUCCESS = 'DELETE_ACTIVITY_POINTS_SUCCESS';
 export const DELETE_ACTIVITY_POINTS_ERROR = 'DELETE_ACTIVITY_POINTS_ERROR';
 
+export const UPDATE_ACTIVITY_POINTS = 'UPDATE_ACTIVITY_POINTS';
+export const UPDATE_ACTIVITY_POINTS_START = 'UPDATE_ACTIVITY_POINTS_START';
+export const UPDATE_ACTIVITY_POINTS_SUCCESS = 'UPDATE_ACTIVITY_POINTS_SUCCESS';
+export const UPDATE_ACTIVITY_POINTS_ERROR = 'UPDATE_ACTIVITY_POINTS_ERROR';
+
 export const ADD_ACTIVITY_POINTS = 'ADD_ACTIVITY_POINTS';
 export const ADD_ACTIVITY_POINTS_START = 'ADD_ACTIVITY_POINTS_START';
 export const ADD_ACTIVITY_POINTS_SUCCESS = 'ADD_ACTIVITY_POINTS_SUCCESS';
@@ -367,6 +372,23 @@ export function addActivityPoints(data, selectedStudents) {
           ...data,
           note: data.note.toString('html'),
           selectedStudents
+        }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function updateActivityPoints(data) {
+  return ({ fetch }) => ({
+    type: UPDATE_ACTIVITY_POINTS,
+    payload: {
+      promise: fetch(`/admin/students/${data.studentId}/points`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'put',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
         }),
       }).then(response => response.json()),
     },

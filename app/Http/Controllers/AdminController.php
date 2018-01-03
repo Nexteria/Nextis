@@ -932,4 +932,29 @@ class AdminController extends Controller
 
         return response()->json($points);
     }
+
+    public function changeStudentActivityPoints(Request $request, $studentId)
+    {
+        $validator = \Validator::make($request->all(), [
+            'gainedPoints' => 'required|numeric|min:0',
+            'maxPossiblePoints' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $points = ActivityPoints::where('id', $request->get('id'))->where('studentId', $studentId)->first();
+        $points->gainedPoints = $request->get('gainedPoints');
+        $points->maxPossiblePoints = $request->get('maxPossiblePoints');
+        $points->addedByUserId = \Auth::user()->id;
+        $points->save();
+
+        return response()->json($points);
+    }
 }

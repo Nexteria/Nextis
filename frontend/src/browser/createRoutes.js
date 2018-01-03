@@ -65,7 +65,7 @@ export default function createRoutes() {
           <Route component={NewSemesterDialog} path="new" />
         </Route>
         <Route component={StudentsPage} path="students">
-          <Route component={StudentProfilePage} path=":studentId(/:tab)" />
+          <Route component={StudentProfilePage} path=":studentId(/:tab)(/:modelId)" />
         </Route>
         <Route component={CreateUserPage} path="users/create" />
         <Route component={EditUser} path="users/:userId" />

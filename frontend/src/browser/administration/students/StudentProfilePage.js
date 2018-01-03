@@ -15,6 +15,7 @@ import StudentNotesTab from './StudentNotesTab';
 import StudentNotesFeed from './StudentNotesFeed';
 import StudentActivityPointsTab from './StudentActivityPointsTab';
 import StudentAttendanceTab from './StudentAttendanceTab';
+import ActivityPointsEditDialog from '../../activityPoints/ActivityPointsEditDialog';
 
 class StudentProfilePage extends Component {
 
@@ -64,6 +65,7 @@ class StudentProfilePage extends Component {
     const student = students.get(studentId);
 
     const activeTab = params ? params.tab : 'basicInfo';
+    const activeModelId = params ? parseInt(params.modelId, 10) : '';
 
     return (
       <div>
@@ -142,6 +144,10 @@ class StudentProfilePage extends Component {
                   mountOnEnter
                 >
                   <StudentActivityPointsTab student={student} />
+                  {activeTab === 'activityPoints' && activeModelId ?
+                    <ActivityPointsEditDialog activityId={activeModelId} student={student} />
+                    : null
+                  }
                 </Tab>
                 <Tab
                   eventKey={'attendance'}

@@ -29,6 +29,16 @@ export default function studentsReducer(state = new InitialState, action) {
       )));
     }
 
+    case actions.UPDATE_ACTIVITY_POINTS_SUCCESS: {
+      const { id, studentId } = action.payload;
+
+      return state.updateIn(['admin', 'students', studentId, 'activityPoints'], points => {
+        const index = points.findIndex(activity => activity.get('id') === id);
+
+        return points.set(index, new Map(action.payload));
+      });
+    }
+
     case actions.ADD_ACTIVITY_POINTS_SUCCESS: {
       const activities = action.payload;
       return state.updateIn(['admin', 'students'], students => {

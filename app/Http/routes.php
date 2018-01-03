@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
             Route::post('/students/profile', 'AdminController@exportStudentProfiles');
             Route::put('/students/points', 'AdminController@changeActivityPoints');
+            Route::put('/students/{studentId}/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@changeStudentActivityPoints']);
             Route::post('/students/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@addActivityPoints']);
             Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
 

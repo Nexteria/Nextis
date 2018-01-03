@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { browserHistory } from 'react-router';
 
 
 import EventActivityDetail from './EventActivityDetail';
@@ -70,6 +71,13 @@ export default class ActivityPointsTable extends React.PureComponent {
           ></i>
           : null
         }
+        {row.actions.change_activity_points ?
+          <i
+            className="fa fa-pencil activity-edit-button"
+            onClick={() => browserHistory.push(`/admin/students/${row.studentId}/activityPoints/${row.id}`)}
+          ></i>
+          : null
+        }
       </span>
     );
   }
@@ -115,6 +123,7 @@ export default class ActivityPointsTable extends React.PureComponent {
 
     const options = {
       onRowClick: (row) => this.expandActivity(row),
+      expandBy: 'column',
     };
 
     return (
@@ -169,15 +178,16 @@ export default class ActivityPointsTable extends React.PureComponent {
             Poznámka
         </TableHeaderColumn>
 
-        {hasPermission('delete_activity_points') ?
+        {hasPermission('delete_activity_points') || hasPermission('change_activity_points') ?
           <TableHeaderColumn
             tdStyle={styles.rowTd}
             dataField="actions"
             searchable={false}
+            expandable={false}
             dataFormat={(cell, row) =>
               this.renderActions(cell, row, deleteActivityPoints)
             }
-            width={'5em'}
+            width={'7em'}
           >
               Akcie
           </TableHeaderColumn>
