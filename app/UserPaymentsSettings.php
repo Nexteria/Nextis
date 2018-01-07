@@ -12,6 +12,7 @@ class UserPaymentsSettings extends Model
         'generationSchoolFeeDay',
         'disableEmailNotifications',
         'disableSchoolFeePayments',
+        'userId',
     ];
 
     public function user()
