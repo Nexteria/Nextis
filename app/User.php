@@ -143,9 +143,10 @@ class User extends Authenticatable implements AuditableContract
     public function hostedEventsQuery()
     {
         $userId = $this->id;
-        return \App\NxEvent::join('nx_event_terms', function ($join) {
-            $join->on('nx_events.id', '=', 'nx_event_terms.eventId');
-        })->where('hostId', $userId)->whereNull('nx_event_terms.deleted_at');
+        return \App\NxEvent::join('nx_event_terms', 'nx_events.id', '=', 'nx_event_terms.eventId')
+            ->where('hostId', $userId)
+            ->where('eventEndDateTime', '>', Carbon::now()->subMonth())
+            ->whereNull('nx_event_terms.deleted_at');
     }
 
     public function eventAttendees()

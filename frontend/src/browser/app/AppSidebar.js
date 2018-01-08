@@ -102,12 +102,11 @@ export default class AppSideBar extends Component {
     hasPermission: PropTypes.func.isRequired,
     rolesList: PropTypes.object.isRequired,
     toggleSidebar: PropTypes.func.isRequired,
-    events: PropTypes.object.isRequired,
     rolesData: PropTypes.object,
   };
 
   render() {
-    const { viewer, rolesList, events, hasPermission, rolesData, toggleSidebar } = this.props;
+    const { viewer, rolesList, hasPermission, toggleSidebar, rolesData } = this.props;
 
     const isStudent = viewer.roles.includes(rolesList.get('STUDENT').id);
 
@@ -154,7 +153,7 @@ export default class AppSideBar extends Component {
               </li>
               : null
             }
-            {viewer.hostedEvents.filter(item => events.get(item.eventId)).size > 0 ?
+            {viewer.hostedEvents.size > 0 ?
               <li>
                 <Link activeStyle={styles.activeLinkStyle} to="/host/events">
                   <i className="fa fa-support"></i>

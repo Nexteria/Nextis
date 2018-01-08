@@ -21,7 +21,7 @@ const InitialState = Record({
   ]),
   visiblePastEvents: false,
   visibleFutureEvents: false,
-  events: null,
+  events: new Map(),
   eventDetailsId: null,
   locationDetailsId: null,
   signOut: new Record({

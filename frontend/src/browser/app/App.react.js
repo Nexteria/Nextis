@@ -45,7 +45,6 @@ class App extends Component {
     loadUserGroups: PropTypes.func.isRequired,
     loadRolesList: PropTypes.func.isRequired,
     loadStudentLevelsList: PropTypes.func.isRequired,
-    loadEventList: PropTypes.func.isRequired,
     loadLocationsList: PropTypes.func.isRequired,
     loadConstants: PropTypes.func.isRequired,
     loading: PropTypes.number.isRequired,
@@ -58,12 +57,10 @@ class App extends Component {
     rolesData: PropTypes.object,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const {
       loadViewer,
-      currentLocale,
       loadLocationsList,
-      loadEventList,
       loadRolesList,
       loadStudentLevelsList,
       loadUserGroups,
@@ -75,7 +72,6 @@ class App extends Component {
     loadViewer();
     loadUserGroups();
     loadRolesList();
-    loadEventList({ status: 'all', dateFrom: '2017-01-01', dateTo: '2017-12-31' });
     loadStudentLevelsList();
     loadLocationsList();
     loadConstants();
@@ -102,13 +98,12 @@ class App extends Component {
       rolesList,
       rolesData,
       location,
-      events,
       viewer,
       toggleSidebar,
     } = this.props;
 
-    if (!viewer || !rolesList || events === null) {
-      return <div></div>;
+    if (!viewer || !rolesList) {
+      return null;
     }
 
     let toggleSidebarFunc = toggleSidebar;
@@ -139,12 +134,16 @@ class App extends Component {
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header {...{ viewer }} location={location} />
-        <AppSidebar toggleSidebar={toggleSidebarFunc} {...{ events, viewer, rolesData, isMobileSidebarOpen, rolesList, hasPermission }} ref="main-footer" />
+        <AppSidebar
+          toggleSidebar={toggleSidebarFunc}
+          {...{ viewer, isMobileSidebarOpen, rolesData, rolesList, hasPermission }}
+          ref="main-footer"
+        />
         <div className="content-wrapper">
           {children}
         </div>
         {viewer.confirmedPrivacyPolicy ?
-          ''
+          null
         :
           <PrivacyPolicyDialog />
         }
@@ -166,4 +165,4 @@ export default connect(state => ({
   rolesList: state.users.rolesList,
   rolesData: state.users.viewerRolesData,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
-}), { ...appActions, ...usersActions, ...eventsActions, ...locationsActions, ...semestersActions })(App);
+}), { ...appActions, ...usersActions, ...locationsActions, ...semestersActions })(App);
