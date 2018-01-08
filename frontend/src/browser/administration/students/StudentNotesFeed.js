@@ -87,6 +87,10 @@ class StudentNotesFeed extends Component {
       updateNoteComment,
     } = this.props;
 
+    if (!users) {
+      return null;
+    }
+
     let dayComments = new Map();
 
     comments.filter(comment => !comment.get('parentId'))
