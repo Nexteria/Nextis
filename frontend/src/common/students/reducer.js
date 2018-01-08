@@ -21,6 +21,7 @@ export default function studentsReducer(state = new InitialState, action) {
     case actions.CHANGE_STUDENT_LEVEL_SUCCESS:
     case actions.CHANGE_STUDENTS_ACTIVITY_POINTS_SUCCESS:
     case actions.CHANGE_TUITION_FEE_SUCCESS:
+    case actions.CHANGE_STUDENT_STATUS_SUCCESS:
     case actions.FETCH_ADMIN_STUDENTS_SUCCESS: {
       return state.setIn(['admin', 'students'], new Map(action.payload.map(student =>
         [student.id, new Map(new Student({

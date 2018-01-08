@@ -5,6 +5,11 @@ export const LOAD_STUDENT_MISSING_POINTS_START = 'LOAD_STUDENT_MISSING_POINTS_ST
 export const LOAD_STUDENT_MISSING_POINTS_SUCCESS = 'LOAD_STUDENT_MISSING_POINTS_SUCCESS';
 export const LOAD_STUDENT_MISSING_POINTS_ERROR = 'LOAD_STUDENT_MISSING_POINTS_ERROR';
 
+export const CHANGE_STUDENT_STATUS = 'CHANGE_STUDENT_STATUS';
+export const CHANGE_STUDENT_STATUS_START = 'CHANGE_STUDENT_STATUS_START';
+export const CHANGE_STUDENT_STATUS_SUCCESS = 'CHANGE_STUDENT_STATUS_SUCCESS';
+export const CHANGE_STUDENT_STATUS_ERROR = 'CHANGE_STUDENT_STATUS_ERROR';
+
 export const DELETE_ACTIVITY_POINTS = 'DELETE_ACTIVITY_POINTS';
 export const DELETE_ACTIVITY_POINTS_START = 'DELETE_ACTIVITY_POINTS_START';
 export const DELETE_ACTIVITY_POINTS_SUCCESS = 'DELETE_ACTIVITY_POINTS_SUCCESS';
@@ -408,6 +413,24 @@ export function loadStudentsMissingPointsList() {
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function changeStudentStatus(data, selectedStudents) {
+  return ({ fetch }) => ({
+    type: CHANGE_STUDENT_STATUS,
+    payload: {
+      promise: fetch('/admin/students/status', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'put',
+        notifications: 'both',
+        body: JSON.stringify({
+          ...data,
+          selectedStudents,
+        }),
       }).then(response => response.json()),
     },
   });

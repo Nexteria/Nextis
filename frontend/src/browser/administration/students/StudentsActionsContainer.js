@@ -15,6 +15,7 @@ import AddNoteAction from './actions/AddNoteAction';
 import ExportStudentsProfilesAction from './actions/ExportStudentsProfilesAction';
 import ChangeActivityPointsAction from './actions/ChangeActivityPointsAction';
 import DownloadReportAction from './actions/DownloadReportAction';
+import ChangeStudentStatusAction from './actions/ChangeStudentStatusAction';
 
 import * as actions from '../../../common/students/actions';
 import AddActivityPoints from './actions/AddActivityPoints';
@@ -43,6 +44,7 @@ class StudentsActionsContainer extends Component {
       change_activity_point: <ChangeActivityPointsAction {...{ selectedStudents }} />,
       download_students_reports: <DownloadReportAction {...{ selectedStudents }} />,
       add_activity_points: <AddActivityPoints {...{ selectedStudents }} />,
+      change_student_status: <ChangeStudentStatusAction {...{ selectedStudents }} />,
     });
 
     return (
@@ -52,7 +54,9 @@ class StudentsActionsContainer extends Component {
             <div className="col-xs-12">
               <div className="box">
                 <div className="box-header" style={{ minHeight: '4em' }}>
-                  <h3 className="box-title">Akcie nad vybranými študentami ({selectedStudents ? selectedStudents.size : 0})</h3>
+                  <h3 className="box-title">
+                    Akcie nad vybranými študentami ({selectedStudents ? selectedStudents.size : 0})
+                  </h3>
                   <div className="box-tools">
                     <Field
                       name={'action'}
@@ -70,6 +74,7 @@ class StudentsActionsContainer extends Component {
                       <option value="change_activity_point">Zmena základu aktivity bodov</option>
                       <option value="download_students_reports">Stiahnuť reporty</option>
                       <option value="add_activity_points">Pridať aktivity body</option>
+                      <option value="change_student_status">Zmeniť status študenta</option>
                     )}
                     </Field>
                   </div>

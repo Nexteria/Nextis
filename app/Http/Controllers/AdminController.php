@@ -604,6 +604,32 @@ class AdminController extends Controller
         return $this->getStudents();
     }
 
+    public function changeStudentStatus(Request $request) {
+        $statuses = array_values(\Config::get('constants')['studentStates']);
+        $validator = \Validator::make($request->all(), [
+          'status' => 'required|in:'.implode(',', $statuses),
+          'selectedStudents' => 'required|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $data = $request->all();
+        foreach ($data['selectedStudents'] as $studentId) {
+            $student = Student::findOrFail($studentId);
+            $student->status = $request->get('status');
+            $student->save();
+        }
+
+        return $this->getStudents();
+    }
+
     public function changeTuitionFee(Request $request)
     {
         $validator = \Validator::make($request->all(), [
