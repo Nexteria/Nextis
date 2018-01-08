@@ -35,7 +35,7 @@ class PaymentsController extends Controller
         $payment = Payment::parse(\Input::get('body-plain'));
 
         if ($payment->user && $payment->user->hasRole('STUDENT')) {
-            $paymentSettings = $user->paymentSettings;
+            $paymentSettings = $payment->user->paymentSettings;
 
             if ($paymentSettings) {
                 if ($paymentSettings->disableSchoolFeePayments || $paymentSettings->disableEmailNotifications) {
