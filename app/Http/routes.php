@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('/students/points', 'AdminController@changeActivityPoints');
             Route::put('/students/{studentId}/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@changeStudentActivityPoints']);
             Route::post('/students/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@addActivityPoints']);
+            Route::get('/students/points/missing', 'AdminController@getStudentsWithMissingActivityPoints');
             Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
 
             Route::post('/comments/{commentId}/comments', 'AdminController@createComment');

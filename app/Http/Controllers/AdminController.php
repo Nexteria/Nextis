@@ -957,4 +957,33 @@ class AdminController extends Controller
 
         return response()->json($points);
     }
+
+    public function getStudentsWithMissingActivityPoints()
+    {
+        $activeSemesterId = DefaultSystemSettings::get('activeSemesterId');
+
+        $students = \DB::table('nx_event_attendees')
+            ->select('nx_events.name as eventName', 'students.id as studentId', 'eventId', 'activityPoints')
+            ->where('wasPresent', true)
+            ->where('filledFeedback', true)
+            ->join('students', 'nx_event_attendees.userId', '=', 'students.userId')
+            ->join('attendees_groups', 'attendees_groups.id', '=', 'nx_event_attendees.attendeesGroupId')
+            ->join('nx_events', 'eventId', '=', 'nx_events.id')
+            ->where('semesterId', $activeSemesterId)
+            ->where('nx_events.status', 'published')
+            ->whereNotExists(function ($query) {
+                $query->select(\DB::raw(1))
+                    ->from('nx_grouped_events')
+                    ->whereRaw('nx_event_id = eventId');
+            })
+            ->whereNotExists(function ($query) {
+                $query->select(\DB::raw(1))
+                    ->from('activity_points')
+                    ->whereRaw('students.id = activity_points.studentId')
+                    ->whereRaw('activity_points.activityType = "event"')
+                    ->whereRaw('activity_points.activityModelId = eventId');
+            })->get();
+
+        return response()->json($students);
+    }
 }

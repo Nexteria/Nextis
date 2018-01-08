@@ -3,14 +3,15 @@ import { List } from 'immutable';
 import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
 
 import * as actions from '../../../common/students/actions';
 import * as usersActions from '../../../common/users/actions';
 import StudentsActionsContainer from './StudentsActionsContainer';
 import StudentsTable from './StudentsTable';
+import MissingPoints from './MissingPoints';
 
 const messages = defineMessages({
   title: {
@@ -55,11 +56,6 @@ const messages = defineMessages({
   },
 });
 
-const styles = {
-  rowTd: {
-    cursor: 'pointer',
-  },
-};
 
 class StudentsPage extends Component {
 
@@ -74,22 +70,6 @@ class StudentsPage extends Component {
     const { fetchAdminStudents, loadStudentLevelsList } = this.props;
     fetchAdminStudents();
     loadStudentLevelsList();
-  }
-
-  calculateStudentPointsColor(student) {
-    let color = '#ff0000';
-    const percentage = Math.round(
-      student.get('sumGainedPoints') / student.get('activityPointsBaseNumber') * 100);
-
-    if (percentage >= 50) {
-      color = '#ecb200';
-    }
-
-    if (percentage > 75) {
-      color = '#11ea05';
-    }
-
-    return color;
   }
 
   getStudentPointsComponent(student) {
@@ -118,6 +98,22 @@ class StudentsPage extends Component {
         {tuitionFeeBalance / 100}
       </span>
     );
+  }
+
+  calculateStudentPointsColor(student) {
+    let color = '#ff0000';
+    const percentage = Math.round(
+      student.get('sumGainedPoints') / student.get('activityPointsBaseNumber') * 100);
+
+    if (percentage >= 50) {
+      color = '#ecb200';
+    }
+
+    if (percentage > 75) {
+      color = '#11ea05';
+    }
+
+    return color;
   }
 
   sortTuitionFeeFunction(a, b, order) {   // order is desc or asc
@@ -153,24 +149,34 @@ class StudentsPage extends Component {
           </h1>
         </section>
         <section className="content">
-          <div className="row">
-            <div className="col-xs-12">
-              <div className="box" style={{ marginBottom: '0px'}}>
-                <div className="box-body no-padding">
-                  <StudentsTable
-                    selectedStudents={selectedStudents}
-                    students={students}
-                    studentLevels={studentLevels}
-                    change={change}
-                    initialized={initialized}
-                  />
-                  <div className="clearfix"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Tabs
+            defaultActiveKey={'overview'}
+            id="students-tabs"
+            className="nav-tabs-custom"
+            mountOnEnter
+          >
+            <Tab
+              eventKey={'overview'}
+              title="Prehľad"
+            >
+              <StudentsTable
+                selectedStudents={selectedStudents}
+                students={students}
+                studentLevels={studentLevels}
+                change={change}
+                initialized={initialized}
+              />
+              <div className="clearfix"></div>
+              <StudentsActionsContainer {...{ students, selectedStudents }} />
+            </Tab>
+            <Tab
+              eventKey={'missing-points'}
+              title="Chýbajúce body"
+            >
+              <MissingPoints />
+            </Tab>
+          </Tabs>
         </section>
-        <StudentsActionsContainer {...{ students, selectedStudents }} />
       </div>
     );
   }

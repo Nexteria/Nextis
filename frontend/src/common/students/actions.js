@@ -1,5 +1,10 @@
 import download from 'downloadjs';
 
+export const LOAD_STUDENT_MISSING_POINTS = 'LOAD_STUDENT_MISSING_POINTS';
+export const LOAD_STUDENT_MISSING_POINTS_START = 'LOAD_STUDENT_MISSING_POINTS_START';
+export const LOAD_STUDENT_MISSING_POINTS_SUCCESS = 'LOAD_STUDENT_MISSING_POINTS_SUCCESS';
+export const LOAD_STUDENT_MISSING_POINTS_ERROR = 'LOAD_STUDENT_MISSING_POINTS_ERROR';
+
 export const DELETE_ACTIVITY_POINTS = 'DELETE_ACTIVITY_POINTS';
 export const DELETE_ACTIVITY_POINTS_START = 'DELETE_ACTIVITY_POINTS_START';
 export const DELETE_ACTIVITY_POINTS_SUCCESS = 'DELETE_ACTIVITY_POINTS_SUCCESS';
@@ -390,6 +395,19 @@ export function updateActivityPoints(data) {
         body: JSON.stringify({
           ...data,
         }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function loadStudentsMissingPointsList() {
+  return ({ fetch }) => ({
+    type: LOAD_STUDENT_MISSING_POINTS,
+    payload: {
+      promise: fetch('/admin/students/points/missing', {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
       }).then(response => response.json()),
     },
   });

@@ -9,6 +9,7 @@ const InitialState = Record({
   admin: new Map({
     students: new Map({}),
     activeStudentComments: new Map({}),
+    missingPoints: new List(),
   })
 }, 'students');
 
@@ -51,6 +52,21 @@ export default function studentsReducer(state = new InitialState, action) {
         });
 
         return newStudents;
+      }).updateIn(['admin', 'missingPoints'], points => {
+        let newPoints = points;
+        activities.forEach(activity => {
+          const pointsIndex = points.findIndex(point =>
+            point.get('studentId') === activity.studentId &&
+            point.get('eventId') === activity.activityModelId &&
+            activity.activityType === 'event'
+          );
+
+          if (pointsIndex !== -1) {
+            newPoints = newPoints.delete(pointsIndex);
+          }
+        });
+
+        return newPoints;
       });
     }
 
@@ -155,6 +171,12 @@ export default function studentsReducer(state = new InitialState, action) {
         );
       }
       return newState.deleteIn(['admin', 'activeStudentComments', commentId]);
+    }
+
+    case actions.LOAD_STUDENT_MISSING_POINTS_SUCCESS: {
+      const points = action.payload;
+
+      return state.setIn(['admin', 'missingPoints'], new List(points.map(point => new Map(point))));
     }
 
     default: {
