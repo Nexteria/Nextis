@@ -4,6 +4,11 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import isAfter from 'date-fns/is_after';
+import parse from 'date-fns/parse';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { compose } from 'recompose';
+
 
 
 import './EventsPage.scss';
@@ -15,7 +20,9 @@ import LocationDetailsDialog from './LocationDetailsDialog';
 import PastEvents from './PastEvents';
 import FutureEvents from './FutureEvents';
 import PresentEvents from './PresentEvents';
+import EventsFilter from './EventsFilter';
 import ChooseTermStreamDialog from '../attendance/ChooseTermStreamDialog';
+import EventMeetingLabel from './EventMeetingLabel';
 
 
 const messages = defineMessages({
@@ -94,7 +101,7 @@ class EventsPage extends Component {
 
   render() {
     const {
-      events,
+      data,
       nxLocations,
       locationDetailsId,
       viewer,
@@ -105,6 +112,9 @@ class EventsPage extends Component {
       children,
       visibleFutureEvents,
     } = this.props;
+
+    const { events } = data;
+    console.log(events);
 
     const eventId = parseInt(params.eventId, 10);
 
@@ -126,7 +136,7 @@ class EventsPage extends Component {
       change,
     } = this.props;
 
-    if (!events || !nxLocations) {
+    if (!events) {
       return <div></div>;
     }
 
@@ -134,48 +144,41 @@ class EventsPage extends Component {
     const presentMonthCount = 2;
     const futureMonthCount = 5;
 
-    const sortedEvents = events.valueSeq()
+    const sortedEvents = events
       .filter(event => event.status === 'published' && !event.parentEventId)
       .filter(event => {
         if (eventsFilter === 'all') {
           return true;
         }
 
-        const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
-        const attendee = group ? group.users.get(viewer.id) : null;
+        const attendee = event.attendees[1] || null;
         if (eventsFilter === 'onlyForMe') {
-          if (event.viewer.get('isInvited')) {
+          if (attendee) {
             return true;
           }
           return false;
         }
 
         if (eventsFilter === 'signedIn') {
-          if (event.viewer.getIn(['attendee', 'signedIn'])) {
+          if (attendee && attendee.signedIn) {
             return true;
           }
           return false;
         }
 
         if (eventsFilter === 'signedOut') {
-          if (attendee && (attendee.get('signedOut') || attendee.get('wontGo')) && !attendee.get('standIn')) {
+          if (attendee && (attendee.signedOut || attendee.wontGo) && !attendee.standIn) {
             return true;
           }
           return false;
         }
 
         if (eventsFilter === 'standIn') {
-          if (attendee && attendee.get('standIn')) {
+          if (attendee && attendee.standIn) {
             return true;
           }
           return false;
         }
-      })
-      .sort((a, b) => {
-        const firstStreamA = a.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
-        const firstStreamB = b.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
-
-        return !firstStreamA || !firstStreamB || isAfter(firstStreamA.get('eventStartDateTime'), firstStreamB.get('eventStartDateTime')) ? 1 : -1;
       });
 
     return (
@@ -191,10 +194,10 @@ class EventsPage extends Component {
               <div className="row">
                 <div className="col-md-12">
                   <ul className="timeline">
-                    {sortedEvents.filter(event => event.id === eventId).map(event =>
+                    {sortedEvents.filter(event => event.id === eventId).map((event, index) =>
                       <Event
                         hide={false}
-                        key={event.id}
+                        key={index}
                         event={event}
                         events={events}
                         viewer={viewer}
@@ -224,100 +227,40 @@ class EventsPage extends Component {
               <h1>
                 <FormattedMessage {...messages.title} />
               </h1>
-              <div className="col-md-12" style={{ textAlign: 'center' }}>
-                <button
-                  className={`btn btn-xs events-filter-button ${eventsFilter === 'all' ? 'active' : ''} events-filter-all`}
-                  onClick={() => change('eventsFilter', 'all')}
-                >
-                  <FormattedMessage {...messages.allEvents} />
-                </button>
-                <button
-                  className={`btn btn-xs events-filter-button ${eventsFilter === 'onlyForMe' ? 'active' : ''} events-filter-only-for-me`}
-                  onClick={() => change('eventsFilter', 'onlyForMe')}
-                >
-                  <FormattedMessage {...messages.onlyForMeEvents} />
-                </button>
-                <button
-                  className={`btn btn-xs events-filter-button ${eventsFilter === 'signedIn' ? 'active' : ''} events-filter-signed-in`}
-                  onClick={() => change('eventsFilter', 'signedIn')}
-                >
-                  <FormattedMessage {...messages.signedInEvents} />
-                </button>
-                <button
-                  className={`btn btn-xs events-filter-button ${eventsFilter === 'signedOut' ? 'active' : ''} events-filter-signed-out`}
-                  onClick={() => change('eventsFilter', 'signedOut')}
-                >
-                  <FormattedMessage {...messages.signedOutEvents} />
-                </button>
-                <button
-                  className={`btn btn-xs events-filter-button ${eventsFilter === 'standIn' ? 'active' : ''} events-filter-stand-in`}
-                  onClick={() => change('eventsFilter', 'standIn')}
-                >
-                  <FormattedMessage {...messages.standInEvents} />
-                </button>
-              </div>
+              <EventsFilter change={change} eventsFilter={eventsFilter} />
             </section>
             <section className="content">
               <div className="row">
                 <div className="col-md-12 timeline">
-                  
-                  {visiblePastEvents ?
-                    <PastEvents
-                      {...{
-                        toggleEventDetails,
-                        openEventDetailsDialog,
-                        attendeeSignIn,
-                        attendeeWontGo,
-                        openLocationDetailsDialog,
-                        closeLocationDetailsDialog,
-                        openSignOutDialog,
-                        pastMonthCount,
-                        signAsStandIn,
-                        signOutAsStandIn,
-                        change,
-                        sortedEvents,
-                      }}
+                {sortedEvents.map((event, index) =>
+                  event.isPrimary ?
+                    <Event
+                      hide={false}
+                      key={index}
+                      event={event}
+                      events={events}
+                      viewer={viewer}
+                      nxLocations={nxLocations}
+                      openEventDetailsDialog={openEventDetailsDialog}
+                      openLocationDetailsDialog={openLocationDetailsDialog}
+                      closeLocationDetailsDialog={closeLocationDetailsDialog}
+                      attendeeSignIn={attendeeSignIn}
+                      openSignOutDialog={openSignOutDialog}
+                      attendeeWontGo={attendeeWontGo}
+                      toggleEventDetails={toggleEventDetails}
+                      signAsStandIn={signAsStandIn}
+                      signOutAsStandIn={signOutAsStandIn}
+                      datailsOpen
+                      change={change}
+                      toggleEventTerm={toggleEventTerm}
                     />
-                    : ''
-                  }
-                  <PresentEvents
-                    {...{
-                      toggleEventDetails,
-                      openEventDetailsDialog,
-                      attendeeSignIn,
-                      attendeeWontGo,
-                      openLocationDetailsDialog,
-                      closeLocationDetailsDialog,
-                      openSignOutDialog,
-                      presentMonthCount,
-                      toggleFutureEvents,
-                      togglePastEvents,
-                      visibleFutureEvents,
-                      visiblePastEvents,
-                      change,
-                      sortedEvents,
-                    }}
-                  />
-                  {visibleFutureEvents ?
-                    <FutureEvents
-                      {...{
-                        toggleEventDetails,
-                        openEventDetailsDialog,
-                        attendeeSignIn,
-                        attendeeWontGo,
-                        openLocationDetailsDialog,
-                        closeLocationDetailsDialog,
-                        openSignOutDialog,
-                        signAsStandIn,
-                        futureMonthCount,
-                        presentMonthCount,
-                        signOutAsStandIn,
-                        change,
-                        sortedEvents,
-                      }}
+                  :
+                    <EventMeetingLabel
+                      key={index}
+                      eventName={event.eventName}
+                      meetingDate={event.eventStartDateTime}
                     />
-                    : ''
-                  }
+                )}
 
                   <ul className="timeline">
                     <li>
@@ -357,22 +300,58 @@ class EventsPage extends Component {
   }
 }
 
-EventsPage = reduxForm({
-  form: 'userEventsPage',
-})(EventsPage);
-
 const selector = formValueSelector('userEventsPage');
 
-export default connect(state => ({
-  events: state.events.events,
-  eventsFilter: selector(state, 'eventsFilter'),
-  visiblePastEvents: state.events.visiblePastEvents,
-  visibleFutureEvents: state.events.visibleFutureEvents,
-  eventDetailsId: state.events.eventDetailsId,
-  viewer: state.users.viewer,
-  signOut: state.events.signOut,
-  locationDetailsId: state.events.locationDetailsId,
-  nxLocations: state.nxLocations.locations,
-  initialValues: { eventsFilter: 'onlyForMe' },
-  chooseStreamEventId: selector(state, 'chooseStreamEventId'),
-}), eventsActions)(EventsPage);
+export default compose(
+  reduxForm({
+    form: 'userEventsPage',
+  }),
+  connect(state => ({
+    eventsFilter: selector(state, 'eventsFilter'),
+    visiblePastEvents: state.events.visiblePastEvents,
+    visibleFutureEvents: state.events.visibleFutureEvents,
+    eventDetailsId: state.events.eventDetailsId,
+    viewer: state.users.viewer,
+    signOut: state.events.signOut,
+    locationDetailsId: state.events.locationDetailsId,
+    nxLocations: state.nxLocations.locations,
+    initialValues: { eventsFilter: 'onlyForMe' },
+    chooseStreamEventId: selector(state, 'chooseStreamEventId'),
+  }), eventsActions),
+  graphql(gql`
+    query FetchEvents{
+      events{
+        id
+        name
+        eventType
+        status
+        hasSignInQuestionaire
+        attendees(userId: 25) {
+          id
+          signedIn
+          signedOut
+          standIn
+          wontGo
+          attendeesGroup {
+            id
+            signUpOpenDateTime
+            signUpDeadlineDateTime
+          }
+        }
+        terms {
+          id
+          eventStartDateTime
+          eventEndDateTime
+          parentTermId
+          attendees(userId: 25) {
+            id
+            signedIn
+            signedOut
+            standIn
+            wontGo
+          }
+        }
+      }
+    }
+  `)
+)(EventsPage);

@@ -33,9 +33,15 @@ const styles = {
   },
   eventDateLabel: {
     marginBottom: '0.5em',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   signInTermLabel: {
     fontSize: '0.8em',
+  },
+  meetingSubtitle: {
+    color: '#000',
+    textAlign: 'center',
   }
 };
 
@@ -181,67 +187,43 @@ export default class Event extends Component {
     } = this.props;
 
     const now = parse(new Date());
-    const streams = event.terms.get('streams').sort((a, b) =>
-      isAfter(a.get('eventStartDateTime'), b.get('eventStartDateTime')) ? 1 : -1
+    const streams = event.terms.filter(term => !term.parentTermId).sort((a, b) =>
+      isAfter(parse(a.eventStartDateTime), parse(b.eventStartDateTime)) ? 1 : -1
     );
-    const firstStream = streams.first();
-    const isBeforeEvent = isBefore(now, firstStream.get('eventStartDateTime'));
-    const attendees = event.attendeesGroups.reduce((reduction, group) =>
-      reduction.merge(group.users)
-    , new Map());
 
-    const nxLocation = nxLocations.get(firstStream.get('nxLocationId'));
+    const firstStream = streams[0];
+    const isBeforeEvent = isBefore(now, parse(firstStream.eventStartDateTime));
 
-    const standInPeople = attendees.filter(user => user.get('standIn'));
+    const attendee = event.attendees[0];
 
-    // TODO what if user will be in multiple groups?
-    const group = event.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
-    const eventViewer = event.get('viewer');
-    const isSignInOpen = eventViewer ?
-      isAfter(now, eventViewer.get('signUpOpenDateTime')) && isBefore(now, eventViewer.get('signUpDeadlineDateTime'))
+    const isSignInOpen = attendee ?
+      isAfter(now, parse(attendee.attendeesGroup.signUpOpenDateTime)) && isBefore(now, parse(attendee.attendeesGroup.signUpDeadlineDateTime))
     : false;
 
-    const signInExpired = eventViewer ?
-      isAfter(now, eventViewer.get('signUpDeadlineDateTime')) : false;
-
-    const attendee = event.viewer.get('attendee');
+    const signInExpired = attendee ?
+      isAfter(now, parse(attendee.attendeesGroup.signUpDeadlineDateTime)) : false;
 
 
-    const undecided = attendee && !attendee.get('signedIn') &&
-      !attendee.get('wontGo') && !attendee.get('signedOut');
-
-    const groupedEvents = event.groupedEvents.valueSeq().map(eventId =>
-      events.filter(e => e.id === eventId).first());
+    const undecided = attendee && !attendee.signedIn &&
+      !attendee.wontGo && !attendee.signedOut;
 
     let eventColorClass = '';
     if (attendee) {
-      if (attendee.get('signedIn')) {
+      if (attendee.signedIn) {
         eventColorClass = 'events-filter-signed-in';
       }
 
-      if (attendee.get('wontGo') || attendee.get('signedOut')) {
+      if (attendee.wontGo || attendee.signedOut) {
         eventColorClass = 'events-filter-signed-out';
       }
 
-      if (attendee.get('standIn')) {
+      if (attendee.standIn) {
         eventColorClass = 'events-filter-stand-in';
       }
     }
 
-    const choosedStream = event.getIn(['terms', 'streams'])
-      .filter(stream => stream.getIn(['attendee', 'signedIn']))
-      .first();
-
-    const choosedGroupedEvents = groupedEvents.filter(ev => {
-      const gGroup = ev.attendeesGroups.filter(group => group.users.has(viewer.id)).first();
-      const gAttendee = gGroup ? gGroup.users.get(viewer.id) : null;
-
-      return gAttendee && gAttendee.get('signedIn');
-    });
-
-    const isMultiTerm = event.getIn(['terms', 'streams']).size > 1;
-    const isMultiMeeting = event.getIn(['terms', 'streams'])
-                                .some(stream => stream.get('terms').size > 0);
+    const isMultiTerm = streams.length > 1;
+    const isMultiMeeting = event.terms.filter(term => term.parentTermId).length > 0;
 
     return (
       <li className="users-event" style={{ display: hide ? 'none' : '' }}>
@@ -252,100 +234,19 @@ export default class Event extends Component {
           <EventTypeLabels isMultiMeeting={isMultiMeeting} isMultiTerm={isMultiTerm} />
           <div className="timeline-header">
             <div className="col-md-1 col-sm-2 col-xs-12 event-date">
-              {groupedEvents.size === 0 ?
-                streams.valueSeq().map(stream =>
-                  <div key={stream.get('id')} style={styles.eventDateLabel}>
-                    <span className="label label-primary">
-                      <FormattedDate value={stream.get('eventStartDateTime')} />
-                    </span>
-                  </div>
-                )
-                : null
-              }
+              <div style={styles.eventDateLabel}>
+                <span className="label label-primary">
+                  <FormattedDate value={event.eventStartDateTime} />
+                </span>
+              </div>
             </div>
             <h3 className="col-md-10 col-sm-8 col-xs-12">{event.name}</h3>
             <div className="col-md-1 col-sm-2 col-xs-12 event-details-button">
               <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
             </div>
-            <SignInActions
-              {...{
-                viewer,
-                event,
-                isSignInOpen,
-                signInExpired,
-                isMultiTerm,
-                change,
-                isBeforeEvent,
-                groupedEvents,
-                attendeeSignIn,
-                attendeeWontGo,
-                openSignOutDialog,
-                signOutAsStandIn,
-                signAsStandIn,
-                toggleEventTerm,
-              }}
-            />
           </div>
-          <div
-            className="col-md-12 event-details-container"
-            style={{ display: event.visibleDetails || datailsOpen ? '' : 'none' }}
-          >
-            {groupedEvents.size === 0 && <EventTerms event={event} />}
-            <EventDetails
-              {...{
-                groupedEvents,
-                openLocationDetailsDialog,
-                nxLocation,
-                event,
-                isMultiTerm,
-                isMultiMeeting,
-              }}
-            />
-            <EventDescription
-              {...{
-                event,
-                firstStream,
-                attendees,
-                standInPeople,
-                groupedEvents,
-                openEventDetailsDialog,
-              }}
-            />
-            <div className="clearfix" />
-          </div>
-          {choosedGroupedEvents.size ?
-            <div className="col-md-12 col-sm-12 col-xs-12">
-              <label>Zvolené termíny:</label>
-              {choosedGroupedEvents.valueSeq().map(ev => <span>{ev.get('name')}</span>)}
-            </div>
-            : null
-          }
         </div>
         <div className="clearfix"></div>
-        {choosedStream && groupedEvents.size === 0 &&
-          <MultiMeetingTerms
-            choosedStream={choosedStream}
-            openLocationDetailsDialog={openLocationDetailsDialog}
-            openSignOutDialog={openSignOutDialog}
-            toggleEventTerm={toggleEventTerm}
-            attendeeSignIn={attendeeSignIn}
-            viewerId={viewer.id}
-            event={event}
-            nxLocations={nxLocations}
-            isBeforeEvent={isBeforeEvent}
-          />
-        }
-        {attendee.get('signedIn') && groupedEvents.size > 0 &&
-          <MultiEventsSelection
-            nxLocations={nxLocations}
-            openLocationDetailsDialog={openLocationDetailsDialog}
-            groupedEvents={groupedEvents}
-            openSignOutDialog={openSignOutDialog}
-            attendeeSignIn={attendeeSignIn}
-            toggleEventTerm={toggleEventTerm}
-            viewerId={viewer.id}
-          />
-        }
       </li>
     );
   }

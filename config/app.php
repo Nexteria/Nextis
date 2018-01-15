@@ -155,6 +155,7 @@ return [
         OwenIt\Auditing\AuditingServiceProvider::class,
         Propaganistas\LaravelPhone\LaravelPhoneServiceProvider::class,
         Propaganistas\LaravelIntl\IntlServiceProvider::class,
+        Rebing\GraphQL\GraphQLServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -232,6 +233,6 @@ return [
         'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
         'ImageTools' => Intervention\Image\Facades\Image::class,
+        'GraphQL' => Rebing\GraphQL\Support\Facades\GraphQL::class,
     ],
-
 ];
