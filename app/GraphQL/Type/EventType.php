@@ -47,6 +47,14 @@ class EventType extends GraphQLType
                 'description' => 'If the user has to fill questionaire during SignIn',
                 'selectable' => false,
             ],
+            'groupedEvents' => [
+                'type' => Type::listOf(GraphQL::type('event')),
+                'description' => 'The grouped events with this event',
+            ],
+            'form' => [
+                'type' => GraphQL::type('QuestionForm'),
+                'description' => 'Question form for this event',
+            ],
             'attendees' => [
                 'type' => Type::listOf(GraphQL::type('NxEventAttendee')),
                 'description' => 'The event`s attendees',

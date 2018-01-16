@@ -63,11 +63,6 @@ class NxEventAttendeeType extends GraphQLType
                 'description' => 'The attendee`s terms',
                 'always' => ['id'],
             ],
-            'terms' => [
-                'type' => Type::listOf(GraphQL::type('NxEventTerm')),
-                'description' => 'The attendee`s terms',
-                'always' => ['id'],
-            ],
             'attendeesGroup' => [
                 'type' => GraphQL::type('NxEventAttendeeGroup'),
                 'description' => 'The attendee`s group',

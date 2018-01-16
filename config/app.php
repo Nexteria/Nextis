@@ -175,6 +175,7 @@ return [
         BrianFaust\Commentable\CommentableServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Rebing\GraphQL\GraphQLServiceProvider::class,
     ],
 
     /*

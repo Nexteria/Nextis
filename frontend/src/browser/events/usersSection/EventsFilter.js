@@ -1,5 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import isAfter from 'date-fns/is_after';
+import parse from 'date-fns/parse';
 
 export default class EventsFilter extends Component {
 
@@ -39,4 +41,56 @@ export default class EventsFilter extends Component {
       </div>
     );
   }
+}
+
+export function filterEvents(events, eventsFilter) {
+  return events.filter(event => event.status === 'published' && !event.parentEventId)
+    .filter(event => {
+      if (eventsFilter === 'all') {
+        return true;
+      }
+
+      const attendee = event.attendees[0] || null;
+      switch (eventsFilter) {
+        case 'onlyForMe':
+          return attendee;
+
+        case 'signedIn':
+          return (attendee && attendee.signedIn);
+
+        case 'signedOut':
+          return (attendee && (attendee.signedOut || attendee.wontGo) && !attendee.standIn);
+
+        case 'standIn':
+          return (attendee && attendee.standIn);
+
+        default:
+          return false;
+      }
+    }).reduce((reduction, value) => {
+      value.terms.forEach(term => {
+        const termDate = parse(term.eventStartDateTime);
+        if (!term.parentTermId) {
+          reduction.push({
+            ...value,
+            eventStartDateTime: termDate,
+            isPrimary: true,
+          });
+          return;
+        }
+
+        if (term.attendees[0] && term.attendees[0].signedIn) {
+          reduction.push({
+            eventName: value.name,
+            eventStartDateTime: termDate,
+            isPrimary: false,
+          });
+        }
+      });
+
+      return reduction;
+    }, [])
+    .sort((a, b) =>
+      isAfter(a.eventStartDateTime, b.eventStartDateTime) ? 1 : -1
+  );
 }
