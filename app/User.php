@@ -155,28 +155,38 @@ class User extends Authenticatable implements AuditableContract
 
     public function computeActivityPoints($semesterId = null)
     {
-        $sumGainedPoints = 0;
-        $sumPotentialPoints = 0;
-        $eventAttendees = $this->eventAttendees;
+        $eventAttendees = $this->eventAttendees()
+            ->join('attendees_groups', 'attendees_groups.id', '=', 'attendeesGroupId')
+            ->join('nx_events', 'nx_events.id', '=', 'eventId')
+            ->where('semesterId', $semesterId)
+            ->where('status', 'published')
+            ->get();
 
         if (!$semesterId) {
             $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
         }
 
+        $sumGainedPoints = $this->student->activityPoints()->where('semesterId', $semesterId)->sum('gainedPoints');
+        $sumPotentialPoints = 0;
+        $sumPossibleMissedPoints = 0;
+
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
-            if ($event != null && !$event->getParentEvent() && $event->status == 'published') {
-                if ($event->semesterId == $semesterId) {
-                    if ($attendee->filledFeedback && $attendee->wasPresent) {
-                        $sumGainedPoints += $event->activityPoints;
-                    }
-                    if ($event->eventStartDateTime < Carbon::now() && $event->eventEndDateTime < Carbon::now()) {
-                        $sumPotentialPoints += $event->activityPoints;
-                    }
+            if ($event != null && !$event->getParentEvent()) {
+                if ($event->eventStartDateTime < Carbon::now() && $event->eventEndDateTime < Carbon::now()) {
+                    $sumPotentialPoints += $event->activityPoints;
+                }
+                if ($attendee->wasPresent && !$attendee->filledFeedback) {
+                    $sumPossibleMissedPoints += $event->activityPoints;
                 }
             }
         }
-        return ['sumGainedPoints' => $sumGainedPoints, 'sumPotentialPoints' => $sumPotentialPoints];
+
+        return [
+            'sumGainedPoints' => $sumGainedPoints,
+            'sumPotentialPoints' => $sumPotentialPoints,
+            'sumPossibleMissedPoints' => $sumPossibleMissedPoints,
+        ];
     }
 
     public function generateMonthlySchoolFee($month, $year, $adminUserId, $createdAt = null)

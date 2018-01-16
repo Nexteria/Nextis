@@ -147,22 +147,6 @@ class Report
             $points = $student->user->computeActivityPoints($semester->id);
             $basePoints = $semester->pivot->activityPointsBaseNumber;
 
-            // list of student`s level events which he/she missed
-            $events = NxEvent::where('semesterId', $semester->id)
-                             ->where('status', 'published')
-                             ->get();
-
-            $possiblePoints = 0;
-            foreach ($events as $event) {
-                $attendee = $event->attendees()
-                               ->where('nx_event_attendees.userId', $student->user->id)
-                               ->first();
-
-                if ($attendee && $attendee->wasPresent && !$attendee->filledFeedback) {
-                    $possiblePoints += $event->activityPoints;
-                }
-            }
-
             $data[] = [
                 'firstName' => $student->firstName,
                 'lastName' => $student->lastName,
@@ -172,7 +156,7 @@ class Report
                 'minimumSemesterActivityPoints' => $semester->pivot->minimumSemesterActivityPoints,
                 'gainedPoints' => $points['sumGainedPoints'],
                 'level' => $student->level->name,
-                'possiblePoints' => $possiblePoints,
+                'possiblePoints' => $points['sumPossibleMissedPoints'],
             ];
         }
 
