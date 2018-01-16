@@ -52,7 +52,7 @@ class Report
                     ->whereHas('attendeesGroup', function ($query) use ($term, $hoursBeforeEvent) {
                         $query->whereRaw(
                             $term->attendees()->getTable().'.signedOut > "'.
-                            $term->eventStartDateTime->subHours($reqhoursBeforeEventuest)->format('Y-m-d H:i:s').'"'
+                            $term->eventStartDateTime->subHours($hoursBeforeEvent)->format('Y-m-d H:i:s').'"'
                         );
                     })
                     ->with(['user'])
