@@ -891,14 +891,19 @@ class AdminController extends Controller
     public function getStudentsReports(Request $request, $reportType)
     {
         $report = null;
+        $semesterId = $request->get('semesterId');
+        if (!$semesterId) {
+            $semesterId = DefaultSystemSettings::get('activeSemesterId');
+        }
+
         switch ($reportType) {
             case 'signed-didnt-come':
-                $report = Report::getSignedDidnComeStudentsExcel();
+                $report = Report::getSignedDidnComeStudentsExcel($semesterId);
                 break;
 
             case 'late-unsigning':
                 $hoursBeforeEvent = $request->get('hoursBeforeEvent');
-                $report = Report::getLateUnsigningStudentsExcel($hoursBeforeEvent);
+                $report = Report::getLateUnsigningStudentsExcel($semesterId, $hoursBeforeEvent);
                 break;
             
             case 'student-semesters-points':

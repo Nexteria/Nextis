@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import SelectComponent from '../../../components/Select';
 import InputComponent from '../../../components/Input';
 import * as studentsActions from '../../../../common/students/actions';
+import * as semesterActions from '../../../../common/semesters/actions';
 
 const styles = {
   container: {
@@ -81,7 +82,14 @@ class DownloadReportAction extends Component {
     downloadStudentsReport: PropTypes.func.isRequired,
     reportType: PropTypes.string,
     selectedStudents: PropTypes.object,
+    fetchAdminSemesters: PropTypes.func.isRequired,
+    semesters: PropTypes.object,
   };
+
+  componentDidMount() {
+    const { fetchAdminSemesters } = this.props;
+    fetchAdminSemesters();
+  }
 
   disableDownloadButton(reportType, selectedStudents) {
     let disable = false;
@@ -101,6 +109,7 @@ class DownloadReportAction extends Component {
       downloadStudentsReport,
       handleSubmit,
       reportType,
+      semesters,
       selectedStudents,
     } = this.props;
 
@@ -132,6 +141,25 @@ class DownloadReportAction extends Component {
                     type="number"
                     label={"Zakázaný počet hodín pred eventom"}
                   />
+                  : null
+                }
+                {reportType === 'late-unsigning' || reportType === 'signed-didnt-come' ?
+                  <Field
+                    name={'semesterId'}
+                    normalize={value => parseInt(value, 10)}
+                    component={SelectComponent}
+                    label={"Semester"}
+                  >
+                    {semesters.map(semester =>
+                      <option
+                        value={semester.get('id')}
+                        key={semester.get('id')}
+                      >
+                        {semester.get('name')}
+                      </option>
+                    )}
+                  )}
+                  </Field>
                   : null
                 }
               </div>
@@ -174,7 +202,9 @@ const selector = formValueSelector('downloadStudentsReports');
 
 export default connect(state => ({
   reportType: selector(state, 'reportType'),
+  semesters: state.semesters.getIn(['admin', 'semesters']),
   initialValues: {
     hoursBeforeEvent: 24,
+    semesterId: state.semesters.get('activeSemesterId'),
   },
-}), studentsActions)(DownloadReportAction);
+}), { ...studentsActions, ...semesterActions })(DownloadReportAction);

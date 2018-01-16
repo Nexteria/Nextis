@@ -7,9 +7,9 @@ use \App\DefaultSystemSettings;
 
 class Report
 {
-    public static function getSignedDidnComeStudentsExcel()
+    public static function getSignedDidnComeStudentsExcel($semesterId)
     {
-        $events = NxEvent::where('status', 'published')->get();
+        $events = NxEvent::where('status', 'published')->where('semesterId', $semesterId)->get();
         $attendees = collect([]);
         foreach ($events as $event) {
             $terms = $event->terms()->whereRaw('eventEndDateTime < NOW()')->get();
@@ -41,9 +41,9 @@ class Report
         });
     }
 
-    public static function getLateUnsigningStudentsExcel($hoursBeforeEvent)
+    public static function getLateUnsigningStudentsExcel($semesterId, $hoursBeforeEvent)
     {
-        $events = NxEvent::where('status', 'published')->get();
+        $events = NxEvent::where('status', 'published')->where('semesterId', $semesterId)->get();
         $attendees = collect([]);
         foreach ($events as $event) {
             $terms = $event->terms()->whereRaw('eventEndDateTime < NOW()')->get();

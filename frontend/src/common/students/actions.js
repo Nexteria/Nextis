@@ -317,6 +317,10 @@ export function downloadStudentsReport(data, selectedStudents) {
     options = `${options}&hoursBeforeEvent=${data.hoursBeforeEvent}`;
   }
 
+  if (data.reportType === 'late-unsigning' || data.reportType === 'signed-didnt-come') {
+    options = `${options}&semesterId=${data.semesterId}`;
+  }
+
   if (data.reportType === 'student-semesters-points') {
     options = `${options}&studentId=${selectedStudents.first()}`;
   }
