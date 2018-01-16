@@ -66,6 +66,28 @@ class NxEventTermType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The end datetime of the term',
             ],
+            'canNotSignInReason' => [
+                'type' => Type::string(),
+                'description' => 'If the user can sign in',
+                'args' => [
+                    'userId' => [
+                        'type' => Type::int(),
+                        'name' => 'userId',
+                    ]
+                ],
+                'resolve' => function ($root, $args) {
+                    if (isset($args['userId'])) {
+                        $attendee = $root->attendees()->where('userId', $args['userId'])->first();
+                        if (!$attendee) {
+                            return 'user_not_invited';
+                        }
+                        return $root->event->canSignInAttendee($attendee, $root->id)['codename'];
+                    }
+
+                    return 'user_not_specified';
+                },
+                'selectable' => false,
+            ],
             'attendees' => [
                 'type' => Type::listOf(GraphQL::type('NxEventAttendee')),
                 'description' => 'The event`s attendees',
@@ -77,7 +99,6 @@ class NxEventTermType extends GraphQLType
                 ],
                 'resolve' => function ($root, $args) {
                     if (isset($args['userId'])) {
-                        \Log::error(var_export($root->attendees()->where('userId', $args['userId'])->get(), true));
                         return $root->attendees()->where('userId', $args['userId'])->get();
                     }
 

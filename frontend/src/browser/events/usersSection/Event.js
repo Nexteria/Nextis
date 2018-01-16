@@ -222,6 +222,10 @@ export default class Event extends Component {
       }
     }
 
+    const groupedEvents = event.groupedEvents.map(groupedEvent =>
+      events.filter(e => e.id === groupedEvent.id)[0]
+    );
+
     const isMultiTerm = streams.length > 1;
     const isMultiMeeting = event.terms.filter(term => term.parentTermId).length > 0;
 
@@ -244,6 +248,24 @@ export default class Event extends Component {
             <div className="col-md-1 col-sm-2 col-xs-12 event-details-button">
               <i className="fa fa-bars" onClick={() => toggleEventDetails(event)}></i>
             </div>
+            <SignInActions
+              {...{
+                attendee,
+                event,
+                isSignInOpen,
+                signInExpired,
+                isMultiTerm,
+                change,
+                isBeforeEvent,
+                groupedEvents,
+                attendeeSignIn,
+                attendeeWontGo,
+                openSignOutDialog,
+                signOutAsStandIn,
+                signAsStandIn,
+                toggleEventTerm,
+              }}
+            />
           </div>
         </div>
         <div className="clearfix"></div>

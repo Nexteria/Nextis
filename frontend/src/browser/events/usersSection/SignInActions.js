@@ -8,13 +8,13 @@ import { Map } from 'immutable';
 export default class SignInActions extends Component {
 
   static propTypes = {
-    viewer: PropTypes.object.isRequired,
+    attendee: PropTypes.object.isRequired,
     toggleEventTerm: PropTypes.func.isRequired,
   }
 
   render() {
     const {
-      viewer,
+      attendee,
       event,
       isSignInOpen,
       signInExpired,
@@ -30,9 +30,8 @@ export default class SignInActions extends Component {
       toggleEventTerm,
     } = this.props;
 
-    const eventViewer = event.get('viewer');
 
-    if (!eventViewer.get('isInvited')) {
+    if (!attendee) {
       return (
         <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
           Tento event nie je pre teba dostupný
@@ -40,21 +39,21 @@ export default class SignInActions extends Component {
       );
     }
 
-    const attendee = eventViewer.has('attendee') ? eventViewer.get('attendee') : null;
-    const signedIn = attendee ? attendee.get('signedIn') : false;
-    const signedOut = attendee ? attendee.get('signedOut') : false;
-    const standIn = attendee ? attendee.get('standIn') : false;
-    const wontGo = attendee ? attendee.get('wontGo') : false;
-    const wasPresent = attendee ? attendee.get('wasPresent') : false;
-    const filledFeedback = attendee ? attendee.get('filledFeedback') : false;
+    const signedIn = attendee ? attendee.signedIn : false;
+    const signedOut = attendee ? attendee.signedOut : false;
+    const standIn = attendee ? attendee.standIn : false;
+    const wontGo = attendee ? attendee.wontGo : false;
+    const wasPresent = attendee ? attendee.wasPresent : false;
+    const filledFeedback = attendee ? attendee.filledFeedback : false;
 
     let canSignIn = false;
     let canNotSignInReasons = new Map();
-    event.getIn(['terms', 'streams']).forEach(stream => {
-      if (stream.get('canViewerSignIn')) {
+    const streams = event.terms.filter(term => !term.parentTermId);
+    streams.forEach(term => {
+      if (!term.canNotSignInReason) {
         canSignIn = true;
       } else {
-        canNotSignInReasons = canNotSignInReasons.set(stream.get('canViewerSignInMessageCodename'), true);
+        canNotSignInReasons = canNotSignInReasons.set(term.canNotSignInReason, true);
       }
     });
 
@@ -65,18 +64,18 @@ export default class SignInActions extends Component {
       <div>
         <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
           {isSignInOpen &&
-            <span>Deadline prihlasovania: <FormattedDate value={eventViewer.get('signUpDeadlineDateTime')} /></span>
+            <span>Deadline prihlasovania: <FormattedDate value={attendee.attendeesGroup.signUpDeadlineDateTime} /></span>
           }
           {!signedIn && signInExpired &&
-            <span>Prihlasovanie bolo možné do: <FormattedDate value={eventViewer.get('signUpDeadlineDateTime')} /></span>
+            <span>Prihlasovanie bolo možné do: <FormattedDate value={attendee.attendeesGroup.signUpDeadlineDateTime} /></span>
           }
           {!isSignInOpen && !signInExpired &&
             <span>
               <span>Prihlasovanie sa otvára: </span>
               <span>
-                <FormattedDate value={eventViewer.get('signUpOpenDateTime')} />
+                <FormattedDate value={attendee.attendeesGroup.signUpOpenDateTime} />
                 <span> o </span>
-                <FormattedTime value={eventViewer.get('signUpOpenDateTime')} />
+                <FormattedTime value={attendee.attendeesGroup.signUpOpenDateTime} />
               </span>
             </span>
           }
@@ -99,23 +98,23 @@ export default class SignInActions extends Component {
                 if (isMultiTerm) {
                   change('chooseStreamEventId', event.id);
                 } else {
-                  toggleEventTerm(event.getIn(['terms', 'streams']).first().get('id'), event.id);
-                  if (event.has('questionForm') && event.get('questionForm')) {
+                  toggleEventTerm(streams[0].id, event.id);
+                  if (event.form) {
                     browserHistory.push({
                       pathname: `/events/${event.id}/questionnaire`,
-                      state: { viewerId: viewer.id, groupId: viewer.attendeeGroupId }
+                      state: { viewerId: attendee.userId, groupId: attendee.attendeesGroup.id }
                     });
                   } else {
                     if (groupedEvents.size) {
                       browserHistory.push(`/events/${event.id}/login`);
                     } else {
-                      attendeeSignIn(viewer.get('id'));
+                      attendeeSignIn(attendee.userId);
                     }
                   }
                 }
               }}
             >
-              {event.has('questionForm') && event.get('questionForm') ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
+              {event.form ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
               Záväzne sa prihlasujem {isMultiTerm ? '- vybrať termín' : ''}
             </button>
           }
@@ -131,11 +130,11 @@ export default class SignInActions extends Component {
             <button
               className="btn btn-danger btn-xs"
               onClick={() => {
-                toggleEventTerm(event.getIn(['terms', 'streams']).first().get('id'), event.id);
+                toggleEventTerm(streams[0].id, event.id);
                 if (event.mandatoryParticipation) {
                   openSignOutDialog(event, 'WONT_GO');
                 } else {
-                  attendeeWontGo(viewer.get('id'));
+                  attendeeWontGo(attendee.userId);
                 }
               }}
             >
@@ -146,8 +145,8 @@ export default class SignInActions extends Component {
             <button
               className="btn btn-info btn-xs"
               onClick={() => {
-                toggleEventTerm(event.getIn(['terms', 'streams']).first().get('id'), event.id);
-                signAsStandIn(viewer.get('id'));
+                toggleEventTerm(streams[0].id, event.id);
+                signAsStandIn(attendee.userId);
               }}
             >
               Prihlásiť ako náhradník
@@ -157,8 +156,8 @@ export default class SignInActions extends Component {
             <button
               className="btn btn-warning btn-xs"
               onClick={() => {
-                toggleEventTerm(event.getIn(['terms', 'streams']).first().get('id'), event.id);
-                signOutAsStandIn(viewer.get('id'));
+                toggleEventTerm(streams[0].id, event.id);
+                signOutAsStandIn(attendee.userId);
               }}
             >
               Odhlásiť z náhradníkov

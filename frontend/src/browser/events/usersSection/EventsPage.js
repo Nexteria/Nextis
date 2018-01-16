@@ -3,8 +3,6 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import isAfter from 'date-fns/is_after';
-import parse from 'date-fns/parse';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose } from 'recompose';
@@ -20,7 +18,7 @@ import LocationDetailsDialog from './LocationDetailsDialog';
 import PastEvents from './PastEvents';
 import FutureEvents from './FutureEvents';
 import PresentEvents from './PresentEvents';
-import EventsFilter from './EventsFilter';
+import EventsFilter, { filterEvents } from './EventsFilter';
 import ChooseTermStreamDialog from '../attendance/ChooseTermStreamDialog';
 import EventMeetingLabel from './EventMeetingLabel';
 
@@ -144,42 +142,8 @@ class EventsPage extends Component {
     const presentMonthCount = 2;
     const futureMonthCount = 5;
 
-    const sortedEvents = events
-      .filter(event => event.status === 'published' && !event.parentEventId)
-      .filter(event => {
-        if (eventsFilter === 'all') {
-          return true;
-        }
+    const sortedEvents = filterEvents(events, eventsFilter);
 
-        const attendee = event.attendees[1] || null;
-        if (eventsFilter === 'onlyForMe') {
-          if (attendee) {
-            return true;
-          }
-          return false;
-        }
-
-        if (eventsFilter === 'signedIn') {
-          if (attendee && attendee.signedIn) {
-            return true;
-          }
-          return false;
-        }
-
-        if (eventsFilter === 'signedOut') {
-          if (attendee && (attendee.signedOut || attendee.wontGo) && !attendee.standIn) {
-            return true;
-          }
-          return false;
-        }
-
-        if (eventsFilter === 'standIn') {
-          if (attendee && attendee.standIn) {
-            return true;
-          }
-          return false;
-        }
-      });
 
     return (
       <div>
@@ -326,8 +290,15 @@ export default compose(
         eventType
         status
         hasSignInQuestionaire
+        form {
+          id
+        }
+        groupedEvents {
+          id
+        }
         attendees(userId: 25) {
           id
+          userId
           signedIn
           signedOut
           standIn
@@ -342,6 +313,7 @@ export default compose(
           id
           eventStartDateTime
           eventEndDateTime
+          canNotSignInReason(userId: 25)
           parentTermId
           attendees(userId: 25) {
             id
