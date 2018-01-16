@@ -166,9 +166,13 @@ class User extends Authenticatable implements AuditableContract
             $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
         }
 
-        $sumGainedPoints = $this->student->activityPoints()->where('semesterId', $semesterId)->sum('gainedPoints');
+        $sumGainedPoints = 0;
         $sumPotentialPoints = 0;
         $sumPossibleMissedPoints = 0;
+
+        if ($this->student) {
+            $sumGainedPoints = $this->student->activityPoints()->where('semesterId', $semesterId)->sum('gainedPoints');
+        }
 
         foreach ($eventAttendees as $attendee) {
             $event = $attendee->event();
