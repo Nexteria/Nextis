@@ -112,7 +112,7 @@ class AdminController extends Controller
 
         $results = [];
         foreach ($semesters as $semester) {
-            $students = $semester->students()->where('status', 'active')->get()->map(function ($student) {
+            $students = $semester->students()->where('status', 'active')->whereIn('semester_student.studentLevelId', [1,2,3])->get()->map(function ($student) {
                 return [
                   'id' => $student->id,
                   'levelId' => $student->pivot->studentLevelId,
