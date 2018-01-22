@@ -54,6 +54,7 @@ class EditGuideDialog extends Component {
 
         if (gField) {
           html = gField.get('value');
+          data[`${field.get('codename')}_needUpdates`] = gField.get('needUpdates') || false;
         }
       }
       data[field.get('codename')] = RichTextEditor.createValueFromString(html, 'html');
@@ -171,6 +172,15 @@ class EditGuideDialog extends Component {
                     name={field.get('codename')}
                     component={TextEditorComponent}
                     label={field.get('name')}
+                  />
+                  <Field
+                    name={`${field.get('codename')}_needUpdates`}
+                    component={InputComponent}
+                    type="checkbox"
+                    labelCol={2}
+                    contentCol={1}
+                    label="Potrebný update:"
+                    inputStyle={{ marginBottom: '2em' }}
                   />
                 </div>
               )}

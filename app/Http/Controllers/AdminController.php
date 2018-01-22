@@ -1162,12 +1162,16 @@ class AdminController extends Controller
         $updated = [];
         foreach ($guide->fields as $field) {
             $updated[] = $field->fieldType->codename;
-            if ($request->has($field->fieldType->codename)) {
+            if ($request->exists($field->fieldType->codename)) {
                 $value = $request->get($field->fieldType->codename);
                 $field->value = clean($value);
-                if ($field->fieldType->required && ($value === '<p><br></p>' || $value === '')) {
+                $needUpdates = $request->get($field->fieldType->codename.'_needUpdates');
+                if ($needUpdates && $needUpdates != 'false') {
                     $field->needUpdates = Carbon::now();
+                } else {
+                    $field->needUpdates = null;
                 }
+
                 $field->userId = \Auth::user()->id;
                 $field->save();
             }
@@ -1179,12 +1183,15 @@ class AdminController extends Controller
                 continue;
             }
 
-            if ($request->has($type->codename)) {
+            if ($request->exists($type->codename)) {
                 $value = $request->get($type->codename);
                 $field = new GuideField();
                 $field->fieldTypeId = $type->id;
-                if ($type->required && ($value === '<p><br></p>' || $value === '')) {
+                $needUpdates = $request->get($type->codename.'_needUpdates');
+                if ($needUpdates && $needUpdates != 'false') {
                     $field->needUpdates = Carbon::now();
+                } else {
+                    $field->needUpdates = null;
                 }
                 $field->value = clean($value);
                 $field->userId = \Auth::user()->id;

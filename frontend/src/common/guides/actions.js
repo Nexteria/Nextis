@@ -101,6 +101,7 @@ export function editGuide(data, guideId) {
 
     fields.forEach(field => {
       formData.append(field.get('codename'), data[field.get('codename')].toString('html'));
+      formData.append(`${field.get('codename')}_needUpdates`, data[`${field.get('codename')}_needUpdates`]);
     });
 
     formData.append('firstName', data.firstName);
