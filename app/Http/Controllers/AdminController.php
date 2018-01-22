@@ -918,6 +918,10 @@ class AdminController extends Controller
             case 'students-active-semester-points':
                 $report = Report::getStudentsActiveSemesterPointsExcel();
                 break;
+
+            case 'students-active-semester-attendance':
+                $report = Report::getStudentsActiveSemesterAttendance();
+                break;
         }
 
         return $report->download('xls');

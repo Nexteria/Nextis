@@ -75,6 +75,20 @@ const studentsActiveSemesterPointsDescription = (
   </div>
 );
 
+const studentsActiveSemesterAttendanceDescription = (
+  <div>
+    <span>Report obsahuje zaznamy o vsetkych pozvanych studentoch na stretnutiach a eventoch a informácie:</span>
+    <ul>
+      <li>Meno a priezvisko</li>
+      <li>Level</li>
+      <li>Názov eventu</li>
+      <li>Dátum stretnutia</li>
+      <li>Či bol študent prihlásený, odhlásený alebo dal vedieť, že nepríde</li>
+      <li>Či daný študent bol na stretnutí a či vyplnil feedback</li>
+    </ul>
+  </div>
+);
+
 class DownloadReportAction extends Component {
 
   static propTypes = {
@@ -132,6 +146,7 @@ class DownloadReportAction extends Component {
                   <option value={'late-unsigning'}>Zoznam neskoro sa odhlasujúcich</option>
                   <option value={'student-semesters-points'}>Prehľad aktivít študenta</option>
                   <option value={'students-active-semester-points'}>Prehľad bodov študentov</option>
+                  <option value={'students-active-semester-attendance'}>Prehľad účasti študentov</option>
                 )}
                 </Field>
                 {reportType === 'late-unsigning' ?
@@ -184,6 +199,7 @@ class DownloadReportAction extends Component {
               {reportType === 'late-unsigning' ? lateUnsigningDescription : null}
               {reportType === 'student-semesters-points' ? studentSemesterPointsDescription : null}
               {reportType === 'students-active-semester-points' ? studentsActiveSemesterPointsDescription : null}
+              {reportType === 'students-active-semester-attendance' ? studentsActiveSemesterAttendanceDescription : null}
               
             </div>
           </form>

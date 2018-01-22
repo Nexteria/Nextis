@@ -3,6 +3,8 @@
 use Carbon\Carbon;
 use \App\NxEvent;
 use \App\Student;
+use \App\Semester;
+use \App\NxEventTerm;
 use \App\DefaultSystemSettings;
 
 class Report
@@ -164,6 +166,49 @@ class Report
             $excel->sheet('Data', function ($sheet) use ($data, $student) {
                 $sheet->loadView('exports.students_active_semesters_points', [
                     'data' => $data,
+                ]);
+            });
+        });
+    }
+
+    public static function getStudentsActiveSemesterAttendance()
+    {
+        $semester = Semester::where('id', DefaultSystemSettings::get('activeSemesterId'))->first();
+
+        $eventIds = NxEvent::where('semesterId', $semester->id)
+            ->where('status', 'published')
+            ->whereDoesntHave('terms', function ($query) {
+                $query->whereRaw('eventEndDateTime > NOW()');
+            })
+            ->pluck('id');
+
+        $termAttendees = NxEventTerm::whereIn('eventId', $eventIds)
+            ->join('nx_event_attendees_nx_event_terms', 'termId', '=', 'nx_event_terms.id')
+            ->join('nx_event_attendees', 'attendeeId', '=', 'nx_event_attendees.id')
+            ->join('nx_events', 'nx_events.id', '=', 'eventId')
+            ->join('students', 'students.userId', '=', 'nx_event_attendees.userId')
+            ->join('semester_student', 'semester_student.studentId', '=', 'students.id')
+            ->join('student_levels', 'student_levels.id', '=', 'semester_student.studentLevelId')
+            ->where('semester_student.semesterId', DefaultSystemSettings::get('activeSemesterId'))
+            ->whereNull('nx_event_attendees.deleted_at')
+            ->select([
+                'nx_events.name as eventName',
+                'nx_event_attendees_nx_event_terms.wasPresent',
+                'nx_event_attendees_nx_event_terms.filledFeedback',
+                'nx_event_attendees_nx_event_terms.signedIn',
+                'nx_event_attendees_nx_event_terms.standIn',
+                'nx_event_attendees_nx_event_terms.signedOut',
+                'nx_event_attendees_nx_event_terms.wontGo',
+                'students.firstName',
+                'students.lastName',
+                'student_levels.name as levelName',
+                'nx_event_terms.eventStartDateTime',
+            ])->get();
+
+        return \Excel::create('Prehľad účasti študentov', function ($excel) use ($termAttendees) {
+            $excel->sheet('Data', function ($sheet) use ($termAttendees) {
+                $sheet->loadView('exports.students_active_semesters_attendance', [
+                    'data' => $termAttendees,
                 ]);
             });
         });
