@@ -104,7 +104,7 @@
               Dnes sa otvorilo prihlasovanie na <b>{{ $eventType }} {{ $eventName }}</b>. Daj nám, prosím, vedieť do <b>{{ $eventSignInDeadline }}</b>, či sa ho zúčastníš.
             </p>
             <p>
-              Preto, že event je viactermínový, je možné prihlásiť sa iba priamo v Space-i
+              Keďže sa dá vybrať jedna z viacerých možností termínu kurzu, prihlásiť sa dá iba priamo v Space
             </p></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>

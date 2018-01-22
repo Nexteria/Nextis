@@ -39,6 +39,10 @@ import AddPaymentsDialog from './payments/AddPaymentsDialog';
 import SemestersPage from './administration/semesters/SemestersPage';
 import NewSemesterDialog from './administration/semesters/NewSemesterDialog';
 import StudentsPage from './administration/students/StudentsPage';
+import GuidesPage from './administration/guides/GuidesPage';
+import EditGuideFieldDialog from './administration/guides/EditGuideFieldDialog';
+import EditGuideDialog from './administration/guides/EditGuideDialog';
+import GuideProfilePageDialog from './administration/guides/GuideProfilePageDialog';
 import StudentProfilePage from './administration/students/StudentProfilePage';
 import BeforeEventQuestionnaire from './events/usersSection/BeforeEventQuestionnaire';
 
@@ -77,9 +81,17 @@ export default function createRoutes() {
           <Route component={EditUserGroup} path=":groupId" />
         </Route>
 
+        <Route component={GuidesPage} path="guides">
+          <Route component={EditGuideFieldDialog} path="fields/add" />
+          <Route component={EditGuideFieldDialog} path="fields/:fieldId" />
+          <Route component={EditGuideDialog} path="add" />
+          <Route component={EditGuideDialog} path=":guideId" />
+          <Route component={GuideProfilePageDialog} path=":guideId/profile" />
+        </Route>
+
         <Route component={EventsPage} path="events">
           <Route component={EventsDefaultSettings} path="settings" />
-          <Route component={Events} path="category/:category"/>
+          <Route component={Events} path="category/:category" />
         </Route>
         <Route component={EditEvent} path="events/:eventId" />
 
@@ -89,13 +101,12 @@ export default function createRoutes() {
         <Route component={RolesPage} path="roles" />
         <Route component={EditRole} path="roles/create" />
         <Route component={EditRole} path="roles/:roleId" />
-        
+
         <Route component={UnassociatedPaymentsDialog} path="payments/unassociated" />
         <Route component={TuitionFeesSummaryExportDialog} path="payments/exports/tuitionFeesSummary" />
         <Route component={ImportPaymentsDialog} path="payments/imports/payments" />
         <Route component={AddPaymentsDialog} path="payments/new" />
         <Route component={PaymentsPage} path="payments" />
-        
 
         <Route component={LocationsPage} path="nxLocations" />
         <Route component={CreateLocationDialog} path="nxLocations/create" />

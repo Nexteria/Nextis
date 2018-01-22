@@ -7169,9 +7169,9 @@ react-dom@^15.4.2:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react-dropzone@^3.5.3:
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.13.1.tgz#5380d47585b44ad2877c0b5a9b92abe7bd2a12e5"
+react-dropzone@^4.2.5:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-4.2.5.tgz#61f4ea914ac8b0a8c7f39795c74c4718d03b13f1"
   dependencies:
     attr-accept "^1.0.3"
     prop-types "^15.5.7"

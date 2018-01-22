@@ -32,6 +32,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => '/api'], function () {
 
         Route::group(['prefix' => '/admin'], function () {
+            Route::get('/guides', 'AdminController@getGuides');
+            Route::post('/guides', 'AdminController@createGuides');
+            Route::post('/guides/{guideId}', 'AdminController@updateGuides')
+            ->where(array('guideId' => '[0-9]+'));
+            Route::post('/guides/import', 'AdminController@importGuides');
+            Route::get('/guides/fields', 'AdminController@getGuidesFieldTypes');
+            Route::post('/guides/fields', 'AdminController@createOrUpdateGuidesFieldType');
+            Route::put('/guides/fields/{fieldId}', 'AdminController@createOrUpdateGuidesFieldType');
+            Route::delete('/guides/fields/{fieldId}', 'AdminController@deleteGuidesFieldType');
+
             Route::get('/nxEvents/categories', 'AdminController@getNxEventsCategories');
             Route::get('/nxEvents/{eventId}/terms/{termId}/attendees/{type}', 'AdminController@getTermAttendeesList');
             Route::get('/nxEvents/{eventId}/terms/attendees/{type}', 'AdminController@getEventAttendeesList');

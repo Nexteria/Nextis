@@ -11,6 +11,9 @@ use App\Student;
 use App\StudentLevel;
 use App\NxEventAttendee;
 use App\NxEventTerm;
+use App\Models\Guide;
+use App\Models\GuideFieldType;
+use App\Models\GuideField;
 use App\User;
 use App\Role;
 use App\DefaultSystemSettings;
@@ -23,6 +26,7 @@ use App\Models\QuestionForm\Form;
 use App\Models\QuestionForm\Answer;
 use App\Models\QuestionForm\Question;
 use App\Models\QuestionForm\Choice;
+use App\Image;
 
 class AdminController extends Controller
 {
@@ -1016,5 +1020,245 @@ class AdminController extends Controller
             })->get();
 
         return response()->json($students);
+    }
+
+    public function getGuides()
+    {
+        return response()->json(Guide::with(['fields', 'profilePicture'])->get());
+    }
+
+    public function getGuidesFieldTypes()
+    {
+        return response()->json(GuideFieldType::all());
+    }
+
+    public function createOrUpdateGuidesFieldType(Request $request, $fieldId = null)
+    {
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|string|max:254',
+            'order' => 'numeric',
+            'codename' => 'required|unique:guide_field_types,codename,'.$fieldId.'|alpha_dash|max:254',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        if ($fieldId) {
+            $field = GuideFieldType::findOrFail($fieldId);
+        } else {
+            $field = new GuideFieldType();
+        }
+
+        $field->fill($request->all());
+        $field->userId = \Auth::user()->id;
+        $field->save();
+
+        return response()->json($field);
+    }
+
+    public function deleteGuidesFieldType(Request $request, $fieldId)
+    {
+        GuideFieldType::findOrFail($fieldId)->delete();
+
+        return response()->json([]);
+    }
+
+    public function createGuides(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'firstName' => 'required|string|max:254',
+            'lastName' => 'required|string|max:254',
+            'email' => 'required|email|max:254',
+            'linkedInUrl' => 'required|url|max:254',
+            'currentOccupation' => 'required|string|max:254',
+            'file' => 'required|image',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $data = [
+            'file' => \Input::file('file'),
+            'title' => $request->get('firstName').' '.$request->get('lastName'),
+            'description' => 'Guide profile photo',
+        ];
+
+        $profilePicture = Image::store($data);
+
+        $guide = new Guide();
+        $guide->fill($request->all());
+        $guide->profileImageId= $profilePicture->id;
+        $guide->lastModifiedUserId= \Auth::user()->id;
+        $guide->save();
+
+        $fieldTypes = GuideFieldType::all();
+
+        foreach ($fieldTypes as $type) {
+            if ($request->has($type->codename)) {
+                $value = $request->get($type->codename);
+                $field = new GuideField();
+                $field->fieldTypeId = $type->id;
+                if ($type->required && ($value === '<p><br></p>' || $value === '')) {
+                    $field->needUpdates = Carbon::now();
+                }
+                $field->value = clean($value);
+                $field->userId = \Auth::user()->id;
+                $field->guideId = $guide->id;
+                $field->save();
+            }
+        }
+
+        return response()->json(Guide::with(['fields', 'profilePicture'])->where('id', $guide->id)->first());
+    }
+
+    public function updateGuides(Request $request, $guideId)
+    {
+        $validator = \Validator::make($request->all(), [
+            'firstName' => 'required|string|max:254',
+            'lastName' => 'required|string|max:254',
+            'email' => 'required|email|max:254',
+            'linkedInUrl' => 'required|url|max:254',
+            'currentOccupation' => 'required|string|max:254',
+            'file' => 'image',
+        ]);
+
+        if ($validator->fails()) {
+            $messages = '';
+            foreach (json_decode($validator->messages()) as $message) {
+                $messages .= ' '.implode(' ', $message);
+            }
+            
+            return response()->json(['error' => $messages], 400);
+        }
+
+        $guide = Guide::findOrFail($guideId);
+        $guide->fill($request->all());
+        $guide->lastModifiedUserId= \Auth::user()->id;
+
+        if (\Input::file('file')) {
+            $data = [
+                'file' => \Input::file('file'),
+                'title' => $request->get('firstName').' '.$request->get('lastName'),
+                'description' => 'Guide profile photo',
+            ];
+
+            $profilePicture = Image::store($data);
+            $guide->profileImageId= $profilePicture->id;
+        }
+        $guide->save();
+
+        $updated = [];
+        foreach ($guide->fields as $field) {
+            $updated[] = $field->fieldType->codename;
+            if ($request->has($field->fieldType->codename)) {
+                $value = $request->get($field->fieldType->codename);
+                $field->value = clean($value);
+                if ($field->fieldType->required && ($value === '<p><br></p>' || $value === '')) {
+                    $field->needUpdates = Carbon::now();
+                }
+                $field->userId = \Auth::user()->id;
+                $field->save();
+            }
+        }
+
+        $fieldTypes = GuideFieldType::all();
+        foreach ($fieldTypes as $type) {
+            if (in_array($type->codename, $updated)) {
+                continue;
+            }
+
+            if ($request->has($type->codename)) {
+                $value = $request->get($type->codename);
+                $field = new GuideField();
+                $field->fieldTypeId = $type->id;
+                if ($type->required && ($value === '<p><br></p>' || $value === '')) {
+                    $field->needUpdates = Carbon::now();
+                }
+                $field->value = clean($value);
+                $field->userId = \Auth::user()->id;
+                $field->guideId = $guide->id;
+                $field->save();
+            }
+        }
+
+        return response()->json(Guide::with(['fields', 'profilePicture'])->where('id', $guide->id)->first());
+    }
+
+    public function importGuides()
+    {
+        $reader = \Excel::load(\Input::file('file'));
+        $guides = $reader->toArray();
+
+        foreach ($guides as $guide) {
+            if (!isset($guide['firstname']) && !isset($guide['lastname']) && !isset($guide['email'])) {
+                continue;
+            }
+
+            $guideData = [
+                'firstName' => $guide['firstname'],
+                'lastName' => $guide['lastname'],
+                'email' => $guide['email'],
+                'linkedInUrl' => $guide['linkedinurl'] ?? '',
+                'currentOccupation' => $guide['currentoccupation'] ?? '',
+            ];
+
+            $guideFields = [
+                'fields_where_want_to_help' => $this->prepareGuideField($guide['fields_where_want_to_help']),
+                'cv_highlights' => $this->prepareGuideField($guide['cv_highlights']),
+                'my_activities' => $guide['my_activities'],
+                'type_of_work_with_student' => $guide['type_of_work_with_student'],
+                'links_about_me' => $guide['links_about_me'],
+                'what_student_should_know' => $guide['what_student_should_know'],
+            ];
+
+            $guide = new Guide();
+            $guide->fill($guideData);
+            $guide->userId= \Auth::user()->id;
+            $guide->lastModifiedUserId= \Auth::user()->id;
+            $guide->save();
+
+            foreach ($guideFields as $type => $field) {
+                $dbFieldType = GuideFieldType::where('codename', $type)->first();
+
+                $value = clean($field);
+                $field = new GuideField();
+                $field->fieldTypeId = $dbFieldType->id;
+                if ($dbFieldType->required && ($value === '<p><br></p>' || $value === '')) {
+                    $field->needUpdates = Carbon::now();
+                }
+                $field->value = clean($value);
+                $field->userId = \Auth::user()->id;
+                $field->guideId = $guide->id;
+                $field->save();
+            }
+        }
+
+        return response()->json([]);
+    }
+
+    private function prepareGuideField($text)
+    {
+        $items = preg_split("/\r\n|\n|\r|[*]/", $text);
+
+        if (count($items > 1)) {
+            $items = array_map(function ($item) {
+                return preg_replace("/^[ ]?[-][ ]/", "", $item);
+            }, $items);
+            return '<ul><li>'.implode('</li><li>', $items).'</li></ul>';
+        }
+
+        return $text;
     }
 }

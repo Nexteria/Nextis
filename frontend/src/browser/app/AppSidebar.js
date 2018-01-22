@@ -166,7 +166,10 @@ export default class AppSideBar extends Component {
                   <FormattedMessage {...messages.studiesAdministration} />
                 </li>
                 <li>
-                  <Link activeStyle={styles.activeLinkStyle} to="/admin/events/category/afterSignInOpening">
+                  <Link
+                    activeStyle={styles.activeLinkStyle}
+                    to="/admin/events/category/afterSignInOpening"
+                  >
                     <i className="fa fa-calendar"></i>
                     <span><FormattedMessage {...messages.events} /></span>
                   </Link>
@@ -193,6 +196,12 @@ export default class AppSideBar extends Component {
                 <li className="header">
                   <i className="fa fa-gears"></i>
                   <FormattedMessage {...messages.systemAdministration} />
+                </li>
+                <li>
+                  <Link activeStyle={styles.activeLinkStyle} to="/admin/guides">
+                    <i className="fa fa-bank"></i>
+                    <span>Guides</span>
+                  </Link>
                 </li>
                 <li>
                   <Link activeStyle={styles.activeLinkStyle} to="/admin/userGroups">

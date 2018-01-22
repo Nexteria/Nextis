@@ -12,6 +12,7 @@ import payments from './payments/reducer';
 import semesters from './semesters/reducer';
 import students from './students/reducer';
 import publicSignin from './public/reducer';
+import guides from './guides/reducer';
 
 import { LOGOUT } from './app/actions';
 import { combineReducers } from 'redux';
@@ -50,6 +51,7 @@ export default function configureReducer(initialState, platformReducers) {
     semesters,
     students,
     publicSignin,
+    guides,
     form: formReducer,
   });
 

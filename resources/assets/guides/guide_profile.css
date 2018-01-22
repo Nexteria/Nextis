@@ -1,0 +1,45 @@
+  html {
+    background-color: #eee;
+    width: auto; }
+  
+  body {
+    font-family: Roboto;
+    margin: 0px auto;
+    width: 21cm;
+    padding: 0;
+    font-size: 0.7em; }
+  
+  li {
+    line-height: 16px; }
+  
+  .page {
+    position: relative;
+    height: 29.7cm;
+    background: #fff;
+    display: block;
+    padding: 1cm 1.5cm;
+    box-sizing: border-box;
+    page-break-after: always; }
+  
+  .content {
+    display: block;
+    height: 28.7cm; }
+  
+  .header {
+    height: 1cm;
+    width: 19.5cm;
+    display: block;
+    margin-bottom: 3em; }
+
+  .inner-content {
+    height: 100%;
+    display: block;
+    height: 26.9cm; }
+  
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1cm;
+    box-sizing: border-box; }

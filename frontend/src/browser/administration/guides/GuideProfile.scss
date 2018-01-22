@@ -1,0 +1,144 @@
+$titleColor: #ffcb32;
+$leftSideColor: #343434;
+.guides-container .modal-content {
+    background-color: transparent;
+}
+
+.page {
+    position: relative;
+    height: 29.7cm;
+    margin: auto;
+    max-height: 29.7cm;
+    width: 21cm;
+    max-width: 21cm;
+    background: #fff;
+    display: flex;
+    box-sizing: border-box;
+    page-break-after: always;
+    font-family: geomanist;
+    overflow: hidden;
+    box-shadow: 2px 3px 20px 4px #000;
+}
+
+.page .nx-logo {
+    color: $titleColor;
+    font-size: 0.9cm;
+    margin-left: 1.5cm;
+    position: absolute;
+    bottom: 0cm;
+}
+
+.page ul {
+    padding-left: 0.5cm;
+}
+
+.guide-left-column {
+    width: 9cm;
+    max-width: 9cm;
+    background-color: $leftSideColor;
+    letter-spacing: 0.1cm;
+}
+
+.guide-right-column {
+    width: 12cm;
+    max-width: 12cm;
+    letter-spacing: 0.1cm;
+}
+
+.guide-profile-picture {
+    margin-left: 1cm;
+    margin-right: 1cm;
+    margin-top: 1.5cm;
+    width: 6cm;
+    height: 6cm;
+    border-radius: 6cm;
+    border: 0.2cm solid #ccc;
+}
+
+.guide-name {
+    margin-left: 1cm;
+    margin-right: 1cm;
+    color: $titleColor;
+    font-size: 0.9cm;
+    text-transform: uppercase;
+    line-height: 1cm;
+    margin-top: 1cm;
+    font-weight: bold;
+}
+
+.guide-name > div {
+    margin: 0;
+    padding: 0;
+}
+
+.guide-occupation {
+    color: #ccc;
+    margin-left: 1cm;
+    margin-right: 1cm;
+    margin-top: 0.5cm;
+}
+
+.guide-linkedin {
+    margin-left: 1cm;
+    margin-right: 1cm;
+}
+
+.guide-section-title {
+    margin: 0cm 1cm;
+    color: $titleColor;
+    font-size: 0.45cm;
+    text-transform: uppercase;
+    line-height: 0.6cm;
+    font-weight: bold;
+    font-family: 'geomanistbold';
+}
+
+.guide-section-one {
+    margin-top: 3cm;
+}
+
+.guide-section-data {
+    color: #ccc;
+    margin: 0cm 1cm;
+    margin-top: 0.1cm;
+    text-align: justify;
+}
+
+.guide-right-column .guide-section-title {
+    margin: 0.2cm 1cm;
+    margin-top: 0.6cm;
+}
+
+.guide-right-column .guide-section-data {
+    color: $leftSideColor;
+    font-size: 0.35cm;
+    line-height: 0.4cm;
+    letter-spacing: 0cm;
+}
+
+.guide-right-column .top-section-one, .guide-right-column .top-section-two {
+    margin-top: 1.5cm;
+    font-size: 2em;
+}
+
+@font-face {
+    font-family: 'geomanistbold';
+    src: url('/fonts/geomanist-bold-webfont.eot');
+    src: url('/fonts/geomanist-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/geomanist-bold-webfont.woff2') format('woff2'),
+         url('/fonts/geomanist-bold-webfont.woff') format('woff'),
+         url('/fonts/geomanist-bold-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'geomanist';
+    src: url('/fonts/geomanist-book-webfont.eot');
+    src: url('/fonts/geomanist-book-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/geomanist-book-webfont.woff2') format('woff2'),
+         url('/fonts/geomanist-book-webfont.woff') format('woff'),
+         url('/fonts/geomanist-book-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

@@ -1,7 +1,16 @@
 import React from 'react';
 
 export default function renderInput(data) {
-  const { input, label, icon, type, contentCol, labelCol, meta: { asyncValidating, touched, error } } = data;
+  const {
+    input,
+    label,
+    icon,
+    type,
+    inputStyle,
+    contentCol,
+    labelCol,
+    meta: { asyncValidating, touched, error },
+  } = data;
 
   const contentColumn = contentCol || 12;
   const labelColumn = labelCol || 12;
@@ -20,6 +29,7 @@ export default function renderInput(data) {
           readOnly={data.readOnly}
           placeholder={label}
           type={type}
+          style={inputStyle || {}}
           className={type !== 'checkbox' ? 'form-control' : 'checkbox'}
           id={input.name}
         />
