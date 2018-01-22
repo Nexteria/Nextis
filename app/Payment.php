@@ -65,7 +65,7 @@ class Payment extends Model
 
         $result = [
           'type' => $matches[1] === 'znizeny' ? 'debet' : 'kredit',
-          'amount' => (int) floatval($matches[2]) * 100,
+          'amount' => (int) floatval(str_replace(',', '.', $matches[2])) * 100,
         ];
         
         return $result;
