@@ -55,6 +55,7 @@ class App extends Component {
     isMobileSidebarOpen: PropTypes.bool.isRequired,
     fetchSemesters: PropTypes.func.isRequired,
     toggleSidebar: PropTypes.func.isRequired,
+    rolesData: PropTypes.object,
   };
 
   componentWillMount() {
@@ -99,6 +100,7 @@ class App extends Component {
       hasPermission,
       currentLocale,
       rolesList,
+      rolesData,
       location,
       events,
       viewer,
@@ -137,7 +139,7 @@ class App extends Component {
         />
         {/* Pass location to ensure header active links are updated. */}
         <Header {...{ viewer }} location={location} />
-        <AppSidebar toggleSidebar={toggleSidebarFunc} {...{ events, viewer, isMobileSidebarOpen, rolesList, hasPermission }} ref="main-footer" />
+        <AppSidebar toggleSidebar={toggleSidebarFunc} {...{ events, viewer, rolesData, isMobileSidebarOpen, rolesList, hasPermission }} ref="main-footer" />
         <div className="content-wrapper">
           {children}
         </div>
@@ -162,5 +164,6 @@ export default connect(state => ({
   loading: state.app.loading,
   isMobileSidebarOpen: state.app.isMobileSidebarOpen,
   rolesList: state.users.rolesList,
+  rolesData: state.users.viewerRolesData,
   hasPermission: (permission) => state.users.hasPermission(permission, state),
 }), { ...appActions, ...usersActions, ...eventsActions, ...locationsActions, ...semestersActions })(App);

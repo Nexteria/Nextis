@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Student;
@@ -53,5 +54,26 @@ class StudentsController extends Controller
         $points->delete();
 
         return response()->json();
+    }
+
+    public function updateGuidesOption(Request $request, $optionId)
+    {
+        $student = Student::where('userId', \Auth::user()->id)->first();
+        $option = $student->guidesOptions()->wherePivot('id', '=', $optionId)->first();
+
+        $data = [
+            'priority' => intval($request->get('priority')),
+            'whyIWouldChooseThisGuide' => $request->get('whyIWouldChooseThisGuide'),
+            'howCanIHelp' => $request->get('howCanIHelp'),
+            'updated_at' => Carbon::now(),
+        ];
+
+        if ($data['priority'] !== "-1" && $student->guidesOptions()->wherePivot('priority', '=', $data['priority'])->exists()) {
+            return response()->json(['error' => 'Nie je možné priradiť rovnakú prioritu'], 400);
+        }
+
+        $student->guidesOptions()->updateExistingPivot($option->pivot->guideId, $data);
+
+        return response()->json($student->fresh()->guidesOptions);
     }
 }

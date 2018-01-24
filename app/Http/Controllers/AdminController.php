@@ -160,6 +160,8 @@ class AdminController extends Controller
               'activityPoints' => $activityPoints,
               'tuitionFeeBalance' => $student->getTuitionFeeBalance(),
               'status' => $student->status,
+              'guidesOptions' => $student->guidesOptions,
+              'guideId' => $semester->pivot->guideId,
             ];
         }
 
@@ -1132,9 +1134,9 @@ class AdminController extends Controller
         $validator = \Validator::make($request->all(), [
             'firstName' => 'required|string|max:254',
             'lastName' => 'required|string|max:254',
-            'email' => 'required|email|max:254',
-            'linkedInUrl' => 'required|url|max:254',
-            'currentOccupation' => 'required|string|max:254',
+            'email' => 'email|max:254',
+            'linkedInUrl' => 'url|max:254',
+            'currentOccupation' => 'string|max:254',
             'file' => 'image',
         ]);
 
@@ -1160,6 +1162,16 @@ class AdminController extends Controller
 
             $profilePicture = Image::store($data);
             $guide->profileImageId= $profilePicture->id;
+
+            // resize image
+            $pixelCropX = $request->get('pixelCrop_x');
+            $pixelCropY = $request->get('pixelCrop_y');
+            $pixelCropWidth = $request->get('pixelCrop_width');
+            $pixelCropHeight = $request->get('pixelCrop_height');
+
+            $img = \ImageTools::make(public_path().$profilePicture->filePath);
+            $img->crop($pixelCropWidth, $pixelCropHeight, $pixelCropX, $pixelCropY);
+            $img->save();
         }
         $guide->save();
 
@@ -1271,5 +1283,60 @@ class AdminController extends Controller
         }
 
         return $text;
+    }
+
+    public function assignStudentGuideOption($studentId, $guideId)
+    {
+        $student = Student::findOrFail($studentId);
+        $guide = Guide::findOrFail($guideId);
+
+        $semesterId = $student->getActiveSemester()->id;
+
+        $student->guidesOptions()->attach($guideId, [
+            'semesterId' => $semesterId,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        return response()->json($student->fresh()->guidesOptions);
+    }
+
+    public function removeStudentGuideOption($studentId, $optionId)
+    {
+        $student = Student::findOrFail($studentId);
+
+        $option = $student->guidesOptions()->wherePivot('id', '=', $optionId)->first();
+        $student->guidesOptions()->updateExistingPivot($option->pivot->guideId, [
+            'deleted_at' => Carbon::now(),
+        ]);
+
+        return response()->json($student->fresh()->guidesOptions);
+    }
+
+    public function assignStudentGuide(Request $request, $studentId, $guideId)
+    {
+        $student = Student::findOrFail($studentId);
+        $guide = Guide::findOrFail($guideId);
+
+        $semesterId = $student->getActiveSemester()->id;
+
+        $student->semesters()->updateExistingPivot($semesterId, ['guideId' => $guideId]);
+
+        if ($request->get('notify') === 'true') {
+            $email = new \App\Mail\Guides\AssignedGuideMail($student, $guide);
+            \Mail::send($email);
+        }
+
+        return $this->getStudents();
+    }
+
+    public function removeStudentGuideConnection($studentId)
+    {
+        $student = Student::findOrFail($studentId);
+        $semesterId = $student->getActiveSemester()->id;
+
+        $student->semesters()->updateExistingPivot($semesterId, ['guideId' => null]);
+
+        return $this->getStudents();
     }
 }

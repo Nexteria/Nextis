@@ -1,6 +1,11 @@
 export const TOGGLE_EVENT_TERM = 'TOGGLE_EVENT_TERM';
 export const SAVE_SIGNIN_FORM_DATA = 'SAVE_SIGNIN_FORM_DATA';
 
+export const DELETE_STUDENT_GUIDE_CONNECTION = 'DELETE_STUDENT_GUIDE_CONNECTION';
+export const DELETE_STUDENT_GUIDE_CONNECTION_START = 'DELETE_STUDENT_GUIDE_CONNECTION_START';
+export const DELETE_STUDENT_GUIDE_CONNECTION_SUCCESS = 'DELETE_STUDENT_GUIDE_CONNECTION_SUCCESS';
+export const DELETE_STUDENT_GUIDE_CONNECTION_ERROR = 'DELETE_STUDENT_GUIDE_CONNECTION_ERROR';
+
 export const FETCH_GUIDES_LIST = 'FETCH_GUIDES_LIST';
 export const FETCH_GUIDES_LIST_START = 'FETCH_GUIDES_LIST_START';
 export const FETCH_GUIDES_LIST_SUCCESS = 'FETCH_GUIDES_LIST_SUCCESS';
@@ -97,6 +102,10 @@ export function editGuide(data, guideId) {
     const formData = new FormData();
     if (data.photo) {
       formData.append('file', data.photo[0]);
+      formData.append('pixelCrop_x', data.photo[0].pixelCrop.x);
+      formData.append('pixelCrop_y', data.photo[0].pixelCrop.y);
+      formData.append('pixelCrop_width', data.photo[0].pixelCrop.width);
+      formData.append('pixelCrop_height', data.photo[0].pixelCrop.height);
     }
 
     fields.forEach(field => {
@@ -138,6 +147,19 @@ export function uploadNewGuidesExcel(files) {
         method: 'post',
         notifications: 'both',
         body: data,
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function removeStudentsGuideConnection(studentId) {
+  return ({ fetch }) => ({
+    type: DELETE_STUDENT_GUIDE_CONNECTION,
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/guides`, {
+        credentials: 'same-origin',
+        method: 'delete',
+        notifications: 'both',
       }).then(response => response.json()),
     },
   });

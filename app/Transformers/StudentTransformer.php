@@ -16,6 +16,8 @@ class StudentTransformer extends Transformer
           'userId' => (int) $student->userId,
           'tuitionFee' => $semester ? $semester->pivot->tuitionFee : 0,
           'activityPointsBaseNumber' => $semester ? $semester->pivot->activityPointsBaseNumber : 0,
+          'guideId' => $semester ? $semester->pivot->guideId : null,
+          'guidesOptions' => $student->guidesOptions,
           'minimumSemesterActivityPoints' => $semester ? $semester->pivot->minimumSemesterActivityPoints : 0,
         ];
     }

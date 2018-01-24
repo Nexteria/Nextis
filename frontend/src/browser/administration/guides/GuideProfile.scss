@@ -37,6 +37,10 @@ $leftSideColor: #343434;
     max-width: 9cm;
     background-color: $leftSideColor;
     letter-spacing: 0.1cm;
+
+    li {
+        text-align: left;
+    }
 }
 
 .guide-right-column {

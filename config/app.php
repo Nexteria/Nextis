@@ -173,7 +173,7 @@ return [
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         BrianFaust\Commentable\CommentableServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
-
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -231,6 +231,7 @@ return [
         'Uuid' => Webpatser\Uuid\Uuid::class,
         'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
+        'ImageTools' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

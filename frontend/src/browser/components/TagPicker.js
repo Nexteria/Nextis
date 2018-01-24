@@ -1,4 +1,5 @@
 import React from 'react';
+import './TagPicker.scss';
 import { WithContext as ReactTags } from 'react-tag-input';
 
 export default function renderTagPicker(data) {
@@ -28,6 +29,11 @@ export default function renderTagPicker(data) {
         <ReactTags
           id={input.name}
           placeholder={label}
+          handleFilterSuggestions={(value, possibleSuggestions) =>
+            possibleSuggestions.filter(suggestion =>
+              suggestion.toLowerCase().includes(value.toLowerCase())
+            )
+          }
           tags={input.value.map(val => ({ id: val.get('id'), text: suggestionsMapFunc(val) })).toArray()}
           suggestions={tagsData.map(suggestionsMapFunc).toArray()}
           handleDelete={i =>
@@ -35,7 +41,11 @@ export default function renderTagPicker(data) {
           }
           handleAddition={tag => {
             const newTag = tagsData.find(tagData => suggestionsMapFunc(tagData) === tag);
-            input.onChange(input.value.set(newTag.get('id'), newTag));
+            if (input.handleAddition) {
+              input.handleAddition(newTag);
+            } else {
+              input.onChange(input.value.set(newTag.get('id'), newTag));
+            }
           }}
         />
         <div className="has-error col-md-12" style={{ paddingLeft: '0px' }}>

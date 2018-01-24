@@ -1,5 +1,30 @@
 import download from 'downloadjs';
 
+export const UPDATE_GUIDE_OPTION = 'UPDATE_GUIDE_OPTION';
+export const UPDATE_GUIDE_OPTION_START = 'UPDATE_GUIDE_OPTION_START';
+export const UPDATE_GUIDE_OPTION_SUCCESS = 'UPDATE_GUIDE_OPTION_SUCCESS';
+export const UPDATE_GUIDE_OPTION_ERROR = 'UPDATE_GUIDE_OPTION_ERROR';
+
+export const ADD_STUDENTS_GUIDE_OPTION = 'ADD_STUDENTS_GUIDE_OPTION';
+export const ADD_STUDENTS_GUIDE_OPTION_START = 'ADD_STUDENTS_GUIDE_OPTION_START';
+export const ADD_STUDENTS_GUIDE_OPTION_SUCCESS = 'ADD_STUDENTS_GUIDE_OPTION_SUCCESS';
+export const ADD_STUDENTS_GUIDE_OPTION_ERROR = 'ADD_STUDENTS_GUIDE_OPTION_ERROR';
+
+export const FETCH_STUDENTS_GUIDES = 'FETCH_STUDENTS_GUIDES';
+export const FETCH_STUDENTS_GUIDES_START = 'FETCH_STUDENTS_GUIDES_START';
+export const FETCH_STUDENTS_GUIDES_SUCCESS = 'FETCH_STUDENTS_GUIDES_SUCCESS';
+export const FETCH_STUDENTS_GUIDES_ERROR = 'FETCH_STUDENTS_GUIDES_ERROR';
+
+export const ASSIGN_STUDENT_GUIDE = 'ASSIGN_STUDENT_GUIDE';
+export const ASSIGN_STUDENT_GUIDE_START = 'ASSIGN_STUDENT_GUIDE_START';
+export const ASSIGN_STUDENT_GUIDE_SUCCESS = 'ASSIGN_STUDENT_GUIDE_SUCCESS';
+export const ASSIGN_STUDENT_GUIDE_ERROR = 'ASSIGN_STUDENT_GUIDE_ERROR';
+
+export const REMOVE_STUDENTS_GUIDE_OPTION = 'REMOVE_STUDENTS_GUIDE_OPTION';
+export const REMOVE_STUDENTS_GUIDE_OPTION_START = 'REMOVE_STUDENTS_GUIDE_OPTION_START';
+export const REMOVE_STUDENTS_GUIDE_OPTION_SUCCESS = 'REMOVE_STUDENTS_GUIDE_OPTION_SUCCESS';
+export const REMOVE_STUDENTS_GUIDE_OPTION_ERROR = 'REMOVE_STUDENTS_GUIDE_OPTION_ERROR';
+
 export const LOAD_STUDENT_MISSING_POINTS = 'LOAD_STUDENT_MISSING_POINTS';
 export const LOAD_STUDENT_MISSING_POINTS_START = 'LOAD_STUDENT_MISSING_POINTS_START';
 export const LOAD_STUDENT_MISSING_POINTS_SUCCESS = 'LOAD_STUDENT_MISSING_POINTS_SUCCESS';
@@ -435,6 +460,89 @@ export function changeStudentStatus(data, selectedStudents) {
           ...data,
           selectedStudents,
         }),
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function feetchStudentGuides(studentId) {
+  return ({ fetch }) => ({
+    type: FETCH_STUDENTS_GUIDES,
+    meta: {
+      studentId,
+    },
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/guides`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function addStudentsGuideOption(guide, studentId) {
+  return ({ fetch }) => ({
+    type: ADD_STUDENTS_GUIDE_OPTION,
+    meta: {
+      guideId: guide.get('id'),
+      studentId,
+    },
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/guides/${guide.get('id')}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function removeStudentsGuideOption(studentId, optionId) {
+  return ({ fetch }) => ({
+    type: REMOVE_STUDENTS_GUIDE_OPTION,
+    meta: {
+      studentId,
+    },
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/guidesOption/${optionId}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'delete',
+        notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function assignGuideToStudent(studentId, guideId, notifyStudent) {
+  return ({ fetch }) => ({
+    type: ASSIGN_STUDENT_GUIDE,
+    meta: {
+      studentId,
+    },
+    payload: {
+      promise: fetch(`/admin/students/${studentId}/guides/${guideId}/assign?notify=${notifyStudent ? 'true' : 'false'}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'put',
+        notifications: 'both',
+      }).then(response => response.json()),
+    },
+  });
+}
+
+export function updateGuideOption(data, optionId) {
+  return ({ fetch }) => ({
+    type: UPDATE_GUIDE_OPTION,
+    payload: {
+      promise: fetch(`/students/me/guidesOptions/${optionId}`, {
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        notifications: 'both',
+        body: JSON.stringify(data),
       }).then(response => response.json()),
     },
   });

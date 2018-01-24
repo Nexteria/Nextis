@@ -44,6 +44,7 @@ class Student extends Model
                     ->withPivot([
                       'studentLevelId',
                       'tuitionFee',
+                      'guideId',
                       'activityPointsBaseNumber',
                       'minimumSemesterActivityPoints'
                     ]);
@@ -66,5 +67,20 @@ class Student extends Model
         }
 
         return $accountBalance;
+    }
+
+    public function guidesOptions()
+    {
+        return $this->belongsToMany('App\Models\Guide', 'student_guide_options', 'studentId', 'guideId')
+            ->withPivot([
+                'id',
+                'priority',
+                'semesterId',
+                'howCanIHelp',
+                'whyIWouldChooseThisGuide',
+                'deleted_at',
+                'created_at',
+                'updated_at',
+            ])->wherePivot('deleted_at', '=', null);
     }
 }

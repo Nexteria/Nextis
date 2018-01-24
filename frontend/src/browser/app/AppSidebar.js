@@ -103,10 +103,11 @@ export default class AppSideBar extends Component {
     rolesList: PropTypes.object.isRequired,
     toggleSidebar: PropTypes.func.isRequired,
     events: PropTypes.object.isRequired,
+    rolesData: PropTypes.object,
   };
 
   render() {
-    const { viewer, rolesList, events, hasPermission, toggleSidebar } = this.props;
+    const { viewer, rolesList, events, hasPermission, rolesData, toggleSidebar } = this.props;
 
     const isStudent = viewer.roles.includes(rolesList.get('STUDENT').id);
 
@@ -137,6 +138,18 @@ export default class AppSideBar extends Component {
                 <Link activeStyle={styles.activeLinkStyle} to="/payments">
                   <i className="fa fa-money text-green"></i>
                   <span><FormattedMessage {...messages.payments} /></span>
+                </Link>
+              </li>
+              : null
+            }
+            {isStudent && rolesData.get('student') && (rolesData.getIn(['student', 'guideId']) || rolesData.getIn(['student', 'guidesOptions']).length) ?
+              <li>
+                <Link activeStyle={styles.activeLinkStyle} to="/guides">
+                  <i className="fa fa-bank"></i>
+                  <span>Guide</span>
+                  <small className="label pull-right bg-green">
+                    NEW
+                  </small>
                 </Link>
               </li>
               : null

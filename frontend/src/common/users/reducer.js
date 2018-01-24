@@ -10,6 +10,7 @@ import Group from './models/Group';
 import Role from './models/Role';
 import StudentLevel from './models/StudentLevel';
 import Permission from './models/Permission';
+import * as studentActions from '../students/actions';
 
 function hasPermission(permission, state) {
   const viewer = state.users.viewer;
@@ -42,6 +43,10 @@ const InitialState = Record({
 
 export default function usersReducer(state = new InitialState, action) {
   switch (action.type) {
+    case studentActions.UPDATE_GUIDE_OPTION_SUCCESS: {
+      return state.setIn(['viewerRolesData', 'student', 'guidesOptions'], action.payload);
+    }
+
     case actions.LOAD_VIEWER_SUCCESS: {
       const user = action.payload.user;
       const student = action.payload.student;

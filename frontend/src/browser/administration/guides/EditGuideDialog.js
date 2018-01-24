@@ -10,7 +10,7 @@ import RichTextEditor from 'react-rte';
 import * as actions from '../../../common/guides/actions';
 import InputComponent from '../../components/Input';
 import TextEditorComponent from '../../components/TextEditor';
-import FileUpload from '../../components/FileUpload';
+import FileUpload from '../../components/ImageUpload';
 
 class EditGuideDialog extends Component {
 
@@ -217,9 +217,6 @@ const validate = (values) => {
   const required = [
     'firstName',
     'lastName',
-    'email',
-    'linkedInUrl',
-    'currentOccupation',
   ];
 
   if (values.email && !validator.isEmail(values.email)) {

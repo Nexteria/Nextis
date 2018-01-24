@@ -1,4 +1,4 @@
-import { Record, List } from 'immutable';
+import { Record, Map, List } from 'immutable';
 
 const Group = Record({
   activityPointsBaseNumber: null,
@@ -13,6 +13,8 @@ const Group = Record({
   sumPotentialPoints: 0,
   tuitionFeeBalance: 0,
   activityPoints: new List(),
+  guidesOptions: new Map(),
+  guideId: null,
 });
 
 export default Group;

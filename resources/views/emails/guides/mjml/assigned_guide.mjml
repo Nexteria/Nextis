@@ -1,0 +1,72 @@
+<mjml>
+  <mj-head>
+    <mj-title>Nexteria Space</mj-title>
+  </mj-head>
+  <mj-body>
+    <mj-container background-color="#d6dde5">
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-image width="185" padding-bottom="10" padding-top="10" padding-right="0" padding-left="0"  src="https://space.nexteria.sk/img/nexteria-logo.png" ></mj-image>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="90%" vertical-align="top">
+          <mj-text align="center" line-height="30px">
+            <h1>
+              Guide
+            </h1>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%">
+          <mj-text align="center">
+            <b>Ahoj {{ $userFirstName }},</b> práve Ti bol pridelený guide a stáva sa ním:
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
+          <mj-image border="4px solid #ccc" border-radius="110px" width="220px" height="220px" src="{{ $guideImgUrl }}"></mj-image>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%">
+          <mj-text font-size="25px" align="center">
+        		{{ $guideName }}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%">
+          <mj-text align="center">
+      Do týždňa vám obom pošleme prepájací email a vaša spolupráca môže začať. Nezabudni, guide očakáva Tvoj proaktívny prístup a iniciovanie (nielen) prvého stretnutia.<br/>
+
+Prajeme Ti nadviazanie príjemnej a obohacujúcej spolupráce.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top">
+          <mj-text align="center">
+            Za tím NLA
+          	<br/>
+            Betka Drutarovská
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
+        <mj-column width="100%" vertical-align="top" background-color="#fcc133">
+          <mj-text color="#ffffff" font-family="Helvetica,Arial,sans-serif" font-size="10px" line-height="12px" align="center">
+            Copyright © 2017 Nexteria, All rights reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section full-width="full-width" padding-bottom="20" padding-top="20">
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

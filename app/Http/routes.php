@@ -62,6 +62,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/students/{studentId}/comments', 'AdminController@createStudentComment');
             Route::post('/students/comments', 'AdminController@createBulkStudentsComment');
             Route::get('/students/{studentId}/comments', 'AdminController@getStudentComments');
+            Route::put('/students/{studentId}/guides/{guideId}/assign', 'AdminController@assignStudentGuide');
+            Route::post('/students/{studentId}/guides/{guideId}', 'AdminController@assignStudentGuideOption');
+            Route::delete('/students/{studentId}/guidesOption/{optionId}', 'AdminController@removeStudentGuideOption');
             Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
             Route::post('/students/profile', 'AdminController@exportStudentProfiles');
             Route::put('/students/points', 'AdminController@changeActivityPoints');
@@ -69,6 +72,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/students/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@addActivityPoints']);
             Route::get('/students/points/missing', 'AdminController@getStudentsWithMissingActivityPoints');
             Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
+            Route::delete('/students/{studentId}/guides', 'AdminController@removeStudentGuideConnection');
 
             Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
             Route::put('/comments/{commentId}', 'AdminController@updateComment');
@@ -104,6 +108,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/roles', ['middleware' => ['permission:create_roles'], 'uses' => 'RolesController@createRole']);
         Route::put('/roles/{roleId}', ['middleware' => ['permission:update_roles'], 'uses' => 'RolesController@updateRole']);
         Route::delete('/roles/{roleId}', ['middleware' => ['permission:delete_roles'], 'uses' => 'RolesController@deleteRole']);
+
+        Route::post('/students/me/guidesOptions/{optionId}', 'StudentsController@updateGuidesOption');
         
         Route::post('/nxEvents/feedbackForm/validate', 'NxEventsController@validateFeedbackForm');
 

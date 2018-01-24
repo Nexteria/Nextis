@@ -45,10 +45,14 @@ import EditGuideDialog from './administration/guides/EditGuideDialog';
 import GuideProfilePageDialog from './administration/guides/GuideProfilePageDialog';
 import StudentProfilePage from './administration/students/StudentProfilePage';
 import BeforeEventQuestionnaire from './events/usersSection/BeforeEventQuestionnaire';
+import StudentGuidesPage from './guides/GuidesPage';
 
 export default function createRoutes() {
   return (
     <Route component={App} path="/">
+      <Route component={StudentGuidesPage} path="/guides">
+        <Route component={GuideProfilePageDialog} path=":guideId" />
+      </Route>
       <Route component={UserEventsPage} path="/events" />
       <Route component={EventAttendeesDialog} path="/events/:eventId/attendees" />
       <Route component={UserEventsPage} path="/events/:eventId">

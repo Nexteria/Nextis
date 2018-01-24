@@ -16,6 +16,7 @@ import StudentNotesFeed from './StudentNotesFeed';
 import StudentActivityPointsTab from './StudentActivityPointsTab';
 import StudentAttendanceTab from './StudentAttendanceTab';
 import ActivityPointsEditDialog from '../../activityPoints/ActivityPointsEditDialog';
+import StudentGuidesTab from './StudentGuidesTab';
 
 class StudentProfilePage extends Component {
 
@@ -156,6 +157,13 @@ class StudentProfilePage extends Component {
                   {activeSemesterId ?
                     <StudentAttendanceTab userId={student.get('userId')} /> : null
                   }
+                </Tab>
+                <Tab
+                  eventKey={'guides'}
+                  title="Guide"
+                  mountOnEnter
+                >
+                  <StudentGuidesTab student={student} />
                 </Tab>
               </Tabs>
             </div>
