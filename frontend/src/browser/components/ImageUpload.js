@@ -48,8 +48,10 @@ export default class Dialog extends Component {
       crop.height = 100;
       crop.x = (100 - (image.naturalHeight / image.naturalWidth * 100)) / 2;
       crop.y = 0;
+      crop.width = (image.naturalHeight / image.naturalWidth * 100);
     } else {
       crop.width = 100;
+      crop.height = (image.naturalWidth / image.naturalHeight * 100);
       crop.y = (100 - (image.naturalWidth / image.naturalHeight * 100)) / 2;
       crop.x = 0;
     }
