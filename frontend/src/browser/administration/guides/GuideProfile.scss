@@ -15,7 +15,7 @@ $leftSideColor: #343434;
     display: flex;
     box-sizing: border-box;
     page-break-after: always;
-    font-family: geomanist;
+    font-family: 'Arial';
     overflow: hidden;
     box-shadow: 2px 3px 20px 4px #000;
 }
@@ -94,7 +94,7 @@ $leftSideColor: #343434;
     text-transform: uppercase;
     line-height: 0.6cm;
     font-weight: bold;
-    font-family: 'geomanistbold';
+    font-family: 'Arial';
 }
 
 .guide-section-one {
@@ -123,26 +123,4 @@ $leftSideColor: #343434;
 .guide-right-column .top-section-one, .guide-right-column .top-section-two {
     margin-top: 1.5cm;
     font-size: 2em;
-}
-
-@font-face {
-    font-family: 'geomanistbold';
-    src: url('/fonts/geomanist-bold-webfont.eot');
-    src: url('/fonts/geomanist-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/fonts/geomanist-bold-webfont.woff2') format('woff2'),
-         url('/fonts/geomanist-bold-webfont.woff') format('woff'),
-         url('/fonts/geomanist-bold-webfont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'geomanist';
-    src: url('/fonts/geomanist-book-webfont.eot');
-    src: url('/fonts/geomanist-book-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/fonts/geomanist-book-webfont.woff2') format('woff2'),
-         url('/fonts/geomanist-book-webfont.woff') format('woff'),
-         url('/fonts/geomanist-book-webfont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
