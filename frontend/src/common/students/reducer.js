@@ -31,7 +31,7 @@ export default function studentsReducer(state = new InitialState, action) {
       return state.setIn(['admin', 'students'], new Map(action.payload.map(student =>
         [student.id, new Map(new Student({
           ...student,
-          guidesOptions: new Map(student.guidesOptions.map(guide => [guide.id, new Map(guide)])),
+          guidesOptions: student.guidesOptions ? new Map(student.guidesOptions.map(guide => [guide.id, new Map(guide)])) : new Map(),
           activityPoints: new List(student.activityPoints.map(activity => new Map(activity))),
         }))]
       )));
@@ -83,7 +83,7 @@ export default function studentsReducer(state = new InitialState, action) {
 
       return state.setIn(['admin', 'students', studentId], new Map(new Student({
         ...student,
-        guidesOptions: new Map(student.guidesOptions.map(guide => [guide.id, new Map(guide)])),
+        guidesOptions: student.guidesOptions ? new Map(student.guidesOptions.map(guide => [guide.id, new Map(guide)])) : new Map(),
         activityPoints: new List(student.activityPoints.map(activity => new Map(activity))),
       })));
     }
