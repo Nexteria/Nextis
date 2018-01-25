@@ -76,7 +76,6 @@ class Student extends Model
                 'id',
                 'priority',
                 'semesterId',
-                'howCanIHelp',
                 'whyIWouldChooseThisGuide',
                 'deleted_at',
                 'created_at',

@@ -139,16 +139,9 @@ class StudentGuidesTab extends Component {
               thStyle={styles.rowTd}
               dataField="whyIWouldChooseThisGuide"
             >
-                Prečo by som si vybral tohto guida/ku?
+                Napíš nám, na čom chceš pomocou tohto guida pracovať.
             </TableHeaderColumn>
 
-            <TableHeaderColumn
-              thStyle={styles.rowTd}
-              tdStyle={styles.rowTd}
-              dataField="whyIWouldChooseThisGuide"
-            >
-                Ako môžem guidovi pomôcť?
-            </TableHeaderColumn>
             <TableHeaderColumn
               thStyle={styles.rowTd}
               tdStyle={styles.rowTd}

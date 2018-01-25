@@ -61,14 +61,7 @@ class GuideOption extends Component {
           <Field
             name={'whyIWouldChooseThisGuide'}
             component={TextAreaComponent}
-            label="Čo ťa u guida zaujalo/presvedčilo, že ti môže pomôcť posunúť sa k tvojmu cieľu/ v tvojej téme?"
-            readOnly={isReadonly}
-          />
-
-          <Field
-            name={'howCanIHelp'}
-            component={TextAreaComponent}
-            label="Vidíš v niečom aj ty svoj prínos pre guida? V čom? (odkaz pre guida)"
+            label="Napíš nám, na čom chceš pomocou tohto guida pracovať. Chceme mu(jej) to poslať, aby mal aj on(ona) jasnejšiu predstavu o Tebe a zároveň chceme predísť zlej interpretácii z našej strany. Môžeš stručne zosumarizovať aj to, čo si nám poslal(a) v prihláške."
             readOnly={isReadonly}
           />
 
@@ -95,7 +88,7 @@ GuideOption = reduxForm({
   validate: (values) => {
     const errors = {};
 
-    const required = ['priority', 'howCanIHelp', 'whyIWouldChooseThisGuide'];
+    const required = ['priority', 'whyIWouldChooseThisGuide'];
 
     required.forEach(item => {
       if (!values[item]) {

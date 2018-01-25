@@ -64,7 +64,6 @@ class StudentsController extends Controller
         $data = [
             'priority' => intval($request->get('priority')),
             'whyIWouldChooseThisGuide' => $request->get('whyIWouldChooseThisGuide'),
-            'howCanIHelp' => $request->get('howCanIHelp'),
             'updated_at' => Carbon::now(),
         ];
 
