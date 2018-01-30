@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { browserHistory } from 'react-router';
 
 import * as actions from '../../common/students/actions';
@@ -16,6 +16,7 @@ class GuideOption extends Component {
     handleSubmit: PropTypes.func.isRequired,
     updateGuideOption: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
+    priority: PropTypes.number,
   };
 
   componentDidMount() {
@@ -25,10 +26,10 @@ class GuideOption extends Component {
   }
 
   render() {
-    const { student, option, handleSubmit, updateGuideOption } = this.props;
+    const { student, option, handleSubmit, updateGuideOption, priority } = this.props;
 
     const priorities = student.get('guidesOptions').map(option => option.pivot.priority);
-    const isReadonly = option.pivot.created_at != option.pivot.updated_at;
+    const isReadonly = option.pivot.created_at !== option.pivot.updated_at;
 
     return (
       <div className="container box">
@@ -50,6 +51,8 @@ class GuideOption extends Component {
             component={SelectComponent}
             label="Preferencia (1 - preferujem najviac)"
             readOnly={isReadonly}
+            disabled={isReadonly}
+            normalize={value => parseInt(value, 10)}
           >
             <option disabled>Prosím vyber možnosť</option>
             <option value={-1}>Nemám záujem o tohto guida</option>
@@ -57,6 +60,16 @@ class GuideOption extends Component {
               <option key={index} value={index + 1} disabled={priorities.includes(index + 1)}>{index + 1}</option>
             )}
           </Field>
+
+          {priority === -1 ?
+            <Field
+              name={'whyDoYouRefuseThisGuide'}
+              component={TextAreaComponent}
+              label="Aby sme lepšie rozumeli tvojmu rozhodnutiu, prosím, napíš nám zdôvodnenie, prečo o tohto guida nemáš záujem"
+              readOnly={isReadonly}
+            />
+            : null
+          }
 
           <Field
             name={'whyIWouldChooseThisGuide'}
@@ -88,7 +101,7 @@ GuideOption = reduxForm({
   validate: (values) => {
     const errors = {};
 
-    const required = ['priority', 'whyIWouldChooseThisGuide'];
+    const required = ['priority'];
 
     required.forEach(item => {
       if (!values[item]) {
@@ -96,10 +109,23 @@ GuideOption = reduxForm({
       }
     });
 
+    if (values.priority !== -1 && !values.whyIWouldChooseThisGuide) {
+      errors.whyIWouldChooseThisGuide = 'Položka je povinná';
+    }
+
+    if (values.priority && values.priority === -1 && !values.whyDoYouRefuseThisGuide) {
+      errors.whyDoYouRefuseThisGuide = 'Položka je povinná';
+    }
+
     return errors;
   }
 })(GuideOption);
 
-export default connect(state => ({
-  student: state.users.viewerRolesData.get('student'),
-}), actions)(GuideOption);
+export default connect((state, props) => {
+  const selector = formValueSelector(props.form);
+
+  return {
+    student: state.users.viewerRolesData.get('student'),
+    priority: selector(state, 'priority'),
+  };
+}, actions)(GuideOption);

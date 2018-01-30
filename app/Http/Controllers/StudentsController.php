@@ -64,10 +64,11 @@ class StudentsController extends Controller
         $data = [
             'priority' => intval($request->get('priority')),
             'whyIWouldChooseThisGuide' => $request->get('whyIWouldChooseThisGuide'),
+            'whyDoYouRefuseThisGuide' => $request->get('whyDoYouRefuseThisGuide'),
             'updated_at' => Carbon::now(),
         ];
 
-        if ($data['priority'] !== "-1" && $student->guidesOptions()->wherePivot('priority', '=', $data['priority'])->exists()) {
+        if ($data['priority'] !== -1 && $student->guidesOptions()->wherePivot('priority', '=', $data['priority'])->exists()) {
             return response()->json(['error' => 'Nie je možné priradiť rovnakú prioritu'], 400);
         }
 

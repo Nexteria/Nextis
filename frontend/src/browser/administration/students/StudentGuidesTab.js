@@ -54,8 +54,10 @@ class StudentGuidesTab extends Component {
 
     const data = student.get('guidesOptions').map(guideData => ({
       firstName: guideData.get('firstName'),
-      lastName: guideData.get('firstName'),
+      lastName: guideData.get('lastName'),
       ...guideData.get('pivot'),
+      whyDoYouRefuseThisGuide: guideData.get('pivot').priority === -1 ?
+        guideData.get('pivot').whyDoYouRefuseThisGuide : '',
       actions: (
         <div>
           <button
@@ -140,6 +142,14 @@ class StudentGuidesTab extends Component {
               dataField="whyIWouldChooseThisGuide"
             >
                 Napíš nám, na čom chceš pomocou tohto guida pracovať.
+            </TableHeaderColumn>
+
+            <TableHeaderColumn
+              tdStyle={styles.rowTd}
+              thStyle={styles.rowTd}
+              dataField="whyDoYouRefuseThisGuide"
+            >
+                Aby sme lepšie rozumeli tvojmu rozhodnutiu, prosím, napíš nám zdôvodnenie, prečo o tohto guida nemáš záujem)
             </TableHeaderColumn>
 
             <TableHeaderColumn
