@@ -68,15 +68,14 @@ class GuideOption extends Component {
               label="Aby sme lepšie rozumeli tvojmu rozhodnutiu, prosím, napíš nám zdôvodnenie, prečo o tohto guida nemáš záujem"
               readOnly={isReadonly}
             />
-            : null
+            :
+            <Field
+              name={'whyIWouldChooseThisGuide'}
+              component={TextAreaComponent}
+              label="Napíš nám, na čom chceš pomocou tohto guida pracovať. Chceme mu(jej) to poslať, aby mal aj on(ona) jasnejšiu predstavu o Tebe a zároveň chceme predísť zlej interpretácii z našej strany. Môžeš stručne zosumarizovať aj to, čo si nám poslal(a) v prihláške."
+              readOnly={isReadonly}
+            />
           }
-
-          <Field
-            name={'whyIWouldChooseThisGuide'}
-            component={TextAreaComponent}
-            label="Napíš nám, na čom chceš pomocou tohto guida pracovať. Chceme mu(jej) to poslať, aby mal aj on(ona) jasnejšiu predstavu o Tebe a zároveň chceme predísť zlej interpretácii z našej strany. Môžeš stručne zosumarizovať aj to, čo si nám poslal(a) v prihláške."
-            readOnly={isReadonly}
-          />
 
           {!isReadonly ?
             <div className="pull-right text-right">

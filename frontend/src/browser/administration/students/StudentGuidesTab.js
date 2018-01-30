@@ -58,6 +58,8 @@ class StudentGuidesTab extends Component {
       ...guideData.get('pivot'),
       whyDoYouRefuseThisGuide: guideData.get('pivot').priority === -1 ?
         guideData.get('pivot').whyDoYouRefuseThisGuide : '',
+      whyIWouldChooseThisGuide: guideData.get('pivot').priority !== -1 ?
+        guideData.get('pivot').whyIWouldChooseThisGuide : '',
       actions: (
         <div>
           <button
