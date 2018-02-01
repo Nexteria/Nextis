@@ -115,6 +115,7 @@
     "react-router-redux": "^4.0.0",
     "react-router-scroll": "^0.2.0",
     "react-rte": "^0.11.0",
+    "react-scroll": "^1.7.6",
     "react-sortable-hoc": "^0.6.6",
     "react-star-rating-component": "^1.2.4",
     "react-tag-input": "^4.0.1",

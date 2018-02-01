@@ -12,6 +12,24 @@
     width: 100%;
     text-align: center;
   }
+
+  position: relative;
+}
+
+.user-events-page .content-header {
+  position: fixed;
+  top: 3.5em;
+  z-index: 9999;
+  background-color: #ecf0f5;
+  width: 100%;
+}
+
+.user-events-page .content-header .events-filter {
+  left: -2em;
+}
+
+.user-events-page .content {
+  margin-top: 5em;
 }
 
 .event-login-modal { 
@@ -21,4 +39,11 @@
 .event-login.box {
   border: none;
   box-shadow: none;
+}
+
+li div.timeline-item.last-item {
+  width: 17em;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
 }

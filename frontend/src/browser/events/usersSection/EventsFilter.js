@@ -17,7 +17,7 @@ export default class EventsFilter extends Component {
     } = this.props;
 
     return (
-      <div className="col-md-12" style={{ textAlign: 'center' }}>
+      <div className="col-md-12 events-filter" style={{ textAlign: 'center' }}>
         <button
           className={`btn btn-xs events-filter-button ${eventsFilter === 'all' ? 'active' : ''} events-filter-all`}
           onClick={() => change('eventsFilter', 'all')}
