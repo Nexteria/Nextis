@@ -6,7 +6,10 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose } from 'recompose';
-
+import format from 'date-fns/format';
+import addMonths from 'date-fns/add_months';
+import subMonths from 'date-fns/sub_months';
+import * as Scroll from 'react-scroll';
 
 
 import './EventsPage.scss';
@@ -97,6 +100,72 @@ class EventsPage extends Component {
     chooseStreamEventId: PropTypes.number,
   };
 
+  constructor(props) {
+    super(props);
+    this._handleScroll = this._handleScroll.bind(this);
+  }
+
+  _handleScroll() {
+    const { data, change, from, to, noFutureEvents, noPastEvents } = this.props;
+    const fetchMore = data.fetchMore;
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    const totalHeight = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight;
+    const totalScrollHeight = document.body.scrollHeight;
+
+    if (data.loading) {
+      return null;
+    }
+
+    if (totalScrollHeight - totalHeight * 2 <= scrollPosition && noFutureEvents < 3) {
+      fetchMore({
+        query: EventsQuery,
+        variables: {
+          from: format(to, 'YYYY-MM-DD HH:mm:ss'),
+          to: format(addMonths(to, 1), 'YYYY-MM-DD HH:mm:ss'),
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult.events.length) {
+            change('noFutureEvents', noFutureEvents + 1);
+          }
+
+          return {
+            events: [...previousResult.events, ...fetchMoreResult.events],
+          };
+        },
+      });
+      change('to', addMonths(to, 1));
+    }
+
+    if (scrollPosition === 0 && noPastEvents < 3) {
+      fetchMore({
+        query: EventsQuery,
+        variables: {
+          from: format(subMonths(from, 1), 'YYYY-MM-DD HH:mm:ss'),
+          to: format(from, 'YYYY-MM-DD HH:mm:ss'),
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult.events.length) {
+            change('noPastEvents', noPastEvents + 1);
+          }
+          return {
+            events: [...previousResult.events, ...fetchMoreResult.events],
+          };
+        },
+      }).then((data) => { Scroll.animateScroll.scrollMore(300); return data; });
+      change('from', subMonths(from, 1));
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this._handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._handleScroll);
+  }
+
   render() {
     const {
       data,
@@ -109,10 +178,11 @@ class EventsPage extends Component {
       visiblePastEvents,
       children,
       visibleFutureEvents,
+      noFutureEvents,
+      noPastEvents,
     } = this.props;
 
     const { events } = data;
-    console.log(events);
 
     const eventId = parseInt(params.eventId, 10);
 
@@ -191,11 +261,22 @@ class EventsPage extends Component {
               <h1>
                 <FormattedMessage {...messages.title} />
               </h1>
-              <EventsFilter change={change} eventsFilter={eventsFilter} />
+              <EventsFilter className="events-filter" change={change} eventsFilter={eventsFilter} />
             </section>
             <section className="content">
               <div className="row">
-                <div className="col-md-12 timeline">
+                <div className="col-md-12 timeline" ref={this.onMountTimeline}>
+                  <ul className="timeline">
+                    <li>
+                      <i className="fa fa-clock-o bg-gray"></i>
+                      {noPastEvents >= 3 ?
+                        <div className="timeline-item last-item">
+                          Tu je začiatok
+                        </div>
+                        : null
+                      }
+                    </li>
+                  </ul>
                 {sortedEvents.map((event, index) =>
                   event.isPrimary ?
                     <Event
@@ -229,6 +310,12 @@ class EventsPage extends Component {
                   <ul className="timeline">
                     <li>
                       <i className="fa fa-clock-o bg-gray"></i>
+                      {noFutureEvents >= 3 ?
+                        <div className="timeline-item last-item">
+                          Žiadne ďalšie eventy tu zatiaľ nie sú
+                        </div>
+                        : null
+                      }
                     </li>
                   </ul>
                 </div>
@@ -264,11 +351,64 @@ class EventsPage extends Component {
   }
 }
 
+
+const EventsQuery = gql`
+query FetchEvents ($from: String, $to: String){
+  events (from: $from, to: $to){
+    id
+    name
+    eventType
+    status
+    hasSignInQuestionaire
+    form {
+      id
+    }
+    groupedEvents {
+      id
+    }
+    attendees(userId: 25) {
+      id
+      userId
+      signedIn
+      signedOut
+      standIn
+      wontGo
+      attendeesGroup {
+        id
+        signUpOpenDateTime
+        signUpDeadlineDateTime
+      }
+    }
+    terms (from: $from, to: $to) {
+      id
+      eventStartDateTime
+      eventEndDateTime
+      canNotSignInReason(userId: 25)
+      parentTermId
+      attendees(userId: 25) {
+        id
+        signedIn
+        signedOut
+        standIn
+        wontGo
+      }
+    }
+  }
+}
+`;
+
 const selector = formValueSelector('userEventsPage');
 
 export default compose(
   reduxForm({
     form: 'userEventsPage',
+    initialValues: {
+      eventsFilter: 'onlyForMe',
+      from: subMonths(new Date(), 1),
+      to: addMonths(new Date(), 1),
+      noFutureEvents: 0,
+      noPastEvents: 0,
+    },
   }),
   connect(state => ({
     eventsFilter: selector(state, 'eventsFilter'),
@@ -279,51 +419,19 @@ export default compose(
     signOut: state.events.signOut,
     locationDetailsId: state.events.locationDetailsId,
     nxLocations: state.nxLocations.locations,
-    initialValues: { eventsFilter: 'onlyForMe' },
+    from: selector(state, 'from'),
+    to: selector(state, 'to'),
+    noFutureEvents: selector(state, 'noFutureEvents'),
+    noPastEvents: selector(state, 'noPastEvents'),
     chooseStreamEventId: selector(state, 'chooseStreamEventId'),
   }), eventsActions),
-  graphql(gql`
-    query FetchEvents{
-      events{
-        id
-        name
-        eventType
-        status
-        hasSignInQuestionaire
-        form {
-          id
-        }
-        groupedEvents {
-          id
-        }
-        attendees(userId: 25) {
-          id
-          userId
-          signedIn
-          signedOut
-          standIn
-          wontGo
-          attendeesGroup {
-            id
-            signUpOpenDateTime
-            signUpDeadlineDateTime
-          }
-        }
-        terms {
-          id
-          eventStartDateTime
-          eventEndDateTime
-          canNotSignInReason(userId: 25)
-          parentTermId
-          attendees(userId: 25) {
-            id
-            signedIn
-            signedOut
-            standIn
-            wontGo
-          }
-        }
-      }
+  graphql(EventsQuery, {
+    options: {
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        from: format(subMonths(new Date(), 1), 'YYYY-MM-DD HH:mm:ss'),
+        to: format(addMonths(new Date(), 1), 'YYYY-MM-DD HH:mm:ss'),
+      },
     }
-  `)
+  })
 )(EventsPage);

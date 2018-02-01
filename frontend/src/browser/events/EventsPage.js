@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 
+
 import * as actions from '../../common/events/actions';
 import EventsDefaultSettings from './EventsDefaultSettings';
 

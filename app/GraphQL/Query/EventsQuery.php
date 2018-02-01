@@ -37,6 +37,14 @@ class EventsQuery extends Query
                 'name' => 'status',
                 'type' => Type::string()
             ],
+            'from' => [
+                'name' => 'from',
+                'type' => Type::string()
+            ],
+            'to' => [
+                'name' => 'to',
+                'type' => Type::string()
+            ],
             'curriculumLevelId' => [
                 'name' => 'curriculumLevelId',
                 'type' => Type::int()
@@ -66,12 +74,23 @@ class EventsQuery extends Query
             if (isset($args['semesterId'])) {
                 $query->where('semesterId', $args['semesterId']);
             }
+            if (isset($args['from'])) {
+                $query->whereHas('terms', function ($query) use ($args) {
+                    $query->whereRaw('nx_event_terms.eventStartDateTime >= "'.$args['from'].'"');
+                });
+            }
+            if (isset($args['to'])) {
+                $query->whereHas('terms', function ($query) use ($args) {
+                    $query->whereRaw('nx_event_terms.eventStartDateTime <= "'.$args['to'].'"');
+                });
+            }
         };
 
         $events = NxEvent::with(array_keys($fields->getRelations()))
             ->where($where)
             ->select($fields->getSelect())
             ->selectRaw('(nx_events.signInFormId is not null) as hasSignInQuestionaire')
+            ->has('terms')
             ->get();
 
         return $events;

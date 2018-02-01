@@ -6,6 +6,7 @@ import isBefore from 'date-fns/is_before';
 import isAfter from 'date-fns/is_after';
 import parse from 'date-fns/parse';
 
+
 import SignInActions from './SignInActions';
 import EventTerms from './EventTerms';
 import EventDescription from './EventDescription';
@@ -14,6 +15,7 @@ import EventTypeLabels from './EventTypeLabels';
 import MultiEventsSelection from './MultiEventsSelection';
 import EventDetails from './EventDetails';
 import './Event.scss';
+
 
 const styles = {
   labelsContainer: {

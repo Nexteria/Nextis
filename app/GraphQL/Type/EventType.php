@@ -76,6 +76,31 @@ class EventType extends GraphQLType
             'terms' => [
                 'type' => Type::listOf(GraphQL::type('NxEventTerm')),
                 'description' => 'The event`s terms',
+                'args' => [
+                    'from' => [
+                        'type' => Type::string(),
+                        'name' => 'from',
+                    ],
+                    'to' => [
+                        'type' => Type::string(),
+                        'name' => 'to',
+                    ]
+                ],
+                'resolve' => function ($root, $args) {
+                    $query = $root->terms();
+
+                    if (isset($args['from'])) {
+                        \Log::error('from');
+                        $query = $query->whereRaw('nx_event_terms.eventStartDateTime >= "'.$args['from'].'"');
+                    }
+
+                    if (isset($args['to'])) {
+                        \Log::error('to');
+                        $query = $query->whereRaw('nx_event_terms.eventStartDateTime <= "'.$args['to'].'"');
+                    }
+
+                    return $query->get();
+                },
                 'always' => ['id'],
             ],
         ];

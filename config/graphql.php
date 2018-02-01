@@ -35,5 +35,5 @@ return [
     ],
 
     'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],
-    'params_key'    => 'params',
+    'params_key'    => 'variables',
 ];
