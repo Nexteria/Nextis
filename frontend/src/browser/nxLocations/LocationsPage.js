@@ -76,7 +76,7 @@ class LocationsPage extends Component {
       return <div></div>;
     }
 
-    let filteredLocations = locations.valueSeq().map(location => location);
+    let filteredLocations = locations.valueSeq().filter(location => !location.deletedAt).map(location => location);
     if (fields.filter.value) {
       filteredLocations = locations.valueSeq().filter(locations =>
         diacritics.remove(`${locations.name}`).toLowerCase()

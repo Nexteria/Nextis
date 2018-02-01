@@ -16,6 +16,9 @@ const Location = Record({
   zipCode: '',
   countryCode: '',
   isMapVisible: false,
+  createdAt: null,
+  updatedAt: null,
+  deletedAt: null,
 });
 
 export default Location;

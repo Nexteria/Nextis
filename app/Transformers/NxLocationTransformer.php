@@ -22,6 +22,9 @@ class NxLocationTransformer extends Transformer
             'description' => $location->description,
             'instructions' => $location->instructions,
             'pictures' => $pictures,
+            'createdAt' => $location->created_at->toDateTimeString(),
+            'updatedAt' => $location->updated_at->toDateTimeString(),
+            'deletedAt' => $location->deleted_at,
          ];
     }
 }

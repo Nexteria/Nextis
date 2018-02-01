@@ -38,7 +38,7 @@ class NxLocationsController extends Controller
 
     public function getNxLocations()
     {
-        $locations = NxLocation::all();
+        $locations = NxLocation::withTrashed()->get();
 
         return response()->json($this->nxLocationTransformer->transformCollection($locations));
     }
