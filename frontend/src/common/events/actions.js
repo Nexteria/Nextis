@@ -178,7 +178,7 @@ export function saveEvent(fields) {
         id: term.get('id'),
         minCapacity: term.get('minCapacity'),
         maxCapacity: term.get('maxCapacity'),
-        hostId: term.get('hostId'),
+        hostId: term.get('hostId') ? term.get('hostId') : null,
         nxLocationId: term.get('nxLocationId'),
         feedbackLink: term.get('feedbackLink'),
         publicFeedbackLink: term.get('publicFeedbackLink'),
