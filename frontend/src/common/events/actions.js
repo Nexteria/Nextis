@@ -168,7 +168,7 @@ export function saveEvent(fields) {
       id: stream.get('id'),
       minCapacity: stream.get('minCapacity'),
       maxCapacity: stream.get('maxCapacity'),
-      hostId: stream.get('hostId'),
+      hostId: stream.get('hostId') ? stream.get('hostId') : null,
       nxLocationId: stream.get('nxLocationId'),
       eventStartDateTime: format(stream.get('eventStartDateTime'), 'YYYY-MM-DD HH:mm:ss'),
       eventEndDateTime: format(stream.get('eventEndDateTime'), 'YYYY-MM-DD HH:mm:ss'),
