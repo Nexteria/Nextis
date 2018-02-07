@@ -174,6 +174,7 @@ class EventsPage extends Component {
       .sort((a, b) => {
         const firstStreamA = a.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
         const firstStreamB = b.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
+
         return isAfter(firstStreamA.get('eventStartDateTime'), firstStreamB.get('eventStartDateTime')) ? 1 : -1;
       });
 

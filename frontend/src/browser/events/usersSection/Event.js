@@ -252,13 +252,16 @@ export default class Event extends Component {
           <EventTypeLabels isMultiMeeting={isMultiMeeting} isMultiTerm={isMultiTerm} />
           <div className="timeline-header">
             <div className="col-md-1 col-sm-2 col-xs-12 event-date">
-              {streams.valueSeq().map(stream =>
-                <div key={stream.get('id')} style={styles.eventDateLabel}>
-                  <span className="label label-primary">
-                    <FormattedDate value={stream.get('eventStartDateTime')} />
-                  </span>
-                </div>
-              )}
+              {groupedEvents.size === 0 ?
+                streams.valueSeq().map(stream =>
+                  <div key={stream.get('id')} style={styles.eventDateLabel}>
+                    <span className="label label-primary">
+                      <FormattedDate value={stream.get('eventStartDateTime')} />
+                    </span>
+                  </div>
+                )
+                : null
+              }
             </div>
             <h3 className="col-md-10 col-sm-8 col-xs-12">{event.name}</h3>
             <div className="col-md-1 col-sm-2 col-xs-12 event-details-button">
