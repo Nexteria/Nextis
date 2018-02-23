@@ -17,7 +17,7 @@ export default class EventsFilter extends Component {
     } = this.props;
 
     return (
-      <div className="col-md-12 events-filter" style={{ textAlign: 'center' }}>
+      <div className="events-filter" style={{ textAlign: 'center' }}>
         <button
           className={`btn btn-xs events-filter-button ${eventsFilter === 'all' ? 'active' : ''} events-filter-all`}
           onClick={() => change('eventsFilter', 'all')}
@@ -75,6 +75,7 @@ export function filterEvents(events, eventsFilter) {
             ...value,
             eventStartDateTime: termDate,
             isPrimary: true,
+            termId: term.id,
           });
           return;
         }
@@ -84,6 +85,7 @@ export function filterEvents(events, eventsFilter) {
             eventName: value.name,
             eventStartDateTime: termDate,
             isPrimary: false,
+            termId: term.id,
           });
         }
       });

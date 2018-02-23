@@ -127,7 +127,7 @@ class User extends Authenticatable implements AuditableContract
 
     public function profilePicture()
     {
-        return $this->hasOne('App\Image', 'profilePictureId');
+        return $this->belongsTo('App\Image', 'profilePictureId');
     }
 
     public function student()

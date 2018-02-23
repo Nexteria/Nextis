@@ -18,9 +18,6 @@ import DetailsDialog from './DetailsDialog';
 import * as eventsActions from '../../../common/events/actions';
 import SignOutDialog from './SignOutDialog';
 import LocationDetailsDialog from './LocationDetailsDialog';
-import PastEvents from './PastEvents';
-import FutureEvents from './FutureEvents';
-import PresentEvents from './PresentEvents';
 import EventsFilter, { filterEvents } from './EventsFilter';
 import ChooseTermStreamDialog from '../attendance/ChooseTermStreamDialog';
 import EventMeetingLabel from './EventMeetingLabel';
@@ -103,6 +100,7 @@ class EventsPage extends Component {
   constructor(props) {
     super(props);
     this._handleScroll = this._handleScroll.bind(this);
+    this.loadOlder = this.loadOlder.bind(this);
   }
 
   _handleScroll() {
@@ -137,25 +135,27 @@ class EventsPage extends Component {
       });
       change('to', addMonths(to, 1));
     }
+  }
 
-    if (scrollPosition === 0 && noPastEvents < 3) {
-      fetchMore({
-        query: EventsQuery,
-        variables: {
-          from: format(subMonths(from, 1), 'YYYY-MM-DD HH:mm:ss'),
-          to: format(from, 'YYYY-MM-DD HH:mm:ss'),
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          if (!fetchMoreResult.events.length) {
-            change('noPastEvents', noPastEvents + 1);
-          }
-          return {
-            events: [...previousResult.events, ...fetchMoreResult.events],
-          };
-        },
-      }).then((data) => { Scroll.animateScroll.scrollMore(300); return data; });
-      change('from', subMonths(from, 1));
-    }
+  loadOlder() {
+    const { data, change, from, to, noFutureEvents, noPastEvents } = this.props;
+    const fetchMore = data.fetchMore;
+
+    fetchMore({
+      query: EventsQuery,
+      variables: {
+        from: format(subMonths(from, 1), 'YYYY-MM-DD HH:mm:ss'),
+        to: format(from, 'YYYY-MM-DD HH:mm:ss'),
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult.events.length) {
+          change('noPastEvents', noPastEvents + 1);
+        }
+        return {
+          events: [...previousResult.events, ...fetchMoreResult.events],
+        };
+      },
+    }).then((data) => { change('from', subMonths(from, 1)); return data; });
   }
 
   componentDidMount() {
@@ -180,11 +180,14 @@ class EventsPage extends Component {
       visibleFutureEvents,
       noFutureEvents,
       noPastEvents,
+      from,
     } = this.props;
 
     const { events } = data;
 
     const eventId = parseInt(params.eventId, 10);
+
+    let currentDate = subMonths(from, 1);
 
     const {
       toggleEventDetails,
@@ -207,10 +210,6 @@ class EventsPage extends Component {
     if (!events) {
       return <div></div>;
     }
-
-    const pastMonthCount = 5;
-    const presentMonthCount = 2;
-    const futureMonthCount = 5;
 
     const sortedEvents = filterEvents(events, eventsFilter);
 
@@ -273,39 +272,70 @@ class EventsPage extends Component {
                         <div className="timeline-item last-item">
                           Tu je začiatok
                         </div>
-                        : null
+                        :
+                        <div
+                          className={`timeline-item last-item button-item${data.loading ? '-disabled' : ''}`}
+                          onClick={data.loading ? null : this.loadOlder}
+                        >
+                          {data.loading ? 'Načítavam ...' : 'Načítať predchádzajúci mesiac'}
+                        </div>
                       }
                     </li>
                   </ul>
-                {sortedEvents.map((event, index) =>
-                  event.isPrimary ?
-                    <Event
-                      hide={false}
-                      key={index}
-                      event={event}
-                      events={events}
-                      viewer={viewer}
-                      nxLocations={nxLocations}
-                      openEventDetailsDialog={openEventDetailsDialog}
-                      openLocationDetailsDialog={openLocationDetailsDialog}
-                      closeLocationDetailsDialog={closeLocationDetailsDialog}
-                      attendeeSignIn={attendeeSignIn}
-                      openSignOutDialog={openSignOutDialog}
-                      attendeeWontGo={attendeeWontGo}
-                      toggleEventDetails={toggleEventDetails}
-                      signAsStandIn={signAsStandIn}
-                      signOutAsStandIn={signOutAsStandIn}
-                      datailsOpen
-                      change={change}
-                      toggleEventTerm={toggleEventTerm}
-                    />
-                  :
+                {sortedEvents.map((event, index) => {
+                  const monthLabels = [];
+
+                  let currentMonth = format(currentDate, 'MMMM YY');
+                  const eventMonth = format(event.eventStartDateTime, 'MMMM YY');
+
+                  while (currentMonth !== eventMonth) {
+                    currentDate = addMonths(currentDate, 1);
+                    currentMonth = format(currentDate, 'MMMM YY');
+                    monthLabels.push(currentMonth);
+                  }
+
+                  if (event.isPrimary) {
+                    return (
+                      <ul className="timeline">
+                        {monthLabels.map(label =>
+                          <li className="time-label">
+                            <span className="bg-yellow">
+                              {label}
+                            </span>
+                          </li>
+                        )}
+                        <Event
+                          hide={false}
+                          key={index}
+                          event={event}
+                          events={events}
+                          viewer={viewer}
+                          nxLocations={nxLocations}
+                          openEventDetailsDialog={openEventDetailsDialog}
+                          openLocationDetailsDialog={openLocationDetailsDialog}
+                          closeLocationDetailsDialog={closeLocationDetailsDialog}
+                          attendeeSignIn={attendeeSignIn}
+                          openSignOutDialog={openSignOutDialog}
+                          attendeeWontGo={attendeeWontGo}
+                          toggleEventDetails={toggleEventDetails}
+                          signAsStandIn={signAsStandIn}
+                          signOutAsStandIn={signOutAsStandIn}
+                          datailsOpen
+                          change={change}
+                          toggleEventTerm={toggleEventTerm}
+                        />
+                      </ul>
+                    );
+                  }
+                  
+                  return (
                     <EventMeetingLabel
                       key={index}
                       eventName={event.eventName}
                       meetingDate={event.eventStartDateTime}
                     />
-                )}
+                  );
+                })}
 
                   <ul className="timeline">
                     <li>

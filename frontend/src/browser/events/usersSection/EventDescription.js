@@ -1,47 +1,45 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { compose } from 'recompose';
+
 
 import * as actions from '../../../common/users/actions';
 
 class EventDescription extends Component {
 
   static propTypes = {
-    event: PropTypes.object.isRequired,
-    groupedEvents: PropTypes.object,
     openEventDetailsDialog: PropTypes.func.isRequired,
-    users: PropTypes.object,
-    loadUser: PropTypes.func,
-  }
-
-  componentWillMount = async () => {
-    const { event, users } = this.props;
-    await Promise.all(event.lectors.map(lector =>
-      !(users && users.get(lector)) && this.props.loadUser(lector)
-    ));
+    data: PropTypes.object.isRequired,
   }
 
   render() {
     const {
-      event,
-      groupedEvents,
+      data,
       openEventDetailsDialog,
-      users,
     } = this.props;
+
+    if (data.loading) {
+      return <div />;
+    }
+
+    const event = data.event;
 
     return (
       <div>
         <div className="col-md-12 col-sm-12 col-xs-12">
           <div><strong>Popis:</strong></div>
           <div
-            dangerouslySetInnerHTML={{ __html: event.shortDescription.toString('html') }}
+            dangerouslySetInnerHTML={{ __html: event.shortDescription }}
           >
           </div>
-          {groupedEvents.size > 0 &&
+          {event.groupedEvents.length > 0 &&
             <div>
               <strong>Obsahujúce eventy:</strong>
               <ul>
-              {groupedEvents.map(gEvent =>
+              {event.groupedEvents.map(gEvent =>
                 <li>
                   <label>
                     <a href="#" onClick={() => openEventDetailsDialog(gEvent.id)}>{gEvent.name}</a>
@@ -51,28 +49,28 @@ class EventDescription extends Component {
               </ul>
             </div>
           }
-          {groupedEvents.size === 0 &&
+          {event.groupedEvents.length === 0 &&
             <div className="lectors-container text-center">
               <div>
                 <strong>Lektori:</strong>
               </div>
-              {event.lectors.size === 0 ?
+              {event.lectors.length === 0 ?
                 'Žiadni lektori'
                 :
-                event.lectors.map(lector => users && users.get(lector) &&
-                  <div key={lector}>
+                event.lectors.map(lector =>
+                  <div key={lector.id}>
                     <div className="col-md-2 col-sm-2 col-xs-2">
                       <img
                         alt="lector"
                         className="lector-picture"
-                        src={users.get(lector).photo ? users.get(lector).photo : '/img/avatar.png'}
+                        src={lector.photo ? lector.photo : '/img/avatar.png'}
                       />
-                      <div>{users.get(lector).firstName} {users.get(lector).lastName}</div>
+                      <div>{lector.firstName} {lector.lastName}</div>
                     </div>
                     <div
                       className="col-md-10 col-sm-10 col-xs-10"
                       dangerouslySetInnerHTML={{
-                        __html: users.get(lector).lectorDescription.toString('html')
+                        __html: lector.lectorDescription
                       }}
                     >
                     </div>
@@ -87,6 +85,35 @@ class EventDescription extends Component {
   }
 }
 
-export default connect(state => ({
-  users: state.users.users,
-}), actions)(EventDescription);
+const EventQuery = gql`
+query FetchEvent ($id: Int){
+  event (id: $id){
+    shortDescription
+    groupedEvents {
+      id
+      name
+    }
+    lectors {
+      id
+      photo
+      firstName
+      lastName
+      lectorDescription
+    }
+  }
+}
+`;
+
+export default compose(
+  connect(state => ({
+    users: state.users.users,
+  }), actions),
+  graphql(EventQuery, {
+    options: props => ({
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        id: props.event.id,
+      },
+    })
+  })
+)(EventDescription);

@@ -66,6 +66,10 @@ class NxEventTermType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The end datetime of the term',
             ],
+            'location' => [
+                'type' => GraphQL::type('NxLocation'),
+                'description' => 'Term location',
+            ],
             'canNotSignInReason' => [
                 'type' => Type::string(),
                 'description' => 'If the user can sign in',
@@ -85,6 +89,18 @@ class NxEventTermType extends GraphQLType
                     }
 
                     return 'user_not_specified';
+                },
+                'selectable' => false,
+            ],
+            'attendingNumbers' => [
+                'type' => GraphQL::type('TermAttendingNumbers'),
+                'description' => 'Attending number for term',
+                'resolve' => function ($root, $args) {
+                    return [
+                        'signedIn' => $root->attendees()->wherePivot('signedIn', '!=', 'null')->count(),
+                        'standIn' => $root->attendees()->wherePivot('standIn', '!=', 'null')->count(),
+                        'invited' => $root->attendees()->count()
+                    ];
                 },
                 'selectable' => false,
             ],

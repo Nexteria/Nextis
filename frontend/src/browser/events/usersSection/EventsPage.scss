@@ -1,10 +1,18 @@
 .user-events-page {
+  .button-item {
+    cursor: pointer;
+  }
+
+  .button-item-disabled {
+    cursor: wait;
+  }
+
   li.time-label {
-    width: 7em;
+    width: 8em;
     text-align: center;
 
     span {
-      width: 6em;
+      width: 7em;
     }
   }
 
@@ -19,13 +27,16 @@
 .user-events-page .content-header {
   position: fixed;
   top: 3.5em;
-  z-index: 9999;
+  z-index: 999;
   background-color: #ecf0f5;
   width: 100%;
+  padding-bottom: 2em;
 }
 
 .user-events-page .content-header .events-filter {
-  left: -2em;
+  position: absolute;
+  left: 30em;
+  top: 1em;
 }
 
 .user-events-page .content {
