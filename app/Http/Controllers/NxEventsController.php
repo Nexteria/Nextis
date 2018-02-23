@@ -297,7 +297,7 @@ class NxEventsController extends Controller
             ];
 
             try {
-                $response = Mailgun::api()->get(env('MAILGUN_DOMAIN')."/tags/".$tag);
+                $response = Mailgun::api()->get(env('MAILGUN_DOMAIN')."/tags/".urlencode($tag));
             } catch (Mailgun\Connection\Exceptions\MissingEndpoint $e) {
                 continue;
             }

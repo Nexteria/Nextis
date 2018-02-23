@@ -4,9 +4,13 @@ use App\GraphQL\Type\EventType;
 use App\GraphQL\Type\NxEventTermType;
 use App\GraphQL\Type\NxEventAttendeeType;
 use App\GraphQL\Type\NxEventAttendeeGroupType;
+use App\GraphQL\Type\NxLocationType;
+use App\GraphQL\Type\TermAttendingNumbers;
+use App\GraphQL\Type\UserType;
 use App\GraphQL\Type\QuestionFormType;
 
 use App\GraphQL\Query\EventsQuery;
+use App\GraphQL\Query\EventQuery;
 
 return [
     'prefix' => 'graphql',
@@ -19,6 +23,7 @@ return [
         'default' => [
             'query' => [
                 'events' => EventsQuery::class,
+                'event' => EventQuery::class,
             ],
             'mutation' => [
             ],
@@ -32,6 +37,9 @@ return [
         'NxEventAttendee' => NxEventAttendeeType::class,
         'NxEventAttendeeGroup' => NxEventAttendeeGroupType::class,
         'QuestionForm' => QuestionFormType::class,
+        'TermAttendingNumbers' => TermAttendingNumbers::class,
+        'NxLocation' => NxLocationType::class,
+        'User' => UserType::class,
     ],
 
     'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],
