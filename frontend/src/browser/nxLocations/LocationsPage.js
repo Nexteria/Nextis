@@ -78,7 +78,7 @@ class LocationsPage extends Component {
 
     let filteredLocations = locations.valueSeq().filter(location => !location.deletedAt).map(location => location);
     if (fields.filter.value) {
-      filteredLocations = locations.valueSeq().filter(locations =>
+      filteredLocations = filteredLocations.valueSeq().filter(locations =>
         diacritics.remove(`${locations.name}`).toLowerCase()
           .indexOf(diacritics.remove(fields.filter.value.toLowerCase())) !== -1
       );
