@@ -43,7 +43,7 @@ class NxEventTerm extends Model implements AuditableContract
 
     public function location()
     {
-        return $this->belongsTo('App\NxLocation', 'nxLocationId');
+        return $this->belongsTo('App\NxLocation', 'nxLocationId')->withTrashed();
     }
 
     public function parentTerm()
