@@ -882,6 +882,14 @@ class AdminController extends Controller
             $attendees = $event->attendees()->whereNotNull($type)->get();
         }
 
+        if ($type === 'signedOut') {
+            return \Excel::create('Export profilov študentov', function ($excel) use ($attendees, $termId) {
+                $excel->sheet('Študenti', function ($sheet) use ($attendees, $termId) {
+                    $sheet->loadView('exports.student_profiles_signed_out', ['attendees' => $attendees, 'isTerm' => $termId]);
+                });
+            })->download('xls');
+        }
+
         $users = [];
         foreach ($attendees as $attendee) {
             $users[] = $attendee->user;
