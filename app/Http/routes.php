@@ -33,52 +33,59 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix' => '/admin'], function () {
             Route::get('/guides', 'AdminController@getGuides');
-            Route::post('/guides', 'AdminController@createGuides');
-            Route::post('/guides/{guideId}', 'AdminController@updateGuides')
-            ->where(array('guideId' => '[0-9]+'));
-            Route::post('/guides/import', 'AdminController@importGuides');
             Route::get('/guides/fields', 'AdminController@getGuidesFieldTypes');
-            Route::post('/guides/fields', 'AdminController@createOrUpdateGuidesFieldType');
-            Route::put('/guides/fields/{fieldId}', 'AdminController@createOrUpdateGuidesFieldType');
-            Route::delete('/guides/fields/{fieldId}', 'AdminController@deleteGuidesFieldType');
+            
+
+            Route::group(['middleware' => 'role:admin'], function () {
+                Route::post('/guides/fields', 'AdminController@createOrUpdateGuidesFieldType');
+                Route::put('/guides/fields/{fieldId}', 'AdminController@createOrUpdateGuidesFieldType');
+                Route::delete('/guides/fields/{fieldId}', 'AdminController@deleteGuidesFieldType');
+                Route::post('/guides/{guideId}', 'AdminController@updateGuides')
+                    ->where(array('guideId' => '[0-9]+'));
+                Route::post('/guides/import', 'AdminController@importGuides');
+                Route::post('/guides', 'AdminController@createGuides');
+
+                Route::get('/questionnaire/{formId}/results', 'AdminController@getFormResults');
+                Route::get('/questionnaire/{formId}/answers', 'AdminController@getFormAnswers');
+
+                Route::post('/semesters', 'AdminController@createSemester');
+                Route::post('/semesters/{semesterId}/assign', 'AdminController@assignSemester');
+
+                Route::post('/students/import', 'AdminController@importNewStudentsFromExcel');
+                Route::post('/students/level', 'AdminController@changeStudentLevel');
+                Route::put('/students/status', 'AdminController@changeStudentStatus');
+                Route::post('/students/tuitionFee', 'AdminController@changeTuitionFee');
+                Route::post('/students/{studentId}/comments', 'AdminController@createStudentComment');
+                Route::post('/students/comments', 'AdminController@createBulkStudentsComment');
+                Route::get('/students/{studentId}/comments', 'AdminController@getStudentComments');
+                Route::put('/students/{studentId}/guides/{guideId}/assign', 'AdminController@assignStudentGuide');
+                Route::post('/students/{studentId}/guides/{guideId}', 'AdminController@assignStudentGuideOption');
+
+                Route::delete('/students/{studentId}/guidesOption/{optionId}', 'AdminController@removeStudentGuideOption');
+                Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
+                Route::post('/students/profile', 'AdminController@exportStudentProfiles');
+                Route::put('/students/points', 'AdminController@changeActivityPoints');
+                Route::put('/students/{studentId}/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@changeStudentActivityPoints']);
+                Route::post('/students/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@addActivityPoints']);
+
+                Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
+                Route::delete('/students/{studentId}/guides', 'AdminController@removeStudentGuideConnection');
+
+                Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
+                Route::put('/comments/{commentId}', 'AdminController@updateComment');
+                Route::delete('/comments/{commentId}', 'AdminController@deleteComment');
+                
+                Route::get('/templates/imports/newStudents', 'AdminController@getNewStudentsImportTemplate');
+            });
 
             Route::get('/nxEvents/categories', 'AdminController@getNxEventsCategories');
             Route::get('/nxEvents/{eventId}/terms/{termId}/attendees/{type}', 'AdminController@getTermAttendeesList');
             Route::get('/nxEvents/{eventId}/terms/attendees/{type}', 'AdminController@getEventAttendeesList');
             Route::put('/nxEvents', 'AdminController@getNxEvents');
 
-            Route::get('/questionnaire/{formId}/results', 'AdminController@getFormResults');
-            Route::get('/questionnaire/{formId}/answers', 'AdminController@getFormAnswers');
-
             Route::get('/semesters', 'AdminController@getSemesters');
-            Route::post('/semesters', 'AdminController@createSemester');
-            Route::post('/semesters/{semesterId}/assign', 'AdminController@assignSemester');
-
             Route::get('/students', 'AdminController@getStudents');
-            Route::post('/students/import', 'AdminController@importNewStudentsFromExcel');
-            Route::post('/students/level', 'AdminController@changeStudentLevel');
-            Route::put('/students/status', 'AdminController@changeStudentStatus');
-            Route::post('/students/tuitionFee', 'AdminController@changeTuitionFee');
-            Route::post('/students/{studentId}/comments', 'AdminController@createStudentComment');
-            Route::post('/students/comments', 'AdminController@createBulkStudentsComment');
-            Route::get('/students/{studentId}/comments', 'AdminController@getStudentComments');
-            Route::put('/students/{studentId}/guides/{guideId}/assign', 'AdminController@assignStudentGuide');
-            Route::post('/students/{studentId}/guides/{guideId}', 'AdminController@assignStudentGuideOption');
-            Route::delete('/students/{studentId}/guidesOption/{optionId}', 'AdminController@removeStudentGuideOption');
-            Route::get('/students/endSchoolYear', 'AdminController@endSchoolYear');
-            Route::post('/students/profile', 'AdminController@exportStudentProfiles');
-            Route::put('/students/points', 'AdminController@changeActivityPoints');
-            Route::put('/students/{studentId}/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@changeStudentActivityPoints']);
-            Route::post('/students/points', ['middleware' => ['permission:add_activity_points'], 'uses' => 'AdminController@addActivityPoints']);
             Route::get('/students/points/missing', 'AdminController@getStudentsWithMissingActivityPoints');
-            Route::get('/students/reports/{reportType}', 'AdminController@getStudentsReports');
-            Route::delete('/students/{studentId}/guides', 'AdminController@removeStudentGuideConnection');
-
-            Route::post('/comments/{commentId}/comments', 'AdminController@createComment');
-            Route::put('/comments/{commentId}', 'AdminController@updateComment');
-            Route::delete('/comments/{commentId}', 'AdminController@deleteComment');
-            
-            Route::get('/templates/imports/newStudents', 'AdminController@getNewStudentsImportTemplate');
         });
         
         Route::get('/app/constants', 'HomeController@getConstants');
