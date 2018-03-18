@@ -95,7 +95,7 @@ export class ChooseTermStreamDialog extends Component {
                 closeDialog();
                 attendeeSignIn(viewerId);
               }}
-            >Prihlásiť</button>
+            >Záväzne sa prihlasujem</button>
           </div>
           <div className="clearfix"></div>
         </Body>

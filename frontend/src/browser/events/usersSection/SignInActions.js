@@ -116,7 +116,7 @@ export default class SignInActions extends Component {
               }}
             >
               {event.has('questionForm') && event.get('questionForm') ? <span style={{ marginRight: '0.5em' }}><i className="fa fa-file-text-o"></i></span> : null}
-              Prihlásiť sa {isMultiTerm ? '- vybrať termín' : ''}
+              Záväzne sa prihlasujem {isMultiTerm ? '- vybrať termín' : ''}
             </button>
           }
           {signedIn && isBeforeEvent &&

@@ -37,11 +37,11 @@
         <mj-column width="100%" vertical-align="top">
           <mj-raw>@if($isMultiterm)</mj-raw>
             <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}">
-              Prihlásiť sa
+              Záväzne sa prihlasujem
             </mj-button>
           <mj-raw>@else</mj-raw>
             <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn">
-              Prihlásiť sa
+              Záväzne sa prihlasujem
             </mj-button>
           <mj-raw>@endif</mj-raw>
         </mj-column>

@@ -35,7 +35,7 @@
       <mj-section background-color="#eeeeff" padding-bottom="0" padding-top="0">
         <mj-column width="100%" vertical-align="top">
           <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn">
-            Zúčastním sa
+            Záväzne sa prihlasujem
           </mj-button>
           <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/wontGo">
             Nezúčastním sa
