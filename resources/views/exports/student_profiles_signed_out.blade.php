@@ -22,7 +22,7 @@
             <td>{{ $attendee->user->lastName }}</td>
             <td>{{ $attendee->user->email }}</td>
             <td>{{ $attendee->user->student ? $attendee->user->student->level->name : '' }}</td>
-            <td>{{ $attendee->user->dateOfBirth ? $$attendee->user->dateOfBirth->age : '' }}</td>
+            <td>{{ $attendee->user->dateOfBirth ? $attendee->user->dateOfBirth->age : '' }}</td>
             <td>{{ $attendee->user->school }}</td>
             <td>{{ $attendee->user->studyProgram }}</td>
             <td>{{ $attendee->user->studyYear }}</td>
