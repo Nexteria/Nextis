@@ -141,7 +141,7 @@ class Events extends Component {
       .sort((a, b) => {
         const firstStreamA = a.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
         const firstStreamB = b.getIn(['terms', 'streams']).sort((aa, bb) => isAfter(aa.get('eventStartDateTime'), bb.get('eventStartDateTime')) ? 1 : -1).first();
-        return isAfter(firstStreamA.get('eventStartDateTime'), firstStreamB.get('eventStartDateTime')) ? 1 : -1;
+        return !firstStreamA || !firstStreamB || isAfter(firstStreamA.get('eventStartDateTime'), firstStreamB.get('eventStartDateTime')) ? 1 : -1;
       })
       .map(event => event);
 
@@ -176,8 +176,8 @@ class Events extends Component {
         id: event.id,
         eventName: event.name,
         questionForm: event.questionForm ? event.questionForm.getIn(['formData', 'id']) : null,
-        eventStarts: <FormattedRelative value={firstStream.get('eventStartDateTime')} />,
-        eventStartDateTime: firstStream.get('eventStartDateTime'),
+        eventStarts: firstStream ? <FormattedRelative value={firstStream.get('eventStartDateTime')} /> : null,
+        eventStartDateTime: firstStream ? firstStream.get('eventStartDateTime') : null,
         capacity: {
           maxCapacity: streams.reduce((reduction, value) => reduction + value.get('maxCapacity'), 0),
           minCapacity: streams.reduce((reduction, value) => reduction + value.get('minCapacity'), 0),
