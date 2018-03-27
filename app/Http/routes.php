@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/guides/fields', 'AdminController@getGuidesFieldTypes');
             
 
-            Route::group(['middleware' => 'role:admin'], function () {
+            Route::group(['middleware' => 'role:ADMIN'], function () {
                 Route::post('/guides/fields', 'AdminController@createOrUpdateGuidesFieldType');
                 Route::put('/guides/fields/{fieldId}', 'AdminController@createOrUpdateGuidesFieldType');
                 Route::delete('/guides/fields/{fieldId}', 'AdminController@deleteGuidesFieldType');
