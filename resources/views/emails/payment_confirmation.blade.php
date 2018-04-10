@@ -9,13 +9,8 @@
 
 <br>
 <br>
-Vďaka nesprávne zadanému variabilnému symbolu sa nám nepodarilo priradiť k tvojej platbe účel. Tvoja platba vo výške € {{ $payment->amount / 100 }} však prebehla úspešne.
+Tvoja platba vo výške € {{ $payment->amount / 100 }} prebehla úspešne. Ďakujeme
 <br>
-Kontaktuj, prosím, Janku na čísle +421 911 257 919.
 
-<br>
-<br>
-Ďakujeme za pochopenie
-<br>
-Tvoj tím NLA
+Tím NLA
 @endsection

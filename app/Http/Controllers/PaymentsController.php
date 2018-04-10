@@ -46,8 +46,10 @@ class PaymentsController extends Controller
             $email = null;
             if ($payment->user->student && $payment->variableSymbol == $payment->user->student->tuitionFeeVariableSymbol) {
                 $email = new \App\Mail\ReceivedTuitionFeeConfirmation($payment);
-            } else {
+            } else if (Payment::where('variableSymbol', $payment->variableSymbol)->where('transactionType', 'debet')->exists()) {
                 $email = new \App\Mail\ReceivedPaymentConfirmation($payment);
+            } else {
+                $email = new \App\Mail\ReceivedUnknownPaymentConfirmation($payment);
             }
             
             \Mail::send($email);
