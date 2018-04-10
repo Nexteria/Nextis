@@ -32,8 +32,13 @@ class ReceivedPaymentConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->to($this->user->email)
-                    ->subject(trans('emails.payment_confirmation_title'))
-                    ->view('emails.payment_confirmation');
+        $this->to($this->user->email)
+            ->subject(trans('emails.payment_confirmation_title'))
+            ->view('emails.payment_confirmation');
+        
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()
+                    ->addTextHeader('X-Mailgun-Tag', 'non-tuition-payment');
+        });
     }
 }
