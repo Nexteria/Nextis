@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('autogenerate:eventManagerAttendanceCheckMail')->everyMinute();
         $schedule->command('autogenerate:hostAttendanceMail')->everyMinute();
         $schedule->command('autogenerate:feedbackFormNotification')->dailyAt('9:00');
-        $schedule->command('autogenerate:feedbackFormRemainder')->dailyAt('1:00');
-        $schedule->command('autogenerate:feedbackStatsMail')->dailyAt('1:00');
+        $schedule->command('autogenerate:feedbackFormRemainder')->dailyAt('01:00');
+        $schedule->command('autogenerate:feedbackStatsMail')->dailyAt('23:59');
     }
 }
