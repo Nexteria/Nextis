@@ -925,8 +925,8 @@ class AdminController extends Controller
                 $report = Report::getStudentSemesterPointsExcel($studentId);
                 break;
             
-            case 'students-active-semester-points':
-                $report = Report::getStudentsActiveSemesterPointsExcel();
+            case 'students-semester-points':
+                $report = Report::getStudentsSemesterPointsExcel($semesterId);
                 break;
 
             case 'students-active-semester-attendance':

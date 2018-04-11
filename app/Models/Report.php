@@ -133,14 +133,14 @@ class Report
         });
     }
 
-    public static function getStudentsActiveSemesterPointsExcel()
+    public static function getStudentsSemesterPointsExcel($semesterId)
     {
         $students = Student::all();
 
         $data = [];
         foreach ($students as $student) {
             $semester = $student->semesters()
-                                ->where('semesterId', DefaultSystemSettings::get('activeSemesterId'))
+                                ->where('semesterId', $semesterId)
                                 ->first();
             if (!$semester) {
                 continue;
