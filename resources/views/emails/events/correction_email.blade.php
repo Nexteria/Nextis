@@ -85,8 +85,8 @@
       <table role="presentation" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td style="vertical-align:top;width:540px;">
-      <![endif]--><div class="mj-column-per-90 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-bottom:0px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:30px;text-align:center;"><h1>
-              Uvoľnené miesto!
+      <![endif]--><div class="mj-column-per-90 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:30px;text-align:center;"><h1>
+              Škriatok v systéme
             </h1></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
@@ -100,10 +100,7 @@
       <table role="presentation" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-bottom:5px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;"><b>Ahoj {{ $user->firstName }},</b></div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:16px;text-align:left;"><p>
-              Práve sa uvoľnilo miesto na <b>{{ $eventType }} {{ $eventName }}</b>.
-            </p>
-            <p>Na tomto evente si v roli “náhradníka”, preto si jedným z tých, ktorým sme odoslali o uvoľnení miesta info. Miesto je však len jedno, preto sa prihlás čím skôr. Platí princíp <b>First Come First Served</b>.</p></div></td></tr></tbody></table></div><!--[if mso | IE]>
+      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;"><b>Ahoj {{ $userFirstName }},</b></div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;">dnes ráno si dostal email o otvorení prihlasovania na event <b>IK EY: Assesment Centrum</b>. Informácia o otvorení tohto eventu je výsledkom chyby v systéme a tento event sa <b>NEKONÁ</b></div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;">Ospravedlňujem sa za spôsobenie zmätku a za pochopenie ďakujem.</div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="center"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:center;">Prajem pekný zvyšok dňa.</div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
@@ -116,33 +113,7 @@
       <table role="presentation" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody>@if($isMultiterm)<tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;" align="center" border="0"><tbody><tr><td style="border:none;border-radius:3px;color:white;cursor:auto;padding:10px 25px;" align="center" valign="middle" bgcolor="#00a65a"><a href="https://space.nexteria.sk/events/{{ $eventId }}" style="text-decoration:none;background:#00a65a;color:white;font-family:Helvetica;font-size:13px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank">Záväzne sa prihlasujem</a></td></tr></tbody></table></td></tr>@else<tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;" align="center" border="0"><tbody><tr><td style="border:none;border-radius:3px;color:white;cursor:auto;padding:10px 25px;" align="center" valign="middle" bgcolor="#00a65a"><a href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn" style="text-decoration:none;background:#00a65a;color:white;font-family:Helvetica;font-size:13px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank">Záväzne sa prihlasujem</a></td></tr></tbody></table></td></tr>@endif</tbody></table></div><!--[if mso | IE]>
-      </td></tr></table>
-      <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td></tr></table>
-      <![endif]-->
-      <!--[if mso | IE]>
-      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
-      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">Prajem pekný zvyšok dňa.</div></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td></tr></table>
-      <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
-      </td></tr></table>
-      <![endif]-->
-      <!--[if mso | IE]>
-      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]--><div style="margin:0px auto;max-width:600px;background:#eeeeff;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#eeeeff;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:0px;"><!--[if mso | IE]>
-      <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="vertical-align:top;width:600px;">
-      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">Za tím NLA</div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">{{ $eventManagerName }}</div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">Projektový manažér Nexteria Leadership Academy</div></td></tr><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:10px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;">{{ $eventManagerPhone }}</div></td></tr></tbody></table></div><!--[if mso | IE]>
+      <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;padding-top:20px;padding-bottom:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:left;"></div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
@@ -158,6 +129,13 @@
       <![endif]--><div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" style="background:#fcc133;vertical-align:top;" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:12px;text-align:center;">Copyright © 2017 Nexteria, All rights reserved.</div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
+      </td></tr></table>
+      <![endif]-->
+      <!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]--><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" border="0"><tbody><tr><td><div style="margin:0px auto;max-width:600px;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:20px;padding-top:20px;"></td></tr></tbody></table></div></td></tr></tbody></table><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></div>
 </body>

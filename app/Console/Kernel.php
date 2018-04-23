@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
         Commands\AutogenerateHostNotificationMail::class,
         Commands\AutogenerateEventSignInRemainderMail::class,
         Commands\AutogenerateOpeningNoticeToEventManagerMail::class,
+        Commands\SendCorrectionEmail::class,
         Commands\GetGoogleUserRefreshToken::class,
     ];
 
