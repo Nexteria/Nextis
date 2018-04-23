@@ -12,7 +12,7 @@ import subMonths from 'date-fns/sub_months';
 import * as Scroll from 'react-scroll';
 
 
-import './EventsPage.scss';
+import '../EventsPage.scss';
 import Event from './Event';
 import DetailsDialog from './DetailsDialog';
 import * as eventsActions from '../../../common/events/actions';
@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
 });
 
-class EventsPage extends Component {
+class Overview extends Component {
 
   static propTypes = {
     events: PropTypes.object,
@@ -216,21 +216,54 @@ class EventsPage extends Component {
 
     return (
       <div>
-        {eventId ?
-          <div className="user-events-page">
-            <section className="content-header">
-              <h1>
-                <FormattedMessage {...messages.title} />
-              </h1>
-            </section>
-            <section className="content">
-              <div className="row">
-                <div className="col-md-12">
-                  <ul className="timeline">
-                    {sortedEvents.filter(event => event.id === eventId).map((event, index) =>
+        <div className="user-events-page">
+          <section className="content-header">
+            <h1>Prehľad eventov</h1>
+            <EventsFilter className="events-filter" change={change} eventsFilter={eventsFilter} />
+          </section>
+          <section className="content">
+            <div className="row">
+              <div className="col-md-12 timeline" ref={this.onMountTimeline}>
+                <ul className="timeline">
+                  <li>
+                    <i className="fa fa-clock-o bg-gray"></i>
+                    {noPastEvents >= 3 ?
+                      <div className="timeline-item last-item">Tu je začiatok</div>
+                      :
+                      <div
+                        className={`timeline-item last-item button-item${data.loading ? '-disabled' : ''}`}
+                        onClick={data.loading ? null : this.loadOlder}
+                      >
+                        {data.loading ? 'Načítavam ...' : 'Načítať predchádzajúci mesiac'}
+                      </div>
+                    }
+                  </li>
+                </ul>
+              {sortedEvents.map((event, eventIndex) => {
+                const monthLabels = [];
+
+                let currentMonth = format(currentDate, 'MMMM YY');
+                const eventMonth = format(event.eventStartDateTime, 'MMMM YY');
+
+                while (currentMonth !== eventMonth) {
+                  currentDate = addMonths(currentDate, 1);
+                  currentMonth = format(currentDate, 'MMMM YY');
+                  monthLabels.push(currentMonth);
+                }
+
+                if (event.isPrimary) {
+                  return (
+                    <ul className="timeline" key={`${event.id}_${eventIndex}`}>
+                      {monthLabels.map((label, index) =>
+                        <li key={index} className="time-label">
+                          <span className="bg-yellow">
+                              {label}
+                          </span>
+                        </li>
+                      )}
                       <Event
                         hide={false}
-                        key={index}
+                        key={eventIndex}
                         event={event}
                         events={events}
                         viewer={viewer}
@@ -248,127 +281,38 @@ class EventsPage extends Component {
                         change={change}
                         toggleEventTerm={toggleEventTerm}
                       />
-                    )}
-                  </ul>
-                </div>
-              </div>
-            </section>
-          </div>
-        :
-          <div className="user-events-page">
-            <section className="content-header">
-              <h1>
-                <FormattedMessage {...messages.title} />
-              </h1>
-              <EventsFilter className="events-filter" change={change} eventsFilter={eventsFilter} />
-            </section>
-            <section className="content">
-              <div className="row">
-                <div className="col-md-12 timeline" ref={this.onMountTimeline}>
-                  <ul className="timeline">
-                    <li>
-                      <i className="fa fa-clock-o bg-gray"></i>
-                      {noPastEvents >= 3 ?
-                        <div className="timeline-item last-item">
-                          Tu je začiatok
-                        </div>
-                        :
-                        <div
-                          className={`timeline-item last-item button-item${data.loading ? '-disabled' : ''}`}
-                          onClick={data.loading ? null : this.loadOlder}
-                        >
-                          {data.loading ? 'Načítavam ...' : 'Načítať predchádzajúci mesiac'}
-                        </div>
-                      }
-                    </li>
-                  </ul>
-                {sortedEvents.map((event, eventIndex) => {
-                  const monthLabels = [];
-
-                  let currentMonth = format(currentDate, 'MMMM YY');
-                  const eventMonth = format(event.eventStartDateTime, 'MMMM YY');
-
-                  while (currentMonth !== eventMonth) {
-                    currentDate = addMonths(currentDate, 1);
-                    currentMonth = format(currentDate, 'MMMM YY');
-                    monthLabels.push(currentMonth);
-                  }
-
-                  if (event.isPrimary) {
-                    return (
-                      <ul className="timeline" key={`${event.id}_${eventIndex}`}>
-                        {monthLabels.map((label, index) =>
-                          <li key={index} className="time-label">
-                            <span className="bg-yellow">
-                              {label}
-                            </span>
-                          </li>
-                        )}
-                        <Event
-                          hide={false}
-                          key={eventIndex}
-                          event={event}
-                          events={events}
-                          viewer={viewer}
-                          nxLocations={nxLocations}
-                          openEventDetailsDialog={openEventDetailsDialog}
-                          openLocationDetailsDialog={openLocationDetailsDialog}
-                          closeLocationDetailsDialog={closeLocationDetailsDialog}
-                          attendeeSignIn={attendeeSignIn}
-                          openSignOutDialog={openSignOutDialog}
-                          attendeeWontGo={attendeeWontGo}
-                          toggleEventDetails={toggleEventDetails}
-                          signAsStandIn={signAsStandIn}
-                          signOutAsStandIn={signOutAsStandIn}
-                          datailsOpen
-                          change={change}
-                          toggleEventTerm={toggleEventTerm}
-                        />
-                      </ul>
-                    );
-                  }
-                  
-                  return (
-                    <EventMeetingLabel
-                      key={index}
-                      eventName={event.eventName}
-                      meetingDate={event.eventStartDateTime}
-                    />
+                    </ul>
                   );
-                })}
+                }
+                
+                return (
+                  <EventMeetingLabel
+                    key={index}
+                    eventName={event.eventName}
+                    meetingDate={event.eventStartDateTime}
+                  />
+                );
+              })}
 
-                  <ul className="timeline">
-                    <li>
-                      <i className="fa fa-clock-o bg-gray"></i>
-                      {noFutureEvents >= 3 ?
-                        <div className="timeline-item last-item">
-                          Žiadne ďalšie eventy tu zatiaľ nie sú
-                        </div>
-                        : null
-                      }
-                    </li>
-                  </ul>
-                </div>
+                <ul className="timeline">
+                  <li>
+                    <i className="fa fa-clock-o bg-gray"></i>
+                    {noFutureEvents >= 3 ?
+                      <div className="timeline-item last-item">
+                        Žiadne ďalšie eventy tu zatiaľ nie sú
+                      </div>
+                    : null
+                    }
+                  </li>
+                </ul>
               </div>
-            </section>
-          </div>
-        }
+            </div>
+          </section>
+        </div>
 
         {eventDetailsId ?
           <DetailsDialog event={events.get(eventDetailsId)} />
           : ''
-        }
-
-        {signOut.eventId && <SignOutDialog />}
-
-        {chooseStreamEventId &&
-          <ChooseTermStreamDialog
-            open
-            viewerId={viewer.id}
-            closeDialog={() => change('chooseStreamEventId', null)}
-            terms={events.getIn([chooseStreamEventId, 'terms'])}
-            event={events.get(chooseStreamEventId)}
-          />
         }
 
         {locationDetailsId ?
@@ -469,4 +413,4 @@ export default compose(
       },
     }
   })
-)(EventsPage);
+)(Overview);
