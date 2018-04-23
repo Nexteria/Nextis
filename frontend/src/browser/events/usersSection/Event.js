@@ -6,6 +6,7 @@ import { FormattedMessage, FormattedDate, defineMessages } from 'react-intl';
 import EventTypeLabels from './EventTypeLabels';
 import EventDetails from './EventDetails';
 import EventDescription from './EventDescription';
+import SignInActions from './SignInActions';
 import './Event.scss';
 
 
@@ -59,7 +60,7 @@ export default class Event extends Component {
 
   static propTypes = {
     event: PropTypes.object.isRequired,
-    events: PropTypes.object.isRequired,
+    events: PropTypes.array.isRequired,
     viewer: PropTypes.object.isRequired,
     toggleEventDetails: PropTypes.func.isRequired,
     openEventDetailsDialog: PropTypes.func.isRequired,
@@ -143,6 +144,12 @@ export default class Event extends Component {
             <h3 className="col-md-10 col-sm-8 col-xs-12">{event.name}</h3>
             <div className="col-md-1 col-sm-2 col-xs-12 event-details-button">
               <i className="fa fa-bars" onClick={this.toggleDetails}></i>
+            </div>
+            <div>
+              <SignInActions
+                attendee={attendee}
+                event={event}
+              />
             </div>
           </div>
           {this.state.visibleDetails ?

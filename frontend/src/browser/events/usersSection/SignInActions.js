@@ -1,33 +1,23 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { FormattedDate, FormattedTime } from 'react-intl';
-import { browserHistory } from 'react-router';
-import { Map } from 'immutable';
+import SignUpDeadlines from './SignUpDeadlines';
+import isWithinRange from 'date-fns/is_within_range';
+import isAfter from 'date-fns/is_after';
+
+import FeedbackButton from './Event/FeedbackButton';
 
 
 export default class SignInActions extends Component {
 
   static propTypes = {
     attendee: PropTypes.object.isRequired,
-    toggleEventTerm: PropTypes.func.isRequired,
+    event: PropTypes.object.isRequired,
   }
 
   render() {
     const {
       attendee,
       event,
-      isSignInOpen,
-      signInExpired,
-      isMultiTerm,
-      change,
-      isBeforeEvent,
-      groupedEvents,
-      attendeeSignIn,
-      attendeeWontGo,
-      openSignOutDialog,
-      signOutAsStandIn,
-      signAsStandIn,
-      toggleEventTerm,
     } = this.props;
 
 
@@ -40,7 +30,7 @@ export default class SignInActions extends Component {
     }
 
     const signedIn = attendee ? attendee.signedIn : false;
-    const signedOut = attendee ? attendee.signedOut : false;
+    /* const signedOut = attendee ? attendee.signedOut : false;
     const standIn = attendee ? attendee.standIn : false;
     const wontGo = attendee ? attendee.wontGo : false;
     const wasPresent = attendee ? attendee.wasPresent : false;
@@ -58,39 +48,34 @@ export default class SignInActions extends Component {
     });
 
     const capacityLimitReached =
-      canNotSignInReasons.has('group_max_capacity_reached') || canNotSignInReasons.has('term_max_capacity_reached');
+      canNotSignInReasons.has('group_max_capacity_reached') || canNotSignInReasons.has('term_max_capacity_reached'); */
+
+    const now = new Date();
+    const isSignInOpen = isWithinRange(
+      now,
+      attendee.attendeesGroup.signUpOpenDateTime,
+      attendee.attendeesGroup.signUpDeadlineDateTime
+    );
+
+    const signInExpired = isAfter(now, attendee.attendeesGroup.signUpDeadlineDateTime);
 
     return (
-      <div>
-        <div className="col-md-12 col-sm-12 col-xs-12 event-actions-notes">
-          {isSignInOpen &&
-            <span>Deadline prihlasovania: <FormattedDate value={attendee.attendeesGroup.signUpDeadlineDateTime} /></span>
-          }
-          {!signedIn && signInExpired &&
-            <span>Prihlasovanie bolo možné do: <FormattedDate value={attendee.attendeesGroup.signUpDeadlineDateTime} /></span>
-          }
-          {!isSignInOpen && !signInExpired &&
-            <span>
-              <span>Prihlasovanie sa otvára: </span>
-              <span>
-                <FormattedDate value={attendee.attendeesGroup.signUpOpenDateTime} />
-                <span> o </span>
-                <FormattedTime value={attendee.attendeesGroup.signUpOpenDateTime} />
-              </span>
-            </span>
-          }
-        </div>
+      // questionForm
+      // multiterms
+      // multi stretko
+      // obsadene
+      // choose option
+      // nahradnici
 
-        <div className="event-actions col-md-12 col-sm-12 col-xs-12">
-          {signedIn && wasPresent && !filledFeedback &&
-            <a
-              className="btn btn-info btn-xs"
-              target="_blank"
-              href={event.publicFeedbackLink}
-            >
-            Vyplniť feedback
-            </a>
-          }
+      <div>
+        <SignUpDeadlines attendee={attendee} />
+
+        {attendee.wasPresent && !attendee.filledFeedback &&
+          <FeedbackButton publicFeedbackLink={event.publicFeedbackLink} />
+        }
+
+        {/* <div className="event-actions col-md-12 col-sm-12 col-xs-12">
+          
           {!signedIn && isSignInOpen && canSignIn &&
             <button
               className="btn btn-success btn-xs"
@@ -163,7 +148,7 @@ export default class SignInActions extends Component {
               Odhlásiť z náhradníkov
             </button>
           }
-        </div>
+        </div> */}
       </div>
     );
   }
