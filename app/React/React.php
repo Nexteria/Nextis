@@ -17,15 +17,15 @@ class React
     public static function script($module_name, $attributes = array(), $secure = null)
     {
         if (App::environment('local')) {
-            $url = env('HOT_LOAD_SERVER')."/build/".$module_name.'.js';
+            $url = env('HOT_LOAD_SERVER')."/static/js/bundle.js";
             $attributes['src'] = $url;
         } else {
-            $contents = file_get_contents(base_path().'/public/build/file_hash.json');
+            $contents = file_get_contents(base_path().'/public/asset-manifest.json');
             $contents = utf8_encode($contents);
             $hashes = json_decode($contents);
 
-            $name = is_array($hashes->{$module_name}) ? $hashes->{$module_name}[0] : $hashes->{$module_name};
-            return HTML::script('/build/'.$name);
+            $name = $hashes->{$module_name.'.js'};
+            return HTML::script('/'.$name);
         }
 
         return '<script'.HTML::attributes($attributes).'></script>'.PHP_EOL;
@@ -48,12 +48,12 @@ class React
         if (App::environment('local')) {
             return '';
         } else {
-            $contents = file_get_contents(public_path().'/build/file_hash.json');
+            $contents = file_get_contents(base_path().'/public/asset-manifest.json');
             $contents = utf8_encode($contents);
             $hashes = json_decode($contents);
 
-            $name = is_array($hashes->{$module_name}) ? $hashes->{$module_name}[1] : $hashes->{$module_name};
-            return HTML::style('/build/'.$name);
+            $name = $hashes->{$module_name.'.css'};
+            return HTML::style('/'.$name);
         }
 
         return '<link'.HTML::attributes($attributes).'>'.PHP_EOL;

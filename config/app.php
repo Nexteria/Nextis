@@ -176,6 +176,7 @@ return [
         Mews\Purifier\PurifierServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Rebing\GraphQL\GraphQLServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*
