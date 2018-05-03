@@ -9,6 +9,7 @@ public/build
 resources/views/emails/*.php
 
 !public
+public/static/*
 public/uploads/*
 !public/uploads/.gitkeep
 !public/uploads/images

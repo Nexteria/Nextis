@@ -11,8 +11,11 @@
 |
 */
 
-Auth::routes();
 
+
+\Log::error(env('APP_ENV'));
+
+Route::post('/login', 'Auth\LoginController@login');
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');
 
@@ -184,8 +187,8 @@ Route::group(['middleware' => 'auth'], function () {
             ], 404);
         })->where('slug', '.*');
     });
+});
 
-    Route::any('{slug?}', function ($slug = null) {
-        return view('index');
-    })->where('slug', '(?!api).*');
+Route::any('{slug?}', function ($slug = null) {
+    return view('index');
 });
