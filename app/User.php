@@ -166,16 +166,16 @@ class User extends Authenticatable implements AuditableContract
 
     public function computeActivityPoints($semesterId = null)
     {
+        if (!$semesterId) {
+            $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
+        }
+
         $eventAttendees = $this->eventAttendees()
             ->join('attendees_groups', 'attendees_groups.id', '=', 'attendeesGroupId')
             ->join('nx_events', 'nx_events.id', '=', 'eventId')
             ->where('semesterId', $semesterId)
             ->where('status', 'published')
             ->get();
-
-        if (!$semesterId) {
-            $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
-        }
 
         $sumGainedPoints = 0;
         $sumPotentialPoints = 0;

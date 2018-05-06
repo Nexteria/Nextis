@@ -44,7 +44,7 @@ class Panels extends React.Component {
                   color="warning"
                   tabs={[
                     {
-                      tabButton: "Profile",
+                      tabButtonTitle: "Profile",
                       tabContent: (
                         <span>
                           <p>
@@ -66,7 +66,7 @@ class Panels extends React.Component {
                       )
                     },
                     {
-                      tabButton: "Settings",
+                      tabButtonTitle: "Settings",
                       tabContent: (
                         <span>
                           <p>
@@ -83,7 +83,7 @@ class Panels extends React.Component {
                       )
                     },
                     {
-                      tabButton: "Options",
+                      tabButtonTitle: "Options",
                       tabContent: (
                         <span>
                           <p>
@@ -120,7 +120,7 @@ class Panels extends React.Component {
                   }}
                   tabs={[
                     {
-                      tabButton: "Profile",
+                      tabButtonTitle: "Profile",
                       tabContent: (
                         <span>
                           <p>
@@ -142,7 +142,7 @@ class Panels extends React.Component {
                       )
                     },
                     {
-                      tabButton: "Settings",
+                      tabButtonTitle: "Settings",
                       tabContent: (
                         <span>
                           <p>
@@ -159,7 +159,7 @@ class Panels extends React.Component {
                       )
                     },
                     {
-                      tabButton: "Options",
+                      tabButtonTitle: "Options",
                       tabContent: (
                         <span>
                           <p>
@@ -225,7 +225,7 @@ class Panels extends React.Component {
                   }}
                   tabs={[
                     {
-                      tabButton: "Dashboard",
+                      tabButtonTitle: "Dashboard",
                       tabIcon: Dashboard,
                       tabContent: (
                         <span>
@@ -254,7 +254,7 @@ class Panels extends React.Component {
                       )
                     },
                     {
-                      tabButton: "Schedule",
+                      tabButtonTitle: "Schedule",
                       tabIcon: Schedule,
                       tabContent: (
                         <span>
@@ -293,7 +293,7 @@ class Panels extends React.Component {
               alignCenter
               tabs={[
                 {
-                  tabButton: "Description",
+                  tabButtonTitle: "Description",
                   tabIcon: Info,
                   tabContent: (
                     <RegularCard
@@ -314,7 +314,7 @@ class Panels extends React.Component {
                   )
                 },
                 {
-                  tabButton: "Location",
+                  tabButtonTitle: "Location",
                   tabIcon: LocationOn,
                   tabContent: (
                     <RegularCard
@@ -335,7 +335,7 @@ class Panels extends React.Component {
                   )
                 },
                 {
-                  tabButton: "Legal Info",
+                  tabButtonTitle: "Legal Info",
                   tabIcon: Gavel,
                   tabContent: (
                     <RegularCard
@@ -356,7 +356,7 @@ class Panels extends React.Component {
                   )
                 },
                 {
-                  tabButton: "Help Center",
+                  tabButtonTitle: "Help Center",
                   tabIcon: HelpOutline,
                   tabContent: (
                     <RegularCard

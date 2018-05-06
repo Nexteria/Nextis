@@ -5,8 +5,8 @@ const store = {
     user: null,
   },
   actions: {
-    setUser: ({}, user) => ({
-      user
+    setUser: (state = {}, user) => ({
+      ...user
     }),
   },
 }

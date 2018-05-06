@@ -12,9 +12,6 @@
 */
 
 
-
-\Log::error(env('APP_ENV'));
-
 Route::post('/login', 'Auth\LoginController@login');
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');

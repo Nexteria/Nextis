@@ -40,7 +40,7 @@ function Header({ ...props }) {
     });
     return name;
   }
-  const { classes, color, rtlActive } = props;
+  const { classes, color, history, rtlActive } = props;
   const appBarClasses = cx({
     [" " + classes[color]]: color
   });
@@ -73,7 +73,7 @@ function Header({ ...props }) {
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          <HeaderLinks rtlActive={rtlActive} />
+          <HeaderLinks history={history} rtlActive={rtlActive} />
         </Hidden>
         <Hidden mdUp>
           <IconButton

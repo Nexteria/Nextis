@@ -50,6 +50,14 @@ class NxEventAttendeeType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The reason why attendee signed out',
             ],
+            'signInOpenDateTime' => [
+                'type' => Type::string(),
+                'description' => 'The sign in opening date time attendee',
+            ],
+            'signInCloseDateTime' => [
+                'type' => Type::string(),
+                'description' => 'The sign in close date time for attendee',
+            ],
             'userId' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'The id of the user for the attendee'

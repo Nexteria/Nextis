@@ -21,12 +21,29 @@ import {
   roseColor
 } from "assets/jss/material-dashboard-pro-react.jsx";
 
-const statsCardStyle = {
+const cardTitleSmall = {
+  fontSize: "65%",
+  fontWeight: "400",
+  lineHeight: "1",
+  color: "#777"
+};
+
+const cardTitle = {
+  margin: "0",
+  ...defaultFont,
+  fontSize: "1.825em"
+};
+
+const statsCardStyle = theme => ({
   card,
   cardHeader: {
     ...cardHeader,
     float: "left",
-    textAlign: "center"
+    textAlign: "center",
+    position: 'relative',
+  },
+  cardHeaderButton: {
+    cursor: 'pointer',
   },
   orangeCardHeader,
   greenCardHeader,
@@ -53,17 +70,6 @@ const statsCardStyle = {
     margin: "0 0 10px",
     ...defaultFont
   },
-  cardTitle: {
-    margin: "0",
-    ...defaultFont,
-    fontSize: "1.825em"
-  },
-  cardTitleSmall: {
-    fontSize: "65%",
-    fontWeight: "400",
-    lineHeight: "1",
-    color: "#777"
-  },
   cardActions: {
     ...cardActions,
     padding: "10px 0 0 0!important"
@@ -81,23 +87,79 @@ const statsCardStyle = {
     width: "16px",
     height: "16px"
   },
+  warningCardTitleSmall: {
+    color: warningColor,
+    ...cardTitleSmall,
+  },
+  warningCardTitle: {
+    color: warningColor,
+    ...cardTitle,
+  },
   warningCardStatsIcon: {
     color: warningColor
+  },
+  primaryCardTitleSmall: {
+    color: primaryColor,
+    ...cardTitleSmall,
+  },
+  primaryCardTitle: {
+    color: primaryColor,
+    ...cardTitle,
   },
   primaryCardStatsIcon: {
     color: primaryColor
   },
+  dangerCardTitleSmall: {
+    color: dangerColor,
+    ...cardTitleSmall,
+  },
+  dangerCardTitle: {
+    color: dangerColor,
+    ...cardTitle,
+  },
   dangerCardStatsIcon: {
     color: dangerColor
+  },
+  successCardTitleSmall: {
+    color: successColor,
+    ...cardTitleSmall,
+  },
+  successCardTitle: {
+    color: successColor,
+    ...cardTitle,
   },
   successCardStatsIcon: {
     color: successColor
   },
+  infoCardTitleSmall: {
+    color: infoColor,
+    ...cardTitleSmall,
+  },
+  infoCardTitle: {
+    color: infoColor,
+    ...cardTitle,
+  },
   infoCardStatsIcon: {
     color: infoColor
   },
+  roseCardTitleSmall: {
+    color: roseColor,
+    ...cardTitleSmall,
+  },
+  roseCardTitle: {
+    color: roseColor,
+    ...cardTitle,
+  },
   roseCardStatsIcon: {
     color: roseColor
+  },
+  grayCardTitleSmall: {
+    color: grayColor,
+    ...cardTitleSmall,
+  },
+  grayCardTitle: {
+    color: grayColor,
+    ...cardTitle,
   },
   grayCardStatsIcon: {
     color: grayColor
@@ -106,7 +168,47 @@ const statsCardStyle = {
     color: primaryColor,
     textDecoration: "none",
     ...defaultFont
-  }
-};
+  },
+  moveHeaderUp: {
+    transform: "translate3d(0, -10px, 0)",
+  },
+  badgeBottomRight: {
+    zIndex: "4",
+    [theme.breakpoints.up("md")]: {
+      position: "absolute",
+      bottom: "15px",
+      right: "10px",
+      display: "block"
+    },
+  },
+  badgeBottomLeft: {
+    zIndex: "4",
+    [theme.breakpoints.up("md")]: {
+      position: "absolute",
+      bottom: "15px",
+      left: "10px",
+      verticalAlign: "middle",
+      display: "block"
+    },
+  },
+  badgeTopRight: {
+    zIndex: "4",
+    [theme.breakpoints.up("md")]: {
+      position: "absolute",
+      top: "10px",
+      right: "10px",
+      display: "block"
+    },
+  },
+  badgeTopLeft: {
+    zIndex: "4",
+    [theme.breakpoints.up("md")]: {
+      position: "absolute",
+      top: "10px",
+      left: "10px",
+      display: "block"
+    },
+  },
+});
 
 export default statsCardStyle;
