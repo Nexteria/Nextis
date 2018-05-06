@@ -130,6 +130,9 @@ const navPillsStyle = theme => ({
   alignCenter: {
     alignItems: "center",
     justifyContent: "center"
+  },
+  tabButtonTitle: {
+    lineHeight: '1em',
   }
 });
 

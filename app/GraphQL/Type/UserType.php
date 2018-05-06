@@ -10,7 +10,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 class UserType extends GraphQLType
 {
     protected $attributes = [
-        'name' => 'User',
+        'name' => 'user',
         'description' => 'User type',
         'model' => User::class,
     ];
@@ -45,6 +45,18 @@ class UserType extends GraphQLType
                     return null;
                 },
                 'selectable' => false,
+            ],
+            'balance' => [
+                'type' => Type::float(),
+                'description' => 'The user balance',
+                'resolve' => function ($root, $args) {
+                    return $root->getAccountBalance();
+                },
+                'selectable' => false,
+            ],
+            'student' => [
+                'type' => GraphQL::type('student'),
+                'description' => 'Student associated with this user',
             ],
         ];
     }

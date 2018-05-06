@@ -66,9 +66,17 @@ class NxEventTermType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The end datetime of the term',
             ],
+            'feedbackDeadlineAt' => [
+                'type' => Type::string(),
+                'description' => 'The deadline for filling of feedback',
+            ],
             'location' => [
                 'type' => GraphQL::type('NxLocation'),
                 'description' => 'Term location',
+            ],
+            'event' => [
+                'type' => GraphQL::type('event'),
+                'description' => 'Term`s event',
             ],
             'canNotSignInReason' => [
                 'type' => Type::string(),
@@ -120,7 +128,6 @@ class NxEventTermType extends GraphQLType
 
                     return $root->attendees()->get();
                 },
-                'always' => ['id'],
             ],
         ];
     }

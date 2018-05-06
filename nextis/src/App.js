@@ -55,18 +55,21 @@ class App extends Component {
   }
 
   render() {
-    const { classes, actions, history } = this.props;
+    const { classes, actions, history, user } = this.props;
 
     return (
       <div>
-        {this.state.isLoading ?
+        {this.props.location.pathname === '/' || this.props.location.pathname === '/login' || !user ?
           <div className={classes.wrapper} ref="wrapper">
             <div className={classes.fullPage}>
               <div className={classes.content}>
                 <div className={classes.container}>
                   <GridContainer justify="center">
                     <ItemGrid xs={12} sm={6} md={4}>
-                      <Spinner name='line-scale-pulse-out' className={classes.loader} />
+                      {this.state.isLoading ?
+                        <Spinner name='line-scale-pulse-out' className={classes.loader} />
+                        : null
+                      }
                       <Route
                         exact
                         path={'/login'}

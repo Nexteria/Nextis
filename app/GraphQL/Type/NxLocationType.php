@@ -26,6 +26,14 @@ class NxLocationType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The name of the location',
             ],
+            'addressLine1' => [
+                'type' => Type::string(),
+                'description' => 'Location address line 1'
+            ],
+            'addressLine2' => [
+                'type' => Type::string(),
+                'description' => 'Location address line 2'
+            ]
         ];
     }
 }

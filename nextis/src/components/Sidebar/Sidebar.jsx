@@ -20,7 +20,7 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 
 import sidebarStyle from "assets/jss/material-dashboard-pro-react/components/sidebarStyle.jsx";
 
-import avatar from "assets/img/faces/avatar.jpg";
+import avatar from "assets/img/default-avatar.png";
 
 var ps;
 
@@ -85,8 +85,10 @@ class Sidebar extends React.Component {
       logoText,
       routes,
       bgColor,
-      rtlActive
+      rtlActive,
+      user
     } = this.props;
+
     const itemText =
       classes.itemText +
       " " +
@@ -130,7 +132,8 @@ class Sidebar extends React.Component {
       cx({
         [classes.photoRTL]: rtlActive
       });
-    var user = (
+
+      var userSection = (
       <div className={userWrapperClass}>
         <div className={photo}>
           <img src={avatar} className={classes.avatarImg} alt="..." />
@@ -143,7 +146,7 @@ class Sidebar extends React.Component {
               onClick={() => this.openCollapse("openAvatar")}
             >
               <ListItemText
-                primary={rtlActive ? "تانيا أندرو" : "Tania Andrew"}
+                primary={`${user.firstName} ${user.lastName}`}
                 secondary={
                   <b
                     className={
@@ -170,43 +173,7 @@ class Sidebar extends React.Component {
                       {"MP"}
                     </span>
                     <ListItemText
-                      primary={"My Profile"}
-                      disableTypography={true}
-                      className={collapseItemText}
-                    />
-                  </NavLink>
-                </ListItem>
-                <ListItem className={classes.collapseItem}>
-                  <NavLink
-                    to="#"
-                    className={
-                      classes.itemLink + " " + classes.userCollapseLinks
-                    }
-                  >
-                    <span className={collapseItemMini}>
-                      {rtlActive ? "هوع" : "EP"}
-                    </span>
-                    <ListItemText
-                      primary={
-                        rtlActive ? "تعديل الملف الشخصي" : "Edit Profile"
-                      }
-                      disableTypography={true}
-                      className={collapseItemText}
-                    />
-                  </NavLink>
-                </ListItem>
-                <ListItem className={classes.collapseItem}>
-                  <NavLink
-                    to="#"
-                    className={
-                      classes.itemLink + " " + classes.userCollapseLinks
-                    }
-                  >
-                    <span className={collapseItemMini}>
-                      {rtlActive ? "و" : "S"}
-                    </span>
-                    <ListItemText
-                      primary={rtlActive ? "إعدادات" : "Settings"}
+                      primary={"Môj profil"}
                       disableTypography={true}
                       className={collapseItemText}
                     />
@@ -433,7 +400,7 @@ class Sidebar extends React.Component {
             {brand}
             <SidebarWrapper
               className={sidebarWrapper}
-              user={user}
+              user={userSection}
               headerLinks={<HeaderLinks rtlActive={rtlActive} />}
               links={links}
             />
@@ -459,7 +426,7 @@ class Sidebar extends React.Component {
             {brand}
             <SidebarWrapper
               className={sidebarWrapper}
-              user={user}
+              user={userSection}
               links={links}
             />
             {image !== undefined ? (

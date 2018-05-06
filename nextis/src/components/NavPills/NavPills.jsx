@@ -68,7 +68,12 @@ class NavPills extends React.Component {
             });
           return (
             <Tab
-              label={prop.tabButton}
+              label={
+                <div className={classes.tabButtonTitle}>
+                  <div>{prop.tabButtonTitle}</div>
+                  <div>{prop.tabButtonSubtitle}</div>
+                </div>
+              }
               key={key}
               {...icon}
               classes={{
@@ -124,7 +129,8 @@ NavPills.propTypes = {
   active: PropTypes.number,
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
-      tabButton: PropTypes.string,
+      tabButtonTitle: PropTypes.string,
+      tabButtonSubitle: PropTypes.string,
       tabIcon: PropTypes.func,
       tabContent: PropTypes.node
     })

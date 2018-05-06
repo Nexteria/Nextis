@@ -60,7 +60,7 @@ class EventType extends GraphQLType
                 'description' => 'The grouped events with this event',
             ],
             'lectors' => [
-                'type' => Type::listOf(GraphQL::type('User')),
+                'type' => Type::listOf(GraphQL::type('user')),
                 'description' => 'The lectors for this event',
             ],
             'form' => [

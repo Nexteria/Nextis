@@ -76,7 +76,7 @@ class Dashboard extends React.Component {
     this.setState({ miniActive: !this.state.miniActive });
   }
   render() {
-    const { classes, ...rest } = this.props;
+    const { classes, history, user, ...rest } = this.props;
 
     const mainPanel =
       classes.mainPanel +
@@ -99,6 +99,7 @@ class Dashboard extends React.Component {
           bgColor="black"
           miniActive={this.state.miniActive}
           location={this.props.location}
+          user={user}
           {...rest}
         />
         <div className={mainPanel} ref="mainPanel">
@@ -107,6 +108,7 @@ class Dashboard extends React.Component {
             miniActive={this.state.miniActive}
             routes={dashboardRoutes}
             handleDrawerToggle={this.handleDrawerToggle}
+            history={history}
             {...rest}
           />
           {/* On the /maps/full-screen-maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
