@@ -117,6 +117,12 @@ const tableStyle = theme => ({
       backgroundColor: "#c4e3f3"
     }
   },
+  shadedRow: {
+    backgroundColor: '#eee',
+    '& > td': {
+      color: '#6a6a6a9e',
+    }
+  }
 });
 
 export default tableStyle;

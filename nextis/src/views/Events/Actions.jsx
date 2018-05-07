@@ -9,26 +9,13 @@ import Spinner from 'react-spinkit';
 
 // material-ui components
 import withStyles from "material-ui/styles/withStyles";
-import Checkbox from "material-ui/Checkbox";
 
 // material-ui icons
-import Assignment from "@material-ui/icons/Assignment";
-import Person from "@material-ui/icons/Person";
-import Edit from "@material-ui/icons/Edit";
-import Close from "@material-ui/icons/Close";
-import Check from "@material-ui/icons/Check";
-import Remove from "@material-ui/icons/Remove";
-import Add from "@material-ui/icons/Add";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import Info from "@material-ui/icons/Info";
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import IconCard from "components/Cards/IconCard.jsx";
 import Table from "components/Table/Table.jsx";
 import Button from "components/CustomButtons/Button.jsx";
-import IconButton from "components/CustomButtons/IconButton.jsx";
 
 import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eventActionsStyle.jsx";
 
@@ -64,15 +51,18 @@ class Actions extends React.Component {
       );
     });
 
-    return [
-      event.name,
-      <div>
-        <div>{startDateTimeString}</div>
-        <div>{endDateTimeString}</div>
-      </div>,
-      deadline,
-      fillButtons
-    ];
+    return {
+      data: [
+        event.name,
+        <div>
+          <div>{startDateTimeString}</div>
+          <div>{endDateTimeString}</div>
+        </div>,
+        deadline,
+        fillButtons
+      ],
+      shaded: attendee.signedOut || attendee.wontGo,
+    };
   }
 
   transformFeedbackTerm(term, classes) {
@@ -96,11 +86,14 @@ class Actions extends React.Component {
       );
     });
 
-    return [
-      term.event.name,
-      feedbackDeadline,
-      fillButtons
-    ];
+    return {
+      data: [
+        term.event.name,
+        "",
+        feedbackDeadline,
+        fillButtons
+      ]
+    };
   }
 
   render() {
@@ -117,6 +110,7 @@ class Actions extends React.Component {
 
     return (
       <div>
+        <h3>Prihlasovanie</h3>
         <Table
           tableHead={[
             "Názov eventu",
@@ -145,9 +139,11 @@ class Actions extends React.Component {
           customHeadClassesForCells={[0, 1, 2, 3]}
         />
 
+        <h3 className={classes.feedbackTitle}>Feedback</h3>
         <Table
           tableHead={[
             "Názov eventu",
+            "",
             "Deadline na vyplnenie",
             "Akcie"
           ]}
@@ -159,17 +155,19 @@ class Actions extends React.Component {
             )
           }
           customCellClasses={[
+            classes.left,
             classes.center,
-            classes.right,
-            classes.right
+            classes.center,
+            classes.center,
           ]}
-          customClassesForCells={[0, 4, 5]}
+          customClassesForCells={[0, 1, 2, 3]}
           customHeadCellClasses={[
+            classes.left,
+            classes.center + " " + classes.durationField,
             classes.center,
-            classes.right,
-            classes.right
+            classes.center + " " + classes.actionButtons,
           ]}
-          customHeadClassesForCells={[0, 4, 5]}
+          customHeadClassesForCells={[0, 1, 2, 3]}
         />
       </div>
     );

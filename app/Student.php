@@ -76,9 +76,9 @@ class Student extends Model
     {
         $termIds = NxEventTerm::whereRaw('eventStartDateTime > NOW()')
             ->join('nx_event_attendees_nx_event_terms', 'nx_event_terms.id', '=', 'termId')
-            ->whereNotNull('nx_event_attendees_nx_event_terms.signedIn')
             ->join('nx_event_attendees', 'nx_event_attendees.id', '=', 'attendeeId')
             ->where('nx_event_attendees.userId', $this->userId)
+            ->whereNotNull('nx_event_attendees.signedIn')
             ->whereNull('nx_event_attendees.deleted_at')
             ->pluck('termId');
 

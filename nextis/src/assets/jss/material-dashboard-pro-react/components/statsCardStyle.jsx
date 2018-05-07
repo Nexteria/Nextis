@@ -174,40 +174,32 @@ const statsCardStyle = theme => ({
   },
   badgeBottomRight: {
     zIndex: "4",
-    [theme.breakpoints.up("md")]: {
-      position: "absolute",
-      bottom: "15px",
-      right: "10px",
-      display: "block"
-    },
+    position: "absolute",
+    bottom: "15px",
+    right: "10px",
+    display: "block"
   },
   badgeBottomLeft: {
     zIndex: "4",
-    [theme.breakpoints.up("md")]: {
-      position: "absolute",
-      bottom: "15px",
-      left: "10px",
-      verticalAlign: "middle",
-      display: "block"
-    },
+    position: "absolute",
+    bottom: "15px",
+    left: "10px",
+    verticalAlign: "middle",
+    display: "block"
   },
   badgeTopRight: {
     zIndex: "4",
-    [theme.breakpoints.up("md")]: {
-      position: "absolute",
-      top: "10px",
-      right: "10px",
-      display: "block"
-    },
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    display: "block"
   },
   badgeTopLeft: {
     zIndex: "4",
-    [theme.breakpoints.up("md")]: {
-      position: "absolute",
-      top: "10px",
-      left: "10px",
-      display: "block"
-    },
+    position: "absolute",
+    top: "10px",
+    left: "10px",
+    display: "block"
   },
 });
 
