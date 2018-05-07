@@ -99,6 +99,9 @@ const eventActionsStyle = {
   durationField: {
     minWidth: '9em',
   },
+  feedbackTitle: {
+      marginTop: '2em',
+  },
 };
 
 export default eventActionsStyle;

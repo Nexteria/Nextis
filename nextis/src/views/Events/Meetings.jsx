@@ -9,26 +9,13 @@ import Spinner from 'react-spinkit';
 
 // material-ui components
 import withStyles from "material-ui/styles/withStyles";
-import Checkbox from "material-ui/Checkbox";
 
 // material-ui icons
-import Assignment from "@material-ui/icons/Assignment";
-import Person from "@material-ui/icons/Person";
-import Edit from "@material-ui/icons/Edit";
-import Close from "@material-ui/icons/Close";
-import Check from "@material-ui/icons/Check";
-import Remove from "@material-ui/icons/Remove";
-import Add from "@material-ui/icons/Add";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import Info from "@material-ui/icons/Info";
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import IconCard from "components/Cards/IconCard.jsx";
 import Table from "components/Table/Table.jsx";
 import Button from "components/CustomButtons/Button.jsx";
-import IconButton from "components/CustomButtons/IconButton.jsx";
 
 import extendedTablesStyle from "assets/jss/material-dashboard-pro-react/views/extendedTablesStyle.jsx";
 
@@ -36,10 +23,15 @@ class Meetings extends React.Component {
   transformTerm(term, classes) {
 
     const startDateTimeString = format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm');
-    const fillButtons = [
+    let fillButtons = [
       { color: "info", icon: Info },
-      { color: "danger", text: 'Odhlásiť'  }
-    ].map((prop, key) => {
+    ];
+
+    if (term.attendees[0].signedIn && term.attendees[0].signedIn !== "") {
+      fillButtons.push({ color: "danger", text: 'Odhlásiť' });
+    }
+
+    fillButtons = fillButtons.map((prop, key) => {
       return (
         <Button color={prop.color} customClass={classes.actionButton} key={key}>
           {prop.icon ? <prop.icon className={classes.icon} /> : null}
@@ -80,24 +72,24 @@ class Meetings extends React.Component {
           )
         }
         customCellClasses={[
-          classes.center,
+          classes.left,
           classes.right,
           classes.right
         ]}
-        customClassesForCells={[0, 4, 5]}
+        customClassesForCells={[0, 1, 2]}
         customHeadCellClasses={[
-          classes.center,
+          classes.left,
           classes.right,
           classes.right
         ]}
-        customHeadClassesForCells={[0, 4, 5]}
+        customHeadClassesForCells={[0, 1, 2]}
       />
     );
   }
 }
 
 const meetingsQuery = gql`
-query FetchMeetings ($id: Int){
+query FetchMeetings ($id: Int, $userId: Int){
   student (id: $id){
     id
     userId
@@ -115,6 +107,10 @@ query FetchMeetings ($id: Int){
         addressLine1
         addressLine2
       }
+      attendees (userId: $userId){
+        id
+        signedIn
+      }
     }
   }
 }
@@ -128,6 +124,7 @@ export default compose(
       notifyOnNetworkStatusChange: true,
       variables: {
         id: props.user.studentId,
+        userId: props.user.id,
       },
     })
   }),

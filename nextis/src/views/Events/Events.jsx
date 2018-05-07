@@ -13,10 +13,10 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 import NavPills from "components/NavPills/NavPills.jsx";
-import Accordion from "components/Accordion/Accordion.jsx";
 
 import Meetings from "views/Events/Meetings.jsx";
 import Actions from "views/Events/Actions.jsx";
+import Overview from "views/Events/Overview.jsx";
 
 const styles = {
   pageSubcategoriesTitle: {
@@ -28,7 +28,6 @@ const styles = {
 
 class Events extends React.Component {
   render() {
-    const { classes } = this.props;
     return (
       <GridContainer justify="center">
         <ItemGrid xs={12} sm={12} md={12} lg={12}>
@@ -42,6 +41,8 @@ class Events extends React.Component {
               tabIcon: FeedbackIcon,
               tabContent: (
               <RegularCard
+                cardTitle="Description about product"
+                cardSubtitle="More information here"
                 content={<Actions />}
               />
               )
@@ -63,21 +64,7 @@ class Events extends React.Component {
               tabButtonSubtitle: "udalostí",
               tabIcon: ListIcon,
               tabContent: (
-              <RegularCard
-                cardTitle="Legal info of the product"
-                cardSubtitle="More information here"
-                content={
-                <span>
-                  Completely synergize resource taxing relationships via
-                  premier niche markets. Professionally cultivate
-                  one-to-one customer service with robust ideas.
-                  <br />
-                  <br />
-                  Dynamically innovate resource-leveling customer
-                  service for state of the art customer service.
-                </span>
-                }
-              />
+                <Overview />
               )
             },
             ]}

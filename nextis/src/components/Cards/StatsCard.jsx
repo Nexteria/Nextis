@@ -9,7 +9,6 @@ import CardContent from "material-ui/Card/CardContent";
 import CardHeader from "material-ui/Card/CardHeader";
 import CardActions from "material-ui/Card/CardActions";
 import Typography from "material-ui/Typography";
-import IconButton from "material-ui/IconButton";
 
 import statsCardStyle from "assets/jss/material-dashboard-pro-react/components/statsCardStyle";
 

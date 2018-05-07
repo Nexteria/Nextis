@@ -39,7 +39,6 @@ const loadingPageStyle = {
     backgroundPosition: "center center"
   },
   content: {
-    paddingTop: "18vh",
     minHeight: "calc(100vh - 80px)",
     position: "relative",
     zIndex: "4"

@@ -117,9 +117,13 @@ function CustomTable({ ...props }) {
                 </TableRow>
               );
             }
+
+            const data = prop.data ?  prop.data : prop;
+            const shadedClass = prop.shaded && prop.shaded !== "" ? classes.shadedRow : "";
+
             return (
-              <TableRow key={key} hover={hover} className={classes.tableRow + " " + tableRowClasses}>
-                {prop.map((prop, key) => {
+              <TableRow key={key} hover={hover} className={classes.tableRow + " " + tableRowClasses + " " + shadedClass}>
+                {data.map((prop, key) => {
                   const tableCellClasses =
                     classes.tableCell +
                     " " +

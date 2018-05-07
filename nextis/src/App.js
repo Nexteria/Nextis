@@ -70,15 +70,15 @@ class App extends Component {
                         <Spinner name='line-scale-pulse-out' className={classes.loader} />
                         : null
                       }
-                      <Route
-                        exact
-                        path={'/login'}
-                        render={() =>
-                          <LoginPage actions={actions} history={history} />
-                        }
-                      />
                     </ItemGrid>
                   </GridContainer>
+                  <Route
+                    exact
+                    path={'/login'}
+                    render={() =>
+                      <LoginPage actions={actions} history={history} />
+                    }
+                  />
                 </div>
               </div>
 

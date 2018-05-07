@@ -65,7 +65,7 @@ class LoginPage extends React.Component {
       <div className={classes.content}>
         <div className={classes.container}>
           <GridContainer justify="center">
-            <ItemGrid xs={12} sm={6} md={4}>
+            <ItemGrid xs={12} sm={6} md={4} lg={4}>
               <form method="POST" action="/login" autoComplete="off" onSubmit={this.handleLogin}>
                 <LoginCard
                   customCardClass={classes[this.state.cardAnimaton]}
