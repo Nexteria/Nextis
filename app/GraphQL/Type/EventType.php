@@ -59,6 +59,15 @@ class EventType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type('event')),
                 'description' => 'The grouped events with this event',
             ],
+            'parentEvent' => [
+                'type' => GraphQL::type('event'),
+                'description' => 'Parent event for this event',
+                'resolve' => function ($root, $args) {
+                    return $root->getParentEvent();
+                },
+                'always' => ['id'],
+                'selectable' => false,
+            ],
             'lectors' => [
                 'type' => Type::listOf(GraphQL::type('user')),
                 'description' => 'The lectors for this event',

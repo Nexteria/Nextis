@@ -73,6 +73,7 @@ const loadingPageStyle = {
   },
   loader: {
     textAlign: 'center',
+    marginTop: '20em',
     '&>div': {
         height: '60px',
         width: '8px',

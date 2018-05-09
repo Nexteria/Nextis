@@ -3,6 +3,7 @@
 // #############################
 
 import {
+  defaultFont,
   infoColor,
   primaryColor,
   successColor,
@@ -174,6 +175,9 @@ const timelineStyle = theme => ({
   timelineHeading: {
     marginBottom: "15px"
   },
+  noMargin: {
+    margin: 0,
+  },
   timelineBody: {
     fontSize: "14px",
     lineHeight: "21px"
@@ -181,7 +185,6 @@ const timelineStyle = theme => ({
   timelineFooter: {
     zIndex: "1000",
     position: "relative",
-    float: "left"
   },
   footerTitle: {
     color: "#333333",
@@ -191,7 +194,14 @@ const timelineStyle = theme => ({
   footerLine: {
     marginTop: "10px",
     marginBottom: "5px"
-  }
+  },
+  timelineSubtitleHeading: {
+    ...defaultFont,
+    color: "#999999",
+    marginTop: '5px',
+    marginBottom: '1em',
+    fontSize: "0.9em",
+  },
 });
 
 export default timelineStyle;

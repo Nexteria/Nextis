@@ -12,7 +12,7 @@ import {
   grayColor
 } from "assets/jss/material-dashboard-pro-react.jsx";
 
-const badgeStyle = {
+const badgeStyle = theme => ({
   badge: {
     borderRadius: "12px",
     padding: "5px 12px",
@@ -24,7 +24,11 @@ const badgeStyle = {
     textAlign: "center",
     whiteSpace: "nowrap",
     verticalAlign: "baseline",
-    display: "inline"
+    display: "inline",
+    [theme.breakpoints.down("md")]: {
+      whiteSpace: "normal",
+      display: "block",
+    }
   },
   primary: {
     backgroundColor: primaryColor
@@ -47,6 +51,6 @@ const badgeStyle = {
   gray: {
     backgroundColor: grayColor
   }
-};
+});
 
 export default badgeStyle;
