@@ -8,6 +8,7 @@ use App\GraphQL\Type\NxLocationType;
 use App\GraphQL\Type\TermAttendingNumbers;
 use App\GraphQL\Type\UserType;
 use App\GraphQL\Type\StudentType;
+use App\GraphQL\Type\StudentLevelType;
 use App\GraphQL\Type\ActivityPointsType;
 use App\GraphQL\Type\QuestionFormType;
 
@@ -15,6 +16,7 @@ use App\GraphQL\Query\EventsQuery;
 use App\GraphQL\Query\EventQuery;
 use App\GraphQL\Query\UserQuery;
 use App\GraphQL\Query\StudentQuery;
+use App\GraphQL\Query\StudentsQuery;
 
 return [
     'prefix' => 'graphql',
@@ -30,6 +32,7 @@ return [
                 'event' => EventQuery::class,
                 'user' => UserQuery::class,
                 'student' => StudentQuery::class,
+                'students' => StudentsQuery::class,
             ],
             'mutation' => [
             ],
@@ -47,6 +50,7 @@ return [
         'NxLocation' => NxLocationType::class,
         'user' => UserType::class,
         'student' => StudentType::class,
+        'studentLevel' => StudentLevelType::class,
         'activityPoints' => ActivityPointsType::class,
     ],
 
