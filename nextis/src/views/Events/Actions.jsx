@@ -66,6 +66,9 @@ class Actions extends React.Component {
   }
 
   transformFeedbackTerm(term, classes) {
+    const startDateTimeString = format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm');
+    const endDateTimeString = format(parse(term.eventEndDateTime), 'DD.MM.YYYY o HH:mm');
+
     const feedbackDeadline = format(parse(term.feedbackDeadlineAt), 'DD.MM.YYYY o HH:mm');
     const fillButtons = [
       { color: "info", text: 'Feedback' }
@@ -89,7 +92,10 @@ class Actions extends React.Component {
     return {
       data: [
         term.event.name,
-        "",
+        <div>
+          <div>{startDateTimeString}</div>
+          <div>{endDateTimeString}</div>
+        </div>,
         feedbackDeadline,
         fillButtons
       ]
@@ -143,7 +149,7 @@ class Actions extends React.Component {
         <Table
           tableHead={[
             "Názov eventu",
-            "",
+            "Trvanie",
             "Deadline na vyplnenie",
             "Akcie"
           ]}
@@ -158,7 +164,7 @@ class Actions extends React.Component {
             classes.left,
             classes.center,
             classes.center,
-            classes.center,
+            classes.left,
           ]}
           customClassesForCells={[0, 1, 2, 3]}
           customHeadCellClasses={[
@@ -182,6 +188,7 @@ query FetchMeetings ($id: Int, $userId: Int){
     termsForFeedback {
       id
       feedbackDeadlineAt
+      eventStartDateTime
       eventEndDateTime
       publicFeedbackLink
       event {

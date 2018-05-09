@@ -45,8 +45,13 @@ function Timeline({ ...props }) {
             ) : null}
             <div className={panelClasses}>
               {prop.title ? (
-                <div className={classes.timelineHeading}>
+                <div className={classes.timelineHeading + " " + prop.subtitle ? classes.noMargin : ""}>
                   <Badge color={prop.titleColor}>{prop.title}</Badge>
+                </div>
+              ) : null}
+              {prop.subtitle ? (
+                <div className={classes.timelineSubtitleHeading}>
+                  {prop.subtitle}
                 </div>
               ) : null}
               <div className={classes.timelineBody}>{prop.body}</div>
