@@ -5,19 +5,13 @@ import { compose } from 'recompose';
 import ReactTable from "react-table";
 import Spinner from 'react-spinkit';
 import download from 'downloadjs';
+import { Route } from "react-router-dom";
 import request from "common/fetch";
 
 // material-ui components
 import withStyles from "material-ui/styles/withStyles";
 
 // @material-ui/icons
-import ListIcon from "@material-ui/icons/List";
-import FeedbackIcon from "@material-ui/icons/Feedback";
-import TodayIcon from "@material-ui/icons/Today";
-import Assignment from "@material-ui/icons/Assignment";
-import Dvr from "@material-ui/icons/Dvr";
-import Favorite from "@material-ui/icons/Favorite";
-import Close from "@material-ui/icons/Close";
 import Info from "@material-ui/icons/Info";
 import ContactsIcon from "@material-ui/icons/Contacts";
 
@@ -26,8 +20,8 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 
 import IconCard from "components/Cards/IconCard.jsx";
-import IconButton from "components/CustomButtons/IconButton.jsx";
 import Button from "components/CustomButtons/Button.jsx";
+import UserInfoModal from "views/Contacts/UserInfoModal.jsx";
 
 import contactsStyle from "assets/jss/material-dashboard-pro-react/views/contactsStyle.jsx";
 
@@ -40,22 +34,70 @@ class Contacts extends React.Component {
     .then(blob => download(blob, 'kontakty.vcf', 'text/vcard'))
   }
 
+  getColumns() {
+    let columns = [];
+
+    columns.push({
+      Header: "Meno",
+      accessor: "name",
+    });
+
+    if (window.innerWidth > 600) {
+      columns.push({
+        Header: "Email",
+        accessor: "email",
+      });
+
+      columns.push({
+        Header: "Level",
+        accessor: "Level",
+      });
+    }
+
+    columns.push({
+      Header: "Telefón",
+      headerStyle: { textAlign: 'left' },
+      accessor: "phone",
+    });
+
+    columns.push({
+      Header: "",
+      accessor: "actions",
+      sortable: false,
+      filterable: false,
+    });
+
+    return columns;
+  }
+
+  formatPhone(number) {
+    if (!number) {
+      return "";
+    }
+
+    if (number.length === 13) {
+      return `${number.slice(0, 4)} ${number.slice(4, 7)} ${number.slice(7, 10)} ${number.slice(10)}`;
+    } else {
+      return number;
+    }
+  }
+
   render() {
     if (this.props.data.loading) {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const { classes } = this.props;
+    const { classes, history } = this.props;
 
     const students = this.props.data.students;
     const data = students.map(student => ({
       name: `${student.lastName} ${student.firstName}`,
       email: student.user.email || "",
       level: student.level.name,
-      phone: student.user.phone || "",
+      phone: this.formatPhone(student.user.phone),
       actions: (
-        <div className="actions-right">
-          <Button color="warning" customClass={classes.actionButton}>
+        <div className={window.innerWidth > 600 ? "actions-right" : "actions-center"}>
+          <Button color="warning" customClass={classes.actionButton} onClick={() => history.push(`/contacts/${student.user.id}`)}>
             <Info />
           </Button>
         </div>
@@ -83,36 +125,12 @@ class Contacts extends React.Component {
                       defaultFilterMethod={(filter, row, column) =>
                         filter.value.localeCompare(row[column.id].slice(0, filter.value.length), "sk", {sensitivity: 'base'}) === 0
                       }
-                      columns={[
-                          {
-                            Header: "Meno",
-                            accessor: "name",
-                          },
-                          {
-                            Header: "Email",
-                            accessor: "email"
-                          },
-                          {
-                            Header: "Level",
-                            accessor: "level"
-                          },
-                          {
-                            Header: "Telefón",
-                            headerStyle: { textAlign: 'left' },
-                            accessor: "phone"
-                          },
-                          {
-                            Header: "",
-                            headerStyle: { textAlign: 'center' },
-                            accessor: "actions",
-                            sortable: false,
-                            filterable: false,
-                          }
-                      ]}
+                      columns={this.getColumns()}
                       showPaginationTop={false}
                       showPaginationBottom
                       showPageSizeOptions={false}
-                      className="-striped -highlight"
+                      showPageJump={false}
+                      className={"-striped -highlight " + classes.contactsTable}
                     />
                 }
             />
@@ -122,6 +140,12 @@ class Contacts extends React.Component {
             <span>Stiahnuť kontakty vo formáte vCard</span>
           </Button>
         </ItemGrid>
+
+        <Route
+          exact
+          path={'/contacts/:userId'}
+          component={UserInfoModal}
+        />
       </GridContainer>
     );
   }

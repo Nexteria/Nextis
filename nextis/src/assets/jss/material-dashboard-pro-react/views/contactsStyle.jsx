@@ -7,6 +7,16 @@ const contactsStyle = {
   center: {
       textAlign: "center",
   },
+  contactsTable: {
+    width: '100%',
+    top: '1em',
+    '& .-header': {
+      height: '2em',
+    },
+    '& .rt-td': {
+      whiteSpace: 'normal',
+    },
+  },
 };
 
 export default contactsStyle;
