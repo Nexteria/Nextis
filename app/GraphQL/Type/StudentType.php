@@ -35,6 +35,10 @@ class StudentType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The last name of the student',
             ],
+            'user' => [
+                'type' => GraphQL::type('user'),
+                'description' => 'User associated with this student',
+            ],
             'tuitionFee' => [
                 'type' => Type::int(),
                 'description' => 'The student`s tuition fee',
@@ -55,6 +59,10 @@ class StudentType extends GraphQLType
 
                     return $studentSemester->pivot->tuitionFee;
                 },
+            ],
+            'level' => [
+                'type' => GraphQL::type('studentLevel'),
+                'description' => 'The student`s level',
             ],
             'activityPoints' => [
                 'type' => GraphQL::type('activityPoints'),

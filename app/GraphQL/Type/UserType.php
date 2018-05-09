@@ -30,6 +30,14 @@ class UserType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The last name of the user',
             ],
+            'email' => [
+                'type' => Type::string(),
+                'description' => 'The email of the user',
+            ],
+            'phone' => [
+                'type' => Type::string(),
+                'description' => 'The phone of the user',
+            ],
             'lectorDescription' => [
                 'type' => Type::string(),
                 'description' => 'The lector description associated with this user',

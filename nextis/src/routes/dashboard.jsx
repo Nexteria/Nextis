@@ -1,6 +1,7 @@
 import Dashboard from "views/Dashboard/Dashboard.jsx";
 import Calendar from "views/Calendar/Calendar.jsx";
 import Events from "views/Events/Events.jsx";
+import Contacts from "views/Contacts/Contacts.jsx";
 
 
 // @material-ui/icons
@@ -8,7 +9,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import Accessibility from "@material-ui/icons/Accessibility";
 import CardTravel from "@material-ui/icons/CardTravel";
 import Assignment from "@material-ui/icons/Assignment";
-import Contacts from "@material-ui/icons/Contacts";
+import ContactsIcon from "@material-ui/icons/Contacts";
 
 var dashRoutes = [
   {
@@ -42,8 +43,8 @@ var dashRoutes = [
     path: "/contacts",
     name: "Kontakty",
     state: "openContacts",
-    icon: Contacts,
-    component: Calendar
+    icon: ContactsIcon,
+    component: Contacts
   },
 ];
 export default dashRoutes;
