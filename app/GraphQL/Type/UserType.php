@@ -38,6 +38,34 @@ class UserType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The phone of the user',
             ],
+            'personalDescription' => [
+                'type' => Type::string(),
+                'description' => 'The personal description associated with this user',
+            ],
+            'facebookLink' => [
+                'type' => Type::string(),
+                'description' => 'The user`s facebook profile link',
+            ],
+            'linkedinLink' => [
+                'type' => Type::string(),
+                'description' => 'The user`s linkedin profile link',
+            ],
+            'actualJobInfo' => [
+                'type' => Type::string(),
+                'description' => 'The user`s actual job',
+            ],
+            'school' => [
+                'type' => Type::string(),
+                'description' => 'The users school',
+            ],
+            'studyProgram' => [
+                'type' => Type::string(),
+                'description' => 'The user`s study program',
+            ],
+            'studyYear' => [
+                'type' => Type::string(),
+                'description' => 'The year in school for user',
+            ],
             'lectorDescription' => [
                 'type' => Type::string(),
                 'description' => 'The lector description associated with this user',
