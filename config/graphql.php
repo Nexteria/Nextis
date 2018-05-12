@@ -9,8 +9,10 @@ use App\GraphQL\Type\TermAttendingNumbers;
 use App\GraphQL\Type\UserType;
 use App\GraphQL\Type\StudentType;
 use App\GraphQL\Type\StudentLevelType;
+use App\GraphQL\Type\ActivityPointsInfoType;
 use App\GraphQL\Type\ActivityPointsType;
 use App\GraphQL\Type\QuestionFormType;
+use App\GraphQL\Type\SemesterType;
 
 use App\GraphQL\Query\EventsQuery;
 use App\GraphQL\Query\EventQuery;
@@ -51,7 +53,9 @@ return [
         'user' => UserType::class,
         'student' => StudentType::class,
         'studentLevel' => StudentLevelType::class,
+        'activityPointsInfo' => ActivityPointsInfoType::class,
         'activityPoints' => ActivityPointsType::class,
+        'semester' => SemesterType::class,
     ],
 
     'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],

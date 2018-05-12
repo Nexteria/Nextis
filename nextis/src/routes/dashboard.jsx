@@ -2,6 +2,7 @@ import Dashboard from "views/Dashboard/Dashboard.jsx";
 import Calendar from "views/Calendar/Calendar.jsx";
 import Events from "views/Events/Events.jsx";
 import Contacts from "views/Contacts/Contacts.jsx";
+import ActivityPoints from "views/ActivityPoints/ActivityPoints.jsx";
 
 
 // @material-ui/icons
@@ -26,11 +27,12 @@ var dashRoutes = [
     component: Events
   },
   {
-    path: "/activity-points",
+    path: "/activity-points/:semesterId?",
+    baseLink: "/activity-points",
     name: "Aktivity body",
     state: "openActivityPoints",
     icon: Accessibility,
-    component: Calendar
+    component: ActivityPoints
   },
   {
     path: "/payments",

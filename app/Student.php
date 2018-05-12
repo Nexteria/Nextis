@@ -100,15 +100,42 @@ class Student extends Model
             ])->wherePivot('deleted_at', '=', null);
     }
 
-    public function getOpenEventsForSignin()
+    public function getOpenEventsForSignin($filters = [])
     {
-        $attendeeGroupIds = NxEventAttendee::where('userId', $this->userId)
+        $attendeesQuery = NxEventAttendee::where('userId', $this->userId)
             ->whereRaw('signInOpenDateTime <= NOW()')
-            ->whereRaw('signInCloseDateTime > NOW()')
-            ->pluck('attendeesGroupId');
+            ->whereRaw('signInCloseDateTime > NOW()');
         
+        foreach ($filters as $key => $value) {
+            switch ($key) {
+                case 'signedIn':
+                    if ($value) {
+                        $attendeesQuery->whereNotNull('signedIn');
+                    } else {
+                        $attendeesQuery->whereNull('signedIn');
+                    }
+                    break;
+
+                case 'semesterId':
+                    break;
+
+                default:
+                    throw new \Exception('Unknown filter: '.$key);
+                    break;
+            }
+        }
+            
+        
+        $attendeeGroupIds = $attendeesQuery->pluck('attendeesGroupId');
+
         $eventIds = AttendeesGroup::whereIn('id', $attendeeGroupIds)->pluck('eventId');
-        $events = NxEvent::whereIn('id', $eventIds)->where('status', 'published')->get();
+
+        $eventsQuery = NxEvent::whereIn('id', $eventIds)->where('status', 'published');
+        if (isset($filters['semesterId'])) {
+            $eventsQuery->where('semesterId', $filters['semesterId']);
+        }
+
+        $events = $eventsQuery->get();
 
         return $events;
     }
@@ -130,5 +157,35 @@ class Student extends Model
             })->get();
 
         return $terms;
+    }
+
+    public function unfinishedEvents($filters = [])
+    {
+        $attendeesQuery = NxEventAttendee::where('userId', $this->userId)
+            ->whereNotNull('signedIn')
+            ->where(function ($query) {
+                $query->whereNull('wasPresent');
+                $query->orWhereNull('filledFeedback');
+            })
+            ->whereHas('terms', function ($query) {
+                $query->whereNotNull('signedIn');
+                $query->where(function ($subQuery) {
+                    $subQuery->whereNotNull('feedbackOpenAt');
+                    $subQuery->orWhereRaw('feedbackDeadlineAt > NOW()');
+                });
+            });
+
+        $attendeeGroupIds = $attendeesQuery->pluck('attendeesGroupId');
+
+        $eventIds = AttendeesGroup::whereIn('id', $attendeeGroupIds)->pluck('eventId');
+
+        $eventsQuery = NxEvent::whereIn('id', $eventIds)->where('status', 'published');
+        if (isset($filters['semesterId'])) {
+            $eventsQuery->where('semesterId', $filters['semesterId']);
+        }
+
+        $events = $eventsQuery->get();
+
+        return $events;
     }
 }

@@ -48,7 +48,7 @@ class Dashboard extends React.Component {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const activityPoints = user.student.activityPoints;
+    const activityPointsInfo = user.student.activityPointsInfo;
 
     let eventsStatText = 'Momentálne Ťa nečakajú žiadne stretnutia.'
     let terms = [...user.student.meetings];
@@ -79,7 +79,7 @@ class Dashboard extends React.Component {
               iconHover
               iconLink="/events"
               badgeBottomLeft={termsForFeedback ? <Badge color="success">{termsForFeedback}</Badge> : null}
-              badgeTopRight={openEventsForSignin ? <Badge color="info">{openEventsForSignin}</Badge> : null}
+              badgeTopRight={openEventsForSignin ? <Badge color="danger">{openEventsForSignin}</Badge> : null}
               history={history}
             />
           </ItemGrid>
@@ -88,11 +88,11 @@ class Dashboard extends React.Component {
               icon={Accessibility}
               iconColor="orange"
               title="Aktivity body"
-              description={`${activityPoints.gained} / ${activityPoints.base}`}
+              description={`${activityPointsInfo.gained} / ${activityPointsInfo.base}`}
               statIcon={Warning}
               descriptionColor={'gray'}
               smallColor={'gray'}
-              statText={`75% z Tvojho bodového základu: ${activityPoints.minimum}`}
+              statText={`75% z Tvojho bodového základu: ${activityPointsInfo.minimum}`}
               iconHover
               iconLink="/activity-points"
               history={history}
@@ -149,7 +149,7 @@ query FetchUser ($id: Int){
         id
         eventStartDateTime
       }
-      activityPoints {
+      activityPointsInfo {
         gained
         minimum
         base

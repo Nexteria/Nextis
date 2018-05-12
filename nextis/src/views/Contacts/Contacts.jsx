@@ -46,11 +46,12 @@ class Contacts extends React.Component {
       columns.push({
         Header: "Email",
         accessor: "email",
+        width: 250,
       });
 
       columns.push({
         Header: "Level",
-        accessor: "Level",
+        accessor: "level",
       });
     }
 
@@ -65,6 +66,7 @@ class Contacts extends React.Component {
       accessor: "actions",
       sortable: false,
       filterable: false,
+      maxWidth: 100,
     });
 
     return columns;
@@ -112,7 +114,7 @@ class Contacts extends React.Component {
 
     return (
       <GridContainer justify="center">
-        <ItemGrid xs={12} sm={12} md={12} lg={8}>
+        <ItemGrid xs={12} sm={12} md={12} lg={10}>
             <IconCard
                 icon={ContactsIcon}
                 title=""

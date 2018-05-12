@@ -32,6 +32,8 @@ class ActivityPoints extends Model implements AuditableContract
         'activityModelId' => 'integer',
     ];
 
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+
     public function student()
     {
         return $this->belongsTo('App\Student', 'studentId');
