@@ -27,13 +27,16 @@ function Header({ ...props }) {
     props.routes.map((prop, key) => {
       if (prop.collapse) {
         prop.views.map((prop, key) => {
-          if (prop.path === props.location.pathname) {
+          const pathName = prop.baseLink || prop.path;
+          if (props.location.pathname.indexOf(pathName)> -1) {
             name = prop.name;
           }
           return null;
         });
       }
-      if (prop.path === props.location.pathname) {
+
+      const pathName = prop.baseLink || prop.path;
+      if (props.location.pathname.indexOf(pathName)> -1) {
         name = prop.name;
       }
       return null;

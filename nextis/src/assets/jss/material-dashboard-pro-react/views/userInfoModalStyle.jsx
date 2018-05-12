@@ -60,7 +60,7 @@ const userInfoModalStyle = {
     borderRadius: "50%",
     overflow: "hidden",
     position: 'relative',
-    top: "-6em",
+    top: "-4em",
     boxShadow:
       "0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)"
   },
@@ -89,7 +89,7 @@ const userInfoModalStyle = {
   userName: {
     margin: 0,
     position: 'relative',
-    top: '-0.5em',
+    top: '0',
   },
 };
 

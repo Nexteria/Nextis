@@ -265,7 +265,7 @@ class Sidebar extends React.Component {
                         classes.collapseItemLink +
                         " " +
                         cx({
-                          [" " + classes[color]]: this.activeRoute(prop.path)
+                          [" " + classes[color]]: this.activeRoute(prop.baseLink || prop.path)
                         });
                       const collapseItemMini =
                         classes.collapseItemMini +
@@ -275,7 +275,7 @@ class Sidebar extends React.Component {
                         });
                       return (
                         <ListItem key={key} className={classes.collapseItem}>
-                          <NavLink to={prop.path} className={navLinkClasses}>
+                          <NavLink to={prop.baseLink || prop.path} className={navLinkClasses}>
                             <span className={collapseItemMini}>
                               {prop.mini}
                             </span>
@@ -297,7 +297,7 @@ class Sidebar extends React.Component {
             classes.itemLink +
             " " +
             cx({
-              [" " + classes[color]]: this.activeRoute(prop.path)
+              [" " + classes[color]]: this.activeRoute(prop.baseLink || prop.path)
             });
           const itemText =
             classes.itemText +
@@ -317,7 +317,7 @@ class Sidebar extends React.Component {
             });
           return (
             <ListItem key={key} className={classes.item}>
-              <NavLink to={prop.path} className={navLinkClasses}>
+              <NavLink to={prop.baseLink || prop.path} className={navLinkClasses}>
                 <ListItemIcon className={itemIcon}>
                   <prop.icon />
                 </ListItemIcon>

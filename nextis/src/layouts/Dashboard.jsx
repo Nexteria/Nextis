@@ -43,6 +43,12 @@ const switchRoutes = (
 var ps;
 
 class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.updateRoutes = this.updateRoutes.bind(this);
+  }
+
   state = {
     mobileOpen: false,
     miniActive: false
@@ -75,6 +81,18 @@ class Dashboard extends React.Component {
   sidebarMinimize() {
     this.setState({ miniActive: !this.state.miniActive });
   }
+
+  updateRoutes(routes) {
+    return routes.map(route => {
+      if (route.baseLink && route.baseLink === '/activity-points' && this.props.student) {
+        route.baseLink = `/activity-points/${this.props.student.activeSemesterId}`;
+        return route;
+      }
+
+      return route;
+    });
+  }
+
   render() {
     const { classes, history, user, ...rest } = this.props;
 
@@ -86,10 +104,13 @@ class Dashboard extends React.Component {
         [classes.mainPanelWithPerfectScrollbar]:
           navigator.platform.indexOf("Win") > -1
       });
+
+    let sidebarRoutes = this.updateRoutes(dashboardRoutes);
+
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          routes={dashboardRoutes}
+          routes={sidebarRoutes}
           logoText={"Space"}
           logo={Logo}
           image={image}
@@ -131,7 +152,7 @@ Dashboard.propTypes = {
 };
 
 export default compose(
-  connect(state => ({ user: state.user })),
+  connect(state => ({ user: state.user, student: state.student })),
   withStyles(appStyle),
   withRouter,
 )(Dashboard);

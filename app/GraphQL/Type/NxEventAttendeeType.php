@@ -23,11 +23,11 @@ class NxEventAttendeeType extends GraphQLType
                 'description' => 'The id of the event'
             ],
             'wasPresent' => [
-                'type' => Type::boolean(),
+                'type' => Type::string(),
                 'description' => 'The flag indicates if attendee was present on event',
             ],
             'filledFeedback' => [
-                'type' => Type::boolean(),
+                'type' => Type::string(),
                 'description' => 'The flag indicates if attendee filled feedback for event',
             ],
             'standIn' => [
@@ -76,6 +76,14 @@ class NxEventAttendeeType extends GraphQLType
                 'description' => 'The attendee`s group',
                 'always' => ['id'],
             ],
+            'event' => [
+                'type' => GraphQL::type('event'),
+                'description' => 'Term`s event',
+                'resolve' => function ($root, $args) {
+                    return $root->event();
+                },
+                'selectable' => false,
+            ]
         ];
     }
 
@@ -97,5 +105,15 @@ class NxEventAttendeeType extends GraphQLType
     public function resolveWontGoField($root)
     {
         return (string) $root->wontGo;
+    }
+
+    public function resolveFilledFeedbackField($root)
+    {
+        return (string) $root->filledFeedback;
+    }
+
+    public function resolveWasPresentField($root)
+    {
+        return (string) $root->wasPresent;
     }
 }

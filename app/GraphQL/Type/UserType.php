@@ -3,6 +3,8 @@
 namespace App\GraphQL\Type;
 
 use App\User;
+use App\NxEvent;
+use App\AttendeesGroup;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -93,6 +95,30 @@ class UserType extends GraphQLType
             'student' => [
                 'type' => GraphQL::type('student'),
                 'description' => 'Student associated with this user',
+            ],
+            'eventAttendees' => [
+                'type' => Type::listOf(GraphQL::type('NxEventAttendee')),
+                'description' => 'The users`s attendees',
+                'args' => [
+                    'semesterId' => [
+                        'type' => Type::int(),
+                        'name' => 'semesterId',
+                    ]
+                ],
+                'resolve' => function ($root, $args) {
+
+                    $attendeesQuery = $root->eventAttendees();
+                    if (isset($args['semesterId'])) {
+                        $semesterId = $args['semesterId'];
+                        $eventsIds = NxEvent::where('semesterId', $semesterId)->pluck('id');
+                        $attendeesGroupsIds = AttendeesGroup::whereIn('eventId', $eventsIds)->pluck('id');
+
+                        $attendeesQuery->whereIn('attendeesGroupId', $attendeesGroupsIds);
+                    }
+
+                    return $attendeesQuery->get();
+                },
+                'always' => ['id'],
             ],
         ];
     }

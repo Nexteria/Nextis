@@ -64,9 +64,21 @@ class StudentType extends GraphQLType
                 'type' => GraphQL::type('studentLevel'),
                 'description' => 'The student`s level',
             ],
-            'activityPoints' => [
-                'type' => GraphQL::type('activityPoints'),
-                'description' => 'The student`s activity points',
+            'semesters' => [
+                'type' => Type::listOf(GraphQL::type('semester')),
+                'description' => 'The student`s semesters',
+            ],
+            'activeSemester' => [
+                'type' => GraphQL::type('semester'),
+                'description' => 'The student`s active semester',
+                'resolve' => function ($root, $args) {
+                    return $root->getActiveSemester();
+                },
+                'selectable' => false,
+            ],
+            'activityPointsInfo' => [
+                'type' => GraphQL::type('activityPointsInfo'),
+                'description' => 'The student`s activity points info',
                 'args' => [
                     'semesterId' => [
                         'type' => Type::int(),
@@ -81,7 +93,6 @@ class StudentType extends GraphQLType
                     }
 
                     $studentSemester = $root->semesters()->where('semesterId', $semesterId)->first();
-                    $computedPoints = $root->user->computeActivityPoints($semesterId);
 
                     return [
                         'gained' => $root->activityPoints()->where('semesterId', $semesterId)->sum('gainedPoints'),
@@ -89,6 +100,26 @@ class StudentType extends GraphQLType
                         'base' => $studentSemester->pivot->activityPointsBaseNumber,
                         ''
                     ];
+                },
+                'selectable' => false,
+            ],
+            'activityPoints' => [
+                'type' => Type::listOf(GraphQL::type('activityPoints')),
+                'description' => 'The student`s activity points',
+                'args' => [
+                    'semesterId' => [
+                        'type' => Type::int(),
+                        'name' => 'semesterId',
+                    ]
+                ],
+                'resolve' => function ($root, $args) {
+                    $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
+
+                    if (isset($args['semesterId'])) {
+                        $semesterId = $args['semesterId'];
+                    }
+
+                    return $root->activityPoints()->where('semesterId', $semesterId)->get();
                 },
             ],
             'meetings' => [
@@ -102,8 +133,26 @@ class StudentType extends GraphQLType
             'openEventsForSignin' => [
                 'type' => Type::listOf(GraphQL::type('event')),
                 'description' => 'The student`s events, where the sign in is open.',
+                'args' => [
+                    'signedIn' => [
+                        'type' => Type::boolean(),
+                        'name' => 'signedIn',
+                    ],
+                    'semesterId' => [
+                        'type' => Type::int(),
+                        'name' => 'semesterId',
+                    ],
+                ],
                 'resolve' => function ($root, $args) {
-                    return $root->getOpenEventsForSignin();
+                    $filters = [];
+                    if (isset($args['signedIn'])) {
+                        $filters['signedIn'] = $args['signedIn'];
+                    }
+                    if (isset($args['semesterId'])) {
+                        $filters['semesterId'] = $args['semesterId'];
+                    }
+
+                    return $root->getOpenEventsForSignin($filters);
                 },
                 'selectable' => false,
             ],
@@ -114,7 +163,26 @@ class StudentType extends GraphQLType
                     return $root->getTermsWaitingForFeedback();
                 },
                 'selectable' => false,
-            ]
+            ],
+            'unfinishedEvents' => [
+                'type' => Type::listOf(GraphQL::type('event')),
+                'description' => 'The student`s events, where he is signed in and event is not over yet.',
+                'args' => [
+                    'semesterId' => [
+                        'type' => Type::int(),
+                        'name' => 'semesterId',
+                    ]
+                ],
+                'resolve' => function ($root, $args) {
+                    $filters = [];
+                    if (isset($args['semesterId'])) {
+                        $filters['semesterId'] = $args['semesterId'];
+                    }
+
+                    return $root->unfinishedEvents($filters);
+                },
+                'selectable' => false,
+            ],
         ];
     }
 }
