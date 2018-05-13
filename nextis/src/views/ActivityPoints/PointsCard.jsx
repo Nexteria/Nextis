@@ -33,8 +33,6 @@ class PointsCard extends React.Component {
       classes.cardHeader +
       " " +
       classes[headerColor + "CardHeader"];
-
-    console.log(this.tab)
   
     return (
       <Card className={classes.card}>

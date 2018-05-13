@@ -117,7 +117,7 @@ class ActivityPoints extends React.Component {
           />
         </GridContainer>
         <GridContainer justify="center">
-          <ItemGrid xs={12} sm={12} md={6}>
+          <ItemGrid xs={12} sm={12} md={10}>
             <PointsCard semesterId={selectedSemesterId} studentId={student.id} userId={this.props.user.id}/>
           </ItemGrid>
         </GridContainer>
@@ -129,6 +129,7 @@ class ActivityPoints extends React.Component {
 const userQuery = gql`
 query FetchUser ($id: Int, $semesterId: Int){
   user (id: $id){
+    id
     student {
       id
       activityPointsInfo (semesterId: $semesterId){

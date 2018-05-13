@@ -194,4 +194,9 @@ class Payment extends Model
     {
         return $this->belongsTo('App\User', 'userId');
     }
+
+    public function paymentCategory()
+    {
+        return $this->belongsTo('App\PaymentCategory', 'categoryId');
+    }
 }

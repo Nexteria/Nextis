@@ -13,6 +13,8 @@ use App\GraphQL\Type\ActivityPointsInfoType;
 use App\GraphQL\Type\ActivityPointsType;
 use App\GraphQL\Type\QuestionFormType;
 use App\GraphQL\Type\SemesterType;
+use App\GraphQL\Type\PaymentType;
+use App\GraphQL\Type\PaymentCategoryType;
 
 use App\GraphQL\Query\EventsQuery;
 use App\GraphQL\Query\EventQuery;
@@ -56,6 +58,8 @@ return [
         'activityPointsInfo' => ActivityPointsInfoType::class,
         'activityPoints' => ActivityPointsType::class,
         'semester' => SemesterType::class,
+        'payment' => PaymentType::class,
+        'paymentCategory' => PaymentCategoryType::class,
     ],
 
     'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],

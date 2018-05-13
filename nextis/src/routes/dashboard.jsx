@@ -1,8 +1,8 @@
 import Dashboard from "views/Dashboard/Dashboard.jsx";
-import Calendar from "views/Calendar/Calendar.jsx";
 import Events from "views/Events/Events.jsx";
 import Contacts from "views/Contacts/Contacts.jsx";
 import ActivityPoints from "views/ActivityPoints/ActivityPoints.jsx";
+import Payments from "views/Payments/Payments.jsx";
 
 
 // @material-ui/icons
@@ -39,7 +39,7 @@ var dashRoutes = [
     name: "Štúdijné poplatky",
     state: "openPayments",
     icon: Assignment,
-    component: Calendar
+    component: Payments
   },
   {
     path: "/contacts",

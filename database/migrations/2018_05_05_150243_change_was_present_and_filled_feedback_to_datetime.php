@@ -120,6 +120,9 @@ class ChangeWasPresentAndFilledFeedbackToDatetime extends Migration
         Schema::table('nx_event_attendees', function (Blueprint $table) {
             $table->boolean('wasPresent')->change();
             $table->boolean('filledFeedback')->change();
+
+            $table->dropIndex('nx_event_attendees_waspresent_index');
+            $table->dropIndex('nx_event_attendees_filledfeedback_index');
         });
 
         Schema::table('nx_event_attendees_nx_event_terms', function (Blueprint $table) {

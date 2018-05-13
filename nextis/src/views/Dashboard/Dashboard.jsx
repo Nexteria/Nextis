@@ -31,15 +31,6 @@ import dashboardStyle from "assets/jss/material-dashboard-pro-react/views/dashbo
 
 
 class Dashboard extends React.Component {
-  state = {
-    value: 0
-  };
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
   render() {
     const { history } = this.props;
     const { user } = this.props.data;
@@ -128,6 +119,7 @@ Dashboard.propTypes = {
 const userQuery = gql`
 query FetchUser ($id: Int){
   user (id: $id){
+    id
     balance
     student {
       id

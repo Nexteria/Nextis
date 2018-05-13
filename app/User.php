@@ -140,6 +140,11 @@ class User extends Authenticatable implements AuditableContract
         return $this->hasMany('App\Payment', 'userId')->orderBy('created_at');
     }
 
+    public function paymentCategories()
+    {
+        return $this->hasMany('App\PaymentCategory', 'userId');
+    }
+
     public function hostedEventsQuery()
     {
         $userId = $this->id;
