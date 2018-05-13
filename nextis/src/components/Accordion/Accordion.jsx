@@ -73,7 +73,7 @@ Accordion.propTypes = {
   active: PropTypes.number,
   collapses: PropTypes.arrayOf(
     PropTypes.shape({
-      title: PropTypes.string,
+      title: PropTypes.node,
       content: PropTypes.node
     })
   ).isRequired

@@ -2,8 +2,6 @@
 // // // Accordion component style
 // #############################
 
-import { roseColor } from "assets/jss/material-dashboard-pro-react.jsx";
-
 const accordionStyle = theme => ({
   root: {
     flexGrow: 1,
@@ -26,12 +24,6 @@ const accordionStyle = theme => ({
     borderTopLeftRadius: "3px",
     borderTopRightRadius: "3px",
     color: "#3C4858",
-    "&:hover": {
-      color: roseColor
-    }
-  },
-  expansionPanelSummaryExpaned: {
-    color: roseColor
   },
   expansionPanelSummaryContent: {
     margin: "0"
@@ -60,7 +52,8 @@ const accordionStyle = theme => ({
     fontWeight: "bolder",
     marginTop: "0",
     marginBottom: "0",
-    color: "inherit"
+    color: "inherit",
+    width: '100%',
   },
   expansionPanelDetails: {
     padding: "15px 0px 5px"

@@ -39,6 +39,10 @@ class StudentType extends GraphQLType
                 'type' => GraphQL::type('user'),
                 'description' => 'User associated with this student',
             ],
+            'tuitionFeeVariableSymbol' => [
+                'type' => Type::string(),
+                'description' => 'The variable symbol for student tuition payments',
+            ],
             'tuitionFee' => [
                 'type' => Type::int(),
                 'description' => 'The student`s tuition fee',

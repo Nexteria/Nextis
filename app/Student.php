@@ -147,8 +147,8 @@ class Student extends Model
             ->whereNull('filledFeedback')
             ->pluck('id');
         
-        $terms = NxEventTerm::whereRaw('feedbackDeadlineAt > NOW()')
-            ->whereNotNull('feedbackOpenAt')
+        $terms = NxEventTerm::whereRaw('nx_event_terms.feedbackDeadlineAt > NOW()')
+            ->whereNotNull('nx_event_terms.feedbackOpenAt')
             ->whereNotNull('publicFeedbackLink')
             ->whereHas('attendees', function ($query) use ($attendeeIds) {
                 $query->whereIn('attendeeId', $attendeeIds)
@@ -168,10 +168,10 @@ class Student extends Model
                 $query->orWhereNull('filledFeedback');
             })
             ->whereHas('terms', function ($query) {
-                $query->whereNotNull('signedIn');
+                $query->whereNotNull('nx_event_attendees_nx_event_terms.signedIn');
                 $query->where(function ($subQuery) {
-                    $subQuery->whereNotNull('feedbackOpenAt');
-                    $subQuery->orWhereRaw('feedbackDeadlineAt > NOW()');
+                    $subQuery->whereNotNull('nx_event_attendees_nx_event_terms.feedbackOpenAt');
+                    $subQuery->orWhereRaw('nx_event_attendees_nx_event_terms.feedbackDeadlineAt > NOW()');
                 });
             });
 

@@ -26,10 +26,11 @@ function CustomTable({ ...props }) {
     striped,
     tableShopping,
     customHeadCellClasses,
-    customHeadClassesForCells
+    customHeadClassesForCells,
+    className,
   } = props;
   return (
-    <div className={classes.tableResponsive}>
+    <div className={classes.tableResponsive + " " + className}>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor]}>

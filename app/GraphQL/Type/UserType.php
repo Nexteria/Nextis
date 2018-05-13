@@ -84,6 +84,15 @@ class UserType extends GraphQLType
                 },
                 'selectable' => false,
             ],
+            'paymentsIban' => [
+                'type' => Type::string(),
+                'description' => 'The iban for nx payments',
+                'selectable' => false,
+            ],
+            'payments' => [
+                'type' => Type::listOf(GraphQL::type('payment')),
+                'description' => 'The users`s payments',
+            ],
             'balance' => [
                 'type' => Type::float(),
                 'description' => 'The user balance',
@@ -120,6 +129,15 @@ class UserType extends GraphQLType
                 },
                 'always' => ['id'],
             ],
+            'paymentCategories' => [
+                'type' => Type::listOf(GraphQL::type('paymentCategory')),
+                'description' => 'The payments categories for this user',
+            ],
         ];
+    }
+
+    public function resolvePaymentsIbanField()
+    {
+        return \Config::get('constants')['nexteriaIban'];
     }
 }

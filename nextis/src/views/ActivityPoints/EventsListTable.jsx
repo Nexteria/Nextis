@@ -2,18 +2,15 @@ import React from "react";
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose } from 'recompose';
-import { withRouter, Route } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Spinner from 'react-spinkit';
 
 // material-ui icons
-import Info from "@material-ui/icons/Info";
 import Done from "@material-ui/icons/Done";
 import Clear from "@material-ui/icons/Clear";
 
 // core components
 import Table from "components/Table/Table.jsx";
-import Button from "components/CustomButtons/Button.jsx";
-import InfoDialog from "components/Dialogs/InfoDialog.jsx";
 
 
 class EventsListTable extends React.Component {
@@ -32,7 +29,7 @@ class EventsListTable extends React.Component {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const { classes, data, history } = this.props;
+    const { classes, data } = this.props;
 
     const attendees = data.user.eventAttendees.filter(attendee => {
       if (!attendee.signedIn) {
