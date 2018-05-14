@@ -32,7 +32,7 @@ import dashboardStyle from "assets/jss/material-dashboard-pro-react/views/dashbo
 
 class Dashboard extends React.Component {
   render() {
-    const { history } = this.props;
+    const { history, student } = this.props;
     const { user } = this.props.data;
 
     if (this.props.data.loading) {
@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
               smallColor={'gray'}
               statText={`75% z Tvojho bodového základu: ${activityPointsInfo.minimum}`}
               iconHover
-              iconLink="/activity-points"
+              iconLink={`/activity-points/${student.activeSemesterId}`}
               history={history}
             />
           </ItemGrid>
@@ -152,7 +152,7 @@ query FetchUser ($id: Int){
 `;
 
 export default compose(
-  connect(state => ({ user: state.user })),
+  connect(state => ({ user: state.user, student: state.student })),
   withStyles(dashboardStyle),
   graphql(userQuery, {
     options: props => ({
