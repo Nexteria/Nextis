@@ -93,7 +93,12 @@ class LoginPage extends React.Component {
                           underline: classes.underline,
                           type: 'email',
                           inputRef: input => this.emailRef = input,
-                          onKeyPress: (ev) => ev.key === 'Enter' ? this.handleLogin() : null,
+                          onKeyPress: (ev) => {
+                            if(ev.key === 'Enter') {
+                              this.handleLogin();
+                              ev.preventDefault();
+                            }
+                          },
                           autoFocus: true,
                           endAdornment: (
                             <InputAdornment position="end">
@@ -113,7 +118,12 @@ class LoginPage extends React.Component {
                           inputRef: input => this.passwordRef = input,
                           autoComplete: "off",
                           underline: classes.underline,
-                          onKeyPress: (ev) => ev.key === 'Enter' ? this.handleLogin() : null,
+                          onKeyPress: (ev) => {
+                            if(ev.key === 'Enter') {
+                              this.handleLogin();
+                              ev.preventDefault();
+                            }
+                          },
                           endAdornment: (
                             <InputAdornment position="end">
                               <LockOutline

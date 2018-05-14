@@ -27,7 +27,7 @@ class HeaderLinks extends React.Component {
   };
 
   handleLogout = () => {
-    request('/logout', {}).then(() => this.props.history.push('/login'));
+    request('/logout', {method: 'post', credentials: 'same-origin',}).then(() => this.props.history.push('/login'));
   }
 
   render() {
