@@ -54,6 +54,7 @@ class LoginPage extends React.Component {
       (user) => {
         actions.setUser(user);
         history.push('/dashboard');
+        this.setState({ loginFailed: false });
       },
       () => this.setState({ loginFailed: true })
     );
