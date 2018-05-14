@@ -171,7 +171,7 @@ class Student extends Model
                 $query->whereNotNull('nx_event_attendees_nx_event_terms.signedIn');
                 $query->where(function ($subQuery) {
                     $subQuery->whereNotNull('nx_event_attendees_nx_event_terms.feedbackOpenAt');
-                    $subQuery->orWhereRaw('nx_event_attendees_nx_event_terms.feedbackDeadlineAt > NOW()');
+                    $subQuery->whereRaw('nx_event_attendees_nx_event_terms.feedbackDeadlineAt > NOW()');
                 });
             });
 
