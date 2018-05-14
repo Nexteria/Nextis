@@ -58,7 +58,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-            return response()->json([]);
+            return app('App\Http\Controllers\UsersController')->getUsers('me');
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
