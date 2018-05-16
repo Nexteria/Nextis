@@ -49,7 +49,7 @@ function ProfileCard({ ...props }) {
           root: classes.cardHeader,
           avatar: cardAvatarClass
         }}
-        avatar={<img src={avatar} alt="..." className={classes.img} />}
+        avatar={avatar}
       />
       <CardContent className={classes.textAlign + " " + classes.cardContent}>
         {subtitle !== undefined ? (
@@ -83,7 +83,7 @@ ProfileCard.propTypes = {
   description: PropTypes.node,
   content: PropTypes.node,
   footer: PropTypes.node,
-  avatar: PropTypes.string,
+  avatar: PropTypes.node,
   customCardClass: PropTypes.string,
   customCardAvatarClass: PropTypes.string
 };

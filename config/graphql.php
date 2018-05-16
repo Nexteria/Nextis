@@ -22,6 +22,8 @@ use App\GraphQL\Query\UserQuery;
 use App\GraphQL\Query\StudentQuery;
 use App\GraphQL\Query\StudentsQuery;
 
+use App\GraphQL\Mutations\UserProfileMutation;
+
 return [
     'prefix' => 'graphql',
     'routes' => '{graphql_schema?}',
@@ -39,8 +41,9 @@ return [
                 'students' => StudentsQuery::class,
             ],
             'mutation' => [
+                'UpdateUserProfile' => UserProfileMutation::class,
             ],
-            'middleware' => []
+            'middleware' => ['auth']
         ],
     ],
 

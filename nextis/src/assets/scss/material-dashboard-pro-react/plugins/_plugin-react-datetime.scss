@@ -3,6 +3,7 @@
 */
 .rdt {
   position: relative;
+  height: 100%;
   .rdtPicker{
     -webkit-transition: all 150ms linear;
     -moz-transition: all 150ms linear;
@@ -23,7 +24,7 @@
   }
   input.form-control {
     border: 0;
-    background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#D2D2D2, #D2D2D2);
+    background-image: linear-gradient($brand-primary, $brand-primary), linear-gradient(#D2D2D2, #D2D2D2);
     background-size: 0 2px, 100% 1px;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(100% - 1px);
@@ -34,17 +35,18 @@
     border-radius: 0;
     font-weight: 400;
     width: 100%;
-    height: 36px;
+    height: 100%;
     padding: 7px 0;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.428571429;
     display: block;
     width: 100%;
+    padding-top: 28px;
     color: #555;
   }
   input.form-control:focus {
     outline: none;
-    background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#D2D2D2, #D2D2D2);
+    background-image: linear-gradient($brand-primary, $brand-primary), linear-gradient(#D2D2D2, #D2D2D2);
     background-size: 100% 2px, 100% 1px;
     box-shadow: none;
     transition-duration: 0.3s;
@@ -93,7 +95,7 @@
 
 .rdtPicker {
   display: block;
-  top: 40px;
+  top: 60px;
 }
 .rdtStatic .rdtPicker {
   box-shadow: none;
@@ -140,7 +142,7 @@
     .dow{
       border-bottom: 1px solid #E3E3E3;
       text-align: center;
-      font-size: 12px;
+      font-size: 14px;
       text-transform: uppercase;
       font-weight: inherit;
       padding-bottom: 5px;

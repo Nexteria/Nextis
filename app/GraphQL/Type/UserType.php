@@ -60,6 +60,10 @@ class UserType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The users school',
             ],
+            'faculty' => [
+                'type' => Type::string(),
+                'description' => 'The users faculty',
+            ],
             'studyProgram' => [
                 'type' => Type::string(),
                 'description' => 'The user`s study program',
@@ -71,6 +75,18 @@ class UserType extends GraphQLType
             'lectorDescription' => [
                 'type' => Type::string(),
                 'description' => 'The lector description associated with this user',
+            ],
+            'buddyDescription' => [
+                'type' => Type::string(),
+                'description' => 'The buddy description associated with this user',
+            ],
+            'iban' => [
+                'type' => Type::string(),
+                'description' => 'The user`s iban',
+            ],
+            'dateOfBirth' => [
+                'type' => Type::string(),
+                'description' => 'The user`s date of birth',
             ],
             'photo' => [
                 'type' => Type::string(),
@@ -139,5 +155,10 @@ class UserType extends GraphQLType
     public function resolvePaymentsIbanField()
     {
         return \Config::get('constants')['nexteriaIban'];
+    }
+
+    public function resolveDateOfBirthField($root)
+    {
+        return (string) $root->dateOfBirth;
     }
 }

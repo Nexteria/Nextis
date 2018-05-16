@@ -14,6 +14,7 @@
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "history": "^4.7.2",
+    "immutable": "^3.8.2",
     "isomorphic-fetch": "^2.2.1",
     "material-ui": "1.0.0-beta.41",
     "moment": "^2.22.1",
@@ -31,6 +32,7 @@
     "react-jvectormap": "^0.0.3",
     "react-nouislider": "^2.0.1",
     "react-router-dom": "^4.2.2",
+    "react-rte": "^0.16.1",
     "react-scripts": "1.1.4",
     "react-spinkit": "^3.0.0",
     "react-swipeable-views": "^0.12.13",
@@ -38,7 +40,8 @@
     "react-tagsinput": "^3.19.0",
     "react-waterfall": "^3.0.6",
     "recompose": "^0.27.0",
-    "urijs": "^1.19.1"
+    "urijs": "^1.19.1",
+    "validator": "^10.2.0"
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
