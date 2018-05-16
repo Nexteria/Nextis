@@ -209,62 +209,7 @@ class ValidationForms extends React.Component {
         break;
     }
   }
-  registerClick() {
-    if (this.state.registerEmailState === "") {
-      this.setState({ registerEmailState: "error" });
-    }
-    if (this.state.registerPasswordState === "") {
-      this.setState({ registerPasswordState: "error" });
-    }
-    if (this.state.registerConfirmPasswordState === "") {
-      this.setState({ registerConfirmPasswordState: "error" });
-    }
-    if (this.state.registerCheckboxState === "") {
-      this.setState({ registerCheckboxState: "error" });
-    }
-  }
-  loginClick() {
-    if (this.state.loginEmailState === "") {
-      this.setState({ loginEmailState: "error" });
-    }
-    if (this.state.loginPasswordState === "") {
-      this.setState({ loginPasswordState: "error" });
-    }
-  }
-  typeClick() {
-    if (this.state.requiredState === "") {
-      this.setState({ requiredState: "error" });
-    }
-    if (this.state.typeEmailState === "") {
-      this.setState({ typeEmailState: "error" });
-    }
-    if (this.state.numberState === "") {
-      this.setState({ numberState: "error" });
-    }
-    if (this.state.urlState === "") {
-      this.setState({ urlState: "error" });
-    }
-    if (this.state.equalToState === "") {
-      this.setState({ equalToState: "error" });
-    }
-  }
-  rangeClick() {
-    if (this.state.minLengthState === "") {
-      this.setState({ minLengthState: "error" });
-    }
-    if (this.state.maxLengthState === "") {
-      this.setState({ maxLengthState: "error" });
-    }
-    if (this.state.rangeState === "") {
-      this.setState({ rangeState: "error" });
-    }
-    if (this.state.minValueState === "") {
-      this.setState({ minValueState: "error" });
-    }
-    if (this.state.maxValueState === "") {
-      this.setState({ maxValueState: "error" });
-    }
-  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -287,7 +232,7 @@ class ValidationForms extends React.Component {
                   inputProps={{
                     onChange: event =>
                       this.change(event, "registerEmail", "email"),
-                    type: "email"
+                    type: "email",
                   }}
                 />
                 <CustomInput

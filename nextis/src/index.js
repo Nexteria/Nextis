@@ -13,6 +13,8 @@ import "assets/scss/material-dashboard-pro-react.css?v=1.1.0";
 
 import { Provider } from './common/store';
 
+
+import * as moment from 'moment';
 import App from './App';
 
 import registerServiceWorker from './registerServiceWorker';
@@ -28,6 +30,13 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   link,
 });
+
+moment.updateLocale('en', {
+  week: {
+      dow: 1
+  }
+});
+moment.locale('en');
 
 ReactDOM.render(
   <ApolloProvider client={client}>

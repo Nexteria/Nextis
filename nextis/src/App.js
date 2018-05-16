@@ -14,6 +14,7 @@ import request from "common/fetch";
 import Footer from "components/Footer/Footer.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
+import Snackbar from "components/Snackbar/Snackbar.jsx";
 
 import bgImage from "assets/img/register.jpeg";
 import loadingPageStyle from "assets/jss/material-dashboard-pro-react/views/loadingPageStyle.jsx";
@@ -55,7 +56,7 @@ class App extends Component {
   }
 
   render() {
-    const { classes, actions, history, user } = this.props;
+    const { classes, actions, history, user, notifications } = this.props;
 
     return (
       <div>
@@ -94,13 +95,25 @@ class App extends Component {
             <Dashboard />
           </div>
         }
+        {notifications.valueSeq().map(notification =>
+          <Snackbar
+            key={notification.id}
+            place={notification.place}
+            color={notification.color}
+            icon={notification.icon}
+            message={notification.message}
+            open
+            closeNotification={() => actions.removeNotification(notification.id)}
+            close
+          />
+        )}
       </div>
     );
   }
 }
 
 export default compose(
-  connect(state => ({ user: state.user })),
+  connect(state => ({ user: state.user, notifications: state.notifications })),
   withStyles(loadingPageStyle),
   withRouter,
 )(App);

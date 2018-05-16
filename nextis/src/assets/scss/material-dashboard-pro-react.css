@@ -106,7 +106,7 @@
   cursor: pointer;
   border-radius: 100%;
   transition: all 0.2s ease-out;
-  border: 1px solid #9c27b0;
+  border: 1px solid #ff9920;
   background: #FFFFFF;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
 
@@ -126,7 +126,7 @@
   border-radius: 3px; }
 
 .noUi-connect {
-  background: #9c27b0;
+  background: #ff9920;
   border-radius: 3px;
   -webkit-transition: background 450ms;
   transition: background 450ms; }
@@ -278,9 +278,9 @@
 .slider {
   margin-bottom: 15px; }
   .slider.slider-primary .noUi-connect, .slider.slider-primary.noUi-connect {
-    background-color: #9c27b0; }
+    background-color: #ff9920; }
   .slider.slider-primary .noUi-handle {
-    border-color: #9c27b0; }
+    border-color: #ff9920; }
   .slider.slider-info .noUi-connect, .slider.slider-info.noUi-connect {
     background-color: #00bcd4; }
   .slider.slider-info .noUi-handle {
@@ -401,7 +401,8 @@
 * https://github.com/YouCanBookMe/react-datetime
 */
 .rdt {
-  position: relative; }
+  position: relative;
+  height: 100%; }
   .rdt .rdtPicker {
     -webkit-transition: all 150ms linear;
     -moz-transition: all 150ms linear;
@@ -418,7 +419,7 @@
     margin-top: 0; }
   .rdt input.form-control {
     border: 0;
-    background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#D2D2D2, #D2D2D2);
+    background-image: linear-gradient(#ff9920, #ff9920), linear-gradient(#D2D2D2, #D2D2D2);
     background-size: 0 2px, 100% 1px;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(100% - 1px);
@@ -429,16 +430,17 @@
     border-radius: 0;
     font-weight: 400;
     width: 100%;
-    height: 36px;
+    height: 100%;
     padding: 7px 0;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.428571429;
     display: block;
     width: 100%;
+    padding-top: 28px;
     color: #555; }
   .rdt input.form-control:focus {
     outline: none;
-    background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#D2D2D2, #D2D2D2);
+    background-image: linear-gradient(#ff9920, #ff9920), linear-gradient(#D2D2D2, #D2D2D2);
     background-size: 100% 2px, 100% 1px;
     box-shadow: none;
     transition-duration: 0.3s; }
@@ -482,7 +484,7 @@
 
 .rdtPicker {
   display: block;
-  top: 40px; }
+  top: 60px; }
 
 .rdtStatic .rdtPicker {
   box-shadow: none;
@@ -515,14 +517,14 @@
   padding: 0px;
   border-radius: 50%; }
   .rdtDay.rdtToday.rdtActive, .rdtDay.rdtActive, .rdtDay.rdtActive:hover {
-    background-color: #9c27b0 !important;
+    background-color: #ff9920 !important;
     color: #FFFFFF;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4); }
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 153, 32, 0.4); }
 
 .rdtDays tr .dow {
   border-bottom: 1px solid #E3E3E3;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
   font-weight: inherit;
   padding-bottom: 5px;
@@ -582,7 +584,7 @@
 .rdtPicker th.rdtNext,
 .rdtPicker th.rdtPrev,
 .rdtPicker .rdtTimeToggle {
-  color: #9c27b0; }
+  color: #ff9920; }
 
 .rdtPrev span,
 .rdtNext span {
@@ -658,9 +660,9 @@ td.rdtYear:hover {
     border: 1px solid transparent; }
 
 .rdtCounters .rdtCounter:last-child .rdtCount {
-  color: #9c27b0;
+  color: #ff9920;
   border-radius: 50%;
-  border: 1px solid #9c27b0; }
+  border: 1px solid #ff9920; }
 
 .rdtCounterSeparator {
   padding: 7px;
@@ -726,7 +728,7 @@ td.rdtYear:hover {
     .rdtMonths .rdtYear.rdtActive,
     .rdtYears .rdtMonth.rdtActive,
     .rdtYears .rdtYear.rdtActive {
-      background-color: #9c27b0 !important;
+      background-color: #ff9920 !important;
       color: #FFFFFF; }
 
 .sweet-alert:focus {
@@ -935,7 +937,7 @@ button.rbc-input::-moz-focus-inner {
   font-size: 1.8em; }
 
 .rbc-toolbar button {
-  box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14), 0 3px 1px -2px rgba(156, 39, 176, 0.2), 0 1px 5px 0 rgba(156, 39, 176, 0.12);
+  box-shadow: 0 2px 2px 0 rgba(255, 153, 32, 0.14), 0 3px 1px -2px rgba(255, 153, 32, 0.2), 0 1px 5px 0 rgba(255, 153, 32, 0.12);
   border-width: 2px;
   font-weight: 400;
   font-size: 14px;
@@ -952,10 +954,10 @@ button.rbc-input::-moz-focus-inner {
   .open > .rbc-toolbar button.dropdown-toggle,
   .open > .rbc-toolbar button.dropdown-toggle:focus,
   .open > .rbc-toolbar button.dropdown-toggle:hover {
-    background-color: #9c27b0;
+    background-color: #ff9920;
     color: #FFFFFF; }
   .rbc-toolbar button:focus, .rbc-toolbar button:active, .rbc-toolbar button:hover {
-    box-shadow: 0 14px 26px -12px rgba(156, 39, 176, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(156, 39, 176, 0.2); }
+    box-shadow: 0 14px 26px -12px rgba(255, 153, 32, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(255, 153, 32, 0.2); }
   .rbc-toolbar button.disabled, .rbc-toolbar button.disabled:hover, .rbc-toolbar button.disabled:focus, .rbc-toolbar button.disabled.focus, .rbc-toolbar button.disabled:active, .rbc-toolbar button.disabled.active, .rbc-toolbar button:disabled, .rbc-toolbar button:disabled:hover, .rbc-toolbar button:disabled:focus, .rbc-toolbar button:disabled.focus, .rbc-toolbar button:disabled:active, .rbc-toolbar button:disabled.active, .rbc-toolbar button[disabled], .rbc-toolbar button[disabled]:hover, .rbc-toolbar button[disabled]:focus, .rbc-toolbar button[disabled].focus, .rbc-toolbar button[disabled]:active, .rbc-toolbar button[disabled].active,
   fieldset[disabled] .rbc-toolbar button,
   fieldset[disabled] .rbc-toolbar button:hover,
@@ -966,11 +968,11 @@ button.rbc-input::-moz-focus-inner {
     box-shadow: none; }
   .rbc-toolbar button.btn-simple {
     background-color: transparent;
-    color: #9c27b0;
+    color: #ff9920;
     box-shadow: none; }
     .rbc-toolbar button.btn-simple:hover, .rbc-toolbar button.btn-simple:focus, .rbc-toolbar button.btn-simple:active {
       background-color: transparent;
-      color: #9c27b0; }
+      color: #ff9920; }
 
 .rbc-toolbar button:focus {
   outline: none; }
@@ -984,12 +986,12 @@ button.rbc-input::-moz-focus-inner {
 .rbc-event {
   cursor: pointer;
   padding: 2px 5px;
-  background-color: #9c27b0;
+  background-color: #ff9920;
   border-radius: 5px;
   color: #fff; }
 
 .rbc-event.rbc-selected {
-  background-color: #9c27b0; }
+  background-color: #ff9920; }
 
 .rbc-event-label {
   font-size: 80%; }
@@ -1238,7 +1240,7 @@ button.rbc-input::-moz-focus-inner {
   position: relative; }
 
 .rbc-day-slot .rbc-event {
-  border: 1px solid #9c27b0;
+  border: 1px solid #ff9920;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -2136,7 +2138,7 @@ button.rbc-input::-moz-focus-inner {
       background-color: transparent;
       color: #FFFFFF; }
   .react-tagsinput .react-tagsinput-tag.primary {
-    background-color: #9c27b0;
+    background-color: #ff9920;
     color: #FFFFFF; }
   .react-tagsinput .react-tagsinput-tag.info {
     background-color: #00bcd4;

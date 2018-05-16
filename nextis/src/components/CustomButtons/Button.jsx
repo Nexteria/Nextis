@@ -57,6 +57,7 @@ RegularButton.propTypes = {
     "warningNoBackground",
     "dangerNoBackground",
     "roseNoBackground",
+    "nexteriaOrange",
     "nexteriaOrangeNoBackground",
     "twitter",
     "twitterNoBackground",

@@ -3,6 +3,7 @@ import Events from "views/Events/Events.jsx";
 import Contacts from "views/Contacts/Contacts.jsx";
 import ActivityPoints from "views/ActivityPoints/ActivityPoints.jsx";
 import Payments from "views/Payments/Payments.jsx";
+import Profile from "views/Profile/Profile.jsx";
 
 
 // @material-ui/icons
@@ -17,14 +18,22 @@ var dashRoutes = [
     path: "/dashboard",
     name: "Prehľad",
     icon: DashboardIcon,
-    component: Dashboard
+    component: Dashboard,
+    showInMenu: true,
+  },
+  {
+    path: "/my-profile",
+    name: "Môj profil",
+    component: Profile,
+    showInMenu: false,
   },
   {
     path: "/events",
     name: "Eventy",
     state: "openEvents",
     icon: CardTravel,
-    component: Events
+    component: Events,
+    showInMenu: true,
   },
   {
     path: "/activity-points/:semesterId?",
@@ -32,21 +41,24 @@ var dashRoutes = [
     name: "Aktivity body",
     state: "openActivityPoints",
     icon: Accessibility,
-    component: ActivityPoints
+    component: ActivityPoints,
+    showInMenu: true,
   },
   {
     path: "/payments",
     name: "Štúdijné poplatky",
     state: "openPayments",
     icon: Assignment,
-    component: Payments
+    component: Payments,
+    showInMenu: true,
   },
   {
     path: "/contacts",
     name: "Kontakty",
     state: "openContacts",
     icon: ContactsIcon,
-    component: Contacts
+    component: Contacts,
+    showInMenu: true,
   },
 ];
 export default dashRoutes;
