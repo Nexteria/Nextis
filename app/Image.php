@@ -31,7 +31,7 @@ class Image extends Model
 
         $file = $attributes['file'];
         $token = bin2hex(openssl_random_pseudo_bytes(16));
-        $extension = \Input::file('file')->getClientOriginalExtension();
+        $extension = $file->getClientOriginalExtension();
         $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
         
         $name = $token. '_' .$timestamp.'.'.$extension;
@@ -47,5 +47,10 @@ class Image extends Model
     public function owner()
     {
         return $this->hasOne('App\User', 'ownerId');
+    }
+
+    public function getFilePathAttribute($value)
+    {
+        return env('APP_URL').$value;
     }
 }

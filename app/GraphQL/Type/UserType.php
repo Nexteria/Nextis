@@ -88,17 +88,9 @@ class UserType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The user`s date of birth',
             ],
-            'photo' => [
-                'type' => Type::string(),
-                'description' => 'The url of the photo of the user',
-                'resolve' => function ($root, $args) {
-                    if ($root->profilePicture) {
-                        return $root->profilePicture->filePath;
-                    }
-
-                    return null;
-                },
-                'selectable' => false,
+            'profilePicture' => [
+                'type' => GraphQL::type('image'),
+                'description' => 'The user profile picture',
             ],
             'paymentsIban' => [
                 'type' => Type::string(),

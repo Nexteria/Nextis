@@ -136,7 +136,7 @@ class Sidebar extends React.Component {
       var userSection = (
       <div className={userWrapperClass}>
         <div className={photo}>
-          <img src={avatar} className={classes.avatarImg} alt="..." />
+          <img src={user.profilePicture ? user.profilePicture.filePath : avatar} className={classes.avatarImg} alt="..." />
         </div>
         <List className={classes.list}>
           <ListItem className={classes.item + " " + classes.userItem}>

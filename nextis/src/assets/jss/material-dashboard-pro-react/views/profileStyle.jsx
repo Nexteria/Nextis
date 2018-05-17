@@ -65,7 +65,7 @@ const profileStyle = {
   },
   img: {
     width: "100%",
-    height: "auto",
+    height: '100%',
     verticalAlign: "middle",
     border: "0"
   },
@@ -82,6 +82,34 @@ const profileStyle = {
       marginBottom: 0,
     },
     width: '12em',
+  },
+  avatarContainer: {
+    position: 'relative',
+    width: '130px',
+    height: '130px',
+  },
+  avatarChangeButton: {
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    width: '100%',
+  },
+  confirmButtonContainer: {
+    position: 'absolute',
+    left: '20%',
+    top: '65%',
+    '& button': {
+      display: 'inline',
+      width: '30px',
+      height: '30px',
+      minWidth: '30px',
+      margin: '5px',
+      '& > span': {
+        position: 'relative',
+        top: '-7px',
+        left: '0px',
+      }
+    },
   },
 };
 

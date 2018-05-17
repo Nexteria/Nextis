@@ -24,7 +24,7 @@ class UserTransformer extends Transformer
             'studentId' => $user->student ? $user->student->id : null,
             'linkedinLink' => $user->linkedinLink,
             'personalDescription' => $user->personalDescription ? $user->personalDescription : '',
-            'photo' => $user->photo,
+            'profilePicture' => $user->profilePicture,
             'actualJobInfo' => $user->actualJobInfo,
             'school' => $user->school,
             'faculty' => $user->faculty,

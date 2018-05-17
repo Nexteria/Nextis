@@ -61,7 +61,7 @@ class UserInfoModal extends React.Component {
           className={classes.modalHeader}
         >
           <div className={classes.cardAvatar}>
-            <img src={user.photo || avatar} className={classes.img} alt="..." />
+            <img src={user.profilePicture ? user.profilePicture.filePath : avatar} className={classes.img} alt="..." />
           </div>
           <h3 className={classes.userName}>{user.firstName} {user.lastName}</h3>
         </DialogTitle>
@@ -190,7 +190,10 @@ query FetchUser ($userId: Int) {
     lastName
     email
     phone
-    photo
+    profilePicture {
+      id
+      filePath
+    }
     personalDescription
     facebookLink
     linkedinLink
@@ -199,7 +202,9 @@ query FetchUser ($userId: Int) {
     studyProgram
     studyYear
     student {
+      id
       level {
+        id
         name
       }
     }

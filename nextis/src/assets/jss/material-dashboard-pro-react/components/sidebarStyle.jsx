@@ -477,6 +477,7 @@ const sidebarStyle = theme => ({
   },
   avatarImg: {
     width: "100%",
+    height: "100%",
     verticalAlign: "middle",
     border: "0"
   },

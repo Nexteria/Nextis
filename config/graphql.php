@@ -15,6 +15,7 @@ use App\GraphQL\Type\QuestionFormType;
 use App\GraphQL\Type\SemesterType;
 use App\GraphQL\Type\PaymentType;
 use App\GraphQL\Type\PaymentCategoryType;
+use App\GraphQL\Type\ImageType;
 
 use App\GraphQL\Query\EventsQuery;
 use App\GraphQL\Query\EventQuery;
@@ -23,11 +24,12 @@ use App\GraphQL\Query\StudentQuery;
 use App\GraphQL\Query\StudentsQuery;
 
 use App\GraphQL\Mutations\UserProfileMutation;
+use App\GraphQL\Mutations\UserProfilePhotoMutation;
 
 return [
     'prefix' => 'graphql',
     'routes' => '{graphql_schema?}',
-    'controllers' => \Rebing\GraphQL\GraphQLController::class . '@query',
+    'controllers' => \App\Http\Controllers\GraphQLController::class . '@query',
     'middleware' => [],
     'default_schema' => 'default',
 
@@ -42,6 +44,7 @@ return [
             ],
             'mutation' => [
                 'UpdateUserProfile' => UserProfileMutation::class,
+                'UpdateUserProfilePhoto' => UserProfilePhotoMutation::class,
             ],
             'middleware' => ['auth']
         ],
@@ -63,6 +66,7 @@ return [
         'semester' => SemesterType::class,
         'payment' => PaymentType::class,
         'paymentCategory' => PaymentCategoryType::class,
+        'image' => ImageType::class,
     ],
 
     'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],
