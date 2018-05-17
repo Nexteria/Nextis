@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import { compose } from 'recompose';
 import { connect } from "common/store";
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import Spinner from 'react-spinkit';
 
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
@@ -94,7 +97,11 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { classes, history, user, ...rest } = this.props;
+    const { classes, history, data, ...rest } = this.props;
+
+    if (data.loading) {
+      return <Spinner name='line-scale-pulse-out' />;
+    }
 
     const mainPanel =
       classes.mainPanel +
@@ -120,8 +127,8 @@ class Dashboard extends React.Component {
           bgColor="black"
           miniActive={this.state.miniActive}
           location={this.props.location}
-          user={user}
           {...rest}
+          user={data.user}
         />
         <div className={mainPanel} ref="mainPanel">
           <Header
@@ -151,8 +158,31 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
+const userQuery = gql`
+query FetchUser ($id: Int){
+  user (id: $id){
+    id
+    firstName
+    lastName
+    profilePicture {
+      id
+      filePath
+    }
+  }
+}
+`;
+
+
 export default compose(
   connect(state => ({ user: state.user, student: state.student })),
   withStyles(appStyle),
+  graphql(userQuery, {
+    options: props => ({
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        id: props.user.id,
+      },
+    })
+  }),
   withRouter,
 )(Dashboard);

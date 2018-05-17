@@ -5,7 +5,7 @@ import { Route, Router } from "react-router-dom";
 import request from "common/fetch";
 
 import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client'
 import { ApolloProvider } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
@@ -20,7 +20,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 const hist = createBrowserHistory();
 
-const link = createHttpLink({
+const link = createUploadLink({
   uri: '/graphql',
   credentials: 'same-origin',
   fetch: request,

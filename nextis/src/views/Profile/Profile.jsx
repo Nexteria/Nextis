@@ -22,9 +22,9 @@ import CustomInput from "components/CustomInput/CustomInput.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import ProfileCard from "components/Cards/ProfileCard.jsx";
 import CustomEditor, { stateFromHTML } from "components/CustomEditor/CustomEditor.jsx";
+import ProfileAvatarForm from "views/Profile/ProfileAvatarForm.jsx";
 
 import profileStyle from "assets/jss/material-dashboard-pro-react/views/profileStyle.jsx";
-import avatarImg from "assets/img/faces/marc.jpg";
 
 const formItems = [
   {label: 'Meno *', type: 'text', component: 'input', id: 'firstName', validation: ['required']},
@@ -205,15 +205,15 @@ class Profile extends React.Component {
     }
 
     const { classes, data } = this.props;
-
-    const avatar = <img src={avatarImg} alt="..." className={classes.img} />;
     const user = data.user;
 
     return (
       <GridContainer justify="center">
         <ItemGrid xs={12} sm={12} md={10} lg={8}>
           <ProfileCard
-            avatar={avatar}
+            avatar={
+              <ProfileAvatarForm photoUrl={user.profilePicture ? user.profilePicture.filePath : null} classes={classes} />
+            }
             subtitle={user.actualJobPosition || ""}
             title={`${user.firstName} ${user.lastName}`}
             content={
@@ -301,7 +301,10 @@ query FetchStudents ($id: Int) {
     lastName
     email
     phone
-    photo
+    profilePicture {
+      id
+      filePath
+    }
     facebookLink
     linkedinLink
     actualJobInfo
@@ -351,7 +354,10 @@ const userMutation = gql`
       lastName
       email
       phone
-      photo
+      profilePicture {
+        id
+        filePath
+      }
       facebookLink
       linkedinLink
       actualJobInfo
