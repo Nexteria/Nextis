@@ -53,12 +53,15 @@ export default function fetch(input, init) {
     delete init['notifications'];
   }
 
+  if (!init.hasOwnProperty('disableCredentials')) {
+    init['credentials'] = 'same-origin';
+  }
+
   if (!init.hasOwnProperty('headers')) {
     init['headers'] = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Credentials': 'same-origin',
     };
   }
 
