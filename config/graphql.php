@@ -30,7 +30,7 @@ return [
     'prefix' => 'graphql',
     'routes' => '{graphql_schema?}',
     'controllers' => \App\Http\Controllers\GraphQLController::class . '@query',
-    'middleware' => [],
+    'middleware' => ['web', 'auth'],
     'default_schema' => 'default',
 
     'schemas' => [
