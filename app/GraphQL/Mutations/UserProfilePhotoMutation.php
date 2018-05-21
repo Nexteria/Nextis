@@ -4,7 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use GraphQL;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Upload\UploadType;
+use Rebing\GraphQL\Support\UploadType;
 use Rebing\GraphQL\Support\Mutation;
 use App\User;
 use App\Image;
@@ -27,7 +27,7 @@ class UserProfilePhotoMutation extends Mutation
             'profilePicture' => [
                 'name' => 'profilePicture',
                 'type' => new UploadType(),
-                'rules' => ['required', 'image', 'size:1000'],
+                'rules' => ['required', 'image', 'max:1500'],
             ],
         ];
     }
@@ -40,8 +40,7 @@ class UserProfilePhotoMutation extends Mutation
             return null;
         }
 
-        $file = request()->file()[0];
-        \Log::error($file);
+        $file = $args['profilePicture'];
 
         $data = [
             'file' => $file,

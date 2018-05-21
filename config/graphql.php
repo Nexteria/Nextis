@@ -29,7 +29,7 @@ use App\GraphQL\Mutations\UserProfilePhotoMutation;
 return [
     'prefix' => 'graphql',
     'routes' => '{graphql_schema?}',
-    'controllers' => \App\Http\Controllers\GraphQLController::class . '@query',
+    'controllers' => \Rebing\GraphQL\GraphQLController::class . '@query',
     'middleware' => ['web', 'auth'],
     'default_schema' => 'default',
 
