@@ -24,7 +24,6 @@ const link = createUploadLink({
   uri: '/graphql',
   credentials: 'same-origin',
   headers: {
-    'Content-Type': 'application/json',
     'accept': 'application/json',
     'Access-Control-Allow-Origin': '*',
   },

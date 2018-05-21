@@ -1,9 +1,15 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "nexteria/nextis",
+    "description": "Nexteria system.",
+    "keywords": ["nexteria", "space"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ddeath/graphql-laravel.git"
+        }
+    ],
     "require": {
         "laravel/framework": "5.3.*",
         "laravelcollective/html": "5.3.*",
@@ -22,11 +28,8 @@
         "propaganistas/laravel-intl": "^1.2",
         "faustbrian/laravel-commentable": "2.1.4",
         "intervention/image": "^2.4",
-        "rebing/graphql-laravel": "^1.9",
         "barryvdh/laravel-cors": "^0.11.0",
-        "ecodev/graphql-upload": "^2.0",
-        "symfony/psr-http-message-bridge": "^1.0",
-        "zendframework/zend-diactoros": "^1.7"
+        "rebing/graphql-laravel": "dev-feature-upload-files"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
