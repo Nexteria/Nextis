@@ -147,8 +147,7 @@ class Student extends Model
             ->whereNull('filledFeedback')
             ->pluck('id');
         
-        $terms = NxEventTerm::whereRaw('nx_event_terms.feedbackDeadlineAt > NOW()')
-            ->whereNotNull('nx_event_terms.feedbackOpenAt')
+        $terms = NxEventTerm::whereNotNull('nx_event_terms.feedbackOpenAt')
             ->whereNotNull('publicFeedbackLink')
             ->whereHas('attendees', function ($query) use ($attendeeIds) {
                 $query->whereIn('attendeeId', $attendeeIds)

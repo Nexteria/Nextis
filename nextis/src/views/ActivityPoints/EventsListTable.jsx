@@ -4,13 +4,19 @@ import gql from 'graphql-tag';
 import { compose } from 'recompose';
 import { withRouter } from "react-router-dom";
 import Spinner from 'react-spinkit';
+import isPast from 'date-fns/is_past';
+import isAfter from 'date-fns/is_after';
+import parse from 'date-fns/parse';
+
 
 // material-ui icons
 import Done from "@material-ui/icons/Done";
+import Warning from "@material-ui/icons/Warning";
 import Clear from "@material-ui/icons/Clear";
 
 // core components
 import Table from "components/Table/Table.jsx";
+import Tooltip from 'material-ui/Tooltip';
 
 
 class EventsListTable extends React.Component {
@@ -22,6 +28,37 @@ class EventsListTable extends React.Component {
 
   handleNotesButtonClick(pointsId) {
     this.props.history.push(`/activity-points/${this.props.semesterId}/points/${pointsId}`);
+  }
+
+  getFeedbackIcon(attendee, classes) {
+    if (!attendee.filledFeedback) {
+      return <Clear className={classes.negative} />;
+    }
+
+    const wasLate = attendee.terms.some(term => {
+      const termAttendee = term.attendees[0];
+      if (termAttendee.signedIn && termAttendee.wasPresent && termAttendee.feedbackDeadlineAt) {
+        const feedbackDeadlineAt = parse(termAttendee.feedbackDeadlineAt);
+
+        if (isPast(feedbackDeadlineAt)) {
+          const filledFeedback = parse(termAttendee.filledFeedback);
+          if (isAfter(filledFeedback, feedbackDeadlineAt)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+
+    if (!wasLate) {
+      return <Done className={classes.positive} />;
+    } else {
+      return (
+        <Tooltip id="tooltip-icon" title="Feedback vyplnený po deadline">
+          <Warning className={classes.warning} aria-label="Feedback vyplnený po deadline" />
+        </Tooltip>
+      );
+    }
   }
 
   render() {
@@ -60,7 +97,7 @@ class EventsListTable extends React.Component {
               attendee.event.name,
               attendee.event.activityPoints,
               attendee.wasPresent ? <Done className={classes.positive} /> : <Clear className={classes.negative} />,
-              attendee.filledFeedback ? <Done className={classes.positive} /> : <Clear className={classes.negative} />
+              this.getFeedbackIcon(attendee, classes)
             ]
           )}
         />
@@ -84,6 +121,16 @@ query FetchUser ($id: Int, $semesterId: Int){
         activityPoints
         parentEvent {
           id
+        }
+      }
+      terms {
+        id
+        attendees (userId: $id) {
+          id
+          signedIn
+          filledFeedback
+          feedbackDeadlineAt
+          wasPresent
         }
       }
     }

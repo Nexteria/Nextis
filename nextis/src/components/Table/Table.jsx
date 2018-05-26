@@ -123,7 +123,7 @@ function CustomTable({ ...props }) {
             const shadedClass = prop.shaded && prop.shaded !== "" ? classes.shadedRow : "";
 
             return (
-              <TableRow key={key} hover={hover} className={classes.tableRow + " " + tableRowClasses + " " + shadedClass}>
+              <TableRow key={key} hover={hover} className={classes.tableRow + " " + tableRowClasses + " " + shadedClass + " " + prop.className}>
                 {data.map((prop, key) => {
                   const tableCellClasses =
                     classes.tableCell +
@@ -172,7 +172,7 @@ CustomTable.propTypes = {
     "rose",
     "gray"
   ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string),
+  tableHead: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.node])),
   // Of(PropTypes.arrayOf(PropTypes.node)) || Of(PropTypes.object),
   tableData: PropTypes.array,
   hover: PropTypes.bool,

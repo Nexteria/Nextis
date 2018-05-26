@@ -46,7 +46,7 @@ var dashRoutes = [
   },
   {
     path: "/payments",
-    name: "Štúdijné poplatky",
+    name: "Členské",
     state: "openPayments",
     icon: Assignment,
     component: Payments,

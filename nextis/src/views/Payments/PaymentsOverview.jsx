@@ -24,7 +24,7 @@ export default class PaymentsOverview extends React.Component {
             iconColor="orange"
             title={
               <Typography component="div" className={classes.cardCategory}>
-                <div>IBAN pre platby</div>
+                <div>IBAN pre členské</div>
               </Typography>
             }
             content={<div className={classes.center}>{user.paymentsIban}</div>}
@@ -55,7 +55,7 @@ export default class PaymentsOverview extends React.Component {
             iconColor="orange"
             title={
               <Typography component="div" className={classes.cardCategory}>
-                <div>Mesačné školné</div>
+                <div>Mesačné členské</div>
               </Typography>
             }
             content={

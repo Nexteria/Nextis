@@ -111,6 +111,7 @@ class Overview extends React.Component {
       badgeIcon: HelpOutline,
       title: event.name,
       titleColor: color,
+      inverted: true,
       subtitle,
       body: (
         <p dangerouslySetInnerHTML={{ __html: event.shortDescription }}></p>
@@ -121,18 +122,27 @@ class Overview extends React.Component {
         <div className={classes.timelineButtonContainer}>
           <GridContainer>
             <ItemGrid xs={12} md={9}>
-              <Button disabled color={isMultiMeeting ? color : null} customClass={classes.actionButton}>
-                <ExposurePlus2 />
-                <div className={classes.indicatorButtonText}>Viacdielny</div>
-              </Button>
-              <Button disabled color={hasAlternatives ? color : null} customClass={classes.actionButton}>
+              {isMultiMeeting ?
+                <Button disabled color={color} customClass={classes.actionButton}>
+                  <ExposurePlus2 />
+                  <div className={classes.indicatorButtonText}>Viacdielny</div>
+                </Button>
+                : null
+              }
+              {hasAlternatives ? 
+              <Button disabled color={color} customClass={classes.actionButton}>
                 <CallSplit />
                 <div className={classes.indicatorButtonText}>Vyber si termín</div>
               </Button>
-              <Button disabled color={hasEventChoices ? color : null} customClass={classes.actionButton}>
+                : null
+              }
+              {hasEventChoices ? 
+              <Button disabled color={color} customClass={classes.actionButton}>
                 <Error />
                 <div className={classes.indicatorButtonText}>Alternatíva</div>
               </Button>
+                : null
+              }
             </ItemGrid>
             <ItemGrid xs={12} md={3} className={classes.infoButtonContainer}>
               <Button color={color} customClass={classes.actionButton + " " + classes.infoButton}>
@@ -164,10 +174,6 @@ class Overview extends React.Component {
 
     let events = [...this.props.data.events].filter(event => event.status === 'published').map(event => this.transformEvent(event, classes));
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
-    events = events.map((event, index) => {
-      event.inverted = index % 2 === 1;
-      return event;
-    });
 
     return (
         <GridContainer>
@@ -176,7 +182,7 @@ class Overview extends React.Component {
               plainCard
               customCardClasses={classes.noTopMarginCard}
               content={
-                <Timeline stories={events} />
+                <Timeline simple stories={events} />
               }
             />
           </ItemGrid>

@@ -113,8 +113,8 @@ class NxEventTermType extends GraphQLType
                 'selectable' => false,
             ],
             'attendees' => [
-                'type' => Type::listOf(GraphQL::type('NxEventAttendee')),
-                'description' => 'The event`s attendees',
+                'type' => Type::listOf(GraphQL::type('NxTermAttendee')),
+                'description' => 'The term`s attendees',
                 'args' => [
                     'userId' => [
                         'type' => Type::int(),

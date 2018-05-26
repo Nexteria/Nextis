@@ -7,6 +7,7 @@ import {
     cardHeader,
     defaultFont,
     orangeCardHeader,
+    nexteriaOrangeColor,
     greenCardHeader,
     redCardHeader,
     blueCardHeader,
@@ -137,7 +138,10 @@ import {
     },
     negative: {
       color: dangerColor,
-    }
+    },
+    warning: {
+      color: nexteriaOrangeColor,
+    },
   });
   
   export default pointsCardStyle;
