@@ -35,6 +35,14 @@ class StudentType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The last name of the student',
             ],
+            'startingYear' => [
+                'type' => Type::int(),
+                'description' => 'The year where student start study in Nexteria',
+            ],
+            'endYear' => [
+                'type' => Type::int(),
+                'description' => 'The year where student ends study in Nexteria',
+            ],
             'user' => [
                 'type' => GraphQL::type('user'),
                 'description' => 'User associated with this student',

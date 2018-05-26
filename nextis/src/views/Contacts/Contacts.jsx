@@ -95,7 +95,7 @@ class Contacts extends React.Component {
     const data = students.map(student => ({
       name: `${student.lastName} ${student.firstName}`,
       email: student.user.email || "",
-      level: student.level.name,
+      level: `${student.level.name} (${student.startingYear} - ${student.endYear || " "})`,
       phone: this.formatPhone(student.user.phone),
       actions: (
         <div className={window.innerWidth > 600 ? "actions-right" : "actions-center"}>
@@ -159,6 +159,8 @@ query FetchStudents ($status: String) {
     id
     firstName
     lastName
+    startingYear
+    endYear
     level {
       name
     }
