@@ -40,9 +40,7 @@ class Events extends React.Component {
               tabButtonSubtitle: "feedback",
               tabIcon: FeedbackIcon,
               tabContent: (
-              <RegularCard
-                content={<Actions />}
-              />
+                <Actions />
               )
             },
             {

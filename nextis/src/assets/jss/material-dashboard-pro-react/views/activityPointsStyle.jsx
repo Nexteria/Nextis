@@ -1,6 +1,7 @@
 import {
   successColor,
-  dangerColor
+  dangerColor,
+  nexteriaOrangeColor
 } from "assets/jss/material-dashboard-pro-react.jsx";
 
 const activityPointsStyle = {
@@ -9,6 +10,9 @@ const activityPointsStyle = {
   },
   negative: {
     color: dangerColor,
+  },
+  warning: {
+    color: nexteriaOrangeColor,
   },
   semesterSelector: {
     marginBottom: '1em',

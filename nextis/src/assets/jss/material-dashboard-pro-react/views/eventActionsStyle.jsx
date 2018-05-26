@@ -99,9 +99,29 @@ const eventActionsStyle = {
   durationField: {
     minWidth: '9em',
   },
-  feedbackTitle: {
-      marginTop: '2em',
+  positiveTermRow: {
   },
+  warningTermRow: {
+    backgroundColor: '#ff98008c',
+  },
+  emergencyTermRow: {
+    backgroundColor: '#f443367a',
+  },
+  positiveDeadline: {
+
+  },
+  warningDeadline: {
+    fontWeight: 400,
+  },
+  emergencyDeadline: {
+    fontWeight: 'bold',
+  },
+  deadlineIcon: {
+    fill: '#3a3a3a',
+    position: 'relative',
+    top: '5px',
+    left: '10px',
+  }
 };
 
 export default eventActionsStyle;

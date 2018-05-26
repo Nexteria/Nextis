@@ -2,6 +2,7 @@
 
 use App\GraphQL\Type\EventType;
 use App\GraphQL\Type\NxEventTermType;
+use App\GraphQL\Type\NxTermAttendeeType;
 use App\GraphQL\Type\NxEventAttendeeType;
 use App\GraphQL\Type\NxEventAttendeeGroupType;
 use App\GraphQL\Type\NxLocationType;
@@ -53,6 +54,7 @@ return [
     'types' => [
         'event' => EventType::class,
         'NxEventTerm' => NxEventTermType::class,
+        'NxTermAttendee' => NxTermAttendeeType::class,
         'NxEventAttendee' => NxEventAttendeeType::class,
         'NxEventAttendeeGroup' => NxEventAttendeeGroupType::class,
         'QuestionForm' => QuestionFormType::class,

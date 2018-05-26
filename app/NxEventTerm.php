@@ -59,7 +59,17 @@ class NxEventTerm extends Model implements AuditableContract
     public function attendees()
     {
         return $this->belongsToMany('App\NxEventAttendee', 'nx_event_attendees_nx_event_terms', 'termId', 'attendeeId')
-                    ->withPivot(['signedIn', 'signedOut', 'wontGo', 'signedOutReason', 'standIn', 'wasPresent', 'filledFeedback']);
+                    ->withPivot([
+                        'id',
+                        'signedIn',
+                        'signedOut',
+                        'wontGo',
+                        'signedOutReason',
+                        'standIn',
+                        'wasPresent',
+                        'filledFeedback',
+                        'feedbackDeadlineAt',
+                    ]);
     }
 
     public function host()

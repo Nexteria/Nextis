@@ -1,4 +1,7 @@
 import React from "react";
+import isPast from 'date-fns/is_past';
+import isAfter from 'date-fns/is_after';
+import parse from 'date-fns/parse';
 
 
 // @material-ui/icons
@@ -15,12 +18,46 @@ import StatsCard from "components/Cards/StatsCard.jsx";
 class ActivityPointsStatsCards extends React.Component {
   transformEventWord(count) {
     if (count === 1) {
-      return 'event';
+      return 'aktivitu';
     } else if (count === 0 || count > 4) {
-      return 'event-ov';
+      return 'aktivity';
     } else {
-      return 'event-y';
+      return 'aktivít';
     }
+  }
+
+  computeUnfinishedEventPoints(events) {
+    return events.reduce((reduction, event) => {
+      let activityPoints = event.activityPoints;
+
+      event.attendees.some(attendee => {
+        if (attendee.signedIn) {
+          return attendee.terms.some(term => {
+            const termAttendee = term.attendees[0];
+
+            const feedbackDeadlineAt = parse(termAttendee.feedbackDeadlineAt);
+
+            if (isPast(feedbackDeadlineAt)) {
+              if (!termAttendee.filledFeedback) {
+                activityPoints = Math.floor(activityPoints * 0.9);
+                return true;
+              } else {
+                const filledFeedback = parse(termAttendee.filledFeedback);
+                if (isAfter(filledFeedback, feedbackDeadlineAt)) {
+                  activityPoints = Math.floor(activityPoints * 0.9);
+                  return true;
+                }
+              }
+            }
+            return false;
+          });
+        }
+
+        return false;
+      });
+
+      return reduction + activityPoints
+    }, 0);
   }
 
   render() {
@@ -29,7 +66,7 @@ class ActivityPointsStatsCards extends React.Component {
     const isBelowMinimum = activityPointsInfo.gained < activityPointsInfo.minimum;
 
     const eventsForSignInPoints = openEventsForSignin.reduce((reduction, event) => reduction + event.activityPoints, 0);
-    const unfinishedEventsPoints = unfinishedEvents.reduce((reduction, event) => reduction + event.activityPoints, 0);
+    const unfinishedEventsPoints = this.computeUnfinishedEventPoints(unfinishedEvents);
 
     return (
       <GridContainer justify="center">
@@ -56,8 +93,8 @@ class ActivityPointsStatsCards extends React.Component {
           <StatsCard
             icon={Accessibility}
             iconColor="orange"
-            title="Možné body za eventy na ktoré si prihlásený/á"
-            description={`+ ${unfinishedEventsPoints}`}
+            title="Možné body po absolvovaní aktivít, na ktoré si prihlásený/á"
+            description={`${unfinishedEventsPoints + activityPointsInfo.gained} / ${activityPointsInfo.base}`}
             statIcon={Warning}
             descriptionColor={'gray'}
             smallColor={'gray'}
@@ -68,8 +105,8 @@ class ActivityPointsStatsCards extends React.Component {
           <StatsCard
             icon={Accessibility}
             iconColor="orange"
-            title="Možné body za aktivity na ktoré sa môžeš prihlásiť"
-            description={`+ ${eventsForSignInPoints}`}
+            title="Možné body po absolvovaní aktivít, na ktoré sa môžeš prihlásiť"
+            description={`${unfinishedEventsPoints + activityPointsInfo.gained + eventsForSignInPoints} / ${activityPointsInfo.base}`}
             statIcon={Warning}
             descriptionColor={'gray'}
             smallColor={'gray'}

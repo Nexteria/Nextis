@@ -6,16 +6,20 @@ import { compose } from 'recompose';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
 import Spinner from 'react-spinkit';
+import differenceInHours from 'date-fns/difference_in_hours';
 
 // material-ui components
 import withStyles from "material-ui/styles/withStyles";
 
 // material-ui icons
 import Info from "@material-ui/icons/Info";
+import Warning from "@material-ui/icons/Warning";
 
 // core components
 import Table from "components/Table/Table.jsx";
+import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
+import Tooltip from 'material-ui/Tooltip';
 
 import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eventActionsStyle.jsx";
 
@@ -69,8 +73,10 @@ class Actions extends React.Component {
     const startDateTimeString = format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm');
     const endDateTimeString = format(parse(term.eventEndDateTime), 'DD.MM.YYYY o HH:mm');
 
-    const feedbackDeadline = format(parse(term.feedbackDeadlineAt), 'DD.MM.YYYY o HH:mm');
+    const feedbackDeadlineAt = parse(term.attendees[0].feedbackDeadlineAt);
+    const feedbackDeadline = format(feedbackDeadlineAt, 'DD.MM.YYYY o HH:mm');
     const fillButtons = [
+      { color: "info", icon: Info },
       { color: "info", text: 'Feedback' }
     ].map((prop, key) => {
       return (
@@ -89,14 +95,28 @@ class Actions extends React.Component {
       );
     });
 
+    let termRowClassName = classes.positiveTermRow;
+    let termDeadlineClassName = classes.positiveDeadline;
+
+    const diffInHours = differenceInHours(feedbackDeadlineAt, new Date());
+    if (diffInHours < 72 && diffInHours > 25) {
+      termRowClassName = classes.warningTermRow;
+      termDeadlineClassName = classes.warningDeadline;
+    } else if (diffInHours <= 25) {
+      termRowClassName = classes.emergencyTermRow;
+      termDeadlineClassName = classes.emergencyDeadline;
+    }
+
+
     return {
+      className: termRowClassName,
       data: [
         term.event.name,
         <div>
           <div>{startDateTimeString}</div>
           <div>{endDateTimeString}</div>
         </div>,
-        feedbackDeadline,
+        <span className={termDeadlineClassName}>{feedbackDeadline}</span>,
         fillButtons
       ]
     };
@@ -116,6 +136,53 @@ class Actions extends React.Component {
 
     return (
       <div>
+        <h3>Feedback</h3>
+        <RegularCard
+          content={
+            termsForFeedback.length ?
+              <Table
+                tableHead={[
+                  "Názov eventu",
+                  "Trvanie",
+                  <Tooltip
+                    placement="top"
+                    id="tooltip-icon"
+                    title="Vyplnenie feedbacku po deadline je penalizované strhnutím časti bodov!"
+                  >
+                    <div>
+                      <span>Deadline na vyplnenie</span>
+                      <Warning className={classes.deadlineIcon}/>
+                    </div>
+                  </Tooltip>,
+                  "Akcie"
+                ]}
+                tableData={
+                  [...termsForFeedback].sort((a, b) => {
+                    return a.attendees[0].feedbackDeadlineAt.localeCompare(b.attendees[0].feedbackDeadlineAt);
+                  }).map(term =>
+                    this.transformFeedbackTerm(term, classes)
+                  )
+                }
+                customCellClasses={[
+                  classes.left,
+                  classes.center,
+                  classes.center,
+                  classes.center,
+                ]}
+                customClassesForCells={[0, 1, 2, 3]}
+                customHeadCellClasses={[
+                  classes.left,
+                  classes.center + " " + classes.durationField,
+                  classes.center,
+                  classes.center + " " + classes.actionButtons,
+                ]}
+                customHeadClassesForCells={[0, 1, 2, 3]}
+              />
+              :
+              <h4 className={classes.center}>Dobrá práca! Momentálne nemáš žiadny nevyplnený feedback!</h4>
+          }
+        />
+
         <h3>Prihlasovanie</h3>
         <Table
           tableHead={[
@@ -127,37 +194,6 @@ class Actions extends React.Component {
           tableData={
             [...openEventsForSignin].map(event =>
               this.transformEvent(event, classes)
-            )
-          }
-          customCellClasses={[
-            classes.left,
-            classes.center,
-            classes.center,
-            classes.left,
-          ]}
-          customClassesForCells={[0, 1, 2, 3]}
-          customHeadCellClasses={[
-            classes.left,
-            classes.center + " " + classes.durationField,
-            classes.center,
-            classes.center + " " + classes.actionButtons,
-          ]}
-          customHeadClassesForCells={[0, 1, 2, 3]}
-        />
-
-        <h3 className={classes.feedbackTitle}>Feedback</h3>
-        <Table
-          tableHead={[
-            "Názov eventu",
-            "Trvanie",
-            "Deadline na vyplnenie",
-            "Akcie"
-          ]}
-          tableData={
-            [...termsForFeedback].sort((a, b) => {
-              return a.feedbackDeadlineAt.localeCompare(b.feedbackDeadlineAt);
-            }).map(term =>
-              this.transformFeedbackTerm(term, classes)
             )
           }
           customCellClasses={[
@@ -187,7 +223,10 @@ query FetchMeetings ($id: Int, $userId: Int){
     userId
     termsForFeedback {
       id
-      feedbackDeadlineAt
+      attendees (userId: $userId) {
+        id
+        feedbackDeadlineAt
+      }
       eventStartDateTime
       eventEndDateTime
       publicFeedbackLink

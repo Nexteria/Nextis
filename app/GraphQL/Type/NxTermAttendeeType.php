@@ -7,11 +7,11 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class NxEventAttendeeType extends GraphQLType
+class NxTermAttendeeType extends GraphQLType
 {
     protected $attributes = [
-        'name' => 'NxEventAttendee',
-        'description' => 'Event attendee type',
+        'name' => 'NxTermAttendee',
+        'description' => 'Term attendee type',
         'model' => NxEventAttendee::class,
     ];
 
@@ -20,35 +20,79 @@ class NxEventAttendeeType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'The id of the event'
+                'description' => 'The id of the attendee'
+            ],
+            'pivotId' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'The id of the intermediate table record',
+                'resolve' => function ($root) {
+                    return $root->pivot->id;
+                },
+                'selectable' => false,
             ],
             'wasPresent' => [
                 'type' => Type::string(),
                 'description' => 'The timestamp indicates when was presence maked for the event',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->wasPresent;
+                },
+                'selectable' => false,
             ],
             'filledFeedback' => [
                 'type' => Type::string(),
                 'description' => 'The timestamp indicates when feedback was filled',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->filledFeedback;
+                },
+                'selectable' => false,
+            ],
+            'feedbackDeadlineAt' => [
+                'type' => Type::string(),
+                'description' => 'The timestamp indicates when the deadline for filling feedback is',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->feedbackDeadlineAt;
+                },
+                'selectable' => false,
             ],
             'standIn' => [
                 'type' => Type::string(),
                 'description' => 'The datetime when attendee signed as standin',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->standIn;
+                },
+                'selectable' => false,
             ],
             'signedIn' => [
                 'type' => Type::string(),
                 'description' => 'The datetime when attendee signed in',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->signedIn;
+                },
+                'selectable' => false,
             ],
             'signedOut' => [
                 'type' => Type::string(),
                 'description' => 'The datetime when attendee signed out',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->signedOut;
+                },
+                'selectable' => false,
             ],
             'wontGo' => [
                 'type' => Type::string(),
                 'description' => 'The datetime when attendee signed as wont go',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->wontGo;
+                },
+                'selectable' => false,
             ],
             'signedOutReason' => [
                 'type' => Type::string(),
                 'description' => 'The reason why attendee signed out',
+                'resolve' => function ($root) {
+                    return (string) $root->pivot->signedOutReason;
+                },
+                'selectable' => false,
             ],
             'signInOpenDateTime' => [
                 'type' => Type::string(),
@@ -66,9 +110,13 @@ class NxEventAttendeeType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'The id of the sign in group for the event and attendee'
             ],
-            'terms' => [
-                'type' => Type::listOf(GraphQL::type('NxEventTerm')),
-                'description' => 'The attendee`s terms',
+            'term' => [
+                'type' => GraphQL::type('NxEventTerm'),
+                'description' => 'The attendee`s term',
+                'resolve' => function ($root) {
+                    return (string) $root->terms()->where('id', $root->pivot->termId)->first();
+                },
+                'selectable' => false,
                 'always' => ['id'],
             ],
             'attendeesGroup' => [
@@ -87,33 +135,38 @@ class NxEventAttendeeType extends GraphQLType
         ];
     }
 
-    public function resolveStandInField($root)
-    {
-        return (string) $root->standIn;
-    }
-
     public function resolveSignedInField($root)
     {
-        return (string) $root->signedIn;
+        return (string) $root->pivot->signedIn;
     }
 
     public function resolveSignedOutField($root)
     {
-        return (string) $root->signedOut;
+        return (string) $root->pivot->signedOut;
     }
 
     public function resolveWontGoField($root)
     {
-        return (string) $root->wontGo;
+        return (string) $root->pivot->wontGo;
     }
 
     public function resolveFilledFeedbackField($root)
     {
-        return (string) $root->filledFeedback;
+        return (string) $root->pivot->filledFeedback;
     }
 
     public function resolveWasPresentField($root)
     {
-        return (string) $root->wasPresent;
+        return (string) $root->pivot->wasPresent;
+    }
+    
+    public function resolveFeedbackDeadlineAtField($root)
+    {
+        return (string) $root->pivot->feedbackDeadlineAt;
+    }
+
+    public function resolvePivotIdField($root)
+    {
+        return $root->pivot->id;
     }
 }

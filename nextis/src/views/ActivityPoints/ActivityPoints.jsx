@@ -146,6 +146,20 @@ query FetchUser ($id: Int, $semesterId: Int){
         id
         activityPoints
         name
+        attendees (userId: $id) {
+          id
+          signedIn
+          filledFeedback
+          terms {
+            id
+            attendees (userId: $id) {
+              id
+              signedIn
+              filledFeedback
+              feedbackDeadlineAt
+            }
+          }
+        }
       }
       semesters {
         id

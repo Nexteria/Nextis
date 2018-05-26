@@ -41,12 +41,12 @@ class Dashboard extends React.Component {
 
     const activityPointsInfo = user.student.activityPointsInfo;
 
-    let eventsStatText = 'Momentálne Ťa nečakajú žiadne stretnutia.'
+    let eventNextMeetingDate = '-'
     let terms = [...user.student.meetings];
     if (terms.length) {
       terms = terms.sort((a, b) => a.eventStartDateTime.localeCompare(b.eventStartDateTime));
       const soonestTerm = format(parse(terms[0].eventStartDateTime), 'DD.MM.YYYY o HH:mm');
-      eventsStatText = `Najbližšie stretnutie máš ${soonestTerm}`;
+      eventNextMeetingDate = `${soonestTerm}`;
     }
 
     const openEventsForSignin = user.student.openEventsForSignin.filter(event =>
@@ -61,12 +61,12 @@ class Dashboard extends React.Component {
             <StatsCard
               icon={CardTravel}
               iconColor="orange"
-              title="Tvoje ďalšie stretnutia"
-              description={terms.length}
+              title="Tvoje najbližšie stretnutie"
+              description={eventNextMeetingDate}
               statIcon={DateRange}
               descriptionColor={'gray'}
               smallColor={'gray'}
-              statText={eventsStatText}
+              statText={`Po4et tvojich ďalších stretnutí: ${terms.length}`}
               iconHover
               iconLink="/events"
               badgeBottomLeft={termsForFeedback ? <Badge color="success">{termsForFeedback}</Badge> : null}
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
               smallColor={user.balance / 100 < 0 ? 'danger' : 'success'}
               small={'€'}
               statIcon={LocalOffer}
-              statText={`Výška Tvojho mesačného školného je: ${user.student.tuitionFee / 100} €`}
+              statText={`Výška Tvojho mesačného členského je: ${user.student.tuitionFee / 100} €`}
               iconHover
               iconLink="/payments"
               history={history}

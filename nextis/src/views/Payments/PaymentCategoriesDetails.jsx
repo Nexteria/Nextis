@@ -70,7 +70,7 @@ export default class PaymentCategoriesDetails extends React.Component {
             cardTitle="Kategórie"
             content={
               <Accordion
-                active={null}
+                active={0}
                 collapses={categories.map(category => {
                   return {
                     title: <div>
