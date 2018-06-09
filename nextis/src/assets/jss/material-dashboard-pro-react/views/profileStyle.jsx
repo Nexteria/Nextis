@@ -1,5 +1,6 @@
 import {
-  dangerColor
+  dangerColor,
+  boxShadow,
 } from "assets/jss/material-dashboard-pro-react.jsx";
 
 const profileStyle = {
@@ -111,6 +112,12 @@ const profileStyle = {
       }
     },
   },
+  skillsProfileCard: {
+    "&:hover": {
+      ...boxShadow,
+      cursor: "pointer",
+    }
+  }
 };
 
 export default profileStyle;

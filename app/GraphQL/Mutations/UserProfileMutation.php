@@ -87,6 +87,11 @@ class UserProfileMutation extends Mutation
                 'type' => Type::nonNull(Type::string()),
                 'rules' => ['required'],
             ],
+            'skills' => [
+                'name' => 'skills',
+                'type' => Type::listOf(Type::int()),  # list of skill IDs
+                'rules' => ['present', 'array'],
+            ]
         ];
     }
     
@@ -111,6 +116,8 @@ class UserProfileMutation extends Mutation
         $user->dateOfBirth = $args['dateOfBirth'];
         $user->personalDescription = $args['personalDescription'];
         $user->studyYear = $args['studyYear'];
+
+        $user->skills()->sync($args['skills']);
 
         $user->save();
         

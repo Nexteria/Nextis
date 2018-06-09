@@ -54,7 +54,7 @@ export default function fetch(input, init) {
   }
 
   if (!init.hasOwnProperty('disableCredentials')) {
-    init['credentials'] = 'same-origin';
+    init['credentials'] = 'include';
   }
 
   if (!init.hasOwnProperty('headers')) {

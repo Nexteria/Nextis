@@ -44,6 +44,7 @@ class User extends Authenticatable implements AuditableContract
         'iban',
         'nexteriaTeamRole',
         'dateOfBirth',
+        'skills',
     ];
 
     protected $dates = ['dateOfBirth', 'deleted_at'];
@@ -148,6 +149,11 @@ class User extends Authenticatable implements AuditableContract
     public function payments()
     {
         return $this->hasMany('App\Payment', 'userId')->orderBy('created_at');
+    }
+
+    public function skills()
+    {
+        return $this->belongsToMany('App\Skill');
     }
 
     public function paymentCategories()

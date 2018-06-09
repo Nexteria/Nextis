@@ -57,11 +57,6 @@ export class EventDetails extends React.Component {
     const { event } = this.props.data;
     const { classes } = this.props;
 
-    let terms = [...event.terms];
-    terms = terms.sort((a, b) => {
-      return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
-    });
-
     const parentTerms = {};
     let rootTerms = 0;
     [...event.terms].forEach(term => {
@@ -73,8 +68,6 @@ export class EventDetails extends React.Component {
     });
 
     const hasAlternatives = rootTerms > 1;
-    const hasEventChoices = event.groupedEvents.length || (event.parentEvent && event.parentEvent.id);
-    const isMultiMeeting = Object.keys(parentTerms).length >= 1;
 
     return (
       <div>

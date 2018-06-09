@@ -141,6 +141,10 @@ class UserType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type('paymentCategory')),
                 'description' => 'The payments categories for this user',
             ],
+            'skills' => [
+                'type' => Type::listOf(GraphQL::type('skill')),
+                'description' => 'Skills for this user',
+            ],
         ];
     }
 
