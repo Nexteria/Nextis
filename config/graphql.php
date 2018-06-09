@@ -17,15 +17,20 @@ use App\GraphQL\Type\SemesterType;
 use App\GraphQL\Type\PaymentType;
 use App\GraphQL\Type\PaymentCategoryType;
 use App\GraphQL\Type\ImageType;
+use App\GraphQL\Type\SkillType;
 
 use App\GraphQL\Query\EventsQuery;
 use App\GraphQL\Query\EventQuery;
 use App\GraphQL\Query\UserQuery;
+use App\GraphQL\Query\UsersQuery;
 use App\GraphQL\Query\StudentQuery;
 use App\GraphQL\Query\StudentsQuery;
+use App\GraphQL\Query\SkillsQuery;
 
+use App\GraphQL\Mutations\CreateSkillMutation;
 use App\GraphQL\Mutations\UserProfileMutation;
 use App\GraphQL\Mutations\UserProfilePhotoMutation;
+
 
 return [
     'prefix' => 'graphql',
@@ -40,12 +45,15 @@ return [
                 'events' => EventsQuery::class,
                 'event' => EventQuery::class,
                 'user' => UserQuery::class,
+                'users' => UsersQuery::class,
                 'student' => StudentQuery::class,
                 'students' => StudentsQuery::class,
+                'skills' => SkillsQuery::class,
             ],
             'mutation' => [
                 'UpdateUserProfile' => UserProfileMutation::class,
                 'UpdateUserProfilePhoto' => UserProfilePhotoMutation::class,
+                'CreateSkill' => CreateSkillMutation::class,
             ],
             'middleware' => ['auth']
         ],
@@ -69,6 +77,7 @@ return [
         'payment' => PaymentType::class,
         'paymentCategory' => PaymentCategoryType::class,
         'image' => ImageType::class,
+        'skill' => SkillType::class,
     ],
 
     'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],

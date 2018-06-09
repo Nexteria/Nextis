@@ -67,7 +67,7 @@ const profileCardStyle = {
     margin: "0 20px 10px",
     paddingTop: "10px",
     borderTop: "1px solid #eeeeee"
-  }
+  },
 };
 
 export default profileCardStyle;

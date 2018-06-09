@@ -22,7 +22,8 @@ function ProfileCard({ ...props }) {
     footer,
     customCardClass,
     customCardAvatarClass,
-    customCardFooterClass
+    customCardFooterClass,
+    onClick,
   } = props;
   const cardClasses =
     classes.card +
@@ -43,7 +44,7 @@ function ProfileCard({ ...props }) {
       [customCardFooterClass]: customCardFooterClass !== undefined
     });
   return (
-    <Card className={cardClasses}>
+    <Card className={cardClasses} onClick={onClick}>
       <CardHeader
         classes={{
           root: classes.cardHeader,

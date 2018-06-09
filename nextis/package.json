@@ -12,6 +12,7 @@
     "classnames": "^2.2.5",
     "date-fns": "^1.29.0",
     "downloadjs": "^1.4.7",
+    "downshift": "^1.31.14",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "history": "^4.7.2",
