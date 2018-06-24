@@ -46,7 +46,7 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider>
       <Router history={hist}>
-        <Route path={'/'} render={(props) => <App location={props.location} />} />
+        <Route path={'/'} component={App} />
       </Router>
     </Provider>
   </ApolloProvider>

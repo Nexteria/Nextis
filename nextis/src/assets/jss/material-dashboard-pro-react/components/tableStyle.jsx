@@ -122,6 +122,49 @@ const tableStyle = theme => ({
     '& > td': {
       color: '#6a6a6a9e',
     }
+  },
+  tableBodyRow: {
+    //Small Screen
+    display: "block",
+    height: "auto",
+    marginTop: 10,
+    backgroundColor: '#e0e0e0',
+
+    [theme.breakpoints.up("sm")]: {
+      height: 48,
+      display: "table-row",
+      border: 0,
+      backgroundColor: "#ffffff"
+    }
+  },
+  tableBodyData: {
+    display: "block",
+    padding: 12,
+    fontSize: 14,
+    textAlign: 'center',
+    border: 0,
+
+    // Adding each data table head from here
+    "&:before": {
+      content: "attr(datatitle)",
+      display: "block",
+      textAlign: 'center',
+      fontWeight: 600,
+      color: "#00000"
+    },
+
+    [theme.breakpoints.up("sm")]: {
+      display: "table-cell",
+      padding: "20px 24px",
+      fontSize: 14,
+      textAlign: "left",
+      borderBottom: "1px solid #ccc",
+
+      "&:before": {
+        content: "",
+        display: "none"
+      }
+    }
   }
 });
 

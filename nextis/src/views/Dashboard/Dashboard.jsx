@@ -7,6 +7,7 @@ import { connect } from "common/store";
 import Spinner from 'react-spinkit';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
+import { withRouter } from 'react-router-dom';
 
 
 // material-ui components
@@ -66,7 +67,7 @@ class Dashboard extends React.Component {
               statIcon={DateRange}
               descriptionColor={'gray'}
               smallColor={'gray'}
-              statText={`Po4et tvojich ďalších stretnutí: ${terms.length}`}
+              statText={`Počet tvojich ďalších stretnutí: ${terms.length}`}
               iconHover
               iconLink="/events"
               badgeBottomLeft={termsForFeedback ? <Badge color="success">{termsForFeedback}</Badge> : null}
@@ -162,4 +163,5 @@ export default compose(
       },
     })
   }),
+  withRouter,
 )(Dashboard);

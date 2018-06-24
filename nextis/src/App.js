@@ -113,8 +113,8 @@ class App extends Component {
 }
 
 export default compose(
+  withRouter,
   connect(state => ({ user: state.user, notifications: state.notifications })),
   withStyles(loadingPageStyle),
-  withRouter,
 )(App);
 

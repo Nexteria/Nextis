@@ -73,14 +73,14 @@ class Meetings extends React.Component {
         }
         customCellClasses={[
           classes.left,
-          classes.right,
-          classes.right
+          classes.center,
+          classes.center
         ]}
         customClassesForCells={[0, 1, 2]}
         customHeadCellClasses={[
           classes.left,
-          classes.right,
-          classes.right
+          classes.center,
+          classes.center
         ]}
         customHeadClassesForCells={[0, 1, 2]}
       />

@@ -174,6 +174,7 @@ query FetchUser ($id: Int){
 
 
 export default compose(
+  withRouter,
   connect(state => ({ user: state.user, student: state.student })),
   withStyles(appStyle),
   graphql(userQuery, {
@@ -184,5 +185,6 @@ export default compose(
       },
     })
   }),
-  withRouter,
 )(Dashboard);
+
+

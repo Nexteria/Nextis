@@ -9,6 +9,7 @@ import TableBody from "material-ui/Table/TableBody";
 import TableCell from "material-ui/Table/TableCell";
 import TableHead from "material-ui/Table/TableHead";
 import TableRow from "material-ui/Table/TableRow";
+import Hidden from "material-ui/Hidden";
 
 import tableStyle from "assets/jss/material-dashboard-pro-react/components/tableStyle";
 
@@ -33,30 +34,32 @@ function CustomTable({ ...props }) {
     <div className={classes.tableResponsive + " " + className}>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
-          <TableHead className={classes[tableHeaderColor]}>
-            <TableRow className={classes.tableRow}>
-              {tableHead.map((prop, key) => {
-                const tableCellClasses =
-                  classes.tableHeadCell +
-                  " " +
-                  classes.tableCell +
-                  " " +
-                  cx({
-                    [customHeadCellClasses[
-                      customHeadClassesForCells.indexOf(key)
-                    ]]:
-                      customHeadClassesForCells.indexOf(key) !== -1,
-                    [classes.tableShoppingHead]: tableShopping,
-                    [classes.tableHeadFontSize]: !tableShopping
-                  });
-                return (
-                  <TableCell className={tableCellClasses} key={key}>
-                    {prop}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
+          <Hidden only="xs">
+            <TableHead className={classes[tableHeaderColor]}>
+              <TableRow className={classes.tableRow}>
+                {tableHead.map((prop, key) => {
+                  const tableCellClasses =
+                    classes.tableHeadCell +
+                    " " +
+                    classes.tableCell +
+                    " " +
+                    cx({
+                      [customHeadCellClasses[
+                        customHeadClassesForCells.indexOf(key)
+                      ]]:
+                        customHeadClassesForCells.indexOf(key) !== -1,
+                      [classes.tableShoppingHead]: tableShopping,
+                      [classes.tableHeadFontSize]: !tableShopping
+                    });
+                  return (
+                    <TableCell className={tableCellClasses} key={key}>
+                      {prop}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+          </Hidden>
         ) : null}
         <TableBody>
           {tableData.map((prop, key) => {
@@ -74,7 +77,14 @@ function CustomTable({ ...props }) {
             });
             if (prop.total) {
               return (
-                <TableRow key={key} hover={hover} className={tableRowClasses}>
+                <TableRow
+                  key={key}
+                  hover={hover}
+                  className={tableRowClasses}
+                  classes={{
+                    root: classes.tableBodyRow
+                  }}
+                >
                   <TableCell
                     className={classes.tableCell}
                     colSpan={prop.colspan}
@@ -123,7 +133,14 @@ function CustomTable({ ...props }) {
             const shadedClass = prop.shaded && prop.shaded !== "" ? classes.shadedRow : "";
 
             return (
-              <TableRow key={key} hover={hover} className={classes.tableRow + " " + tableRowClasses + " " + shadedClass + " " + prop.className}>
+              <TableRow
+                key={key}
+                hover={hover}
+                className={classes.tableRow + " " + tableRowClasses + " " + shadedClass + " " + prop.className}
+                classes={{
+                  root: classes.tableBodyRow
+                }}
+              >
                 {data.map((prop, key) => {
                   const tableCellClasses =
                     classes.tableCell +
@@ -135,7 +152,7 @@ function CustomTable({ ...props }) {
                         customClassesForCells.indexOf(key) !== -1,
                     });
                   return (
-                    <TableCell className={tableCellClasses} key={key}>
+                    <TableCell datatitle={tableHead[key]} className={tableCellClasses} key={key} classes={{ root: classes.tableBodyData }}>
                       {prop}
                     </TableCell>
                   );
