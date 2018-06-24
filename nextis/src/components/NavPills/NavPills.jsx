@@ -31,7 +31,6 @@ class NavPills extends React.Component {
     const {
       classes,
       tabs,
-      direction,
       color,
       horizontal,
       alignCenter
@@ -57,7 +56,23 @@ class NavPills extends React.Component {
         {tabs.map((prop, key) => {
           var icon = {};
           if (prop.tabIcon !== undefined) {
-            icon["icon"] = <prop.tabIcon className={classes.tabIcon} />;
+            icon["icon"] = (
+              <div>
+                <prop.tabIcon className={classes.tabIcon} />
+                {prop.badgeBottomLeft !== null ?
+                  <div className={classes.badgeBottomLeft}>{prop.badgeBottomLeft}</div> : null
+                }
+                {prop.badgeBottomRight !== null ?
+                  <div className={classes.badgeBottomRight}>{prop.badgeBottomRight}</div> : null
+                }
+                {prop.badgeTopLeft !== null ?
+                  <div className={classes.badgeTopLeft}>{prop.badgeTopLeft}</div> : null
+                }
+                {prop.badgeTopRight !== null ?
+                  <div className={classes.badgeTopRight}>{prop.badgeTopRight}</div> : null
+                }
+              </div>
+            );
           }
           const pillsClasses =
             classes.pills +
@@ -90,13 +105,18 @@ class NavPills extends React.Component {
     const tabContent = (
       <div className={classes.contentWrapper}>
         <SwipeableViews
-          axis={direction === "rtl" ? "x-reverse" : "x"}
+          axis={"x"}
           index={this.state.active}
           onChangeIndex={this.handleChangeIndex}
         >
           {tabs.map((prop, key) => {
+            let addedClass = "";
+            if (key !== this.state.active) {
+              addedClass = classes.displayNone;
+            }
+
             return (
-              <div className={classes.tabContent} key={key}>
+              <div className={classes.tabContent + " " + addedClass} key={key}>
                 {prop.tabContent}
               </div>
             );

@@ -133,7 +133,36 @@ const navPillsStyle = theme => ({
   },
   tabButtonTitle: {
     lineHeight: '1em',
-  }
+  },
+  badgeBottomRight: {
+    zIndex: "4",
+    position: "absolute",
+    top: "3em",
+    right: "10px",
+    display: "block"
+  },
+  badgeBottomLeft: {
+    zIndex: "4",
+    position: "absolute",
+    top: "3em",
+    left: "10px",
+    verticalAlign: "middle",
+    display: "block"
+  },
+  badgeTopRight: {
+    zIndex: "4",
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    display: "block"
+  },
+  badgeTopLeft: {
+    zIndex: "4",
+    position: "absolute",
+    top: "10px",
+    left: "10px",
+    display: "block"
+  },
 });
 
 export default navPillsStyle;

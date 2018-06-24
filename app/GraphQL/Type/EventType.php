@@ -34,6 +34,10 @@ class EventType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The short description of the event',
             ],
+            'description' => [
+                'type' => Type::string(),
+                'description' => 'The description of the event',
+            ],
             'status' => [
                 'type' => Type::string(),
                 'description' => 'The status of the event',

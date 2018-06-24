@@ -2,6 +2,12 @@ import React from "react";
 
 // material-ui components
 import withStyles from "material-ui/styles/withStyles";
+import { compose } from 'recompose';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { connect } from "common/store";
+import Spinner from 'react-spinkit';
+import { Route, withRouter } from "react-router-dom";
 
 // @material-ui/icons
 import ListIcon from "@material-ui/icons/List";
@@ -17,6 +23,9 @@ import NavPills from "components/NavPills/NavPills.jsx";
 import Meetings from "views/Events/Meetings.jsx";
 import Actions from "views/Events/Actions.jsx";
 import Overview from "views/Events/Overview.jsx";
+import Badge from "components/Badge/Badge.jsx";
+
+import EventDetailsDialog from "views/Events/EventDetailsDialog.jsx";
 
 const styles = {
   pageSubcategoriesTitle: {
@@ -28,6 +37,18 @@ const styles = {
 
 class Events extends React.Component {
   render() {
+    if (this.props.data.loading) {
+      return <Spinner name='line-scale-pulse-out' />;
+    }
+
+    const { user } = this.props.data;
+
+    const openEventsForSignin = user.student.openEventsForSignin.filter(event =>
+      !event.attendees[0].signedIn && !event.attendees[0].signedOut && !event.attendees[0].wontGo
+    ).length;
+
+    const termsForFeedback = user.student.termsForFeedback.length;
+
     return (
       <GridContainer justify="center">
         <ItemGrid xs={12} sm={12} md={12} lg={12}>
@@ -39,6 +60,8 @@ class Events extends React.Component {
               tabButtonTitle: "Prihlasovanie,",
               tabButtonSubtitle: "feedback",
               tabIcon: FeedbackIcon,
+              badgeBottomLeft: <Badge color="success">{termsForFeedback}</Badge>,
+              badgeTopRight: <Badge color="danger">{openEventsForSignin}</Badge>,
               tabContent: (
                 <Actions />
               )
@@ -66,9 +89,50 @@ class Events extends React.Component {
             ]}
           />
         </ItemGrid>
+        <Route
+          path="/events/:eventId"
+          exact
+          component={EventDetailsDialog}
+        />
       </GridContainer>
     );
   }
 }
 
-export default withStyles(styles)(Events);
+const userQuery = gql`
+query FetchUser ($id: Int){
+  user (id: $id){
+    id
+    student {
+      id
+      termsForFeedback {
+        id
+      }
+      openEventsForSignin {
+        id
+        name
+        attendees (userId: $id) {
+          id
+          signedIn
+          signedOut
+          wontGo
+        }
+      }
+    }
+  }
+}
+`;
+
+export default compose(
+  withRouter,
+  connect(state => ({ user: state.user, student: state.student })),
+  withStyles(styles),
+  graphql(userQuery, {
+    options: props => ({
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        id: props.user.id,
+      },
+    })
+  }),
+)(Events);

@@ -1,5 +1,6 @@
 import React from "react";
 import { graphql } from 'react-apollo';
+import { withRouter } from "react-router-dom";
 import gql from 'graphql-tag';
 import { connect } from "common/store";
 import { compose } from 'recompose';
@@ -13,81 +14,37 @@ import withStyles from "material-ui/styles/withStyles";
 
 // material-ui icons
 import Info from "@material-ui/icons/Info";
-import Warning from "@material-ui/icons/Warning";
 
 // core components
 import Table from "components/Table/Table.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Tooltip from 'material-ui/Tooltip';
+import SignInSection from 'views/Events/SignInSection.jsx';
 
 import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eventActionsStyle.jsx";
 
 class Actions extends React.Component {
-  transformEvent(event, classes) {
-    const terms = event.terms.sort((a, b) => {
-      return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
-    });
 
-    const startDateTimeString = format(parse(terms[0].eventStartDateTime), 'DD.MM.YYYY o HH:mm');
-    const endDateTimeString = format(parse(terms[terms.length - 1].eventEndDateTime), 'DD.MM.YYYY o HH:mm');
-
-    const attendee = event.attendees[0];
-    const deadline = format(parse(attendee.signInCloseDateTime), 'DD.MM.YYYY o HH:mm');
-
-    let fillButtons = [
-      { color: "info", icon: Info },
-      { color: "success", text: 'Prihlásiť' }
-    ];
-
-    if (!attendee.wontGo && !attendee.signedOut) {
-      fillButtons.push(
-        { color: "danger", text: 'Nezúčastním sa' }
-      );
-    }
-
-    fillButtons = fillButtons.map((prop, key) => {
-      return (
-        <Button color={prop.color} customClass={classes.actionButton} key={key}>
-          {prop.icon ? <prop.icon className={classes.icon} /> : null}
-          {prop.text ? prop.text : null}
-        </Button>
-      );
-    });
-
-    return {
-      data: [
-        event.name,
-        <div>
-          <div>{startDateTimeString}</div>
-          <div>{endDateTimeString}</div>
-        </div>,
-        deadline,
-        fillButtons
-      ],
-      shaded: attendee.signedOut || attendee.wontGo,
-    };
-  }
-
-  transformFeedbackTerm(term, classes) {
+  transformFeedbackTerm(term, classes, history) {
     const startDateTimeString = format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm');
     const endDateTimeString = format(parse(term.eventEndDateTime), 'DD.MM.YYYY o HH:mm');
 
     const feedbackDeadlineAt = parse(term.attendees[0].feedbackDeadlineAt);
     const feedbackDeadline = format(feedbackDeadlineAt, 'DD.MM.YYYY o HH:mm');
     const fillButtons = [
-      { color: "info", icon: Info },
-      { color: "info", text: 'Feedback' }
+      { color: "info", icon: Info, action: () => history.push(`/events/${term.event.id}`) },
+      { color: "info", text: 'Feedback', action: () => () => {
+        const win = window.open(term.publicFeedbackLink, '_blank');
+        win.focus();
+      } }
     ].map((prop, key) => {
       return (
         <Button
           color={prop.color}
           customClass={classes.actionButton}
           key={key}
-          onClick={() => {
-            const win = window.open(term.publicFeedbackLink, '_blank');
-            win.focus();
-          }}
+          onClick={prop.action}
         >
           {prop.icon ? <prop.icon className={classes.icon} /> : null}
           {prop.text ? prop.text : null}
@@ -112,10 +69,16 @@ class Actions extends React.Component {
       className: termRowClassName,
       data: [
         term.event.name,
-        <div>
-          <div>{startDateTimeString}</div>
-          <div>{endDateTimeString}</div>
-        </div>,
+        <Tooltip
+          placement="top"
+          id="tooltip-icon"
+          title="Vyplnenie feedbacku po deadline je penalizované strhnutím časti bodov!"
+        >
+          <div>
+            <div>{startDateTimeString}</div>
+            <div>{endDateTimeString}</div>
+          </div>
+        </Tooltip>,
         <span className={termDeadlineClassName}>{feedbackDeadline}</span>,
         fillButtons
       ]
@@ -123,15 +86,12 @@ class Actions extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     
     if (this.props.data.loading) {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const openEventsForSignin = this.props.data.student.openEventsForSignin.filter(event =>
-      !event.attendees[0].signedIn
-    );
     const termsForFeedback = this.props.data.student.termsForFeedback;
 
     return (
@@ -144,23 +104,14 @@ class Actions extends React.Component {
                 tableHead={[
                   "Názov eventu",
                   "Trvanie",
-                  <Tooltip
-                    placement="top"
-                    id="tooltip-icon"
-                    title="Vyplnenie feedbacku po deadline je penalizované strhnutím časti bodov!"
-                  >
-                    <div>
-                      <span>Deadline na vyplnenie</span>
-                      <Warning className={classes.deadlineIcon}/>
-                    </div>
-                  </Tooltip>,
+                  'Deadline na vyplnenie',
                   "Akcie"
                 ]}
                 tableData={
                   [...termsForFeedback].sort((a, b) => {
                     return a.attendees[0].feedbackDeadlineAt.localeCompare(b.attendees[0].feedbackDeadlineAt);
                   }).map(term =>
-                    this.transformFeedbackTerm(term, classes)
+                    this.transformFeedbackTerm(term, classes, history)
                   )
                 }
                 customCellClasses={[
@@ -184,33 +135,7 @@ class Actions extends React.Component {
         />
 
         <h3>Prihlasovanie</h3>
-        <Table
-          tableHead={[
-            "Názov eventu",
-            "Trvanie",
-            "Deadline na prihlásenie",
-            "Akcie"
-          ]}
-          tableData={
-            [...openEventsForSignin].map(event =>
-              this.transformEvent(event, classes)
-            )
-          }
-          customCellClasses={[
-            classes.left,
-            classes.center,
-            classes.center,
-            classes.left,
-          ]}
-          customClassesForCells={[0, 1, 2, 3]}
-          customHeadCellClasses={[
-            classes.left,
-            classes.center + " " + classes.durationField,
-            classes.center,
-            classes.center + " " + classes.actionButtons,
-          ]}
-          customHeadClassesForCells={[0, 1, 2, 3]}
-        />
+        <SignInSection />
       </div>
     );
   }
@@ -235,24 +160,6 @@ query FetchMeetings ($id: Int, $userId: Int){
         name
       }
     }
-    openEventsForSignin {
-      id
-      name
-      terms {
-        id
-        eventStartDateTime
-        eventEndDateTime
-        parentTermId
-      }
-      attendees (userId: $userId){
-        id
-        signedIn
-        signedOut
-        wontGo
-        signInOpenDateTime
-        signInCloseDateTime
-      }
-    }
   }
 }
 `;
@@ -269,4 +176,5 @@ export default compose(
       },
     })
   }),
+  withRouter,
 )(Actions);
