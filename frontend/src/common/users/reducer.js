@@ -58,6 +58,8 @@ export default function usersReducer(state = new InitialState, action) {
         personalDescription: RichTextEditor.createValueFromString(user.personalDescription, 'html'),
         guideDescription: RichTextEditor.createValueFromString(user.guideDescription, 'html'),
         lectorDescription: RichTextEditor.createValueFromString(user.lectorDescription, 'html'),
+        otherActivities: RichTextEditor.createValueFromString(user.otherActivities, 'html'),
+        hobby: RichTextEditor.createValueFromString(user.hobby, 'html'),
         buddyDescription: RichTextEditor.createValueFromString(user.buddyDescription, 'html'),
       });
 

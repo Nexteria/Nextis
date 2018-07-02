@@ -66,6 +66,8 @@ class User extends Authenticatable implements AuditableContract
         $user->buddyDescription = clean($attributes['buddyDescription']);
         $user->guideDescription = clean($attributes['guideDescription']);
         $user->lectorDescription = clean($attributes['lectorDescription']);
+        $user->hobby = clean($attributes['hobby']);
+        $user->otherActivities = clean($attributes['otherActivities']);
 
         if ($attributes['newPassword'] === $attributes['confirmationPassword']) {
             $user->password = \Hash::make($attributes['newPassword']);
@@ -103,6 +105,14 @@ class User extends Authenticatable implements AuditableContract
 
         if (isset($attributes['lectorDescription'])) {
             $this->lectorDescription = clean($attributes['lectorDescription']);
+        }
+
+        if (isset($attributes['hobby'])) {
+            $this->hobby = clean($attributes['hobby']);
+        }
+
+        if (isset($attributes['otherActivities'])) {
+            $this->otherActivities = clean($attributes['otherActivities']);
         }
 
         if (isset($attributes['confirmedPrivacyPolicy'])) {

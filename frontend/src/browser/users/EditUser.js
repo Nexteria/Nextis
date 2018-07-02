@@ -569,6 +569,22 @@ export class EditUser extends Component {
                       }
                     />
 
+                    <Field
+                      name="hobby"
+                      component={TextEditor}
+                      contentCol={10}
+                      labelCol={2}
+                      label="Hobby"
+                    />
+
+                    <Field
+                      name="otherActivities"
+                      component={TextEditor}
+                      contentCol={10}
+                      labelCol={2}
+                      label="Ďalšie moje projekty a dobrovoľníctvo"
+                    />
+
                     {roles.includes(rolesList.get('GUIDE').id) ?
                       <Field
                         name="guideDescription"
@@ -751,6 +767,8 @@ EditUser = fields(EditUser, {
     'newPassword',
     'oldPassword',
     'confirmationPassword',
+    'hobby',
+    'otherActivities'
   ],
 });
 

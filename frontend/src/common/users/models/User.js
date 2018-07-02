@@ -26,6 +26,8 @@ const User = Record({
   guideDescription: RichTextEditor.createEmptyValue(),
   lectorDescription: RichTextEditor.createEmptyValue(),
   buddyDescription: RichTextEditor.createEmptyValue(),
+  hobby: RichTextEditor.createEmptyValue(),
+  otherActivities: RichTextEditor.createEmptyValue(),
   state: 'inactive',
   nexteriaTeamRole: '',
   created_at: null,

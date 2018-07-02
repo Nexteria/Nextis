@@ -34,6 +34,8 @@ class UserTransformer extends Transformer
             'guideDescription' => $user->guideDescription ? $user->guideDescription : '',
             'lectorDescription' => $user->lectorDescription ? $user->lectorDescription : '',
             'buddyDescription' => $user->buddyDescription ? $user->buddyDescription : '',
+            'hobby' => $user->hobby ? $user->hobby : '',
+            'otherActivities' => $user->otherActivities ? $user->otherActivities : '',
             'state' => $user->state,
             'iban' => $user->iban,
             'nexteriaTeamRole' => $user->nexteriaTeamRole,
