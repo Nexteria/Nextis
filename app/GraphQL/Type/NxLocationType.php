@@ -33,7 +33,23 @@ class NxLocationType extends GraphQLType
             'addressLine2' => [
                 'type' => Type::string(),
                 'description' => 'Location address line 2'
-            ]
+            ],
+            'city' => [
+                'type' => Type::string(),
+                'description' => 'Location city'
+            ],
+            'zipCode' => [
+                'type' => Type::string(),
+                'description' => 'Location zipCode'
+            ],
+            'latitude' => [
+                'type' => Type::float(),
+                'description' => 'Location latitude'
+            ],
+            'longitude' => [
+                'type' => Type::float(),
+                'description' => 'Location latitude'
+            ],
         ];
     }
 }

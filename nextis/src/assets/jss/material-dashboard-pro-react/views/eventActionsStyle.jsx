@@ -5,7 +5,7 @@
 import buttonGroupStyle from "assets/jss/material-dashboard-pro-react/buttonGroupStyle.jsx";
 import { primaryColor } from "assets/jss/material-dashboard-pro-react.jsx";
 
-const eventActionsStyle = {
+const eventActionsStyle = theme => ({
   right: {
     textAlign: "right"
   },
@@ -121,7 +121,24 @@ const eventActionsStyle = {
     position: 'relative',
     top: '5px',
     left: '10px',
-  }
-};
+  },
+  eventTypeIcon: {
+    width: '0.6em',
+    height: '0.6em',
+  },
+  eventTypeButton: {
+    fontSize: '0.6em',
+    padding: '5px',
+    margin: 0,
+  },
+  centerMobile: {
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "center"
+    }
+  },
+  legendButton: {
+    marginRight: '1em',
+  },
+});
 
 export default eventActionsStyle;

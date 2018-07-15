@@ -14,8 +14,14 @@ import withStyles from "material-ui/styles/withStyles";
 
 // material-ui icons
 import Info from "@material-ui/icons/Info";
+import ExposurePlus2 from '@material-ui/icons/ExposurePlus2';
+import CallSplit from '@material-ui/icons/CallSplit';
+import EventIcon from '@material-ui/icons/Event';
+import Assignment from '@material-ui/icons/Assignment';
 
 // core components
+import GridContainer from "components/Grid/GridContainer.jsx";
+import ItemGrid from "components/Grid/ItemGrid.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Table from "components/Table/Table.jsx";
@@ -25,7 +31,8 @@ import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eve
 class SignInSection extends React.Component {
 
   transformEvent(event, classes, history) {
-    const terms = event.terms.sort((a, b) => {
+    let terms = [...event.terms];
+    terms = terms.sort((a, b) => {
       return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
     });
 
@@ -37,7 +44,7 @@ class SignInSection extends React.Component {
 
     let fillButtons = [
       { color: "info", icon: Info, action: () => history.push(`/events/${event.id}`) },
-      { color: "success", text: 'Prihlásiť' }
+      { color: "success", icon: event.form ? Assignment : null, text: ' Prihlásiť' }
     ];
 
     if (!attendee.wontGo && !attendee.signedOut) {
@@ -55,9 +62,43 @@ class SignInSection extends React.Component {
       );
     });
 
+    const parentTerms = {};
+    let rootTerms = 0;
+    [...event.terms].forEach(term => {
+      if (term.parentTermId) {
+        parentTerms[term.parentTermId] = true;
+      } else {
+        rootTerms += 1;
+      }
+    });
+
+    const hasAlternatives = rootTerms > 1;
+    const hasEventChoices = event.groupedEvents.length || (event.parentEvent && event.parentEvent.id);
+    const isMultiMeeting = Object.keys(parentTerms).length >= 1;
+
     return {
       data: [
         event.name,
+        <div>
+          {isMultiMeeting ?
+            <Button disabled customClass={classes.eventTypeButton}>
+              <ExposurePlus2 className={classes.eventTypeIcon} />
+            </Button>
+            : null
+          }
+          {hasAlternatives ? 
+          <Button disabled customClass={classes.eventTypeButton}>
+            <EventIcon className={classes.eventTypeIcon} />
+          </Button>
+            : null
+          }
+          {hasEventChoices ? 
+          <Button disabled customClass={classes.eventTypeButton}>
+            <CallSplit className={classes.eventTypeIcon} />
+          </Button>
+            : null
+          }
+        </div>,
         <div>
           <div>{startDateTimeString}</div>
           <div>{endDateTimeString}</div>
@@ -84,34 +125,59 @@ class SignInSection extends React.Component {
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
-      <RegularCard
-        customCardClasses={classes.noTopMarginCard}
-        content={
-          <Table
-            tableHead={[
-              "Názov eventu",
-              "Trvanie",
-              "Deadline na prihlásenie",
-              "Akcie"
-            ]}
-            tableData={[...events]}
-            customCellClasses={[
-              classes.left,
-              classes.center,
-              classes.center,
-              classes.left,
-            ]}
-            customClassesForCells={[0, 1, 2, 3]}
-            customHeadCellClasses={[
-              classes.left,
-              classes.center + " " + classes.durationField,
-              classes.center,
-              classes.center + " " + classes.actionButtons,
-            ]}
-            customHeadClassesForCells={[0, 1, 2, 3]}
+      <GridContainer>
+        <ItemGrid xs={12}>
+          <label>Legenda</label>
+        </ItemGrid>
+        <ItemGrid xs={12}>
+          <Button disabled customClass={classes.eventTypeButton + " " + classes.legendButton}>
+            <ExposurePlus2 className={classes.eventTypeIcon} />
+            <div className={classes.indicatorButtonText}>Viacdielny</div>
+          </Button>
+          <Button disabled customClass={classes.eventTypeButton + " " + classes.legendButton}>
+            <EventIcon className={classes.eventTypeIcon} />
+            <div className={classes.indicatorButtonText}>Vyber si termín</div>
+          </Button>
+          <Button disabled customClass={classes.eventTypeButton + " " + classes.legendButton}>
+            <CallSplit className={classes.eventTypeIcon} />
+            <div className={classes.indicatorButtonText}>Alternatíva</div>
+          </Button>
+        </ItemGrid>
+
+        <ItemGrid xs={12}>
+          <RegularCard
+            customCardClasses={classes.noTopMarginCard}
+            content={
+              <Table
+                tableHead={[
+                  "Názov eventu",
+                  "",
+                  "Trvanie",
+                  "Deadline na prihlásenie",
+                  "Akcie"
+                ]}
+                tableData={[...events]}
+                customCellClasses={[
+                  classes.left,
+                  classes.right + " " + classes.centerMobile,
+                  classes.center,
+                  classes.center,
+                  classes.left,
+                ]}
+                customClassesForCells={[0, 1, 2, 3]}
+                customHeadCellClasses={[
+                  classes.left,
+                  classes.right + " " + classes.centerMobile,
+                  classes.center + " " + classes.durationField,
+                  classes.center,
+                  classes.center + " " + classes.actionButtons,
+                ]}
+                customHeadClassesForCells={[0, 1, 2, 3]}
+              />
+            }
           />
-        }
-      />
+        </ItemGrid>
+      </GridContainer>
     );
   }
 }
@@ -141,6 +207,9 @@ query FetchMeetings ($id: Int, $userId: Int){
       eventType
       status
       shortDescription
+      form {
+        id
+      }
       groupedEvents {
         id
       }
