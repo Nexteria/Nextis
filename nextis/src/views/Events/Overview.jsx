@@ -21,7 +21,7 @@ import Info from "@material-ui/icons/Info";
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import ExposurePlus2 from '@material-ui/icons/ExposurePlus2';
 import CallSplit from '@material-ui/icons/CallSplit';
-import Error from '@material-ui/icons/Error';
+import EventIcon from '@material-ui/icons/Event';
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
@@ -131,14 +131,14 @@ class Overview extends React.Component {
               }
               {hasAlternatives ? 
               <Button disabled color={color} customClass={classes.actionButton}>
-                <CallSplit />
+                <EventIcon />
                 <div className={classes.indicatorButtonText}>Vyber si termín</div>
               </Button>
                 : null
               }
               {hasEventChoices ? 
               <Button disabled color={color} customClass={classes.actionButton}>
-                <Error />
+                <CallSplit />
                 <div className={classes.indicatorButtonText}>Alternatíva</div>
               </Button>
                 : null

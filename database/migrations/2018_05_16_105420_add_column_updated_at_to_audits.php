@@ -13,9 +13,13 @@ class AddColumnUpdatedAtToAudits extends Migration
      */
     public function up()
     {
-        Schema::connection(config('audit.drivers.database.connection'))
-            ->table(config('audit.drivers.database.table'), function (Blueprint $table) {
-                $table->timestamp('updated_at');
+        $connection = config('audit.drivers.database.connection');
+        $tableName = config('audit.drivers.database.table');
+        Schema::connection($connection)
+            ->table($tableName, function (Blueprint $table) use ($connection, $tableName) {
+                if (!Schema::connection($connection)->hasColumn($tableName, 'updated_at')) {
+                    $table->timestamp('updated_at');
+                }
             });
     }
 
