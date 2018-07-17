@@ -54,7 +54,8 @@ class UserTransformer extends Transformer
         if (in_array('gainedActivityPoints', $fields)) {
             $result['gainedActivityPoints'] = $activityPoints['sumGainedPoints'];
             if ($user->student) {
-                $result['activityPointsBaseNumber'] = $user->student->getActiveSemester()->pivot->activityPointsBaseNumber;
+                $semester = $user->student->getActiveSemester();
+                $result['activityPointsBaseNumber'] = $semester ? $semester->pivot->activityPointsBaseNumber : 0;
             }
         }
 

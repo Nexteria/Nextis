@@ -145,7 +145,7 @@ class AdminController extends Controller
         $results = [];
         foreach ($students as $student) {
             $semester = $student->getActiveSemester();
-            $activityPoints = $student->activityPoints()->where('semesterId', $semester->id)->get();
+            $activityPoints = $semester ? $student->activityPoints()->where('semesterId', $semester->id)->get() : null;
 
             $results[] = [
               'id' => $student->id,
@@ -153,15 +153,15 @@ class AdminController extends Controller
               'firstName' => $student->firstName,
               'lastName' => $student->lastName,
               'studentLevelId' => $student->studentLevelId,
-              'activityPointsBaseNumber' => $semester->pivot->activityPointsBaseNumber,
-              'minimumSemesterActivityPoints' => $semester->minimumSemesterActivityPoints,
-              'sumGainedPoints' => $activityPoints->sum('gainedPoints'),
+              'activityPointsBaseNumber' => $semester ? $semester->pivot->activityPointsBaseNumber : 0,
+              'minimumSemesterActivityPoints' => $semester ? $semester->minimumSemesterActivityPoints : 0,
+              'sumGainedPoints' => $semester ? $activityPoints->sum('gainedPoints') : 0,
               'sumPotentialPoints' => 0,
-              'activityPoints' => $activityPoints,
+              'activityPoints' => $semester ? $activityPoints : [],
               'tuitionFeeBalance' => $student->getTuitionFeeBalance(),
               'status' => $student->status,
               'guidesOptions' => $student->guidesOptions,
-              'guideId' => $semester->pivot->guideId,
+              'guideId' => $semester ? $semester->pivot->guideId : null,
             ];
         }
 
