@@ -29,11 +29,12 @@ function CustomTable({ ...props }) {
     customHeadCellClasses,
     customHeadClassesForCells,
     className,
+    noHeader,
   } = props;
   return (
     <div className={classes.tableResponsive + " " + className}>
       <Table className={classes.table}>
-        {tableHead !== undefined ? (
+        {tableHead !== undefined && !noHeader ? (
           <Hidden only="xs">
             <TableHead className={classes[tableHeaderColor]}>
               <TableRow className={classes.tableRow}>
@@ -152,7 +153,7 @@ function CustomTable({ ...props }) {
                         customClassesForCells.indexOf(key) !== -1,
                     });
                   return (
-                    <TableCell datatitle={tableHead[key]} className={tableCellClasses} key={key} classes={{ root: classes.tableBodyData }}>
+                    <TableCell datatitle={noHeader ? '' : tableHead[key]} className={tableCellClasses} key={key} classes={{ root: classes.tableBodyData }}>
                       {prop}
                     </TableCell>
                   );
@@ -202,7 +203,8 @@ CustomTable.propTypes = {
   customHeadClassesForCells: PropTypes.arrayOf(PropTypes.number),
   striped: PropTypes.bool,
   // this will cause some changes in font
-  tableShopping: PropTypes.bool
+  tableShopping: PropTypes.bool,
+  noHeader: PropTypes.bool,
 };
 
 export default withStyles(tableStyle)(CustomTable);

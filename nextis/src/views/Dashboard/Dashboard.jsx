@@ -70,8 +70,8 @@ class Dashboard extends React.Component {
               statText={`Počet tvojich ďalších stretnutí: ${terms.length}`}
               iconHover
               iconLink="/events"
-              badgeBottomLeft={termsForFeedback ? <Badge color="success">{termsForFeedback}</Badge> : null}
-              badgeTopRight={openEventsForSignin ? <Badge color="danger">{openEventsForSignin}</Badge> : null}
+              badgeBottomLeft={<Badge color="success">{termsForFeedback}</Badge>}
+              badgeTopRight={<Badge color="danger">{openEventsForSignin}</Badge>}
               history={history}
             />
           </ItemGrid>

@@ -21,6 +21,7 @@ import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Tooltip from 'material-ui/Tooltip';
 import SignInSection from 'views/Events/SignInSection.jsx';
+import ItemGrid from "components/Grid/ItemGrid.jsx";
 
 import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eventActionsStyle.jsx";
 
@@ -97,42 +98,44 @@ class Actions extends React.Component {
     return (
       <div>
         <h3>Feedback</h3>
-        <RegularCard
-          content={
-            termsForFeedback.length ?
-              <Table
-                tableHead={[
-                  "Názov eventu",
-                  "Trvanie",
-                  'Deadline na vyplnenie',
-                  "Akcie"
-                ]}
-                tableData={
-                  [...termsForFeedback].sort((a, b) => {
-                    return a.attendees[0].feedbackDeadlineAt.localeCompare(b.attendees[0].feedbackDeadlineAt);
-                  }).map(term =>
-                    this.transformFeedbackTerm(term, classes, history)
-                  )
-                }
-                customCellClasses={[
-                  classes.left,
-                  classes.center,
-                  classes.center,
-                  classes.center,
-                ]}
-                customClassesForCells={[0, 1, 2, 3]}
-                customHeadCellClasses={[
-                  classes.left,
-                  classes.center + " " + classes.durationField,
-                  classes.center,
-                  classes.center + " " + classes.actionButtons,
-                ]}
-                customHeadClassesForCells={[0, 1, 2, 3]}
-              />
-              :
-              <h4 className={classes.center}>Dobrá práca! Momentálne nemáš žiadny nevyplnený feedback!</h4>
-          }
-        />
+        <ItemGrid xs={12}>
+          <RegularCard
+            content={
+              termsForFeedback.length ?
+                <Table
+                  tableHead={[
+                    "Názov eventu",
+                    "Trvanie",
+                    'Deadline na vyplnenie',
+                    "Akcie"
+                  ]}
+                  tableData={
+                    [...termsForFeedback].sort((a, b) => {
+                      return a.attendees[0].feedbackDeadlineAt.localeCompare(b.attendees[0].feedbackDeadlineAt);
+                    }).map(term =>
+                      this.transformFeedbackTerm(term, classes, history)
+                    )
+                  }
+                  customCellClasses={[
+                    classes.left,
+                    classes.center,
+                    classes.center,
+                    classes.center,
+                  ]}
+                  customClassesForCells={[0, 1, 2, 3]}
+                  customHeadCellClasses={[
+                    classes.left,
+                    classes.center + " " + classes.durationField,
+                    classes.center,
+                    classes.center + " " + classes.actionButtons,
+                  ]}
+                  customHeadClassesForCells={[0, 1, 2, 3]}
+                />
+                :
+                <h4 className={classes.center}>Dobrá práca! Momentálne nemáš žiadny nevyplnený feedback!</h4>
+            }
+          />
+        </ItemGrid>
 
         <h3>Prihlasovanie</h3>
         <SignInSection />

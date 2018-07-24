@@ -7,9 +7,9 @@ import withStyles from "material-ui/styles/withStyles";
 import badgeStyle from "assets/jss/material-dashboard-pro-react/components/badgeStyle.jsx";
 
 function Badge({ ...props }) {
-  const { classes, color, children } = props;
+  const { classes, color, children, className } = props;
   return (
-    <span className={classes.badge + " " + classes[color]}>{children}</span>
+    <span className={classes.badge + " " + classes[color] + " " + className}>{children}</span>
   );
 }
 

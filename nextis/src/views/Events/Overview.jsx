@@ -176,7 +176,7 @@ class Overview extends React.Component {
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
-        <GridContainer>
+        <div>
           <ItemGrid xs={12}>
             <RegularCard
               plainCard
@@ -201,7 +201,7 @@ class Overview extends React.Component {
                 </Button>
               }
           </ItemGrid>
-      </GridContainer>
+      </div>
     );
   }
 }

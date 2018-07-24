@@ -20,7 +20,6 @@ import EventIcon from '@material-ui/icons/Event';
 import Assignment from '@material-ui/icons/Assignment';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
@@ -125,7 +124,7 @@ class SignInSection extends React.Component {
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
-      <GridContainer>
+      <div>
         <ItemGrid xs={12}>
           <label>Legenda</label>
         </ItemGrid>
@@ -148,36 +147,39 @@ class SignInSection extends React.Component {
           <RegularCard
             customCardClasses={classes.noTopMarginCard}
             content={
-              <Table
-                tableHead={[
-                  "Názov eventu",
-                  "",
-                  "Trvanie",
-                  "Deadline na prihlásenie",
-                  "Akcie"
-                ]}
-                tableData={[...events]}
-                customCellClasses={[
-                  classes.left,
-                  classes.right + " " + classes.centerMobile,
-                  classes.center,
-                  classes.center,
-                  classes.left,
-                ]}
-                customClassesForCells={[0, 1, 2, 3]}
-                customHeadCellClasses={[
-                  classes.left,
-                  classes.right + " " + classes.centerMobile,
-                  classes.center + " " + classes.durationField,
-                  classes.center,
-                  classes.center + " " + classes.actionButtons,
-                ]}
-                customHeadClassesForCells={[0, 1, 2, 3]}
-              />
+              events.length ?
+                <Table
+                  tableHead={[
+                    "Názov eventu",
+                    "",
+                    "Trvanie",
+                    "Deadline na prihlásenie",
+                    "Akcie"
+                  ]}
+                  tableData={[...events]}
+                  customCellClasses={[
+                    classes.left,
+                    classes.right + " " + classes.centerMobile,
+                    classes.center,
+                    classes.center,
+                    classes.left,
+                  ]}
+                  customClassesForCells={[0, 1, 2, 3]}
+                  customHeadCellClasses={[
+                    classes.left,
+                    classes.right + " " + classes.centerMobile,
+                    classes.center + " " + classes.durationField,
+                    classes.center,
+                    classes.center + " " + classes.actionButtons,
+                  ]}
+                  customHeadClassesForCells={[0, 1, 2, 3]}
+                />
+                :
+                <h4 className={classes.center}>Momentálne pre Teba nie je otvorené žiadne prihlasovanie!</h4>
             }
           />
         </ItemGrid>
-      </GridContainer>
+      </div>
     );
   }
 }
