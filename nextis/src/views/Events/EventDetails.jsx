@@ -6,15 +6,20 @@ import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Spinner from 'react-spinkit';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 
 import Accessibility from "@material-ui/icons/Accessibility";
 import Place from "@material-ui/icons/Place";
 import People from "@material-ui/icons/People";
+import EventIcon from '@material-ui/icons/Event';
 
 import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Badge from "components/Badge/Badge.jsx";
+import Table from "components/Table/Table.jsx";
+import RegularCard from "components/Cards/RegularCard.jsx";
 
 import avatarImg from "assets/img/default-avatar.png";
 
@@ -52,10 +57,29 @@ export class EventDetails extends React.Component {
     const { event } = this.props.data;
     const { classes } = this.props;
 
+    let terms = [...event.terms];
+    terms = terms.sort((a, b) => {
+      return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
+    });
+
+    const parentTerms = {};
+    let rootTerms = 0;
+    [...event.terms].forEach(term => {
+      if (term.parentTermId) {
+        parentTerms[term.parentTermId] = true;
+      } else {
+        rootTerms += 1;
+      }
+    });
+
+    const hasAlternatives = rootTerms > 1;
+    const hasEventChoices = event.groupedEvents.length || (event.parentEvent && event.parentEvent.id);
+    const isMultiMeeting = Object.keys(parentTerms).length >= 1;
+
     return (
       <div>
         <h2 className={classes.eventName}>{event.name}</h2>
-        <GridContainer justify="center">
+        <GridContainer justify="center" className={classes.overviewContainer}>
           <ItemGrid xs={12} sm={12} md={12} lg={12}>
             <Accessibility /> Aktivity body: {event.activityPoints}
           </ItemGrid>
@@ -72,7 +96,7 @@ export class EventDetails extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={12} lg={12}>
             <People />
-            <span>Prihlásený: {event.attendees.filter(attendee => attendee.signedIn).length}</span>
+            <span> Prihlásený: {event.attendees.filter(attendee => attendee.signedIn).length}</span>
             <span>, Pozvaný: {event.attendees.length}</span>
             <span>, Náhradníci: {event.attendees.filter(attendee => attendee.standIn).length}</span>
           </ItemGrid>
@@ -81,8 +105,39 @@ export class EventDetails extends React.Component {
         <GridContainer justify="center">
           <ItemGrid xs={12} sm={12} md={12} lg={12}>
             <div className={classes.sectionTitle}>
-              <Badge color="gray">Terminy</Badge>
+              {hasAlternatives ?
+                <Badge color="gray" className={classes.sectionTitleBadge}>
+                  <EventIcon className={classes.eventTypeIcon} />
+                  <span>Termíny - možnosti</span>
+                </Badge>
+                 : null
+              }
             </div>
+            <RegularCard
+              customCardClasses={classes.termsCard}
+              content={
+                <Table
+                  noHeader
+                  tableData={event.terms.map((term, index) => [
+                    `${index + 1}.`,
+                    <span>
+                      <span>{format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm')}, </span>
+                      <span>{this.formatLocation(term.location)}</span>
+                    </span>
+                  ])}
+                  customCellClasses={[
+                    classes.left,
+                    classes.left,
+                  ]}
+                  customClassesForCells={[0, 1]}
+                  customHeadCellClasses={[
+                    classes.left,
+                    classes.left,
+                  ]}
+                  customHeadClassesForCells={[0, 1]}
+                />
+              }
+            />
           </ItemGrid>
         </GridContainer>
 
@@ -106,13 +161,16 @@ export class EventDetails extends React.Component {
               : null
             }
 
-            {this.isDescriptionEmpty(event.description) ?
-              <div className={classes.placeholderText}>Ďalšie podrobnosti nie sú uvedené</div>
-              :
-              <Button onClick={() => this.setState({ detailsOpen: !this.state.detailsOpen })}>
-                {this.state.detailsOpen ? 'Skryť detailný popis' : 'Zobraziť detailný popis'}
-              </Button>
-            }
+            
+            <div className={classes.placeholderText}>
+              {this.isDescriptionEmpty(event.description) ?
+                <span>Ďalšie podrobnosti nie sú uvedené</span>
+                :
+                <Button size="xs" onClick={() => this.setState({ detailsOpen: !this.state.detailsOpen })}>
+                  {this.state.detailsOpen ? 'Skryť detailný popis' : 'Zobraziť detailný popis'}
+                </Button>
+              }
+            </div>
           </ItemGrid>
 
           <ItemGrid xs={12} sm={12} md={12} lg={12} className={classes.section}>
@@ -172,8 +230,15 @@ query FetchEvent ($id: Int){
       signedOut
       wontGo
     }
+    groupedEvents {
+      id
+    }
+    parentEvent {
+      id
+    }
     terms {
       id
+      eventStartDateTime
       location {
         id
         latitude

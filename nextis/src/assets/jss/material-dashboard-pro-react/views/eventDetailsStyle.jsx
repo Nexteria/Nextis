@@ -40,6 +40,28 @@ const eventDetailsStyle = {
   section: {
     marginBottom: '1em',
   },
+  overviewContainer: {
+    marginBottom: '3em',
+    "& > div": {
+      display: "flex",
+      alignItems: "center",
+      "& > svg": {
+        marginRight: "0.5em",
+      },
+    },
+  },
+  termsCard: {
+    boxShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.5)",
+    marginTop: 0,
+  },
+  sectionTitleBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    "& > svg": {
+      fontSize: "12px",
+      marginRight: '5px',
+    },
+  }
 };
 
 export default eventDetailsStyle;
