@@ -24,10 +24,15 @@ export default class PaymentsOverview extends React.Component {
             iconColor="orange"
             title={
               <Typography component="div" className={classes.cardCategory}>
-                <div>IBAN pre členské</div>
+                <div>Pokyny k platbe</div>
               </Typography>
             }
-            content={<div className={classes.center}>{user.paymentsIban}</div>}
+            content={
+              <div className={classes.center}>
+                <div>IBAN: {user.paymentsIban}</div>
+                <div>VS: {user.student.tuitionFeeVariableSymbol}</div>
+              </div>
+            }
           />
         </ItemGrid>
         <ItemGrid xs={12} sm={6} md={6} lg={4}>
