@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { connect } from "common/store";
@@ -70,7 +71,7 @@ class Overview extends React.Component {
     });
   }
 
-  transformEvent(event, classes) {
+  transformEvent(event, classes, history) {
     const terms = [...event.terms].sort((a, b) => {
       return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
     });
@@ -145,7 +146,11 @@ class Overview extends React.Component {
               }
             </ItemGrid>
             <ItemGrid xs={12} md={3} className={classes.infoButtonContainer}>
-              <Button color={color} customClass={classes.actionButton + " " + classes.infoButton}>
+              <Button
+                color={color}
+                customClass={classes.actionButton + " " + classes.infoButton}
+                onClick={() => history.push(`/events/${event.id}`)}
+              >
                 <Info />
               </Button>
             </ItemGrid>
@@ -172,7 +177,9 @@ class Overview extends React.Component {
 
     const { classes } = this.props;
 
-    let events = [...this.props.data.events].filter(event => event.status === 'published').map(event => this.transformEvent(event, classes));
+    let events = [...this.props.data.events].filter(event => event.status === 'published')
+      .map(event => this.transformEvent(event, classes, this.props.history));
+
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
@@ -242,4 +249,5 @@ export default compose(
       },
     })
   }),
+  withRouter,
 )(Overview);

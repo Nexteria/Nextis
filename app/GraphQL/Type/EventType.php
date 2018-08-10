@@ -63,6 +63,10 @@ class EventType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type('event')),
                 'description' => 'The grouped events with this event',
             ],
+            'exclusionaryEvents' => [
+                'type' => Type::listOf(GraphQL::type('event')),
+                'description' => 'The events in exclusion group for this event',
+            ],
             'parentEvent' => [
                 'type' => GraphQL::type('event'),
                 'description' => 'Parent event for this event',

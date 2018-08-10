@@ -17,7 +17,6 @@ import TodayIcon from "@material-ui/icons/Today";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
-import RegularCard from "components/Cards/RegularCard.jsx";
 import NavPills from "components/NavPills/NavPills.jsx";
 
 import Meetings from "views/Events/Meetings.jsx";
@@ -71,11 +70,7 @@ class Events extends React.Component {
               tabButtonSubtitle: "stretnutia",
               tabIcon: TodayIcon,
               tabContent: (
-              <RegularCard
-                titleAlign="center"
-                cardTitle="Tvoje stretnutia na ktoré si sa záväzne prihlásil"
-                content={<Meetings />}
-              />
+                <Meetings />
               )
             },
             {

@@ -16,6 +16,8 @@ import Info from "@material-ui/icons/Info";
 // core components
 import Table from "components/Table/Table.jsx";
 import Button from "components/CustomButtons/Button.jsx";
+import ItemGrid from "components/Grid/ItemGrid.jsx";
+import RegularCard from "components/Cards/RegularCard.jsx";
 
 import extendedTablesStyle from "assets/jss/material-dashboard-pro-react/views/extendedTablesStyle.jsx";
 
@@ -57,33 +59,45 @@ class Meetings extends React.Component {
     const meetings = this.props.data.student.meetings;
 
     return (
-      <Table
-        tableHead={[
-          "Názov eventu",
-          "Dátum konania",
-          "Miesto",
-          "Akcie"
-        ]}
-        tableData={
-          [...meetings].sort((a, b) => {
-            return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
-          }).map(term =>
-            this.transformTerm(term, classes)
-          )
-        }
-        customCellClasses={[
-          classes.left,
-          classes.center,
-          classes.center
-        ]}
-        customClassesForCells={[0, 1, 2]}
-        customHeadCellClasses={[
-          classes.left,
-          classes.center,
-          classes.center
-        ]}
-        customHeadClassesForCells={[0, 1, 2]}
-      />
+      <div>
+        <h3>Tvoje stretnuia, na ktoré si sa záväzne prihlásil</h3>
+        <ItemGrid xs={12}>
+          <RegularCard
+            content={
+              meetings.length ?
+                <Table
+                  tableHead={[
+                    "Názov eventu",
+                    "Dátum konania",
+                    "Miesto",
+                    "Akcie"
+                  ]}
+                  tableData={
+                    [...meetings].sort((a, b) => {
+                      return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
+                    }).map(term =>
+                      this.transformTerm(term, classes)
+                    )
+                  }
+                  customCellClasses={[
+                    classes.left,
+                    classes.center,
+                    classes.center
+                  ]}
+                  customClassesForCells={[0, 1, 2]}
+                  customHeadCellClasses={[
+                    classes.left,
+                    classes.center,
+                    classes.center
+                  ]}
+                  customHeadClassesForCells={[0, 1, 2]}
+                />
+                :
+                <h4 className={classes.center}>Momentálne Ťa nečakajú žiadne stretnutia!</h4>
+            }
+          />
+        </ItemGrid>
+      </div>
     );
   }
 }

@@ -1,3 +1,4 @@
+import modalStyle from "assets/jss/material-dashboard-pro-react/modalStyle.jsx";
 
 const eventDetailsStyle = {
   label: {
@@ -15,6 +16,15 @@ const eventDetailsStyle = {
   },
   eventName: {
     marginTop: 0,
+    marginBottom: '2em',
+    '& > h2': {
+      marginBottom: 0,
+    },
+    '& > label': {
+      color: '#f00',
+      display: 'flex',
+      alignItems: 'center',
+    },
   },
   sectionTitle: {
     marginBottom: '1em',
@@ -61,7 +71,14 @@ const eventDetailsStyle = {
       fontSize: "12px",
       marginRight: '5px',
     },
-  }
+  },
+  ...modalStyle,
+  modalCloseButton: {
+    float: 'right',
+  },
+  red: {
+    color: '#f00',
+  },
 };
 
 export default eventDetailsStyle;

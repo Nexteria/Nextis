@@ -13,12 +13,12 @@ import Accessibility from "@material-ui/icons/Accessibility";
 import Place from "@material-ui/icons/Place";
 import People from "@material-ui/icons/People";
 import EventIcon from '@material-ui/icons/Event';
+import ExposurePlus2 from '@material-ui/icons/ExposurePlus2';
 
 import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Badge from "components/Badge/Badge.jsx";
-import Table from "components/Table/Table.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 
 import avatarImg from "assets/img/default-avatar.png";
@@ -49,6 +49,16 @@ export class EventDetails extends React.Component {
     )
   }
 
+  getTerms(rootTermId, parentTerms) {
+    let terms = []
+    if (parentTerms[rootTermId]) {
+      terms.push(parentTerms[rootTermId])
+      terms.concat(this.getTerms(parentTerms[rootTermId].id, parentTerms))
+    }
+
+    return terms
+  }
+
   render() {
     if (this.props.data.loading) {
       return <Spinner name='line-scale-pulse-out' />;
@@ -58,20 +68,21 @@ export class EventDetails extends React.Component {
     const { classes } = this.props;
 
     const parentTerms = {};
-    let rootTerms = 0;
+    let rootTerms = [];
     [...event.terms].forEach(term => {
       if (term.parentTermId) {
-        parentTerms[term.parentTermId] = true;
+        parentTerms[term.parentTermId] = term
       } else {
-        rootTerms += 1;
+        rootTerms.push(term);
       }
     });
 
-    const hasAlternatives = rootTerms > 1;
+    const hasAlternatives = rootTerms.length > 1;
+    const hasEventChoices = event.groupedEvents.length || (event.parentEvent && event.parentEvent.id);
+    const isMultiMeeting = Object.keys(parentTerms).length >= 1;
 
     return (
       <div>
-        <h2 className={classes.eventName}>{event.name}</h2>
         <GridContainer justify="center" className={classes.overviewContainer}>
           <ItemGrid xs={12} sm={12} md={12} lg={12}>
             <Accessibility /> Aktivity body: {event.activityPoints}
@@ -81,7 +92,7 @@ export class EventDetails extends React.Component {
             <span> Miesto konania: </span>
             <span>
               {event.terms.length > 1 ?
-                'Závisí od konkrétneho termínu'
+                ' Závisí od konkrétneho termínu'
                 :
                 this.formatLocation(event.terms[0].location)
               }
@@ -103,35 +114,73 @@ export class EventDetails extends React.Component {
                   <EventIcon className={classes.eventTypeIcon} />
                   <span>Termíny - možnosti</span>
                 </Badge>
-                 : null
+                : null
+              }
+
+             {!hasAlternatives ?
+                <Badge color="gray" className={classes.sectionTitleBadge}>
+                  {isMultiMeeting ? <ExposurePlus2 className={classes.eventTypeIcon} /> : null}
+                  <span>Termíny povinných stretnutí</span>
+                </Badge>
+                : null
               }
             </div>
-            <RegularCard
-              customCardClasses={classes.termsCard}
-              content={
-                <Table
-                  noHeader
-                  tableData={event.terms.map((term, index) => [
-                    `${index + 1}.`,
-                    <span>
-                      <span>{format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm')}, </span>
-                      <span>{this.formatLocation(term.location)}</span>
-                    </span>
-                  ])}
-                  customCellClasses={[
-                    classes.left,
-                    classes.left,
-                  ]}
-                  customClassesForCells={[0, 1]}
-                  customHeadCellClasses={[
-                    classes.left,
-                    classes.left,
-                  ]}
-                  customHeadClassesForCells={[0, 1]}
-                />
-              }
-            />
+            {hasAlternatives ?
+              rootTerms.map((rootTerm, alternativeIndex) =>
+                <div key={alternativeIndex}>
+                  <b>{alternativeIndex + 1}. možnosť</b>
+                  <RegularCard
+                    customCardClasses={classes.termsCard}
+                    content={
+                      <ol>
+                        <li>
+                          <span>{format(parse(rootTerm.eventStartDateTime), 'DD.MM.YYYY o HH:mm')}, </span>
+                          <span>{this.formatLocation(rootTerm.location)}</span>
+                        </li>
+                        {this.getTerms(rootTerm.id, parentTerms).map((term, index) =>
+                          <li key={index}>
+                            <span>{format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm')}, </span>
+                            <span>{this.formatLocation(term.location)}</span>
+                          </li>
+                        ) }
+                      </ol>
+                    }
+                  />
+                </div>
+              )
+              : null
+            }
+
+            {!hasAlternatives ?
+              <RegularCard
+                customCardClasses={classes.termsCard}
+                content={
+                  <ol>
+                    {event.terms.map((term, index) =>
+                      <li key={index}>
+                        <span>{format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm')}, </span>
+                        <span>{this.formatLocation(term.location)}</span>
+                      </li>
+                    ) }
+                  </ol>
+                }
+              />
+              : null
+            }
           </ItemGrid>
+
+          {hasEventChoices && event.parentEvent && event.parentEvent.exclusionaryEvents ?
+            <ItemGrid xs={12} sm={12} md={12} lg={12}>
+              <span className={classes.red}>Prihasením na tento event, stratíš možnosť prihlásiť sa na:</span>
+              <ul>
+                {event.parentEvent.exclusionaryEvents.filter(exclusionaryEvent => exclusionaryEvent.id !== event.id)
+                  .map((exclusionaryEvent, index) =>
+                  <li key={index}>{exclusionaryEvent.name}</li>
+                )}
+               </ul>
+            </ItemGrid>
+            : null
+          }
         </GridContainer>
 
         <GridContainer justify="center">
@@ -228,10 +277,16 @@ query FetchEvent ($id: Int){
     }
     parentEvent {
       id
+      name
+      exclusionaryEvents {
+        id
+        name
+      }
     }
     terms {
       id
       eventStartDateTime
+      parentTermId
       location {
         id
         latitude
