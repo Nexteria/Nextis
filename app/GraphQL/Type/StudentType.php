@@ -69,7 +69,7 @@ class StudentType extends GraphQLType
 
                     $studentSemester = $root->semesters()->where('semesterId', $semesterId)->first();
 
-                    return $studentSemester->pivot->tuitionFee;
+                    return $studentSemester ? $studentSemester->pivot->tuitionFee : null;
                 },
             ],
             'level' => [
@@ -108,9 +108,8 @@ class StudentType extends GraphQLType
 
                     return [
                         'gained' => $root->activityPoints()->where('semesterId', $semesterId)->sum('gainedPoints'),
-                        'minimum' => $studentSemester->pivot->minimumSemesterActivityPoints,
-                        'base' => $studentSemester->pivot->activityPointsBaseNumber,
-                        ''
+                        'minimum' => $studentSemester ? $studentSemester->pivot->minimumSemesterActivityPoints : null,
+                        'base' => $studentSemester ? $studentSemester->pivot->activityPointsBaseNumber : null,
                     ];
                 },
                 'selectable' => false,

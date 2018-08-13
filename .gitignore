@@ -18,4 +18,7 @@ public/uploads/images/*
 secrets/*
 !secrets/.gitkeep
 
+public/service-worker.js
+public/asset-manifest.json
+
 .DS_Store

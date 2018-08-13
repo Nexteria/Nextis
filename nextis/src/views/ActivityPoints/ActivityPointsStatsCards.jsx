@@ -80,13 +80,13 @@ class ActivityPointsStatsCards extends React.Component {
                 <span className={classes[isBelowMinimum ? 'negative' : 'positive']}>
                   {activityPointsInfo.gained}
                 </span>
-                <span> / {activityPointsInfo.base}</span>
+                <span> / {activityPointsInfo.base || '-'}</span>
               </span>
             }
             statIcon={Warning}
             descriptionColor={'gray'}
             smallColor={'gray'}
-            statText={`75% z Tvojho bodového základu: ${activityPointsInfo.minimum}`}
+            statText={`75% z Tvojho bodového základu: ${activityPointsInfo.minimum || '-'}`}
           />
         </ItemGrid>
         <ItemGrid xs={12} sm={6} md={6} lg={4}>
@@ -94,7 +94,7 @@ class ActivityPointsStatsCards extends React.Component {
             icon={Accessibility}
             iconColor="orange"
             title="Možné body po absolvovaní aktivít, na ktoré si prihlásený/á"
-            description={`${unfinishedEventsPoints + activityPointsInfo.gained} / ${activityPointsInfo.base}`}
+            description={`${unfinishedEventsPoints + activityPointsInfo.gained} / ${activityPointsInfo.base || '-'}`}
             statIcon={Warning}
             descriptionColor={'gray'}
             smallColor={'gray'}
@@ -106,7 +106,7 @@ class ActivityPointsStatsCards extends React.Component {
             icon={Accessibility}
             iconColor="orange"
             title="Možné body po absolvovaní aktivít, na ktoré sa môžeš prihlásiť"
-            description={`${unfinishedEventsPoints + activityPointsInfo.gained + eventsForSignInPoints} / ${activityPointsInfo.base}`}
+            description={`${unfinishedEventsPoints + activityPointsInfo.gained + eventsForSignInPoints} / ${activityPointsInfo.base || '-'}`}
             statIcon={Warning}
             descriptionColor={'gray'}
             smallColor={'gray'}

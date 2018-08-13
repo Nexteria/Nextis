@@ -48,7 +48,7 @@ const formItems = [
         type: 'date',
         component: 'date',
         id: 'dateOfBirth',
-        validation: ['required']
+        validation: ['required', 'date']
     },
     {
         label: 'Niečo o Tebe *',
@@ -229,10 +229,16 @@ class Profile extends React.Component {
                 }
 
                 case 'url': {
-                    if (!validator.isURL(value)) {
+                    if (value && !validator.isURL(value)) {
                         errors.push('Položka musí byť url adresa!');
                     }
                     break;
+                }
+
+                case 'date': {
+                    if (parse(value) == 'Invalid Date') {
+                        errors.push('Položka musí byť valídny dátum!');
+                    }
                 }
 
                 default: {
@@ -369,6 +375,7 @@ class Profile extends React.Component {
             });
             this.setState({ updating: false });
         }
+        this.setState({ updating: false });
     }
 
     render() {

@@ -33,16 +33,21 @@ import dashboardStyle from "assets/jss/material-dashboard-pro-react/views/dashbo
 
 class Dashboard extends React.Component {
   render() {
-    const { history, student } = this.props;
-    const { user } = this.props.data;
+    const { history, student, data } = this.props;
+    const { user } = data;
 
-    if (this.props.data.loading) {
-      return <Spinner name='line-scale-pulse-out' />;
+    if (data.loading) {
+      return <Spinner name="line-scale-pulse-out" />;
+    }
+
+    if (!data.student) {
+      // for now only students have dashboard
+      return null;
     }
 
     const activityPointsInfo = user.student.activityPointsInfo;
 
-    let eventNextMeetingDate = '-'
+    let eventNextMeetingDate = '-';
     let terms = [...user.student.meetings];
     if (terms.length) {
       terms = terms.sort((a, b) => a.eventStartDateTime.localeCompare(b.eventStartDateTime));
@@ -80,11 +85,11 @@ class Dashboard extends React.Component {
               icon={Accessibility}
               iconColor="orange"
               title="Aktivity body"
-              description={`${activityPointsInfo.gained} / ${activityPointsInfo.base}`}
+              description={`${activityPointsInfo.gained} / ${activityPointsInfo.base || '-'}`}
               statIcon={Warning}
               descriptionColor={'gray'}
               smallColor={'gray'}
-              statText={`75% z Tvojho bodového základu: ${activityPointsInfo.minimum}`}
+              statText={`75% z Tvojho bodového základu: ${activityPointsInfo.minimum || '-'}`}
               iconHover
               iconLink={`/activity-points/${student.activeSemesterId}`}
               history={history}

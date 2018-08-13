@@ -43,16 +43,16 @@ class ActivityPoints extends React.Component {
   }
 
   render() {
-    if (this.props.data.loading) {
-      return <Spinner name='line-scale-pulse-out' />;
+    const { data, classes, match, user } = this.props;
+
+    if (data.loading) {
+      return <Spinner name="line-scale-pulse-out" />;
     }
 
-    const { classes, data } = this.props;
+    const { student } = data.user;
 
-    const student = data.user.student;
-
-    let selectedSemesterId = parseInt(this.props.match.params.semesterId, 10);
-    if (!selectedSemesterId && student.activeSemester) {
+    let selectedSemesterId = parseInt(match.params.semesterId, 10);
+    if (!selectedSemesterId && student && student.activeSemester) {
       selectedSemesterId = student.activeSemester.id;
     }
 
@@ -80,8 +80,8 @@ class ActivityPoints extends React.Component {
                 value={selectedSemesterId}
                 onChange={this.handleSemesterChange}
                 inputProps={{
-                  name: "activeSemester",
-                  id: "active-semester"
+                  name: 'activeSemester',
+                  id: 'active-semester'
                 }}
               >
                 <MenuItem
@@ -92,7 +92,7 @@ class ActivityPoints extends React.Component {
                 >
                   Vyber semester
                 </MenuItem>
-                {student.semesters.map(semester =>
+                {student ? student.semesters.map(semester => (
                   <MenuItem
                     classes={{
                       root: classes.selectMenuItem,
@@ -103,22 +103,24 @@ class ActivityPoints extends React.Component {
                   >
                     {semester.name}
                   </MenuItem>
-                )}
+                )) : null}
               </Select>
             </FormControl>
           </ItemGrid>
         </GridContainer>
         <GridContainer>
-          <ActivityPointsStatsCards
-            classes={classes}
-            activityPointsInfo={student.activityPointsInfo}
-            unfinishedEvents={student.unfinishedEvents}
-            openEventsForSignin={student.openEventsForSignin}
-          />
+          {student && (
+            <ActivityPointsStatsCards
+              classes={classes}
+              activityPointsInfo={student ? student.activityPointsInfo : null}
+              unfinishedEvents={student ? student.unfinishedEvents : null}
+              openEventsForSignin={student ? student.openEventsForSignin : null}
+            />
+          )}
         </GridContainer>
         <GridContainer justify="center">
           <ItemGrid xs={12} sm={12} md={10}>
-            <PointsCard semesterId={selectedSemesterId} studentId={student.id} userId={this.props.user.id}/>
+            {student && <PointsCard semesterId={selectedSemesterId} studentId={student.id} userId={user.id} />}
           </ItemGrid>
         </GridContainer>
       </div>
@@ -178,12 +180,16 @@ export default compose(
   withStyles(activityPointsStyle),
   withRouter,
   graphql(userQuery, {
-    options: props => ({
-      notifyOnNetworkStatusChange: true,
-      variables: {
-        id: props.user.id,
-        semesterId: parseInt(props.match.params.semesterId, 10) || props.student.activeSemesterId,
-      },
-    })
+    options: (props) => {
+      const { student, match, user } = props;
+
+      return {
+        notifyOnNetworkStatusChange: true,
+        variables: {
+          id: user.id,
+          semesterId: parseInt(match.params.semesterId, 10) || (student ? student.activeSemesterId : 0),
+        },
+      };
+    }
   }),
 )(ActivityPoints);

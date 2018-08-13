@@ -45,12 +45,12 @@ class UserProfileMutation extends Mutation
             'facebookLink' => [
                 'name' => 'facebookLink',
                 'type' => Type::string(),
-                'rules' => ['required', 'url'],
+                'rules' => ['url'],
             ],
             'linkedinLink' => [
                 'name' => 'linkedinLink',
                 'type' => Type::string(),
-                'rules' => ['required', 'url'],
+                'rules' => ['url'],
             ],
             'actualJobInfo' => [
                 'name' => 'actualJobInfo',

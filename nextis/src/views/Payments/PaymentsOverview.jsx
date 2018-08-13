@@ -30,7 +30,7 @@ export default class PaymentsOverview extends React.Component {
             content={
               <div className={classes.center}>
                 <div>IBAN: {user.paymentsIban}</div>
-                <div>VS: {user.student.tuitionFeeVariableSymbol}</div>
+                <div>VS: {user.student ? user.student.tuitionFeeVariableSymbol : '-'}</div>
               </div>
             }
           />
@@ -65,7 +65,7 @@ export default class PaymentsOverview extends React.Component {
             }
             content={
               <div className={classes.center}>
-                <span>{user.student.tuitionFee / 100}</span>
+                <span>{user.student ? (user.student.tuitionFee / 100) : '-'}</span>
                 <span className={classes.euroSign}>€</span>
               </div>
             }

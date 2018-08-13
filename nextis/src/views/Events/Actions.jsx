@@ -87,13 +87,13 @@ class Actions extends React.Component {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes, history, data } = this.props;
     
-    if (this.props.data.loading) {
+    if (data.loading) {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const termsForFeedback = this.props.data.student.termsForFeedback;
+    const termsForFeedback = data.student ? data.student.termsForFeedback : [];
 
     return (
       <div>

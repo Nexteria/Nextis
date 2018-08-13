@@ -163,17 +163,17 @@ class SignInSection extends React.Component {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes, history, data } = this.props;
     
-    if (this.props.data.loading) {
-      return <Spinner name='line-scale-pulse-out' />;
+    if (data.loading) {
+      return <Spinner name="line-scale-pulse-out" />;
     }
 
-    const student = this.props.data.student;
+    const student = data.student;
 
-    const openEventsForSignin = student.openEventsForSignin.filter(event =>
+    const openEventsForSignin = student ? student.openEventsForSignin.filter(event =>
       !event.attendees[0].signedIn
-    );
+    ) : [];
 
     let events = openEventsForSignin.filter(event =>
       event.canStudentSignIn.canSignIn === true ||

@@ -20,7 +20,7 @@ export default class ShortText extends React.Component {
           inputProps={{
             type: 'text',
             value: answer || '',
-            onChange: e => {onChange(e.target.value); console.log(answer)}
+            onChange: e => onChange(e.target.value)
           }}
         />
       </div>

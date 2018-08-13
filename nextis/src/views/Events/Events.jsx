@@ -46,13 +46,13 @@ class Events extends React.Component {
 
     const { user } = data;
 
-    const openEventsForSignin = user.student.openEventsForSignin.filter((event) => {
+    const openEventsForSignin = !user.student ? 0 : user.student.openEventsForSignin.filter((event) => {
       const attendee = event.attendees[0];
 
       return !attendee.signedIn && !attendee.signedOut && !attendee.wontGo;
     }).length;
 
-    const termsForFeedback = user.student.termsForFeedback.length;
+    const termsForFeedback = user.student ? user.student.termsForFeedback.length : 0;
 
     return (
       <GridContainer justify="center">
