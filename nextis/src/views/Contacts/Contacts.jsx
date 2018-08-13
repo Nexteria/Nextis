@@ -7,6 +7,7 @@ import Spinner from 'react-spinkit';
 import download from 'downloadjs';
 import { Route } from 'react-router-dom';
 import request from 'common/fetch';
+import diacritics from 'diacritics';
 
 // material-ui components
 import withStyles from 'material-ui/styles/withStyles';
@@ -16,14 +17,14 @@ import Info from '@material-ui/icons/Info';
 import ContactsIcon from '@material-ui/icons/Contacts';
 
 // core components
-import GridContainer from 'components/Grid/GridContainer.jsx';
-import ItemGrid from 'components/Grid/ItemGrid.jsx';
+import GridContainer from 'components/Grid/GridContainer';
+import ItemGrid from 'components/Grid/ItemGrid';
 
-import IconCard from 'components/Cards/IconCard.jsx';
-import Button from 'components/CustomButtons/Button.jsx';
-import UserInfoModal from 'views/Contacts/UserInfoModal.jsx';
+import IconCard from 'components/Cards/IconCard';
+import Button from 'components/CustomButtons/Button';
+import UserInfoModal from 'views/Contacts/UserInfoModal';
 
-import contactsStyle from 'assets/jss/material-dashboard-pro-react/views/contactsStyle.jsx';
+import contactsStyle from 'assets/jss/material-dashboard-pro-react/views/contactsStyle';
 
 class Contacts extends React.Component {
   handleDownloadContactsRequest() {
@@ -135,18 +136,17 @@ class Contacts extends React.Component {
             icon={ContactsIcon}
             title=""
             iconColor="orange"
-            content={
+            content={(
               <ReactTable
                 data={data}
                 filterable
                 defaultPageSize={20}
-                defaultFilterMethod={(filter, row, column) =>
-                  filter.value.localeCompare(
-                    row[column.id].slice(0, filter.value.length),
-                    'sk',
-                    { sensitivity: 'base' }
-                  ) === 0
-                }
+                defaultFilterMethod={(filter, row, column) => {
+                  const searchValue = diacritics.remove(filter.value).toLowerCase();
+                  const columnValue = diacritics.remove(row[column.id]).toLowerCase();
+
+                  return columnValue.indexOf(searchValue) !== -1;
+                }}
                 columns={this.getColumns()}
                 showPaginationTop={false}
                 showPaginationBottom
@@ -154,7 +154,7 @@ class Contacts extends React.Component {
                 showPageJump={false}
                 className={'-striped -highlight ' + classes.contactsTable}
               />
-            }
+            )}
           />
         </ItemGrid>
         <ItemGrid xs={12} sm={12} md={12} lg={8} className={classes.center}>

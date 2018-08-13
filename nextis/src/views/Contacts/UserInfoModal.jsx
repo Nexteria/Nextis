@@ -22,10 +22,11 @@ import PhoneAndroid from '@material-ui/icons/PhoneAndroid';
 import Work from '@material-ui/icons/Work';
 
 // core components
-import Button from 'components/CustomButtons/Button.jsx';
+import Button from 'components/CustomButtons/Button';
+import ItemGrid from 'components/Grid/ItemGrid';
 import avatar from 'assets/img/default-avatar.png';
 
-import userInfoModalStyle from 'assets/jss/material-dashboard-pro-react/views/userInfoModalStyle.jsx';
+import userInfoModalStyle from 'assets/jss/material-dashboard-pro-react/views/userInfoModalStyle';
 
 import SkillView from 'views/Skills/components/SkillView';
 
@@ -37,150 +38,173 @@ const UserInfoModal = ({
   data: { user, loading },
   classes,
   history
-}) =>
-  loading ? (
-    <Spinner name="line-scale-pulse-out" />
-  ) : (
-    <Dialog
-      classes={{
-        root: classes.center,
-        paper: classes.modal
-      }}
-      open
-      transition={Transition}
-      keepMounted
-      onClose={() => history.goBack()}
-      aria-labelledby="notice-modal-slide-title"
-      aria-describedby="notice-modal-slide-description"
+}) => loading ? (
+  <Spinner name="line-scale-pulse-out" />
+) : (
+  <Dialog
+    classes={{
+      root: classes.center,
+      paper: classes.modal
+    }}
+    open
+    transition={Transition}
+    keepMounted
+    onClose={() => history.goBack()}
+    aria-labelledby="notice-modal-slide-title"
+    aria-describedby="notice-modal-slide-description"
+  >
+    <DialogTitle
+      id="notice-modal-slide-title"
+      disableTypography
+      className={classes.modalHeader}
     >
-      <DialogTitle
-        id="notice-modal-slide-title"
-        disableTypography
-        className={classes.modalHeader}
-      >
-        <div className={classes.cardAvatar}>
-          <img
-            src={user.profilePicture ? user.profilePicture.filePath : avatar}
-            className={classes.img}
-            alt="..."
+      <div className={classes.cardAvatar}>
+        <img
+          src={user.profilePicture ? user.profilePicture.filePath : avatar}
+          className={classes.img}
+          alt="..."
+        />
+      </div>
+      <h3 className={classes.userName}>
+        {`${user.firstName} ${user.lastName}`}
+      </h3>
+    </DialogTitle>
+    <DialogContent
+      id="notice-modal-slide-description"
+      className={classes.modalBody}
+    >
+      <ItemGrid xs={12}>
+        <SkillView skills={user.skills} />
+        <div className={classes.sectionContainer}>
+          <Portrait className={classes.sectionIcon} />
+          <label>O mne</label>
+        </div>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: user.personalDescription || 'Nevyplnené'
+          }}
+        />
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <Portrait className={classes.sectionIcon} />
+          <label>Hobby</label>
+        </div>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: user.hobby || 'Nevyplnené'
+          }}
+        />
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <Portrait className={classes.sectionIcon} />
+          <label>Ďalšie moje projekty a dobrovoľníctvo</label>
+        </div>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: user.otherActivities || 'Nevyplnené'
+          }}
+        />
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <Email className={classes.sectionIcon} />
+          <label>Email</label>
+        </div>
+        <p>{user.email || 'Nevyplnené'}</p>
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <PhoneAndroid className={classes.sectionIcon} />
+          <label>Telefón</label>
+        </div>
+        <p>{user.phone || 'Nevyplnené'}</p>
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <School className={classes.sectionIcon} />
+          <label>Štúdium</label>
+        </div>
+        <p>
+          {user.studyProgram || 'Nevyplnené'}
+        </p>
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <Work className={classes.sectionIcon} />
+          <label>Práca</label>
+        </div>
+        <p>
+          {user.actualJobInfo || 'Nevyplnené'}
+        </p>
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <div className={classes.sectionContainer}>
+          <AccountBalance className={classes.sectionIcon} />
+          <label>Nexteria level</label>
+        </div>
+        <p>
+          {user.student.level.name}
+        </p>
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <Button
+          color="facebookNoBackground"
+          onClick={() => {
+            if (user.facebookLink) {
+              const win = window.open(user.facebookLink, '_blank');
+              win.focus();
+            }
+          }}
+          customClass={classes.socialButtons}
+        >
+          <i
+            className={`
+              ${classes.socialButtonsIcons} ${classes.marginRight} fab fa-facebook-square
+            `}
           />
-        </div>
-        <h3 className={classes.userName}>
-          {user.firstName} {user.lastName}
-        </h3>
-      </DialogTitle>
-      <DialogContent
-        id="notice-modal-slide-description"
-        className={classes.modalBody}
-      >
-        <div>
-          <SkillView skills={user.skills} />
-          <div className={classes.sectionContainer}>
-            <Portrait className={classes.sectionIcon} />
-            <label>O mne</label>
-          </div>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: user.personalDescription || 'Nevyplnené'
-            }}
-          />
-        </div>
-
-        <div>
-          <div className={classes.sectionContainer}>
-            <Email className={classes.sectionIcon} />
-            <label>Email</label>
-          </div>
-          <p>{user.email || 'Nevyplnené'}</p>
-        </div>
-
-        <div>
-          <div className={classes.sectionContainer}>
-            <PhoneAndroid className={classes.sectionIcon} />
-            <label>Telefón</label>
-          </div>
-          <p>{user.phone || 'Nevyplnené'}</p>
-        </div>
-
-        <div>
-          <div className={classes.sectionContainer}>
-            <School className={classes.sectionIcon} />
-            <label>Štúdium</label>
-          </div>
-          <p>{user.studyProgram || 'Nevyplnené'}</p>
-        </div>
-
-        <div>
-          <div className={classes.sectionContainer}>
-            <Work className={classes.sectionIcon} />
-            <label>Práca</label>
-          </div>
-          <p>{user.actualJobInfo || 'Nevyplnené'}</p>
-        </div>
-
-        <div>
-          <div className={classes.sectionContainer}>
-            <AccountBalance className={classes.sectionIcon} />
-            <label>Nexteria level</label>
-          </div>
-          <p>{user.student.level.name}</p>
-        </div>
-
-        <div>
-          <Button
-            color="facebookNoBackground"
-            onClick={() => {
-              if (user.facebookLink) {
-                const win = window.open(user.facebookLink, '_blank');
-                win.focus();
-              }
-            }}
-            customClass={classes.socialButtons}
-          >
-            <i
-              className={
-                classes.socialButtonsIcons +
-                ' ' +
-                classes.marginRight +
-                ' fab fa-facebook-square'
-              }
-            />{' '}
-            {user.facebookLink ? 'Facebook' : 'Nevyplnené'}
-          </Button>
-        </div>
-
-        <div>
-          <Button
-            color="linkedinNoBackground"
-            onClick={() => {
-              if (user.linkedinLink) {
-                const win = window.open(user.linkedinLink, '_blank');
-                win.focus();
-              }
-            }}
-            customClass={classes.socialButtons}
-          >
-            <i
-              className={
-                classes.socialButtonsIcons +
-                ' ' +
-                classes.marginRight +
-                ' fab fa-linkedin'
-              }
-            />{' '}
-            {user.linkedinLink ? 'LinkedIn' : 'Nevyplnené'}
-          </Button>
-        </div>
-      </DialogContent>
-      <DialogActions
-        className={classes.modalFooter + ' ' + classes.modalFooterCenter}
-      >
-        <Button onClick={() => history.goBack()} color="simple">
-          Zavrieť
+          {' '}
+          {user.facebookLink ? 'Facebook' : 'Nevyplnené'}
         </Button>
-      </DialogActions>
-    </Dialog>
-  );
+      </ItemGrid>
+
+      <ItemGrid xs={12}>
+        <Button
+          color="linkedinNoBackground"
+          onClick={() => {
+            if (user.linkedinLink) {
+              const win = window.open(user.linkedinLink, '_blank');
+              win.focus();
+            }
+          }}
+          customClass={classes.socialButtons}
+        >
+          <i
+            className={`${classes.socialButtonsIcons} ${classes.marginRight} fab fa-linkedin`}
+          />
+          {' '}
+          {user.linkedinLink ? 'LinkedIn' : 'Nevyplnené'}
+        </Button>
+      </ItemGrid>
+    </DialogContent>
+    <DialogActions
+      className={`${classes.modalFooter} ${classes.modalFooterCenter}`}
+    >
+      <Button onClick={() => history.goBack()} color="simple">
+        Zavrieť
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
 
 const StudentsQuery = gql`
   query FetchUser($userId: Int) {
@@ -189,6 +213,8 @@ const StudentsQuery = gql`
       firstName
       lastName
       email
+      otherActivities
+      hobby
       phone
       profilePicture {
         id
