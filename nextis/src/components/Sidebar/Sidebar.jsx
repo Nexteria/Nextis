@@ -14,6 +14,7 @@ import ListItemIcon from "material-ui/List/ListItemIcon";
 import ListItemText from "material-ui/List/ListItemText";
 import Hidden from "material-ui/Hidden";
 import Collapse from "material-ui/transitions/Collapse";
+import Button from 'components/CustomButtons/Button';
 
 // core components
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
@@ -410,6 +411,13 @@ class Sidebar extends React.Component {
                 style={{ backgroundImage: "url(" + image + ")" }}
               />
             ) : null}
+            <a
+              className={classes.appFeedbackButton}
+              href="https://wantoo.io/nexteria-space/"
+              target="_blank"
+            >
+              Nahlásiť chybu / vylepšenie
+            </a>
           </Drawer>
         </Hidden>
         <Hidden smDown>
@@ -435,6 +443,13 @@ class Sidebar extends React.Component {
                 style={{ backgroundImage: "url(" + image + ")" }}
               />
             ) : null}
+            <a
+              className={classes.appFeedbackButton}
+              href="https://wantoo.io/nexteria-space/"
+              target="_blank"
+            >
+              Nahlásiť chybu / vylepšenie
+            </a>
           </Drawer>
         </Hidden>
       </div>

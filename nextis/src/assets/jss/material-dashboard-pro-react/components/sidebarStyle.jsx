@@ -15,9 +15,16 @@ import {
   warningColor,
   dangerColor,
   roseColor
-} from "assets/jss/material-dashboard-pro-react.jsx";
+} from 'assets/jss/material-dashboard-pro-react';
+
+import buttonStyle from 'assets/jss/material-dashboard-pro-react/components/buttonStyle';
 
 const sidebarStyle = theme => ({
+  appFeedbackButton: {
+    ...buttonStyle.button,
+    ...buttonStyle.warning,
+    zIndex: 10,
+  },
   drawerPaperRTL: {
     [theme.breakpoints.up("md")]: {
       left: "auto !important",
@@ -493,7 +500,7 @@ const sidebarStyle = theme => ({
     "&:hover,&:focus": {
       color: "#FFFFFF"
     }
-  }
+  },
 });
 
 export default sidebarStyle;
