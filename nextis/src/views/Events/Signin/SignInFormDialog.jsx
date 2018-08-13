@@ -38,7 +38,7 @@ export class SignInFormDialog extends React.Component {
   }
 
   render() {
-    const { data, classes } = this.props;
+    const { classes } = this.props;
 
     return (
       <Dialog

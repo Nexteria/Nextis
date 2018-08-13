@@ -1,27 +1,26 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
-import { NavLink, Link } from "react-router-dom";
-import cx from "classnames";
+import PerfectScrollbar from 'perfect-scrollbar';
+import { NavLink, Link } from 'react-router-dom';
+import cx from 'classnames';
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Drawer from "material-ui/Drawer";
-import List from "material-ui/List";
-import ListItem from "material-ui/List/ListItem";
-import ListItemIcon from "material-ui/List/ListItemIcon";
-import ListItemText from "material-ui/List/ListItemText";
-import Hidden from "material-ui/Hidden";
-import Collapse from "material-ui/transitions/Collapse";
-import Button from 'components/CustomButtons/Button';
+import withStyles from 'material-ui/styles/withStyles';
+import Drawer from 'material-ui/Drawer';
+import List from 'material-ui/List';
+import ListItem from 'material-ui/List/ListItem';
+import ListItemIcon from 'material-ui/List/ListItemIcon';
+import ListItemText from 'material-ui/List/ListItemText';
+import Hidden from 'material-ui/Hidden';
+import Collapse from 'material-ui/transitions/Collapse';
 
 // core components
-import HeaderLinks from "components/Header/HeaderLinks.jsx";
+import HeaderLinks from 'components/Header/HeaderLinks';
 
-import sidebarStyle from "assets/jss/material-dashboard-pro-react/components/sidebarStyle.jsx";
+import sidebarStyle from 'assets/jss/material-dashboard-pro-react/components/sidebarStyle';
 
-import avatar from "assets/img/default-avatar.png";
+import avatar from 'assets/img/default-avatar.png';
 
 var ps;
 
@@ -331,6 +330,20 @@ class Sidebar extends React.Component {
             </ListItem>
           );
         })}
+        <ListItem className={classes.item}>
+          <a
+            href="https://wantoo.io/nexteria-space/"
+            className={classes.itemLink + " " + classes.feedbackLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ListItemText
+              primary={"Nahlásiť chybu / vylepšenie"}
+              disableTypography={true}
+              className={itemText}
+            />
+          </a>
+        </ListItem>
       </List>
     );
 
@@ -411,13 +424,6 @@ class Sidebar extends React.Component {
                 style={{ backgroundImage: "url(" + image + ")" }}
               />
             ) : null}
-            <a
-              className={classes.appFeedbackButton}
-              href="https://wantoo.io/nexteria-space/"
-              target="_blank"
-            >
-              Nahlásiť chybu / vylepšenie
-            </a>
           </Drawer>
         </Hidden>
         <Hidden smDown>
@@ -443,13 +449,6 @@ class Sidebar extends React.Component {
                 style={{ backgroundImage: "url(" + image + ")" }}
               />
             ) : null}
-            <a
-              className={classes.appFeedbackButton}
-              href="https://wantoo.io/nexteria-space/"
-              target="_blank"
-            >
-              Nahlásiť chybu / vylepšenie
-            </a>
           </Drawer>
         </Hidden>
       </div>

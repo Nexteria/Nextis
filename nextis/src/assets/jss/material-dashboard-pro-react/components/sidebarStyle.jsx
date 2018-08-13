@@ -501,6 +501,9 @@ const sidebarStyle = theme => ({
       color: "#FFFFFF"
     }
   },
+  feedbackLink: {
+    marginTop: '2em',
+  },
 });
 
 export default sidebarStyle;
