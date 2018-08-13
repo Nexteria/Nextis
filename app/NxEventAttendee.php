@@ -31,7 +31,15 @@ class NxEventAttendee extends Authenticatable implements AuditableContract
         'filledFeedback',
     ];
 
-    protected $dates = ['deleted_at', 'signedIn', 'signedOut', 'wontGo', 'standIn'];
+    protected $dates = [
+        'deleted_at',
+        'signedIn',
+        'signedOut',
+        'wontGo',
+        'standIn',
+        'signInOpenDateTime',
+        'signInCloseDateTime',
+    ];
 
     public function __construct(array $attributes = array())
     {

@@ -82,6 +82,14 @@ class UserProfileMutation extends Mutation
                 'type' => Type::nonNull(Type::string()),
                 'rules' => ['required', 'min:150'],
             ],
+            'hobby' => [
+                'name' => 'hobby',
+                'type' => Type::nonNull(Type::string()),
+            ],
+            'otherActivities' => [
+                'name' => 'otherActivities',
+                'type' => Type::nonNull(Type::string()),
+            ],
             'studyYear' => [
                 'name' => 'studyYear',
                 'type' => Type::nonNull(Type::string()),
@@ -115,6 +123,8 @@ class UserProfileMutation extends Mutation
         $user->studyProgram = $args['studyProgram'];
         $user->dateOfBirth = $args['dateOfBirth'];
         $user->personalDescription = $args['personalDescription'];
+        $user->hobby = $args['hobby'];
+        $user->otherActivities = $args['otherActivities'];
         $user->studyYear = $args['studyYear'];
 
         $user->skills()->sync($args['skills']);

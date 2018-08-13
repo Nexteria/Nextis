@@ -7,12 +7,17 @@ use App\GraphQL\Type\NxEventAttendeeType;
 use App\GraphQL\Type\NxEventAttendeeGroupType;
 use App\GraphQL\Type\NxLocationType;
 use App\GraphQL\Type\TermAttendingNumbers;
+use App\GraphQL\Type\SigninCheckType;
 use App\GraphQL\Type\UserType;
 use App\GraphQL\Type\StudentType;
 use App\GraphQL\Type\StudentLevelType;
 use App\GraphQL\Type\ActivityPointsInfoType;
 use App\GraphQL\Type\ActivityPointsType;
 use App\GraphQL\Type\QuestionFormType;
+use App\GraphQL\Type\QuestionForm\DescriptionType as QuestionFormDescriptionType;
+use App\GraphQL\Type\QuestionForm\QuestionType;
+use App\GraphQL\Type\QuestionForm\QuestionChoiceType;
+use App\GraphQL\Type\QuestionForm\QuestionAnswerType;
 use App\GraphQL\Type\SemesterType;
 use App\GraphQL\Type\PaymentType;
 use App\GraphQL\Type\PaymentCategoryType;
@@ -30,6 +35,9 @@ use App\GraphQL\Query\SkillsQuery;
 use App\GraphQL\Mutations\CreateSkillMutation;
 use App\GraphQL\Mutations\UserProfileMutation;
 use App\GraphQL\Mutations\UserProfilePhotoMutation;
+use App\GraphQL\Mutations\StandInSignActionMutation;
+use App\GraphQL\Mutations\SubmitQuestionaireMutation;
+use App\GraphQL\Mutations\EventSignActionMutation;
 
 
 return [
@@ -52,8 +60,11 @@ return [
             ],
             'mutation' => [
                 'UpdateUserProfile' => UserProfileMutation::class,
+                'StandInSignAction' => StandInSignActionMutation::class,
                 'UpdateUserProfilePhoto' => UserProfilePhotoMutation::class,
                 'CreateSkill' => CreateSkillMutation::class,
+                'SubmitQuestionaire' => SubmitQuestionaireMutation::class,
+                'EventSignAction' => EventSignActionMutation::class,
             ],
             'middleware' => ['auth']
         ],
@@ -66,7 +77,10 @@ return [
         'NxEventAttendee' => NxEventAttendeeType::class,
         'NxEventAttendeeGroup' => NxEventAttendeeGroupType::class,
         'QuestionForm' => QuestionFormType::class,
+        'QuestionFormQuestion' => QuestionType::class,
+        'QuestionChoice' => QuestionChoiceType::class,
         'TermAttendingNumbers' => TermAttendingNumbers::class,
+        'SigninCheck' => SigninCheckType::class,
         'NxLocation' => NxLocationType::class,
         'user' => UserType::class,
         'student' => StudentType::class,
@@ -78,8 +92,10 @@ return [
         'paymentCategory' => PaymentCategoryType::class,
         'image' => ImageType::class,
         'skill' => SkillType::class,
+        'QuestionFormDescription' => QuestionFormDescriptionType::class,
+        'QuestionAnswer' => QuestionAnswerType::class,
     ],
 
-    'error_formatter' => ['\Rebing\GraphQL\GraphQL', 'formatError'],
+    'error_formatter' => ['\App\GraphQL\ErrorFormatter', 'formatError'],
     'params_key'    => 'variables',
 ];

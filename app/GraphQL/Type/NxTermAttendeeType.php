@@ -135,6 +135,14 @@ class NxTermAttendeeType extends GraphQLType
         ];
     }
 
+    public function resolveSignInOpenDateTimeField($root) {
+        return (string) $root->signInOpenDateTime;
+    }
+
+    public function resolveSignInCloseDateTimeField($root) {
+        return (string) $root->signInCloseDateTime;
+    }
+
     public function resolveSignedInField($root)
     {
         return (string) $root->pivot->signedIn;

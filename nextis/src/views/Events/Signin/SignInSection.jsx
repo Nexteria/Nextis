@@ -1,8 +1,7 @@
-import React from "react";
+import React from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import { withRouter } from "react-router-dom";
-import { connect } from "common/store";
+import { withRouter } from 'react-router-dom';
+import { connect } from 'common/store';
 import { compose } from 'recompose';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
@@ -10,26 +9,62 @@ import isAfter from 'date-fns/is_after';
 import Spinner from 'react-spinkit';
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from 'material-ui/styles/withStyles';
 
 // material-ui icons
-import Info from "@material-ui/icons/Info";
+import Info from '@material-ui/icons/Info';
 import ExposurePlus2 from '@material-ui/icons/ExposurePlus2';
 import CallSplit from '@material-ui/icons/CallSplit';
 import EventIcon from '@material-ui/icons/Event';
 import Assignment from '@material-ui/icons/Assignment';
 
 // core components
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import RegularCard from "components/Cards/RegularCard.jsx";
-import Button from "components/CustomButtons/Button.jsx";
-import Table from "components/Table/Table.jsx";
+import ItemGrid from 'components/Grid/ItemGrid';
+import RegularCard from 'components/Cards/RegularCard';
+import Button from 'components/CustomButtons/Button';
+import Table from 'components/Table/Table';
 
-import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eventActionsStyle.jsx";
+import { meetingsQuery, standInSignAction, eventSignAction } from 'views/Events/Signin/Queries';
+
+import eventActionsStyle from 'assets/jss/material-dashboard-pro-react/views/eventActionsStyle';
 
 class SignInSection extends React.Component {
+  constructor(props) {
+    super(props);
 
-  transformEvent(event, classes, history) {
+    this.handleStandinAction = this.handleStandinAction.bind(this);
+    this.handleWontGoAction = this.handleWontGoAction.bind(this);
+  }
+
+  isEventFull(event) {
+    return (
+      event.canStudentSignIn.codename === 'group_max_capacity_reached' ||
+      event.canStudentSignIn.codename === 'term_max_capacity_reached'
+    );
+  }
+
+  async handleStandinAction(studentId, eventId, action) {
+    await this.props.standInSignAction({ variables: {studentId, eventId, action} })
+    this.props.data.refetch();
+  }
+
+  async handleWontGoAction(event) {
+    const { signAction, student, data } = this.props;
+
+    await signAction({
+      variables: {
+        studentId: student.id,
+        eventId: event.id,
+        action: 'WONT_GO',
+        terms: [event.terms[0].id],
+        reason: '',
+      }
+    });
+
+    data.refetch();
+  }
+
+  transformEvent(event, classes, history, studentId) {
     let terms = [...event.terms];
     terms = terms.sort((a, b) => {
       return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
@@ -42,28 +77,46 @@ class SignInSection extends React.Component {
     const deadline = format(parse(attendee.signInCloseDateTime), 'DD.MM.YYYY o HH:mm');
 
     let fillButtons = [
-      { color: "info", icon: Info, action: () => history.push(`/events/${event.id}`) },
-      { color: "success", icon: event.form ? Assignment : null, text: ' Prihlásiť' }
+      { color: 'info', icon: Info, action: () => history.push(`/events/${event.id}`) },
     ];
 
-    if (!attendee.wontGo && !attendee.signedOut) {
-      fillButtons.push(
-        { color: "danger", text: 'Nezúčastním sa' }
-      );
+    if (!this.isEventFull(event)) {
+      fillButtons.push({
+        color: 'success',
+        icon: event.form ? Assignment : null,
+        text: ' Prihlásiť',
+        action: () => history.push(`/events/${event.id}/signIn`)
+      })
+    } else if (!attendee.standIn) {
+      fillButtons.push({
+        color: 'warning',
+        text: 'Prihlásiť ako náhradník',
+        action: () => history.push(`/events/${event.id}/signIn`)
+      })
     }
 
-    fillButtons = fillButtons.map((prop, key) => {
-      return (
-        <Button color={prop.color} customClass={classes.actionButton} key={key} onClick={prop.action}>
-          {prop.icon ? <prop.icon className={classes.icon} /> : null}
-          {prop.text ? prop.text : null}
-        </Button>
-      );
-    });
+    if (attendee.standIn) {
+      fillButtons.push({ color: 'danger', text: 'Odhlásiť z náhradníkov', action: () => this.handleStandinAction(studentId, event.id, 'SIGN_OUT') })
+    }
+
+    if (!attendee.wontGo && !attendee.signedOut) {
+      fillButtons.push({
+        color: 'danger',
+        text: 'Nezúčastním sa',
+        action: () => this.handleWontGoAction(event)
+      });
+    }
+
+    fillButtons = fillButtons.map((prop, key) => (
+      <Button color={prop.color} customClass={classes.actionButton} key={key} onClick={prop.action}>
+        {prop.icon ? <prop.icon className={classes.icon} /> : null}
+        {prop.text ? prop.text : null}
+      </Button>
+    ));
 
     const parentTerms = {};
     let rootTerms = 0;
-    [...event.terms].forEach(term => {
+    [...event.terms].forEach((term) => {
       if (term.parentTermId) {
         parentTerms[term.parentTermId] = true;
       } else {
@@ -116,11 +169,16 @@ class SignInSection extends React.Component {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const openEventsForSignin = this.props.data.student.openEventsForSignin.filter(event =>
+    const student = this.props.data.student;
+
+    const openEventsForSignin = student.openEventsForSignin.filter(event =>
       !event.attendees[0].signedIn
     );
 
-    let events = openEventsForSignin.map(event => this.transformEvent(event, classes, history));
+    let events = openEventsForSignin.filter(event =>
+      event.canStudentSignIn.canSignIn === true ||
+      this.isEventFull(event)
+    ).map(event => this.transformEvent(event, classes, history, student.id));
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
@@ -184,62 +242,13 @@ class SignInSection extends React.Component {
   }
 }
 
-const meetingsQuery = gql`
-query FetchMeetings ($id: Int, $userId: Int){
-  student (id: $id){
-    id
-    userId
-    termsForFeedback {
-      id
-      attendees (userId: $userId) {
-        id
-        feedbackDeadlineAt
-      }
-      eventStartDateTime
-      eventEndDateTime
-      publicFeedbackLink
-      event {
-        id
-        name
-      }
-    }
-    openEventsForSignin {
-      id
-      name
-      eventType
-      status
-      shortDescription
-      form {
-        id
-      }
-      groupedEvents {
-        id
-      }
-      parentEvent {
-        id
-      }
-      terms {
-        id
-        eventStartDateTime
-        eventEndDateTime
-        parentTermId
-      }
-      attendees (userId: $userId){
-        id
-        signedIn
-        signedOut
-        wontGo
-        signInOpenDateTime
-        signInCloseDateTime
-      }
-    }
-  }
-}
-`;
+
 
 export default compose(
-  connect(state => ({ user: state.user })),
+  connect(state => ({ user: state.user, student: state.student })),
   withStyles(eventActionsStyle),
+  graphql(standInSignAction, { name: 'standInSignAction' }),
+  graphql(eventSignAction, { name: 'signAction' }),
   graphql(meetingsQuery, {
     options: props => ({
       notifyOnNetworkStatusChange: true,

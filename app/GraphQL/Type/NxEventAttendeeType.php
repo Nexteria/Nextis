@@ -87,6 +87,14 @@ class NxEventAttendeeType extends GraphQLType
         ];
     }
 
+    public function resolveSignInOpenDateTimeField($root) {
+        return (string) $root->signInOpenDateTime;
+    }
+
+    public function resolveSignInCloseDateTimeField($root) {
+        return (string) $root->signInCloseDateTime;
+    }
+
     public function resolveStandInField($root)
     {
         return (string) $root->standIn;

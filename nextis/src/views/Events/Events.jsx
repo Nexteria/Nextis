@@ -1,50 +1,56 @@
-import React from "react";
+import React from 'react';
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from 'material-ui/styles/withStyles';
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { connect } from "common/store";
+import { connect } from 'common/store';
 import Spinner from 'react-spinkit';
-import { Route, withRouter } from "react-router-dom";
+import { Route, withRouter } from 'react-router-dom';
 
 // @material-ui/icons
-import ListIcon from "@material-ui/icons/List";
-import FeedbackIcon from "@material-ui/icons/Feedback";
-import TodayIcon from "@material-ui/icons/Today";
+import ListIcon from '@material-ui/icons/List';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import TodayIcon from '@material-ui/icons/Today';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import NavPills from "components/NavPills/NavPills.jsx";
+import GridContainer from 'components/Grid/GridContainer';
+import ItemGrid from 'components/Grid/ItemGrid';
+import NavPills from 'components/NavPills/NavPills';
 
-import Meetings from "views/Events/Meetings.jsx";
-import Actions from "views/Events/Actions.jsx";
-import Overview from "views/Events/Overview.jsx";
-import Badge from "components/Badge/Badge.jsx";
+import Meetings from 'views/Events/Meetings';
+import Actions from 'views/Events/Actions';
+import Overview from 'views/Events/Overview';
+import Badge from 'components/Badge/Badge';
 
-import EventDetailsDialog from "views/Events/EventDetailsDialog.jsx";
+import EventDetailsDialog from 'views/Events/EventDetailsDialog';
+import SignInDialog from 'views/Events/Signin/SignInDialog';
+import SignInFormDialog from 'views/Events/Signin/SignInFormDialog';
 
 const styles = {
   pageSubcategoriesTitle: {
-    color: "#3C4858",
-    textDecoration: "none",
-    textAlign: "center"
+    color: '#3C4858',
+    textDecoration: 'none',
+    textAlign: 'center'
   }
 };
 
 class Events extends React.Component {
   render() {
-    if (this.props.data.loading) {
-      return <Spinner name='line-scale-pulse-out' />;
+    const { data } = this.props;
+
+    if (data.loading) {
+      return <Spinner name="line-scale-pulse-out" />;
     }
 
-    const { user } = this.props.data;
+    const { user } = data;
 
-    const openEventsForSignin = user.student.openEventsForSignin.filter(event =>
-      !event.attendees[0].signedIn && !event.attendees[0].signedOut && !event.attendees[0].wontGo
-    ).length;
+    const openEventsForSignin = user.student.openEventsForSignin.filter((event) => {
+      const attendee = event.attendees[0];
+
+      return !attendee.signedIn && !attendee.signedOut && !attendee.wontGo;
+    }).length;
 
     const termsForFeedback = user.student.termsForFeedback.length;
 
@@ -55,32 +61,40 @@ class Events extends React.Component {
             color="warning"
             alignCenter
             tabs={[
-            {
-              tabButtonTitle: "Prihlasovanie,",
-              tabButtonSubtitle: "feedback",
-              tabIcon: FeedbackIcon,
-              badgeBottomLeft: <Badge color="success">{termsForFeedback}</Badge>,
-              badgeTopRight: <Badge color="danger">{openEventsForSignin}</Badge>,
-              tabContent: (
-                <Actions />
-              )
-            },
-            {
-              tabButtonTitle: "Tvoje",
-              tabButtonSubtitle: "stretnutia",
-              tabIcon: TodayIcon,
-              tabContent: (
-                <Meetings />
-              )
-            },
-            {
-              tabButtonTitle: "Prehľad",
-              tabButtonSubtitle: "udalostí",
-              tabIcon: ListIcon,
-              tabContent: (
-                <Overview />
-              )
-            },
+              {
+                tabButtonTitle: 'Prihlasovanie,',
+                tabButtonSubtitle: 'feedback',
+                tabIcon: FeedbackIcon,
+                badgeBottomLeft: (
+                  <Badge color="success">
+                    {termsForFeedback}
+                  </Badge>
+                ),
+                badgeTopRight: (
+                  <Badge color="danger">
+                    {openEventsForSignin}
+                  </Badge>
+                ),
+                tabContent: (
+                  <Actions />
+                )
+              },
+              {
+                tabButtonTitle: 'Tvoje',
+                tabButtonSubtitle: 'stretnutia',
+                tabIcon: TodayIcon,
+                tabContent: (
+                  <Meetings />
+                )
+              },
+              {
+                tabButtonTitle: 'Prehľad',
+                tabButtonSubtitle: 'udalostí',
+                tabIcon: ListIcon,
+                tabContent: (
+                  <Overview />
+                )
+              },
             ]}
           />
         </ItemGrid>
@@ -88,6 +102,18 @@ class Events extends React.Component {
           path="/events/:eventId"
           exact
           component={EventDetailsDialog}
+        />
+
+        <Route
+          path="/events/:eventId/signIn"
+          exact
+          component={SignInDialog}
+        />
+
+        <Route
+          path="/events/:eventId/signInForm"
+          exact
+          component={SignInFormDialog}
         />
       </GridContainer>
     );
@@ -123,11 +149,15 @@ export default compose(
   connect(state => ({ user: state.user, student: state.student })),
   withStyles(styles),
   graphql(userQuery, {
-    options: props => ({
-      notifyOnNetworkStatusChange: true,
-      variables: {
-        id: props.user.id,
-      },
-    })
+    options: (props) => {
+      const { user } = props;
+
+      return {
+        notifyOnNetworkStatusChange: true,
+        variables: {
+          id: user.id,
+        },
+      };
+    }
   }),
 )(Events);

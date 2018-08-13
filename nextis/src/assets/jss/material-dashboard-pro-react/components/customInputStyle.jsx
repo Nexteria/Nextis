@@ -80,7 +80,7 @@ const customInputStyle = {
     height: "36px",
     fontSize: "14px",
     lineHeight: "1.428571429",
-    color: "#fff",
+    color: "#000",
     "&[rows]": {
       height: "auto"
     },

@@ -120,7 +120,7 @@ export class EventDetails extends React.Component {
              {!hasAlternatives ?
                 <Badge color="gray" className={classes.sectionTitleBadge}>
                   {isMultiMeeting ? <ExposurePlus2 className={classes.eventTypeIcon} /> : null}
-                  <span>Termíny povinných stretnutí</span>
+                  <span>Termíny záväzných stretnutí</span>
                 </Badge>
                 : null
               }

@@ -1,0 +1,29 @@
+{
+    "env": {
+      "browser": true
+    },
+    "parser"  : "babel-eslint",
+    "extends" : ["airbnb"],
+    "rules": {
+      "comma-dangle": 0,
+      "no-extra-semi": 1,
+      "default-case": 0,
+      "global-require": 0,
+      "no-class-assign": 0,
+      "no-confusing-arrow": 0,
+      "no-floating-decimal": 0,
+      "no-nested-ternary": 0,
+      "no-param-reassign": 0,
+      "react/prefer-stateless-function": 0,
+      "import/no-named-as-default": 0,
+      "react/prop-types": 0
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "moduleDirectory": ["node_modules", "src/"]
+        }
+      }
+    }
+  }
+  

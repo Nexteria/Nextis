@@ -20,7 +20,7 @@ import Table from "components/Table/Table.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Tooltip from 'material-ui/Tooltip';
-import SignInSection from 'views/Events/SignInSection.jsx';
+import SignInSection from 'views/Events/Signin/SignInSection.jsx';
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 
 import eventActionsStyle from "assets/jss/material-dashboard-pro-react/views/eventActionsStyle.jsx";

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\User;
 use App\AttendeesGroup;
 use App\StudentLevel;
+use App\Student;
 use App\Models\QuestionForm\Form as QuestionForm;
 use App\Models\QuestionForm\FormDescription;
 use App\Models\QuestionForm\Question;
@@ -366,6 +367,100 @@ class NxEvent extends Model implements AuditableContract
         $settings['eventsManagerUserId'] = $defaultSettings['eventsManagerUserId'];
 
         return $settings;
+    }
+
+    public function canStudentSignIn($studentId) {
+        $student = Student::findOrFail($studentId);
+
+        $attendee = $this->attendees()->where('userId', $student->userId)->first();
+
+        if (!$attendee) {
+            return [
+                'message' => 'Tento event nie je pre Teba otvorený!',
+                'codename' => 'not_invited',
+                'canSignIn' => false,
+            ];
+        }
+
+        if ($attendee->signInOpenDateTime->gt(\Carbon\Carbon::now())) {
+            return [
+                'message' => 'Prihlasovanie pre teba ešte nie je otvorené!',
+                'codename' => 'signin_not_open_yet',
+                'canSignIn' => false,
+            ];
+        }
+
+        if ($attendee->signInCloseDateTime->lt(\Carbon\Carbon::now())) {
+            return [
+                'message' => 'Prihlasovanie pre teba je už uzatvorené!',
+                'codename' => 'signin_is_closed',
+                'canSignIn' => false,
+            ];
+        }
+
+        if ($attendee->signedIn) {
+            return [
+                'message' => 'Už si prihlásený!',
+                'codename' => 'already_signedin',
+                'canSignIn' => false,
+            ];
+        }
+
+        $group = $attendee->attendeesGroup;
+        $signedIn = $group->attendees()
+                          ->whereHas('terms', function ($query) {
+                                $query->where('signedIn', '!=', null);
+                          })
+                          ->count();
+        if ($signedIn >= $group->maxCapacity) {
+            return [
+                'message' => 'Kapacita na prihlásenie pre Tvoju skupinu je plná!',
+                'codename' => 'group_max_capacity_reached',
+                'canSignIn' => false,
+            ];
+        }
+
+        $terms = $this->terms()->whereNull('parentTermId')->get();
+        $hasFreeTerm = false;
+        foreach ($terms as $term) {
+            $signedIn = $term->attendees()->wherePivot('signedIn', '!=', null)->count();
+
+            if ($signedIn < $term->maxCapacity) {
+                $hasFreeTerm = true;
+                break;
+            }
+        }
+
+        if (!$hasFreeTerm) {
+            return [
+                'message' => 'Kapacita eventu je plná!',
+                'codename' => 'event_max_capacity_reached',
+                'canSignIn' => false,
+            ];
+        }
+
+        $parentEvent = $this->getParentEvent();
+        if ($parentEvent) {
+            $isSignedForExclusionaryEvent = $parentEvent->exclusionaryEvents()
+                ->whereHas('attendees', function ($query) use ($student) {
+                    $query->where('userId', $student->userId)
+                          ->whereNotNull('signedIn');
+                })->get();
+
+            if ($isSignedForExclusionaryEvent) {
+                return [
+                    'message' => 'Už si sa prihlásil na event ktorí sa vylučuje s týmto!',
+                    'codename' => 'already_signed_for_exclusionary_event',
+                    'canSignIn' => false,
+                ];
+            }
+        }
+
+        return [
+            'message' => '',
+            'codename' => '',
+            'canSignIn' => true,
+        ];
     }
 
     public function canSignInAttendee($attendee, $termId = null)
