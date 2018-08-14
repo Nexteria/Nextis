@@ -152,7 +152,7 @@ const UserInfoModal = ({
           <label>Nexteria level</label>
         </div>
         <p>
-          {user.student.level.name}
+          {user.student ? user.student.level.name : '-'}
         </p>
       </ItemGrid>
 
