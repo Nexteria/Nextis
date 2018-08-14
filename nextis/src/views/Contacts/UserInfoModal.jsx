@@ -34,6 +34,16 @@ function Transition(props) {
   return <Slide direction="down" {...props} />;
 }
 
+function fixUrl(url) {
+  const isUrlOk = url.indexOf('http') !== -1;
+
+  if (!isUrlOk) {
+    return `https://${url}`;
+  }
+
+  return url;
+}
+
 const UserInfoModal = ({
   data: { user, loading },
   classes,
@@ -157,14 +167,11 @@ const UserInfoModal = ({
       </ItemGrid>
 
       <ItemGrid xs={12}>
-        <Button
+        <a
           color="facebookNoBackground"
-          onClick={() => {
-            if (user.facebookLink) {
-              const win = window.open(user.facebookLink, '_blank');
-              win.focus();
-            }
-          }}
+          target="_blank"
+          rel="noopener noreferrer"
+          href={user.facebookLink ? fixUrl(user.facebookLink) : ''}
           customClass={classes.socialButtons}
         >
           <i
@@ -174,18 +181,15 @@ const UserInfoModal = ({
           />
           {' '}
           {user.facebookLink ? 'Facebook' : 'Nevyplnené'}
-        </Button>
+        </a>
       </ItemGrid>
 
       <ItemGrid xs={12}>
-        <Button
+        <a
           color="linkedinNoBackground"
-          onClick={() => {
-            if (user.linkedinLink) {
-              const win = window.open(user.linkedinLink, '_blank');
-              win.focus();
-            }
-          }}
+          href={user.linkedinLink ? fixUrl(user.linkedinLink) : ''}
+          target="_blank"
+          rel="noopener noreferrer"
           customClass={classes.socialButtons}
         >
           <i
@@ -193,7 +197,7 @@ const UserInfoModal = ({
           />
           {' '}
           {user.linkedinLink ? 'LinkedIn' : 'Nevyplnené'}
-        </Button>
+        </a>
       </ItemGrid>
     </DialogContent>
     <DialogActions

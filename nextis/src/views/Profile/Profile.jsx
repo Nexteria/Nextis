@@ -229,7 +229,7 @@ class Profile extends React.Component {
                 }
 
                 case 'url': {
-                    if (value && !validator.isURL(value)) {
+                    if (value && !validator.isURL(value, { require_protocol: true })) {
                         errors.push('Položka musí byť url adresa!');
                     }
                     break;
