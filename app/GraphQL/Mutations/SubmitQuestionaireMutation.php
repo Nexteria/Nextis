@@ -50,7 +50,6 @@ class SubmitQuestionaireMutation extends Mutation
         $form = QuestionForm::findOrFail($args['formId']);
 
         $savedAnswers = $form->getUsersAnswers($user->id);
-        \Log::error($savedAnswers);
         if (count($savedAnswers) > 0) {
             return new \Exception('Dotazník nie je možné vyplniť dva krát!');
         }
@@ -94,14 +93,13 @@ class SubmitQuestionaireMutation extends Mutation
 
             if ($question['type'] == 'multichoice') {
                 $choiceIds = [];
-                foreach ($question['answer'] as $choice) {
+                foreach ($answer['answer'] as $choice) {
                     array_push($choiceIds, $choice);
                 }
 
-                $questionFilteredChoicesCount = $question->choices()->count();
                 $sendChoicesCount = $question->choices()->whereIn('id', $choiceIds)->count();
 
-                if ($questionFilteredChoicesCount !== $sendChoicesCount) {
+                if (count($choiceIds) !== $sendChoicesCount) {
                     return new \Exception('Nie je možné odpovedať neznámou možnosťou!');
                 }
 

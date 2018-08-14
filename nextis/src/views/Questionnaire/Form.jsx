@@ -56,18 +56,18 @@ export class Form extends React.Component {
   }
 
   async handleFormSubmission() {
-    const { data, submitQuestionaire } = this.props;
+    const { data, submitQuestionaire, history } = this.props;
     const formId = data.event.form.id;
     const { answers } = this.state;
 
     const formAnswers = Object.keys(answers).map(questionId => ({
       questionId,
-      answer: Array.isArray(answers[questionId]) ? answers[questionId] : [answers[questionId]],
+      answer: answers[questionId] !== null && typeof answers[questionId] === 'object' ? Object.keys(answers[questionId]) : [answers[questionId]],
     }));
 
-
-    const response = await submitQuestionaire({ variables: { formId, answers: formAnswers } });
-    return response;
+    await submitQuestionaire({ variables: { formId, answers: formAnswers } });
+    await data.refetch();
+    history.push(`/events/${data.event.id}/signin`);
   }
 
   render() {
