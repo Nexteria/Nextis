@@ -50,6 +50,7 @@ class Dashboard extends React.Component {
     super(props);
 
     this.updateRoutes = this.updateRoutes.bind(this);
+    this.setMainPanelRef = this.setMainPanelRef.bind(this);
   }
 
   state = {
@@ -62,23 +63,15 @@ class Dashboard extends React.Component {
   getRoute() {
     return this.props.location.pathname !== "/maps/full-screen-maps";
   }
-  componentDidMount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      // eslint-disable-next-line
-      ps = new PerfectScrollbar(this.refs.mainPanel, {
-        suppressScrollX: true,
-        suppressScrollY: false
-      });
-    }
-  }
+
   componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
+    if (navigator.platform.indexOf("Win") > -1 && ps) {
       ps.destroy();
     }
   }
   componentDidUpdate(e) {
-    if (e.history.location.pathname !== e.location.pathname && this.refs.mainPanel) {
-      this.refs.mainPanel.scrollTop = 0;
+    if (e.history.location.pathname !== e.location.pathname && this.mainPanel) {
+      this.mainPanel.scrollTop = 0;
     }
   }
   sidebarMinimize() {
@@ -94,6 +87,17 @@ class Dashboard extends React.Component {
 
       return route;
     });
+  }
+
+  setMainPanelRef(element) {
+    this.mainPanel = element;
+    if (navigator.platform.indexOf("Win") > -1 && element) {
+      // eslint-disable-next-line
+      ps = new PerfectScrollbar(element, {
+        suppressScrollX: true,
+        suppressScrollY: false
+      });
+    }
   }
 
   render() {
@@ -130,7 +134,7 @@ class Dashboard extends React.Component {
           {...rest}
           user={data.user}
         />
-        <div className={mainPanel} ref="mainPanel">
+        <div className={mainPanel} ref={this.setMainPanelRef}>
           <Header
             sidebarMinimize={this.sidebarMinimize.bind(this)}
             miniActive={this.state.miniActive}

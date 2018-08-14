@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/icons": "1.0.0-beta.42",
+    "@sentry/browser": "^4.0.0-beta.12",
     "apollo-cache-inmemory": "^1.2.0",
     "apollo-client": "^2.3.0",
     "apollo-link-http": "^1.5.4",

@@ -17,7 +17,6 @@
         <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script src=https://cdn.ravenjs.com/3.24.0/raven.min.js crossorigin=anonymous></script>
 
         {!! React::style('main') !!}
     </head>

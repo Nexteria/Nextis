@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createBrowserHistory } from "history";
 import { Route, Router } from "react-router-dom";
 import request from "common/fetch";
+import { init } from '@sentry/browser';
 
 import { ApolloClient } from 'apollo-client';
 import { createUploadLink } from 'apollo-upload-client'
@@ -17,11 +18,10 @@ import registerServiceWorker from './registerServiceWorker';
 import * as moment from 'moment';
 import App from './App';
 
-window.Raven.config(process.env.REAC_APP_SENTRY_URL, {
-  release: '0-0-0',
+init({
+  dsn: process.env.REAC_APP_SENTRY_URL,
   environment: process.env.REACT_APP_ENVIROMENT,
-}).install();
-
+});
 
 const hist = createBrowserHistory();
 
