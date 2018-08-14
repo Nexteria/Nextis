@@ -186,7 +186,7 @@ class Profile extends React.Component {
         if (component === 'editor') {
             value = value.toString('html');
         } else if (component === 'date') {
-            value = format(value, 'DD.MM.YYYY');
+            value = format(value, 'MM/DD/YYYY');
         }
 
         validations.forEach((type) => {
@@ -236,7 +236,7 @@ class Profile extends React.Component {
                 }
 
                 case 'date': {
-                    if (parse(value) == 'Invalid Date') {
+                    if ((new Date(value)) == 'Invalid Date') {
                         errors.push('Položka musí byť valídny dátum!');
                     }
                 }

@@ -13,11 +13,16 @@ import "assets/scss/material-dashboard-pro-react.css?v=1.1.0";
 
 import { Provider } from './common/store';
 
-
+import registerServiceWorker from './registerServiceWorker';
 import * as moment from 'moment';
 import App from './App';
 
-import registerServiceWorker from './registerServiceWorker';
+window.Raven.config(process.env.REAC_APP_SENTRY_URL, {
+  release: '0-0-0',
+  environment: process.env.REACT_APP_ENVIROMENT,
+}).install();
+
+
 const hist = createBrowserHistory();
 
 const link = createUploadLink({
