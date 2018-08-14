@@ -1,4 +1,5 @@
 import React from "react";
+import * as Sentry from '@sentry/browser';
 import PropTypes from "prop-types";
 
 // material-ui components
@@ -55,6 +56,9 @@ class LoginPage extends React.Component {
         actions.setUser(user);
         history.push('/dashboard');
         this.setState({ loginFailed: false });
+        Sentry.configureScope((scope) => {
+          scope.setUser({ id: user.id, firstName: user.firstName, lastName: user.lastName });
+        });
       },
       () => this.setState({ loginFailed: true })
     );

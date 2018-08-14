@@ -19,7 +19,7 @@ import * as moment from 'moment';
 import App from './App';
 
 init({
-  dsn: process.env.REAC_APP_SENTRY_URL,
+  dsn: process.env.REACT_APP_SENTRY_URL,
   environment: process.env.REACT_APP_ENVIROMENT,
 });
 
