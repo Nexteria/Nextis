@@ -8,6 +8,10 @@ class ErrorFormatter {
     {
         \Log::error($e);
 
+        if (app()->bound('sentry')) {
+            app('sentry')->captureException($e);
+        }
+
         $error = [
             'message' => $e->getMessage()
         ];
