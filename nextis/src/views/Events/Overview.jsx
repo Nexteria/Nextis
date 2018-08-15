@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import { connect } from "common/store";
 import { compose } from 'recompose';
 import parse from 'date-fns/parse';
@@ -31,6 +30,8 @@ import RegularCard from "components/Cards/RegularCard.jsx";
 import Timeline from "components/Timeline/Timeline.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 
+import { overviewQuery } from 'views/Events/Queries';
+
 import eventsOverviewStyle from "assets/jss/material-dashboard-pro-react/views/eventsOverviewStyle.jsx";
 
 class Overview extends React.Component {
@@ -51,7 +52,7 @@ class Overview extends React.Component {
     const fetchMore = data.fetchMore;
 
     fetchMore({
-      query: EventsQuery,
+      query: overviewQuery,
       variables: {
         from: format(subMonths(this.state.from, 1), 'YYYY-MM-DD HH:mm:ss'),
         to: format(this.state.from, 'YYYY-MM-DD HH:mm:ss'),
@@ -213,34 +214,10 @@ class Overview extends React.Component {
   }
 }
 
-const EventsQuery = gql`
-query FetchEvents ($from: String, $to: String){
-  events (from: $from, to: $to){
-    id
-    name
-    eventType
-    status
-    shortDescription
-    groupedEvents {
-      id
-    }
-    parentEvent {
-      id
-    }
-    terms (from: $from, to: $to) {
-      id
-      eventStartDateTime
-      eventEndDateTime
-      parentTermId
-    }
-  }
-}
-`;
-
 export default compose(
   connect(state => ({ user: state.user })),
   withStyles(eventsOverviewStyle),
-  graphql(EventsQuery, {
+  graphql(overviewQuery, {
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {

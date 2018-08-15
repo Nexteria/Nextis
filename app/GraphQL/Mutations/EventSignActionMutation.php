@@ -185,7 +185,7 @@ class EventSignActionMutation extends Mutation
                 }
 
                 foreach ($attendeesToSignOut as $eventAttendee) {
-                    $signedTerms = $eventAttendee->terms()->wherePivot('signedIn', '!=', null)->count();
+                    $signedTerms = $eventAttendee->terms()->wherePivot('signedIn', '!=', '')->wherePivot('signedIn', '!=', null)->count();
                     if (!$term || $signedTerms === 1) {
                         $eventAttendee->signedOut = Carbon::now();
                         $eventAttendee->signedOutReason = clean($args['reason']);
@@ -221,7 +221,7 @@ class EventSignActionMutation extends Mutation
                 }
 
                 if ($wasFull) {
-                    event(new EventAttendeePlaceReleased($event));
+                    event(new \App\Events\EventAttendeePlaceReleased($event));
                 }
             }
         }

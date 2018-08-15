@@ -21,7 +21,8 @@ function RegularCard({ ...props }) {
     customCardClasses,
     contentAlign,
     subtitleAlign,
-    customCardTitleClasses
+    customCardTitleClasses,
+    onClick
   } = props;
   const cardClasses =
     classes.card +
@@ -30,7 +31,7 @@ function RegularCard({ ...props }) {
       [" " + customCardClasses]: customCardClasses !== undefined
     });
   return (
-    <Card className={cardClasses}>
+    <Card className={cardClasses} onClick={onClick}>
       {cardTitle !== undefined || cardSubtitle !== undefined ? (
         <CardHeader
           classes={{

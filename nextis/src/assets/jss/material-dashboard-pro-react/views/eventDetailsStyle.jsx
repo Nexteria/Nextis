@@ -1,6 +1,11 @@
 import modalStyle from "assets/jss/material-dashboard-pro-react/modalStyle.jsx";
+import customCheckboxRadioSwitch from "assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch.jsx";
+import {
+  boxShadow,
+} from "assets/jss/material-dashboard-pro-react.jsx";
 
 const eventDetailsStyle = {
+  ...customCheckboxRadioSwitch,
   label: {
     color: '#000',
   },
@@ -79,6 +84,19 @@ const eventDetailsStyle = {
   red: {
     color: '#f00',
   },
+  termOption: {
+    '&:hover': {
+      ...boxShadow,
+      cursor: 'pointer',
+    }
+  },
+  termOptionInnerWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    '& > div, & > ol': {
+      display: 'inline',
+    },
+  }
 };
 
 export default eventDetailsStyle;

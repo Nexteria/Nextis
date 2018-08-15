@@ -253,7 +253,7 @@ export default compose(
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {
-        id: props.user.studentId,
+        id: props.student.id,
         userId: props.user.id,
       },
     })

@@ -20,13 +20,17 @@ class NxTermAttendeeType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'The id of the attendee'
-            ],
-            'pivotId' => [
-                'type' => Type::nonNull(Type::int()),
                 'description' => 'The id of the intermediate table record',
                 'resolve' => function ($root) {
                     return $root->pivot->id;
+                },
+                'selectable' => false,
+            ],
+            'attendeeId' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'The id of the attendee',
+                'resolve' => function ($root) {
+                    return $root->id;
                 },
                 'selectable' => false,
             ],
@@ -171,10 +175,5 @@ class NxTermAttendeeType extends GraphQLType
     public function resolveFeedbackDeadlineAtField($root)
     {
         return (string) $root->pivot->feedbackDeadlineAt;
-    }
-
-    public function resolvePivotIdField($root)
-    {
-        return $root->pivot->id;
     }
 }

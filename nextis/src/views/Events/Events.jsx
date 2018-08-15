@@ -26,6 +26,7 @@ import Badge from 'components/Badge/Badge';
 
 import EventDetailsDialog from 'views/Events/EventDetailsDialog';
 import SignInDialog from 'views/Events/Signin/SignInDialog';
+import SignOutDialog from 'views/Events/Signin/SignOutDialog';
 import SignInFormDialog from 'views/Events/Signin/SignInFormDialog';
 
 const styles = {
@@ -114,6 +115,12 @@ class Events extends React.Component {
           path="/events/:eventId/signInForm"
           exact
           component={SignInFormDialog}
+        />
+
+        <Route
+          path="/events/:eventId/terms/:termId/signOut"
+          exact
+          component={SignOutDialog}
         />
       </GridContainer>
     );

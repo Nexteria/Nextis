@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 const meetingsQuery = gql`
-query FetchMeetings ($id: Int, $userId: Int){
+query FetchMeetings ($id: Int!, $userId: Int){
   student (id: $id){
     id
     userId
@@ -91,6 +91,10 @@ const eventSignAction = gql`
       reason: $reason
     ) {
       id
+      signedIn
+      signedOut
+      wontGo
+      signedOutReason
     }
   }
 `;

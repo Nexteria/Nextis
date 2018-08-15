@@ -89,7 +89,7 @@ class EventType extends GraphQLType
                 'description' => 'Information if the studen is able to signin for this event',
                 'args' => [
                     'studentId' => [
-                        'type' => Type::int(),
+                        'type' => Type::nonNull(Type::int()),
                         'name' => 'studentId',
                     ]
                 ],
