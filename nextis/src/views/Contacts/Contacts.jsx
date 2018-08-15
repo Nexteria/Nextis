@@ -14,6 +14,7 @@ import withStyles from 'material-ui/styles/withStyles';
 
 // @material-ui/icons
 import Info from '@material-ui/icons/Info';
+import Search from '@material-ui/icons/Search';
 import ContactsIcon from '@material-ui/icons/Contacts';
 
 // core components
@@ -23,44 +24,78 @@ import ItemGrid from 'components/Grid/ItemGrid';
 import IconCard from 'components/Cards/IconCard';
 import Button from 'components/CustomButtons/Button';
 import UserInfoModal from 'views/Contacts/UserInfoModal';
+import CustomInput from 'components/CustomInput/CustomInput';
+import InputAdornment from 'material-ui/Input/InputAdornment';
 
 import contactsStyle from 'assets/jss/material-dashboard-pro-react/views/contactsStyle';
 
+function handleDownloadContactsRequest() {
+  request('/api/contacts', {
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' }
+  })
+    .then(response => response.blob())
+    .then(blob => download(blob, 'kontakty.vcf', 'text/vcard'));
+}
+
 class Contacts extends React.Component {
-  handleDownloadContactsRequest() {
-    request('/api/contacts', {
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(response => response.blob())
-      .then(blob => download(blob, 'kontakty.vcf', 'text/vcard'));
+  constructor(props) {
+    super(props);
+
+    this.getColumns = this.getColumns.bind(this);
   }
 
   getColumns() {
-    let columns = [];
+    const columns = [];
+    const { classes } = this.props;
+
+    const filterComponent = ({ filter, onChange }) => (
+      <CustomInput
+        labelText=""
+        formControlProps={{
+          fullWidth: true
+        }}
+        inputProps={{
+          value: filter ? filter.value : '',
+          type: 'text',
+          onChange: e => onChange(e.target.value),
+          underline: classes.underline,
+          className: classes.searchInput,
+          endAdornment: (
+            <InputAdornment position="end">
+              <Search className={classes.inputAdornmentIcon} />
+            </InputAdornment>
+          )
+        }}
+      />
+    );
 
     columns.push({
       Header: 'Meno',
-      accessor: 'name'
+      accessor: 'name',
+      Filter: filterComponent,
     });
 
     if (window.innerWidth > 600) {
       columns.push({
         Header: 'Email',
         accessor: 'email',
-        width: 250
+        width: 250,
+        Filter: filterComponent,
       });
 
       columns.push({
         Header: 'Level',
-        accessor: 'level'
+        accessor: 'level',
+        Filter: filterComponent,
       });
     }
 
     columns.push({
       Header: 'Telefón',
       headerStyle: { textAlign: 'left' },
-      accessor: 'phone'
+      accessor: 'phone',
+      Filter: filterComponent,
     });
 
     columns.push({
@@ -158,7 +193,7 @@ class Contacts extends React.Component {
           />
         </ItemGrid>
         <ItemGrid xs={12} sm={12} md={12} lg={8} className={classes.center}>
-          <Button color="warning" onClick={this.handleDownloadContactsRequest}>
+          <Button color="warning" onClick={handleDownloadContactsRequest}>
             <span>Stiahnuť kontakty vo formáte vCard</span>
           </Button>
         </ItemGrid>
