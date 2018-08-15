@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import { Route, withRouter } from "react-router-dom";
+import { Route, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Spinner from 'react-spinkit';
 
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from 'material-ui/styles/withStyles';
 
-import LoginPage from "pages/LoginPage";
-import Dashboard from "layouts/Dashboard";
-import { connect } from "common/store";
-import request from "common/fetch";
+import LoginPage from 'pages/LoginPage';
+import Dashboard from 'layouts/Dashboard';
+import { connect } from 'common/store';
+import request from 'common/fetch';
 
 // core components
-import Footer from "components/Footer/Footer.jsx";
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import Snackbar from "components/Snackbar/Snackbar.jsx";
+import Footer from 'components/Footer/Footer';
+import GridContainer from 'components/Grid/GridContainer';
+import ItemGrid from 'components/Grid/ItemGrid';
+import Snackbar from 'components/Snackbar/Snackbar';
 
-import bgImage from "assets/img/register.jpeg";
-import loadingPageStyle from "assets/jss/material-dashboard-pro-react/views/loadingPageStyle.jsx";
+import bgImage from 'assets/img/register.jpeg';
+import loadingPageStyle from 'assets/jss/material-dashboard-pro-react/views/loadingPageStyle';
 
 
 class App extends Component {
@@ -33,51 +33,56 @@ class App extends Component {
       customStatusCheck: (response) => {
         if (response.status === 401) {
           history.push('/login');
-          this.setState({isLoading: false});
+          this.setState({ isLoading: false });
           throw new Error('Unauthorized');
         } else {
           return response;
         }
       }
     }).then(response => response.json())
-    .then(
-      (user) => {
-        actions.setUser(user);
-        history.push('/dashboard');
-        this.setState({isLoading: false});
-      },
-      (err) => {
-        if (err.message !== 'Unauthorized') {
-          throw err;
+      .then(
+        (user) => {
+          actions.setUser(user);
+          history.push('/dashboard');
+          this.setState({ isLoading: false });
+        },
+        (err) => {
+          if (err.message !== 'Unauthorized') {
+            throw err;
+          }
+          return null;
         }
-        return null;
-      }
-    );
+      );
   }
 
   render() {
-    const { classes, actions, history, user, notifications } = this.props;
+    const {
+      classes,
+      actions,
+      history,
+      user,
+      notifications,
+      location,
+    } = this.props;
+
+    const { isLoading } = this.state;
 
     return (
       <div>
-        {this.props.location.pathname === '/' || this.props.location.pathname === '/login' || !user ?
-          <div className={classes.wrapper} ref="wrapper">
+        {location.pathname === '/login' || !user ? (
+          <div className={classes.wrapper}>
             <div className={classes.fullPage}>
               <div className={classes.content}>
                 <div className={classes.container}>
                   <GridContainer justify="center">
                     <ItemGrid xs={12} sm={6} md={4}>
-                      {this.state.isLoading ?
-                        <Spinner name='line-scale-pulse-out' className={classes.loader} />
-                        : null
-                      }
+                      {isLoading ? <Spinner name="line-scale-pulse-out" className={classes.loader} /> : null}
                     </ItemGrid>
                   </GridContainer>
                   <Route
                     exact
-                    path={'/login'}
-                    render={() =>
-                      <LoginPage actions={actions} history={history} />
+                    path="/login"
+                    render={() => <LoginPage actions={actions} history={history} />
                     }
                   />
                 </div>
@@ -86,16 +91,16 @@ class App extends Component {
               <Footer white />
               <div
                 className={classes.fullPageBackground}
-                style={{ backgroundImage: "url(" + bgImage + ")" }}
+                style={{ backgroundImage: `url(${bgImage})` }}
               />
             </div>
           </div>
-          :
+        ) : (
           <div>
             <Dashboard />
           </div>
-        }
-        {notifications.valueSeq().map(notification =>
+        )}
+        {notifications.valueSeq().map(notification => (
           <Snackbar
             key={notification.id}
             place={notification.place}
@@ -106,7 +111,7 @@ class App extends Component {
             closeNotification={() => actions.removeNotification(notification.id)}
             close
           />
-        )}
+        ))}
       </div>
     );
   }
@@ -117,4 +122,3 @@ export default compose(
   connect(state => ({ user: state.user, notifications: state.notifications })),
   withStyles(loadingPageStyle),
 )(App);
-
