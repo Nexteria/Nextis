@@ -145,7 +145,7 @@ class Actions extends React.Component {
 }
 
 const meetingsQuery = gql`
-query FetchMeetingsOverview ($id: Int, $userId: Int){
+query FetchMeetingsOverview ($id: Int!, $userId: Int){
   student (id: $id){
     id
     userId
