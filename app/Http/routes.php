@@ -17,8 +17,8 @@ Route::post('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');
 
 // email event signIn
-Route::get('/nxEvents/{signInToken}/signIn', 'NxEventAttendeesController@getSigninFormByToken');
-Route::get('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@getSigninFormByToken');
+Route::get('/nxEvents/{signInToken}/signIn', function() { return view('index'); });
+Route::get('/nxEvents/{signInToken}/wontGo', function() { return view('index'); });
 Route::post('/nxEvents/{signInToken}/wontGo', 'NxEventAttendeesController@getSigninFormByToken');
 
 Route::group(['prefix' => '/api'], function () {
