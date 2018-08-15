@@ -51,9 +51,9 @@
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
-    "start": "NODE_PATH=./src && npm-run-all -p watch-css start-js",
-    "build": "NODE_PATH=./src && npm run build-css && react-scripts build",
-    "deploy": "npm run build && cp -r build/* ../public/ && rm ../public/index.html",
+    "start": "NODE_PATH=./src && REACT_APP_SPACE_VERSION=$(git log --pretty=\"%h\" -n1 HEAD) && npm-run-all -p watch-css start-js",
+    "build": "NODE_PATH=./src && REACT_APP_SPACE_VERSION=$(git log --pretty=\"%h\" -n1 HEAD) && npm run build-css && react-scripts build",
+    "deploy": "REACT_APP_SPACE_VERSION=$(git log --pretty=\"%h\" -n1 HEAD) npm run build && cp -r build/* ../public/ && rm ../public/index.html",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

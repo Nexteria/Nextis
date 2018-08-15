@@ -21,6 +21,7 @@ import App from './App';
 init({
   dsn: process.env.REACT_APP_SENTRY_URL,
   environment: process.env.REACT_APP_ENVIROMENT,
+  release: process.env.REACT_APP_SPACE_VERSION,
 });
 
 const hist = createBrowserHistory();

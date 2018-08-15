@@ -16,7 +16,7 @@
         "zizaco/entrust": "5.2.x-dev",
         "mews/purifier": "^2.0",
         "guzzlehttp/guzzle": "~6.0.0",
-        "sentry/sentry-laravel": "^0.6.0",
+        "sentry/sentry-laravel": "^0.9.2",
         "doctrine/dbal": "v2.5.4",
         "maatwebsite/excel": "~2.1.0",
         "google/apiclient": "^2.0",

@@ -31,6 +31,7 @@ class LoginPage extends React.Component {
 
     this.handleLogin = this.handleLogin.bind(this);
   }
+
   componentDidMount() {
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
     setTimeout(
@@ -52,12 +53,16 @@ class LoginPage extends React.Component {
         email: this.emailRef.value,
       }),
     }).then(response => response.json()).then(
-      (user) => {
-        actions.setUser(user);
+      (data) => {
+        actions.setUser(data);
         history.push('/dashboard');
         this.setState({ loginFailed: false });
         Sentry.configureScope((scope) => {
-          scope.setUser({ id: user.id, firstName: user.firstName, lastName: user.lastName });
+          scope.setUser({
+            id: data.user.id,
+            firstName: data.user.firstName,
+            lastName: data.user.lastName
+          });
         });
       },
       () => this.setState({ loginFailed: true })

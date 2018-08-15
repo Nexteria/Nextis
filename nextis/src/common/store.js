@@ -8,8 +8,8 @@ const store = {
     notifications: new Map(),
   },
   actions: {
-    setUser: (state = {}, user) => ({
-      ...user
+    setUser: (state = {}, data) => ({
+      ...data
     }),
     setNotification: (state = {}, notification) => ({
       ...state,
