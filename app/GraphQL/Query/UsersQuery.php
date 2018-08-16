@@ -32,6 +32,10 @@ class UsersQuery extends Query
                 'name' => 'status',
                 'type' => Type::string()
             ],
+            'roles' => [
+                'name' => 'roles',
+                'type' => Type::listOf(Type::string()),
+            ],
         ];
     }
 
@@ -46,6 +50,12 @@ class UsersQuery extends Query
 
             if (isset($args['status'])) {
                 $query->where('status', $args['status']);
+            }
+
+            if (isset($args['roles'])) {
+                $query->whereHas('roles', function ($rolesQuery) use ($args) {
+                    $rolesQuery->whereIn('name', $args['roles']);
+                });
             }
         };
 

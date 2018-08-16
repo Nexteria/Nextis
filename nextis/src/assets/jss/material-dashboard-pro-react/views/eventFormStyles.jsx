@@ -3,12 +3,14 @@ import {
 } from 'assets/jss/material-dashboard-pro-react';
 
 import customSelectStyle from 'assets/jss/material-dashboard-pro-react/customSelectStyle';
+import customCheckboxRadioSwitch from 'assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch';
 
 const eventFormStyles = {
   ...customSelectStyle,
+  ...customCheckboxRadioSwitch,
   select: {
     ...customSelectStyle.select,
-    padding: "18px",
+    padding: '18px',
   },
   label: {
     cursor: 'pointer',

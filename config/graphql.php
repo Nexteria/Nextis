@@ -31,6 +31,8 @@ use App\GraphQL\Query\UsersQuery;
 use App\GraphQL\Query\StudentQuery;
 use App\GraphQL\Query\StudentsQuery;
 use App\GraphQL\Query\SkillsQuery;
+use App\GraphQL\Query\SemestersQuery;
+use App\GraphQL\Query\StudentLevelsQuery;
 
 use App\GraphQL\Mutations\CreateSkillMutation;
 use App\GraphQL\Mutations\UserProfileMutation;
@@ -57,6 +59,8 @@ return [
                 'student' => StudentQuery::class,
                 'students' => StudentsQuery::class,
                 'skills' => SkillsQuery::class,
+                'semesters' => SemestersQuery::class,
+                'studentLevels' => StudentLevelsQuery::class,
             ],
             'mutation' => [
                 'UpdateUserProfile' => UserProfileMutation::class,
