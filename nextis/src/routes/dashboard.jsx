@@ -1,10 +1,13 @@
-import Dashboard from 'views/Dashboard/Dashboard.jsx';
-import Events from 'views/Events/Events.jsx';
-import Contacts from 'views/Contacts/Contacts.jsx';
-import ActivityPoints from 'views/ActivityPoints/ActivityPoints.jsx';
-import Payments from 'views/Payments/Payments.jsx';
-import Profile from 'views/Profile/Profile.jsx';
-import SkillSearch from 'views/Skills/SkillSearch/SkillSearch.jsx';
+import Dashboard from 'views/Dashboard/Dashboard';
+import Events from 'views/Events/Events';
+import Contacts from 'views/Contacts/Contacts';
+import ActivityPoints from 'views/ActivityPoints/ActivityPoints';
+import Payments from 'views/Payments/Payments';
+import Profile from 'views/Profile/Profile';
+import SkillSearch from 'views/Skills/SkillSearch/SkillSearch';
+
+import AdminEvents from 'views/Admin/Events/EventsContainer';
+import AdminStudents from 'views/Admin/Students/StudentsContainer';
 
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -14,13 +17,13 @@ import Assignment from '@material-ui/icons/Assignment';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import SkillSearchIcon from '@material-ui/icons/Search';
 
-var dashRoutes = [
+const dashRoutes = [
   {
     path: '/dashboard',
     name: 'Prehľad',
     icon: DashboardIcon,
     component: Dashboard,
-    showInMenu: true
+    showInMenu: true,
   },
   {
     path: '/my-profile',
@@ -68,6 +71,24 @@ var dashRoutes = [
     icon: SkillSearchIcon,
     component: SkillSearch,
     showInMenu: true
-  }
+  },
+  {
+    path: '/admin/events',
+    name: 'Eventy',
+    state: 'openAdminEvents',
+    icon: CardTravel,
+    component: AdminEvents,
+    showInMenu: true,
+    isAdmin: true,
+  },
+  {
+    path: '/admin/students',
+    name: 'Študenti',
+    state: 'openAdminStudents',
+    icon: Accessibility,
+    component: AdminStudents,
+    showInMenu: true,
+    isAdmin: true,
+  },
 ];
 export default dashRoutes;

@@ -168,6 +168,7 @@ query FetchUser ($id: Int){
     id
     firstName
     lastName
+    isAdmin
     profilePicture {
       id
       filePath

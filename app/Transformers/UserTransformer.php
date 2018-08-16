@@ -31,6 +31,7 @@ class UserTransformer extends Transformer
             'studyProgram' => $user->studyProgram,
             'studyYear' => $user->studyYear,
             'roles' => $roles,
+            'isAdmin' => $user->hasRole('ADMIN'),
             'guideDescription' => $user->guideDescription ? $user->guideDescription : '',
             'lectorDescription' => $user->lectorDescription ? $user->lectorDescription : '',
             'buddyDescription' => $user->buddyDescription ? $user->buddyDescription : '',

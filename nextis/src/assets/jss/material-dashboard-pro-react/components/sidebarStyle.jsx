@@ -504,6 +504,16 @@ const sidebarStyle = theme => ({
   feedbackLink: {
     marginTop: '2em',
   },
+  adminSwitchContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: '1em',
+  },
+  adminSwitchLabel: {
+    textTransform: 'capitalize',
+    color: '#fff',
+  }
 });
 
 export default sidebarStyle;

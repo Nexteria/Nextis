@@ -14,6 +14,8 @@ import ListItemIcon from 'material-ui/List/ListItemIcon';
 import ListItemText from 'material-ui/List/ListItemText';
 import Hidden from 'material-ui/Hidden';
 import Collapse from 'material-ui/transitions/Collapse';
+import FormControlLabel from 'material-ui/Form/FormControlLabel';
+import Switch from 'material-ui/Switch';
 
 // core components
 import HeaderLinks from 'components/Header/HeaderLinks';
@@ -52,14 +54,48 @@ class SidebarWrapper extends React.Component {
   }
 
   render() {
-    const { className, user, headerLinks, links } = this.props;
+    const {
+      className,
+      userSection,
+      headerLinks,
+      links,
+      classes,
+      user,
+      showAdminLinks,
+      handleAdminSwitch,
+    } = this.props;
+
     return (
       <div
         className={className}
         ref={this.setSidebarRef}
       >
-        {user}
+        {userSection}
         {headerLinks}
+        {user.isAdmin ? (
+          <FormControlLabel
+            control={(
+              <Switch
+                checked={showAdminLinks}
+                onChange={handleAdminSwitch}
+                value={showAdminLinks ? 'on' : 'off'}
+                classes={{
+                  checked: classes.switchChecked,
+                  bar: classes.switchBarChecked,
+                  icon: classes.switchIcon,
+                  default: classes.switchUnchecked,
+                  iconChecked: classes.switchIconChecked
+                }}
+              />
+            )}
+            classes={{
+              root: classes.adminSwitchContainer,
+              label: classes.adminSwitchLabel,
+            }}
+            label={`Admin ${showAdminLinks ? 'on' : 'off'}`}
+          />
+        ) : null }
+
         {links}
       </div>
     );
@@ -75,10 +111,27 @@ class Sidebar extends React.Component {
       openActivityPoints: this.activeRoute("/activity-points"),
       openPayments: this.activeRoute("/payments"),
       openContacts: this.activeRoute("/contacts"),
-      miniActive: true
+      miniActive: true,
+      showAdminLinks: false,
     };
+
     this.activeRoute.bind(this);
+    this.handleAdminSwitch.bind(this);
   }
+
+  componentDidMount() {
+    const { user } = this.props;
+
+    if (user && user.isAdmin) {
+      this.setState({ showAdminLinks: true });
+    }
+  }
+
+  handleAdminSwitch() {
+    const { showAdminLinks } = this.state;
+    this.setState({ showAdminLinks: !showAdminLinks });
+  }
+
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? true : false;
@@ -100,6 +153,8 @@ class Sidebar extends React.Component {
       rtlActive,
       user
     } = this.props;
+
+    const { showAdminLinks } = this.state;
 
     const itemText =
       classes.itemText +
@@ -197,9 +252,10 @@ class Sidebar extends React.Component {
         </List>
       </div>
     );
+
     var links = (
       <List className={classes.list}>
-        {routes.filter(route => route.showInMenu).map((prop, key) => {
+        {routes.filter(route => route.showInMenu && (showAdminLinks ? route.isAdmin : !route.isAdmin)).map((prop, key) => {
           if (prop.redirect) {
             return null;
           }
@@ -305,6 +361,8 @@ class Sidebar extends React.Component {
               </ListItem>
             );
           }
+
+          
           const navLinkClasses =
             classes.itemLink +
             " " +
@@ -425,10 +483,14 @@ class Sidebar extends React.Component {
           >
             {brand}
             <SidebarWrapper
+              classes={classes}
               className={sidebarWrapper}
-              user={userSection}
+              userSection={userSection}
               headerLinks={<HeaderLinks rtlActive={rtlActive} />}
               links={links}
+              handleAdminSwitch={() => this.handleAdminSwitch()}
+              showAdminLinks={showAdminLinks}
+              user={user}
             />
             {image !== undefined ? (
               <div
@@ -451,9 +513,13 @@ class Sidebar extends React.Component {
           >
             {brand}
             <SidebarWrapper
+              classes={classes}
               className={sidebarWrapper}
-              user={userSection}
+              userSection={userSection}
               links={links}
+              user={user}
+              handleAdminSwitch={() => this.handleAdminSwitch()}
+              showAdminLinks={showAdminLinks}
             />
             {image !== undefined ? (
               <div

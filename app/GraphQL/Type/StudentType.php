@@ -51,6 +51,10 @@ class StudentType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'The variable symbol for student tuition payments',
             ],
+            'status' => [
+                'type' => Type::string(),
+                'description' => 'The student status',
+            ],
             'tuitionFee' => [
                 'type' => Type::int(),
                 'description' => 'The student`s tuition fee',

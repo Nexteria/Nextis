@@ -117,6 +117,14 @@ class UserType extends GraphQLType
                 },
                 'selectable' => false,
             ],
+            'isAdmin' => [
+                'type' => Type::boolean(),
+                'description' => 'Returns true if user is admin, false otherwise.',
+                'resolve' => function ($root, $args) {
+                    return $root->hasRole('ADMIN');
+                },
+                'selectable' => false,
+            ],
             'student' => [
                 'type' => GraphQL::type('student'),
                 'description' => 'Student associated with this user',
