@@ -27,7 +27,11 @@ class AttendeesGroup extends Model
         $group->save();
 
         foreach ($attributes['users'] as $user) {
-            $group->attendees()->save(NxEventAttendee::createNew(array_merge($user, ["attendeesGroupId" => $group->id])));
+            $group->attendees()->save(NxEventAttendee::createNew(array_merge($user, [
+                "attendeesGroupId" => $group->id,
+                "signInOpenDateTime" => $group->signUpOpenDateTime,
+                "signInCloseDateTime" => $group->signUpDeadlineDateTime,
+            ])));
         }
 
         $group->save();
@@ -45,6 +49,10 @@ class AttendeesGroup extends Model
             if (!$attendee) {
                 $attendee = NxEventAttendee::createNew(array_merge($user, ["attendeesGroupId" => $this->id]));
                 $this->attendees()->save($attendee);
+            } else {
+                $attendee->signInOpenDateTime = $this->signUpOpenDateTime;
+                $attendee->signInCloseDateTime = $this->signUpDeadlineDateTime;
+                $attendee->save();
             }
 
             $idsMap[$attendee->id] = true;
