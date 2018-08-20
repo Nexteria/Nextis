@@ -1,34 +1,34 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { connect } from "common/store";
+import { connect } from 'common/store';
 import Spinner from 'react-spinkit';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
+import isAfter from 'date-fns/is_after';
 import { withRouter } from 'react-router-dom';
 
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from 'material-ui/styles/withStyles';
 
 // @material-ui/icons
 
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Accessibility from "@material-ui/icons/Accessibility";
-import CardTravel from "@material-ui/icons/CardTravel";
-import Assignment from "@material-ui/icons/Assignment";
+import Warning from '@material-ui/icons/Warning';
+import DateRange from '@material-ui/icons/DateRange';
+import LocalOffer from '@material-ui/icons/LocalOffer';
+import Accessibility from '@material-ui/icons/Accessibility';
+import CardTravel from '@material-ui/icons/CardTravel';
+import Assignment from '@material-ui/icons/Assignment';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import StatsCard from "components/Cards/StatsCard.jsx";
-import Badge from "components/Badge/Badge.jsx";
+import GridContainer from 'components/Grid/GridContainer';
+import ItemGrid from 'components/Grid/ItemGrid';
+import StatsCard from 'components/Cards/StatsCard';
+import Badge from 'components/Badge/Badge';
 
-import dashboardStyle from "assets/jss/material-dashboard-pro-react/views/dashboardStyle";
+import dashboardStyle from 'assets/jss/material-dashboard-pro-react/views/dashboardStyle';
 
 
 class Dashboard extends React.Component {
@@ -40,7 +40,7 @@ class Dashboard extends React.Component {
       return <Spinner name="line-scale-pulse-out" />;
     }
 
-    if (!data.student) {
+    if (!data.user.student) {
       // for now only students have dashboard
       return null;
     }
@@ -55,9 +55,18 @@ class Dashboard extends React.Component {
       eventNextMeetingDate = `${soonestTerm}`;
     }
 
-    const openEventsForSignin = user.student.openEventsForSignin.filter(event =>
+    const openEventsForSignin = user.student.eventsWithInvitation.filter((event) => {
+      const attendee = event.attendees[0];
+      const signinOpeningDate = parse(attendee.signInOpenDateTime);
+      const signinClosingDate = parse(attendee.signInCloseDateTime);
+
+      const now = new Date();
+
+      return isAfter(now, signinOpeningDate) && isAfter(signinClosingDate, now);
+    }).filter(event =>
       !event.attendees[0].signedIn && !event.attendees[0].signedOut && !event.attendees[0].wontGo
     ).length;
+
     const termsForFeedback = user.student.termsForFeedback.length;
 
     return (
@@ -117,10 +126,6 @@ class Dashboard extends React.Component {
   }
 }
 
-Dashboard.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
 
 const userQuery = gql`
 query FetchUser ($id: Int){
@@ -133,7 +138,7 @@ query FetchUser ($id: Int){
       termsForFeedback {
         id
       }
-      openEventsForSignin {
+      eventsWithInvitation {
         id
         name
         attendees (userId: $id) {

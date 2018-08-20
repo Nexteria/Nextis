@@ -1,26 +1,28 @@
-import React from "react";
+import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose } from 'recompose';
 import Spinner from 'react-spinkit';
-import { connect } from "common/store";
-import { withRouter } from "react-router-dom";
+import { connect } from 'common/store';
+import { withRouter } from 'react-router-dom';
+import parse from 'date-fns/parse';
+import isAfter from 'date-fns/is_after';
 
 // material-ui components
-import Select from "material-ui/Select";
-import MenuItem from "material-ui/Menu/MenuItem";
-import FormControl from "material-ui/Form/FormControl";
-import InputLabel from "material-ui/Input/InputLabel";
-import withStyles from "material-ui/styles/withStyles";
+import Select from 'material-ui/Select';
+import MenuItem from 'material-ui/Menu/MenuItem';
+import FormControl from 'material-ui/Form/FormControl';
+import InputLabel from 'material-ui/Input/InputLabel';
+import withStyles from 'material-ui/styles/withStyles';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
+import GridContainer from 'components/Grid/GridContainer';
+import ItemGrid from 'components/Grid/ItemGrid';
 
-import PointsCard from "views/ActivityPoints/PointsCard.jsx";
+import PointsCard from 'views/ActivityPoints/PointsCard';
 
-import activityPointsStyle from "assets/jss/material-dashboard-pro-react/views/activityPointsStyle.jsx";
-import ActivityPointsStatsCards from "views/ActivityPoints/ActivityPointsStatsCards.jsx";
+import activityPointsStyle from 'assets/jss/material-dashboard-pro-react/views/activityPointsStyle';
+import ActivityPointsStatsCards from 'views/ActivityPoints/ActivityPointsStatsCards';
 
 class ActivityPoints extends React.Component {
   constructor(props) {
@@ -43,7 +45,12 @@ class ActivityPoints extends React.Component {
   }
 
   render() {
-    const { data, classes, match, user } = this.props;
+    const {
+      data,
+      classes,
+      match,
+      user,
+    } = this.props;
 
     if (data.loading) {
       return <Spinner name="line-scale-pulse-out" />;
@@ -54,6 +61,20 @@ class ActivityPoints extends React.Component {
     let selectedSemesterId = parseInt(match.params.semesterId, 10);
     if (!selectedSemesterId && student && student.activeSemester) {
       selectedSemesterId = student.activeSemester.id;
+    }
+
+    let openEventsForSignin = [];
+
+    if (student) {
+      openEventsForSignin = student.eventsWithInvitation.filter((event) => {
+        const attendee = event.attendees[0];
+        const signinOpeningDate = parse(attendee.signInOpenDateTime);
+        const signinClosingDate = parse(attendee.signInCloseDateTime);
+
+        const now = new Date();
+
+        return isAfter(now, signinOpeningDate) && isAfter(signinClosingDate, now);
+      });
     }
 
     return (
@@ -114,7 +135,7 @@ class ActivityPoints extends React.Component {
               classes={classes}
               activityPointsInfo={student ? student.activityPointsInfo : null}
               unfinishedEvents={student ? student.unfinishedEvents : null}
-              openEventsForSignin={student ? student.openEventsForSignin : null}
+              openEventsForSignin={student ? openEventsForSignin : null}
             />
           )}
         </GridContainer>
@@ -129,7 +150,7 @@ class ActivityPoints extends React.Component {
 }
 
 const userQuery = gql`
-query FetchUser ($id: Int, $semesterId: Int){
+query FetchUser ($id: Int!, $semesterId: Int){
   user (id: $id){
     id
     student {
@@ -139,10 +160,15 @@ query FetchUser ($id: Int, $semesterId: Int){
         minimum
         base
       }
-      openEventsForSignin(signedIn: false, semesterId: $semesterId) {
+      eventsWithInvitation(signedIn: false, semesterId: $semesterId) {
         id
         activityPoints
         name
+        attendees (userId: $id) {
+          id
+          signInOpenDateTime
+          signInCloseDateTime
+        }
       }
       unfinishedEvents (semesterId: $semesterId) {
         id

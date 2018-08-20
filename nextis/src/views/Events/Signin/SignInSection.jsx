@@ -75,36 +75,41 @@ class SignInSection extends React.Component {
 
     const attendee = event.attendees[0];
     const deadline = format(parse(attendee.signInCloseDateTime), 'DD.MM.YYYY o HH:mm');
+    const openingDateString = format(parse(event.attendees[0].signInOpenDateTime), 'DD.MM.YYYY o HH:mm');
 
     let fillButtons = [
       { color: 'info', icon: Info, action: () => history.push(`/events/${event.id}`) },
     ];
 
-    if (!this.isEventFull(event)) {
-      fillButtons.push({
-        color: 'success',
-        icon: event.form ? Assignment : null,
-        text: ' Prihlásiť',
-        action: () => history.push(`/events/${event.id}/signIn`)
-      })
-    } else if (!attendee.standIn) {
-      fillButtons.push({
-        color: 'warning',
-        text: 'Prihlásiť ako náhradník',
-        action: () => history.push(`/events/${event.id}/signIn`)
-      })
-    }
+    const signInOpenIsInFuture = isAfter(parse(event.attendees[0].signInOpenDateTime), new Date());
 
-    if (attendee.standIn) {
-      fillButtons.push({ color: 'danger', text: 'Odhlásiť z náhradníkov', action: () => this.handleStandinAction(studentId, event.id, 'SIGN_OUT') })
-    }
+    if (!signInOpenIsInFuture) {
+      if (!this.isEventFull(event) && event.canStudentSignIn.canSignIn) {
+        fillButtons.push({
+          color: 'success',
+          icon: event.form ? Assignment : null,
+          text: ' Prihlásiť',
+          action: () => history.push(`/events/${event.id}/signIn`)
+        });
+      } else if (!attendee.standIn) {
+        fillButtons.push({
+          color: 'warning',
+          text: 'Prihlásiť ako náhradník',
+          action: () => history.push(`/events/${event.id}/signIn`)
+        });
+      }
 
-    if (!attendee.wontGo && !attendee.signedOut) {
-      fillButtons.push({
-        color: 'danger',
-        text: 'Nezúčastním sa',
-        action: () => this.handleWontGoAction(event)
-      });
+      if (attendee.standIn) {
+        fillButtons.push({ color: 'danger', text: 'Odhlásiť z náhradníkov', action: () => this.handleStandinAction(studentId, event.id, 'SIGN_OUT') })
+      }
+
+      if (!attendee.wontGo && !attendee.signedOut) {
+        fillButtons.push({
+          color: 'danger',
+          text: 'Nezúčastním sa',
+          action: () => this.handleWontGoAction(event)
+        });
+      }
     }
 
     fillButtons = fillButtons.map((prop, key) => (
@@ -113,6 +118,15 @@ class SignInSection extends React.Component {
         {prop.text ? prop.text : null}
       </Button>
     ));
+
+    if (signInOpenIsInFuture) {
+      fillButtons = [
+        <span>
+          {`Prihlasovanie sa otvára: ${openingDateString}`}
+        </span>,
+        fillButtons,
+      ];
+    }
 
     const parentTerms = {};
     let rootTerms = 0;
@@ -171,14 +185,11 @@ class SignInSection extends React.Component {
 
     const student = data.student;
 
-    const openEventsForSignin = student ? student.openEventsForSignin.filter(event =>
+    const eventsForSignin = student ? student.eventsWithInvitation.filter(event =>
       !event.attendees[0].signedIn
     ) : [];
 
-    let events = openEventsForSignin.filter(event =>
-      event.canStudentSignIn.canSignIn === true ||
-      this.isEventFull(event)
-    ).map(event => this.transformEvent(event, classes, history, student.id));
+    let events = eventsForSignin.map(event => this.transformEvent(event, classes, history, student.id));
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
@@ -241,7 +252,6 @@ class SignInSection extends React.Component {
     );
   }
 }
-
 
 
 export default compose(

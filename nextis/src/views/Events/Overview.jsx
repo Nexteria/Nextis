@@ -1,7 +1,7 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { graphql } from 'react-apollo';
-import { connect } from "common/store";
+import { connect } from 'common/store';
 import { compose } from 'recompose';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
@@ -9,30 +9,32 @@ import subMonths from 'date-fns/sub_months';
 import addMonths from 'date-fns/add_months';
 import isAfter from 'date-fns/is_after';
 import isPast from 'date-fns/is_past';
+import lastDayOfMonth from 'date-fns/last_day_of_month';
+import startOfMonth from 'date-fns/start_of_month';
 import Spinner from 'react-spinkit';
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from 'material-ui/styles/withStyles';
 
 // material-ui icons
-import Chat from "@material-ui/icons/Chat";
-import ContentPaste from "@material-ui/icons/ContentPaste";
-import Info from "@material-ui/icons/Info";
+import Chat from '@material-ui/icons/Chat';
+import ContentPaste from '@material-ui/icons/ContentPaste';
+import Info from '@material-ui/icons/Info';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import ExposurePlus2 from '@material-ui/icons/ExposurePlus2';
 import CallSplit from '@material-ui/icons/CallSplit';
 import EventIcon from '@material-ui/icons/Event';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import ItemGrid from "components/Grid/ItemGrid.jsx";
-import RegularCard from "components/Cards/RegularCard.jsx";
-import Timeline from "components/Timeline/Timeline.jsx";
-import Button from "components/CustomButtons/Button.jsx";
+import GridContainer from 'components/Grid/GridContainer';
+import ItemGrid from 'components/Grid/ItemGrid';
+import RegularCard from 'components/Cards/RegularCard';
+import Timeline from 'components/Timeline/Timeline';
+import Button from 'components/CustomButtons/Button';
 
 import { overviewQuery } from 'views/Events/Queries';
 
-import eventsOverviewStyle from "assets/jss/material-dashboard-pro-react/views/eventsOverviewStyle.jsx";
+import eventsOverviewStyle from 'assets/jss/material-dashboard-pro-react/views/eventsOverviewStyle';
 
 class Overview extends React.Component {
   constructor(props) {
@@ -42,8 +44,8 @@ class Overview extends React.Component {
   }
 
   state = {
-    from: format(subMonths(new Date(), 1), 'YYYY-MM-DD HH:mm:ss'),
-    to: format(addMonths(new Date(), 1), 'YYYY-MM-DD HH:mm:ss'),
+    from: format(startOfMonth(subMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
+    to: format(lastDayOfMonth(addMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
     noPastEventsCounter: 0,
   };
 
@@ -221,8 +223,8 @@ export default compose(
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {
-        from: format(subMonths(new Date(), 1), 'YYYY-MM-DD HH:mm:ss'),
-        to: format(addMonths(new Date(), 1), 'YYYY-MM-DD HH:mm:ss'),
+        from: format(startOfMonth(subMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
+        to: format(lastDayOfMonth(addMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
       },
     })
   }),

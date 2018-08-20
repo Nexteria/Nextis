@@ -145,7 +145,7 @@ class StudentType extends GraphQLType
                 },
                 'selectable' => false,
             ],
-            'openEventsForSignin' => [
+            'eventsWithInvitation' => [
                 'type' => Type::listOf(GraphQL::type('event')),
                 'description' => 'The student`s events, where the sign in is open.',
                 'args' => [
@@ -167,7 +167,7 @@ class StudentType extends GraphQLType
                         $filters['semesterId'] = $args['semesterId'];
                     }
 
-                    return $root->getOpenEventsForSignin($filters);
+                    return $root->getEventsWithInvitation($filters);
                 },
                 'selectable' => false,
             ],

@@ -19,7 +19,7 @@ query FetchMeetings ($id: Int!, $userId: Int){
         name
       }
     }
-    openEventsForSignin {
+    eventsWithInvitation {
       id
       name
       eventType

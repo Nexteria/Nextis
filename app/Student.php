@@ -141,6 +141,44 @@ class Student extends Model
         return $events;
     }
 
+    public function getEventsWithInvitation($filters = []) {
+        $attendeesQuery = NxEventAttendee::where('userId', $this->userId)
+            ->whereRaw('signInCloseDateTime > NOW()');
+        
+        foreach ($filters as $key => $value) {
+            switch ($key) {
+                case 'signedIn':
+                    if ($value) {
+                        $attendeesQuery->whereNotNull('signedIn');
+                    } else {
+                        $attendeesQuery->whereNull('signedIn');
+                    }
+                    break;
+
+                case 'semesterId':
+                    break;
+
+                default:
+                    throw new \Exception('Unknown filter: '.$key);
+                    break;
+            }
+        }
+            
+        
+        $attendeeGroupIds = $attendeesQuery->pluck('attendeesGroupId');
+
+        $eventIds = AttendeesGroup::whereIn('id', $attendeeGroupIds)->pluck('eventId');
+
+        $eventsQuery = NxEvent::whereIn('id', $eventIds)->where('status', 'published');
+        if (isset($filters['semesterId'])) {
+            $eventsQuery->where('semesterId', $filters['semesterId']);
+        }
+
+        $events = $eventsQuery->get();
+
+        return $events;
+    }
+
     public function getTermsWaitingForFeedback()
     {
         $attendeeIds = NxEventAttendee::where('userId', $this->userId)

@@ -8,6 +8,8 @@ import gql from 'graphql-tag';
 import { connect } from 'common/store';
 import Spinner from 'react-spinkit';
 import { Route, withRouter } from 'react-router-dom';
+import parse from 'date-fns/parse';
+import isAfter from 'date-fns/is_after';
 
 // @material-ui/icons
 import ListIcon from '@material-ui/icons/List';
@@ -47,7 +49,16 @@ class Events extends React.Component {
 
     const { user } = data;
 
-    const openEventsForSignin = !user.student ? 0 : user.student.openEventsForSignin.filter((event) => {
+    // TODO: move filtering to the server as param isOpen
+    const openEventsForSignin = !user.student ? 0 : user.student.eventsWithInvitation.filter((event) => {
+      const attendee = event.attendees[0];
+      const signinOpeningDate = parse(attendee.signInOpenDateTime);
+      const signinClosingDate = parse(attendee.signInCloseDateTime);
+
+      const now = new Date();
+
+      return isAfter(now, signinOpeningDate) && isAfter(signinClosingDate, now);
+    }).filter((event) => {
       const attendee = event.attendees[0];
 
       return !attendee.signedIn && !attendee.signedOut && !attendee.wontGo;
@@ -136,7 +147,7 @@ query FetchUser ($id: Int){
       termsForFeedback {
         id
       }
-      openEventsForSignin {
+      eventsWithInvitation {
         id
         name
         attendees (userId: $id) {
