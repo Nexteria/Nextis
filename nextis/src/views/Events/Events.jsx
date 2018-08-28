@@ -49,6 +49,10 @@ class Events extends React.Component {
 
     const { user } = data;
 
+    if (!user.student) {
+      return null
+    }
+
     // TODO: move filtering to the server as param isOpen
     const openEventsForSignin = !user.student ? 0 : user.student.eventsWithInvitation.filter((event) => {
       const attendee = event.attendees[0];
