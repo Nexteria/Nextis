@@ -23,18 +23,13 @@ class Form extends Model
     public function getUsersAnswers($userId = null)
     {
         $choicesIds = $this->choices()->pluck('choices.id');
-        \Log::error($choicesIds);
-        \Log::error($userId);
-        \Log::error($this->id);
         $query = Answer::whereIn('choiceId', $choicesIds);
 
         if ($userId) {
             $query = $query->where('userId', $userId);
         }
 
-        \Log::error($query->toSql());
         $answers = $query->get();
-        \Log::error($answers);
 
         return $answers;
     }
