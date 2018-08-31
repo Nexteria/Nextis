@@ -126,7 +126,7 @@ export class SignInDialog extends React.Component {
         userId: user.id
       });
       await data.refetch();
-      history.goBack();
+      history.push('/events');
       actions.setNotification({
         id: 'eventSignIn',
         place: 'tr',
