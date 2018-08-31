@@ -53,6 +53,10 @@ class AutogenerateEventReminderMail extends Command
 
                     $attendees = $term->attendees()->wherePivot('signedIn', '!=', null)->get();
                     foreach ($attendees as $attendee) {
+                        if ($attendee->student && $attendee->student->status !== 'active') {
+                            continue;
+                        }
+
                         $email = new \App\Mail\Events\EventReminderMail($event, $term, $attendee->user, $manager);
                         \Mail::send($email);
                     }

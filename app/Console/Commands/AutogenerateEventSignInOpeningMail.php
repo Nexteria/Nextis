@@ -47,6 +47,10 @@ class AutogenerateEventSignInOpeningMail extends Command
                     $eventSignInDeadline = $group->signUpDeadlineDateTime->format('j.n.Y H:i');
 
                     foreach ($group->attendees as $attendee) {
+                        if ($attendee->student && $attendee->student->status !== 'active') {
+                            continue;
+                        }
+
                         $email = new \App\Mail\Events\EventSignInOpeningMail($event, $attendee->user, $attendee->signInToken, $eventSignInDeadline, $manager);
                         \Mail::send($email);
                     }

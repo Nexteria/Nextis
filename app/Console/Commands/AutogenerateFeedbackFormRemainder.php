@@ -90,6 +90,10 @@ class AutogenerateFeedbackFormRemainder extends Command
                 })->get();
 
                 foreach ($attendees as $attendee) {
+                    if ($attendee->student && $attendee->student->status !== 'active') {
+                        continue;
+                    }
+
                     $email = new \App\Mail\Events\EventFeedbackRemainderMail($event, $term, $attendee->user, $manager);
                     \Mail::send($email);
                 }

@@ -46,6 +46,9 @@ class AutogenerateFeedbackFormNotification extends Command
 
                 foreach ($term->attendees as $attendee) {
                     if ($attendee->pivot->wasPresent) {
+                        if ($attendee->student && $attendee->student->status !== 'active') {
+                            continue;
+                        }
                         $email = new \App\Mail\Events\EventFeedbackMail($event, $term, $attendee->user, $manager);
                         \Mail::send($email);
                     }

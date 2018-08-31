@@ -57,6 +57,10 @@ class AutogenerateEventSignInRemainderMail extends Command
                             break;
                         }
 
+                        if ($attendee->student && $attendee->student->status !== 'active') {
+                            continue;
+                        }
+
                         $email = new \App\Mail\Events\EventSignInRemainderMail($event, $attendee->user, $attendee->signInToken, $eventSignInDeadline, $manager);
                         \Mail::send($email);
                     }
