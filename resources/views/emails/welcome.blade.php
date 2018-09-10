@@ -548,43 +548,13 @@
 
                                                                                                 <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #606060;font-family: Helvetica;font-size: 15px;line-height: 150%;text-align: left;">
 
-                                                                                                    <strong>Ahojte všetci,</strong>
-                                                                                                    <br>
-                                                                                                    <br> týmto emailom by som vám chcel v krátkosti predstaviť nový informačný systém Nexterie - Space.
-                                                                                                    <br> 
-                                                                                                    <br> Čo v ňom zatiaľ nájdete:
-                                                                                                    <ul>
-                                                                                                        <li style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">podrobnosti a prihlasovanie na eventy</li>
-                                                                                                    </ul>
-                                                                                                    <br> Čo plánujeme v blízkej dobe doplniť:
-                                                                                                    <ul>
-                                                                                                        <li style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">prehľad získaných bodov za semester</li>
-                                                                                                        <li style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">prehľad o platbe školného</li>
-                                                                                                    </ul>
-                                                                                                    <br>
-
-                                                                                                    Na tomto systéme pracujú dobrovoľníci z radov študentov NLA. Prečo sa vlastne rozhodlo vytvoriť nejaký informačný systém? Minulé roky v Nexterií pracovali 2 študenti, ktorých úlohou bolo starať sa o administratívnu činnosť ako pozývanie na kurzy a diskusie, evidenciu  feedbackov, zaznamenávanie získaných kreditov, kontrolu platby školného, udržiavanie databázy študentov.
-                                                                                                    <br>
-                                                                                                    <br>Keď píšem dvaja študenti, myslím tým šikovní študenti NLA, ktorí svoj čas venovali Nexterii na administratívne činnosti. Aj tie sú dôležité, aby všetko fungovalo tak, ako má, no Nexteria informačný systém má za úlohu zjednodušiť a čo najviac zautomatizovať veci, ktoré sa zautomatizovať dajú, aby sa mohli šikovní ľudia viac venovať rozvoju NLA a vďaka tomu meniť Slovensko k lepšiemu.
-                                                                                                    <br>
-                                                                                                    <br>Systém sa spúšta do prevádzky vo verzií Beta, čo znamená, že môže a bude obsahovať aj nejaké chyby, preto by som chcel aj Teba, {{ $userName }}, poprosiť, ak akúkoľvek chybu nájdeš, alebo by si privítal nejakú novú funkcionalitu, daj nám o nej vedieť <strong><a href="https://wantoo.io/nexteria-space/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #6DC6DD;font-weight: normal;text-decoration: underline;">TU</a>.</strong>
-                                                                                                    <br>
-                                                                                                    <br> Samozrejme ak by bol z Tvojej strany záujem pomôcť s vývojom systému, môžeš si to vybrať aj ako ekvivalent projektu vo firme. Ak chceš viac informacii, napíš mi na dusan.plavak@gmail.com
-                                                                                                    <br>
+                                                                                                    <strong>Ahoj,</strong>
                                                                                                     <br> Do systému sa môžeš prihlásiť na adrese: <a href="https://space.nexteria.sk/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #6DC6DD;font-weight: normal;text-decoration: underline;">https://space.nexteria.sk</a>
                                                                                                     <br>
                                                                                                     <br>
                                                                                                     <strong>Tvoje prihlasovacie meno:</strong> {{ $userEmail }}
                                                                                                     <br>
                                                                                                     <strong>Tvoje prihlasovacie heslo: </strong> {{ $userPassword }}
-                                                                                                    <br>
-                                                                                                    <br> Po prihlásení si prosím skontroluj a doplň informácie v profile. 
-    Keďže by sme radi mali aktuálne profily o naši študentoch (vieme lepšie prispôsobovať aktivity v programe či dať vedieť partnerom relevantnejšie informácie), je aktualizácia profilu dôležitou časťou. Nájdi si na ňu, prosím, pár minút. Ďakujem.
-                                                                                                    <br>
-                                                                                                    <br><strong>Prihlasovanie na aktivity</strong>
-                                                                                                    <br>Prihlasovanie na aktivity v rámci NLA sa bude od 14.9. diať cez Space a nie cez Doodle. V zozname aktivít už môžete vidieť prvé kurzy a diskusiu. Rovno sa na ne prihláste.
-                                                                                                    <br>
-                                                                                                    <br> S pozdravom Dušan Plavák, NLA 2. level
                                                                                                     <br>
                                                                                                     <br>  P.S.: Nezabudni uhradiť školné ;)
                                                                                                     <br>
@@ -638,7 +608,7 @@ Na číslo účtu:</strong> SK9611000000002941464703
 
                                                                                                 <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #606060;font-family: Helvetica;font-size: 11px;line-height: 125%;text-align: left;">
 
-                                                                                                    <em>Copyright © 2016 Nexteria, All rights reserved.</em>
+                                                                                                    <em>Copyright © 2018 Nexteria, All rights reserved.</em>
                                                                                                 </td>
                                                                                             </tr>
                                                                                         </tbody>

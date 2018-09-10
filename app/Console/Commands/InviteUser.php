@@ -42,7 +42,7 @@ class InviteUser extends Command
         {
             $message->from('noreply@space.nexteria.sk', 'Nexteria Space');
             $message->to($user->email);
-            $message->subject("Nexteria Space - prihlasovanie na eventy");
+            $message->subject("Nexteria Space - vitaj v systéme");
         });
     }
 }

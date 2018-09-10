@@ -26,6 +26,7 @@ use App\GraphQL\Type\SkillType;
 
 use App\GraphQL\Query\EventsQuery;
 use App\GraphQL\Query\EventQuery;
+use App\GraphQL\Query\LocationsQuery;
 use App\GraphQL\Query\UserQuery;
 use App\GraphQL\Query\UsersQuery;
 use App\GraphQL\Query\StudentQuery;
@@ -61,6 +62,7 @@ return [
                 'skills' => SkillsQuery::class,
                 'semesters' => SemestersQuery::class,
                 'studentLevels' => StudentLevelsQuery::class,
+                'locations' => LocationsQuery::class,
             ],
             'mutation' => [
                 'UpdateUserProfile' => UserProfileMutation::class,

@@ -42,6 +42,10 @@ class NxLocationType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'Location zipCode'
             ],
+            'countryCode' => [
+                'type' => Type::string(),
+                'description' => 'Location`s country code'
+            ],
             'latitude' => [
                 'type' => Type::float(),
                 'description' => 'Location latitude'

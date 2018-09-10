@@ -8,12 +8,14 @@ import SkillSearch from 'views/Skills/SkillSearch/SkillSearch';
 
 import AdminEvents from 'views/Admin/Events/EventsContainer';
 import AdminStudents from 'views/Admin/Students/StudentsContainer';
+import AdminLocations from 'views/Admin/Locations/LocationsContainer';
 
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import Accessibility from '@material-ui/icons/Accessibility';
 import CardTravel from '@material-ui/icons/CardTravel';
 import Assignment from '@material-ui/icons/Assignment';
+import HomeIcon from '@material-ui/icons/Home';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import SkillSearchIcon from '@material-ui/icons/Search';
 
@@ -87,6 +89,15 @@ const dashRoutes = [
     state: 'openAdminStudents',
     icon: Accessibility,
     component: AdminStudents,
+    showInMenu: true,
+    isAdmin: true,
+  },
+  {
+    path: '/admin/locations',
+    name: 'Miesta',
+    state: 'openAdminLocations',
+    icon: HomeIcon,
+    component: AdminLocations,
     showInMenu: true,
     isAdmin: true,
   },
