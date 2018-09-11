@@ -88,6 +88,11 @@ const loginCardStyle = {
   },
   logo: {
     position: "absolute",
+  },
+  loginCard: {
+    "& input": {
+      color: '#ffffff',
+    },
   }
 };
 

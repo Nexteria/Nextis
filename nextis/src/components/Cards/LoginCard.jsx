@@ -35,7 +35,7 @@ function LoginCard({ ...props }) {
         />
       </div>
       <p className={classes.cardSubtitle}>{cardSubtitle}</p>
-      <CardContent className={classes.cardContent}>{content}</CardContent>
+      <CardContent className={classes.cardContent + " " + classes.loginCard}>{content}</CardContent>
       {footer !== undefined ? (
         <CardActions
           className={classes.cardActions + " " + classes[footerAlign]}
