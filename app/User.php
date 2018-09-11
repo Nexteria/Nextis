@@ -260,4 +260,10 @@ class User extends Authenticatable implements AuditableContract
     {
         return $this->hasOne('App\UserPaymentsSettings', 'userId');
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $email = new \App\Mail\Auth\PasswordResetMail($this, $token);
+        \Mail::send($email);
+    }
 }

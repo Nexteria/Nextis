@@ -6,9 +6,12 @@ import Spinner from 'react-spinkit';
 import withStyles from 'material-ui/styles/withStyles';
 
 import LoginPage from 'pages/LoginPage';
+import PasswordRemindPage from 'pages/PasswordRemindPage';
+import PasswordResetPage from 'pages/PasswordResetPage';
 import Dashboard from 'layouts/Dashboard';
 import { connect } from 'common/store';
 import request from 'common/fetch';
+import { isPublicPath } from 'common/utils';
 
 // core components
 import Footer from 'components/Footer/Footer';
@@ -26,7 +29,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { history, actions } = this.props;
+    const { history, actions, location } = this.props;
+    if (isPublicPath(location.pathname)) {
+      this.setState({ isLoading: false });
+      return
+    }
 
     request('/api/users/me', {
       credentials: 'same-origin',
@@ -60,6 +67,7 @@ class App extends Component {
       classes,
       actions,
       history,
+      match,
       user,
       notifications,
       location,
@@ -79,10 +87,28 @@ class App extends Component {
                       {isLoading ? <Spinner name="line-scale-pulse-out" className={classes.loader} /> : null}
                     </ItemGrid>
                   </GridContainer>
+
                   <Route
                     exact
                     path="/login"
-                    render={() => <LoginPage actions={actions} history={history} />
+                    render={
+                      () => <LoginPage actions={actions} history={history} />
+                    }
+                  />
+
+                  <Route
+                    exact
+                    path="/password/remind"
+                    render={
+                      () => <PasswordRemindPage history={history} />
+                    }
+                  />
+
+                  <Route
+                    exact
+                    path="/password/reset/:token"
+                    render={
+                      () => <PasswordResetPage />
                     }
                   />
                 </div>

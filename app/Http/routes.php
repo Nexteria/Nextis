@@ -15,6 +15,9 @@
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/logout', 'Auth\LoginController@logout');
 Route::post('/payments', 'PaymentsController@processPayment');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get('password/reset/{token}', function(){ return view('index'); });
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 // email event signIn
 Route::get('/nxEvents/{signInToken}/signIn', function() { return view('index'); });

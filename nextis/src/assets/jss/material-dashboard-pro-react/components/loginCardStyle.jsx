@@ -56,7 +56,8 @@ const loginCardStyle = {
   cardSubtitle: {
     ...defaultFont,
     textAlign: "center",
-    fontSize: "14px"
+    marginTop: '2em',
+    fontSize: '1.5em',
   },
   cardActions: {
     padding: "0",

@@ -84,7 +84,7 @@ const loginPageStyle = {
   },
   resetPasswordContainer: {
     textAlign: 'right',
-  },
+  }
 };
 
 export default loginPageStyle;

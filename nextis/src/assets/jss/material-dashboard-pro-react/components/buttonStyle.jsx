@@ -173,6 +173,9 @@ const buttonStyle = {
       color: nexteriaOrangeColor,
       boxShadow: "none",
       backgroundColor: "transparent"
+    },
+    "&:hover": {
+      backgroundColor: "#ff992033"
     }
   },
   white: {

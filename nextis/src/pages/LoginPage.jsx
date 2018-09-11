@@ -1,6 +1,7 @@
 import React from "react";
 import * as Sentry from '@sentry/browser';
 import PropTypes from "prop-types";
+import { Link } from  'react-router-dom'
 
 // material-ui components
 import withStyles from "material-ui/styles/withStyles";
@@ -87,7 +88,7 @@ class LoginPage extends React.Component {
                       size="lg"
                       onClick={this.handleLogin}
                     >
-                      Let's Go
+                      Prihlásiť
                     </Button>
                   }
                   content={
@@ -143,8 +144,13 @@ class LoginPage extends React.Component {
                           )
                         }}
                       />
+
+                      <div className={classes.resetPasswordContainer}>
+                        <Link to="/password/remind" className={classes.resetPassword}>Zabudnuté heslo?</Link>
+                      </div>
+
                       {this.state.loginFailed ?
-                        <div className={classes.loginError}>Invalid login information. Try again.</div>
+                        <div className={classes.loginError}>Neplatné meno / heslo. Skús znova.</div>
                         : null
                       }
                     </div>

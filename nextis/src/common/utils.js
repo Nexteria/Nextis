@@ -5,3 +5,7 @@ export const renderWhileLoading = (component, propName = 'data') =>
     props => props[propName] && props[propName].loading,
     renderComponent(component),
   );
+
+export const isPublicPath = (path) => {
+  return path.indexOf('/password/reset') !== -1
+}
