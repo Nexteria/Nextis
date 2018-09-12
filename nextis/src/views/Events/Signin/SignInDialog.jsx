@@ -24,8 +24,7 @@ import RegularCard from 'components/Cards/RegularCard';
 
 import eventDetailsStyle from 'assets/jss/material-dashboard-pro-react/views/eventDetailsStyle';
 
-import { eventSignAction } from 'views/Events/Signin/Queries';
-import { meetingsQuery } from 'views/Events/Queries';
+import { eventSignAction, meetingsQuery } from 'views/Events/Signin/Queries';
 
 function Transition(props) {
   return <Slide direction="down" {...props} />;
@@ -143,6 +142,8 @@ export class SignInDialog extends React.Component {
       return null;
     }
 
+    const event = data.event;
+
     // TODO: create event class
     const parentTerms = {};
     const rootTerms = [];
@@ -155,6 +156,8 @@ export class SignInDialog extends React.Component {
     });
 
     const hasAlternatives = rootTerms.length > 1;
+    const hasEventChoices = event.groupedEvents.length || (event.parentEvent && event.parentEvent.id);
+    const isBaseEvent = event.groupedEvents.length && !event.parentEvent;
 
     const { choosedTermId } = this.state;
 
@@ -234,16 +237,45 @@ export class SignInDialog extends React.Component {
             </div>
           )) : null}
 
+          {hasEventChoices && event.parentEvent && event.parentEvent.exclusionaryEvents ?
+            <ItemGrid xs={12} sm={12} md={12} lg={12}>
+              <span className={classes.red}>Prihasením na tento event, stratíš možnosť prihlásiť sa na:</span>
+              <ul>
+                {event.parentEvent.exclusionaryEvents.filter(exclusionaryEvent => exclusionaryEvent.id !== event.id)
+                  .map((exclusionaryEvent, index) =>
+                  <li key={index}>{exclusionaryEvent.name}</li>
+                )}
+               </ul>
+            </ItemGrid>
+            : null
+          }
+
           <ItemGrid xs={12} style={{ textAlign: 'center' }}>
-            <Button
-              color="success"
-              size="sm"
-              customClass={classes.marginRight}
-              onClick={() => this.handleSignIn(hasAlternatives)}
-              disabled={hasAlternatives && choosedTermId === null}
-            >
-              Záväzne sa prihlásiť
-            </Button>
+            {!isBaseEvent ?
+              <Button
+                color="success"
+                size="sm"
+                customClass={classes.marginRight}
+                onClick={() => this.handleSignIn(hasAlternatives)}
+                disabled={hasAlternatives && choosedTermId === null}
+              >
+                Záväzne sa prihlásiť
+              </Button>
+            : <div>
+              <p>Prosím prihlás sa na na jeden  z eventov:</p>
+              {hasEventChoices && event.exclusionaryEvents ?
+                <ItemGrid xs={12} sm={12} md={12} lg={12}>
+                  <ul>
+                    {event.exclusionaryEvents.filter(exclusionaryEvent => exclusionaryEvent.id !== event.id)
+                      .map((exclusionaryEvent, index) =>
+                      <li key={index}>{exclusionaryEvent.name}</li>
+                    )}
+                  </ul>
+                </ItemGrid>
+                : null
+              }
+              </div>
+            }
           </ItemGrid>
         </DialogContent>
       </Dialog>
@@ -257,6 +289,14 @@ query FetchEvent ($id: Int, $userId: Int){
     id
     name
     parentEvent {
+      id
+      name
+      exclusionaryEvents {
+        id
+        name
+      }
+    }
+    exclusionaryEvents {
       id
       name
     }

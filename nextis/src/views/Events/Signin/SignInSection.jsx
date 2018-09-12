@@ -186,7 +186,7 @@ class SignInSection extends React.Component {
     const student = data.student;
 
     const eventsForSignin = student ? student.eventsWithInvitation.filter(event =>
-      !event.attendees[0].signedIn
+      !event.attendees[0].signedIn && event.canStudentSignIn.codename !== 'already_signed_for_exclusionary_event'
     ) : [];
 
     let events = eventsForSignin.map(event => this.transformEvent(event, classes, history, student.id));

@@ -445,7 +445,7 @@ class NxEvent extends Model implements AuditableContract
                 ->whereHas('attendees', function ($query) use ($student) {
                     $query->where('userId', $student->userId)
                           ->whereNotNull('signedIn');
-                })->get();
+                })->exists();
 
             if ($isSignedForExclusionaryEvent) {
                 return [

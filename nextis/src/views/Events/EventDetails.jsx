@@ -24,6 +24,7 @@ import RegularCard from "components/Cards/RegularCard.jsx";
 import avatarImg from "assets/img/default-avatar.png";
 
 import eventDetailsStyle from "assets/jss/material-dashboard-pro-react/views/eventDetailsStyle.jsx";
+import { isAfter } from "date-fns";
 
 export class EventDetails extends React.Component {
   state = {
@@ -156,7 +157,7 @@ export class EventDetails extends React.Component {
                 customCardClasses={classes.termsCard}
                 content={
                   <ol>
-                    {event.terms.map((term, index) =>
+                    {[...event.terms].sort((a, b) => isAfter(parse(a.eventStartDateTime), parse(b.eventStartDateTime))).map((term, index) =>
                       <li key={index}>
                         <span>{format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm')}, </span>
                         <span>{this.formatLocation(term.location)}</span>

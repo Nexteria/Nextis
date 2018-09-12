@@ -127,9 +127,11 @@ class EventSignActionMutation extends Mutation
                     $eventAttendee = NxEventAttendee::where('userId', '=', $user->id)
                     ->whereHas('attendeesGroup', function ($query) use ($gEvent) {
                         $query->where('eventId', '=', $gEvent->id);
-                    })->firstOrFail();
+                    })->first();
 
-                    $attendeesWontGo[] = $eventAttendee;
+                    if ($eventAttendee) {
+                        $attendeesWontGo[] = $eventAttendee;
+                    }
                 }
             }
 
