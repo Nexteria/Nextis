@@ -31,6 +31,8 @@ import Button from 'components/CustomButtons/Button';
 import { countries } from 'common/utils';
 
 import locationsEditStyles from 'assets/jss/material-dashboard-pro-react/views/locationsEditStyles';
+import { locationsQuery } from 'views/Admin/Locations/Queries';
+
 
 function Transition(props) {
   return <Slide direction="down" {...props} />;
@@ -105,7 +107,7 @@ export class LocationEditDialog extends React.Component {
       countryCode,
     } = this.state;
 
-    const { actions, updateLocation, data } = this.props;
+    const { actions, updateLocation } = this.props;
 
     if (!latitude || !longitude) {
       this.setState({ error: 'Prosím najskôr skontroluj a zaznač adresu na mape'});
@@ -136,7 +138,6 @@ export class LocationEditDialog extends React.Component {
       instructions: this.state.instructions.toString('html'),
       description: this.state.description.toString('html'),
     } }).then(async () => {
-      await data.refetch({});
       this.handleOnClose();
       actions.setNotification({
         id: 'updateLocation',
@@ -452,7 +453,7 @@ query FetchLocations ($id: Int!){
 `;
 
 const locationMutation = gql`
-  mutation UpdateLocation(
+  mutation UpdateLocation (
     $latitude: Float!
     $longitude: Float!
     $id: Int
@@ -508,6 +509,9 @@ export default compose(
           variables: {
             id: match.params.locationId,
           },
+          refetchQueries: [
+            { query: locationsQuery }
+          ]
         };
       }
     })

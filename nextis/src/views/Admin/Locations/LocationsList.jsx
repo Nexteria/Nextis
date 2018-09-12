@@ -8,7 +8,7 @@ import gql from 'graphql-tag';
 import { connect } from 'common/store';
 import Spinner from 'react-spinkit';
 import ReactTable from 'react-table';
-import { Route, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
 // @material-ui/icons
 import AddIcon from '@material-ui/icons/AddCircleOutline';
@@ -24,6 +24,7 @@ import IconButton from 'components/CustomButtons/IconButton';
 import Button from 'components/CustomButtons/Button';
 
 import LocationEditDialog from 'views/Admin/Locations/LocationEditDialog';
+import { locationsQuery, deleteLocationMutation } from 'views/Admin/Locations/Queries';
 
 const styles = {
   actionButton: {
@@ -85,7 +86,7 @@ class LocationsList extends React.Component {
   }
 
   render() {
-    const { data, classes, history, deleteLocation } = this.props;
+    const { data, classes, history } = this.props;
 
     if (data.loading) {
       return <Spinner name="line-scale-pulse-out" />;
@@ -153,43 +154,23 @@ class LocationsList extends React.Component {
           />
         </ItemGrid>
 
-        <Route
-          path="/admin/locations/new"
-          exact
-          component={LocationEditDialog}
-        />
+        <Switch>
+          <Route
+            path="/admin/locations/new"
+            exact
+            component={LocationEditDialog}
+          />
 
-        <Route
-          path="/admin/locations/:locationId"
-          exact
-          component={LocationEditDialog}
-        />
+          <Route
+            path="/admin/locations/:locationId"
+            exact
+            component={LocationEditDialog}
+          />
+        </Switch>
       </GridContainer>
     );
   }
 }
-
-const locationsQuery = gql`
-query FetchLocations {
-  locations {
-    id
-    name
-    addressLine1
-    addressLine2
-    city
-    zipCode
-    countryCode
-  }
-}
-`;
-
-const deleteLocationMutation = gql`
-mutation DeleteLocation (
-  $id: Int!
-) {
-  DeleteLocation(id: $id)
-}
-`;
 
 export default compose(
   withRouter,
