@@ -40,7 +40,7 @@ function CustomInput({ ...props }) {
   }
   var underlineClasses = cx({
     [classes.underline]: true,
-    [inputProps.underline]: inputProps && inputProps.underline,
+    [inputProps ? inputProps.underline : {}]: inputProps && inputProps.underline,
     [classes.underlineError]: error,
     [classes.underlineSuccess]: success && !error,
   });

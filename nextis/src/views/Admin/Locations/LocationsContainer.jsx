@@ -15,7 +15,6 @@ class LocationsContainer extends React.Component {
       <GridContainer>
         <Route
           path="/admin/locations"
-          exact
           component={LocationsList}
         />
       </GridContainer>

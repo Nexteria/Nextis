@@ -41,6 +41,8 @@ use App\GraphQL\Mutations\UserProfilePhotoMutation;
 use App\GraphQL\Mutations\StandInSignActionMutation;
 use App\GraphQL\Mutations\SubmitQuestionaireMutation;
 use App\GraphQL\Mutations\EventSignActionMutation;
+use App\GraphQL\Mutations\LocationMutation;
+use App\GraphQL\Mutations\DeleteLocationMutation;
 
 
 return [
@@ -71,6 +73,8 @@ return [
                 'CreateSkill' => CreateSkillMutation::class,
                 'SubmitQuestionaire' => SubmitQuestionaireMutation::class,
                 'EventSignAction' => EventSignActionMutation::class,
+                'UpdateLocation' => LocationMutation::class,
+                'DeleteLocation' => DeleteLocationMutation::class,
             ],
             'middleware' => ['auth']
         ],

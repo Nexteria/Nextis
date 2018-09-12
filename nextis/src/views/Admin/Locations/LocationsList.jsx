@@ -14,6 +14,7 @@ import { Route, withRouter } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import HomeIcon from '@material-ui/icons/Home';
 import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
 
 // core components
 import GridContainer from 'components/Grid/GridContainer';
@@ -21,6 +22,8 @@ import ItemGrid from 'components/Grid/ItemGrid';
 import IconCard from 'components/Cards/IconCard';
 import IconButton from 'components/CustomButtons/IconButton';
 import Button from 'components/CustomButtons/Button';
+
+import LocationEditDialog from 'views/Admin/Locations/LocationEditDialog';
 
 const styles = {
   actionButton: {
@@ -47,13 +50,42 @@ const styles = {
 };
 
 class LocationsList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.deleteLocation = this.deleteLocation.bind(this);
+  }
+
   transformAddress(location) {
     return `${location.addressLine1}${location.addressLine2 ? `, ${location.addressLine2}` : ''}
     , ${location.city}, ${location.zipCode}, ${location.countryCode}`
   }
 
+  deleteLocation(locationId) {
+    const { deleteLocation, data, actions } = this.props;
+
+    deleteLocation({ variables: {id: locationId}})
+      .then(async () => {
+        await data.refetch({});
+
+        actions.setNotification({
+          id: 'deleteLocation',
+          place: 'tr',
+          color: 'success',
+          message: 'Miesto bolo zmazané'
+        });
+      }).catch(() => {
+        actions.setNotification({
+          id: 'deleteLocation',
+          place: 'tr',
+          color: 'danger',
+          message: 'Pri zmazaní miesta došlo k chyba. Skúste znova'
+        });
+      })
+  }
+
   render() {
-    const { data, classes, history } = this.props;
+    const { data, classes, history, deleteLocation } = this.props;
 
     if (data.loading) {
       return <Spinner name="line-scale-pulse-out" />;
@@ -68,9 +100,10 @@ class LocationsList extends React.Component {
         actions: (
           <div className="actions-right">
             {[
-              { color: 'success', icon: Edit, actionCode: 'edit' }
+              { color: 'danger', icon: Delete, actionCode: 'Delete', onClick: () => this.deleteLocation(location.id)},
+              { color: 'success', icon: Edit, actionCode: 'edit', onClick: () => history.push(`/admin/locations/${location.id}`)},
             ].map(prop => (
-              <IconButton color={prop.color} customClass={`${classes.actionButton} ${classes.actionButtonRound}`} key={prop.actionCode}>
+              <IconButton color={prop.color} onClick={prop.onClick} customClass={`${classes.actionButton} ${classes.actionButtonRound}`} key={prop.actionCode}>
                 <prop.icon className={classes.icon} />
               </IconButton>
             ))}
@@ -123,12 +156,13 @@ class LocationsList extends React.Component {
         <Route
           path="/admin/locations/new"
           exact
-          component={null}
+          component={LocationEditDialog}
         />
+
         <Route
           path="/admin/locations/:locationId"
           exact
-          component={null}
+          component={LocationEditDialog}
         />
       </GridContainer>
     );
@@ -149,9 +183,18 @@ query FetchLocations {
 }
 `;
 
+const deleteLocationMutation = gql`
+mutation DeleteLocation (
+  $id: Int!
+) {
+  DeleteLocation(id: $id)
+}
+`;
+
 export default compose(
   withRouter,
   connect(state => ({ user: state.user })),
   withStyles(styles),
+  graphql(deleteLocationMutation, { name: 'deleteLocation' }),
   graphql(locationsQuery, {}),
 )(LocationsList);
