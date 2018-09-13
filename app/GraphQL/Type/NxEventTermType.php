@@ -89,10 +89,7 @@ class NxEventTermType extends GraphQLType
                 ],
                 'resolve' => function ($root, $args) {
                     if (isset($args['userId'])) {
-                        $attendee = $root->attendees()->where('userId', $args['userId'])->first();
-                        if (!$attendee) {
-                            return 'user_not_invited';
-                        }
+                        $attendee = $root->event->attendees()->where('userId', $args['userId'])->first();
                         return $root->event->canSignInAttendee($attendee, $root->id)['codename'];
                     }
 

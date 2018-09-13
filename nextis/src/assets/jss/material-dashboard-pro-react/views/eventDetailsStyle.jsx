@@ -96,6 +96,21 @@ const eventDetailsStyle = {
     '& > div, & > ol': {
       display: 'inline',
     },
+  },
+  buttonSpinner: {
+    '& > div': {
+      height: '1em',
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    width: '12em',
+  },
+  disabledCard: {
+    backgroundColor: 'rgba(0, 0, 0, 0.14)',
+    '&:hover': {
+      boxShadow: 'none',
+      cursor: 'not-allowed',
+    }
   }
 };
 

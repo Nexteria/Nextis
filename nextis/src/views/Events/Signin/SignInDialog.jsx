@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import withStyles from 'material-ui/styles/withStyles';
+import Spinner from 'react-spinkit';
 import { connect } from 'common/store';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
@@ -58,6 +59,7 @@ export class SignInDialog extends React.Component {
 
     this.state = {
       choosedTermId: null,
+      loading: false,
     };
 
     this.handleOnClose = this.handleOnClose.bind(this);
@@ -100,6 +102,7 @@ export class SignInDialog extends React.Component {
     } = this.props;
 
     const { choosedTermId } = this.state;
+    this.setState({ loading: true });
 
     // TODO: fix this asap
     const terms = [];
@@ -109,17 +112,17 @@ export class SignInDialog extends React.Component {
       terms.push(data.event.terms[0].id);
     }
 
-    const response = await signAction({
-      variables: {
-        studentId: student.id,
-        eventId: data.event.id,
-        action: 'SIGN_IN',
-        terms,
-        reason: '',
-      }
-    });
+    try {
+      await signAction({
+        variables: {
+          studentId: student.id,
+          eventId: data.event.id,
+          action: 'SIGN_IN',
+          terms,
+          reason: '',
+        }
+      });
 
-    if (!response.data.error) {
       await refetchMeetings.refetch({
         id: student.id,
         userId: user.id
@@ -132,7 +135,17 @@ export class SignInDialog extends React.Component {
         color: 'success',
         message: 'Prihlásenie prebehlo úspešne'
       });
+    } catch (error) {
+      actions.setNotification({
+        id: 'eventSignIn',
+        place: 'tr',
+        color: 'danger',
+        message: error.graphQLErrors[0].message
+      });
+      history.push('/events');
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
@@ -192,14 +205,14 @@ export class SignInDialog extends React.Component {
                 {`${alternativeIndex + 1}. možnosť`}
               </b>
               <RegularCard
-                customCardClasses={classes.termOption}
-                onClick={() => this.chooseTerm(rootTerm.id)}
+                customCardClasses={classes.termOption + " " + `${rootTerm.canNotSignInReason ? classes.disabledCard : ''}`}
+                onClick={() => !rootTerm.canNotSignInReason ? this.chooseTerm(rootTerm.id) : null}
                 content={(
                   <div className={classes.termOptionInnerWrapper}>
                     <div className={classes.checkboxAndRadio}>
                       <Checkbox
                         tabIndex={-1}
-                        onClick={() => this.chooseTerm(rootTerm.id)}
+                        onClick={() => !rootTerm.canNotSignInReason ? this.chooseTerm(rootTerm.id) : null}
                         checkedIcon={
                           <Check className={classes.checkedIcon} />
                         }
@@ -207,6 +220,7 @@ export class SignInDialog extends React.Component {
                         classes={{
                           checked: classes.checked
                         }}
+                        disabled={rootTerm.canNotSignInReason}
                         checked={choosedTermId === rootTerm.id}
                       />
                     </div>
@@ -231,6 +245,13 @@ export class SignInDialog extends React.Component {
                         </li>
                       ))}
                     </ol>
+
+                    <div>
+                      {rootTerm.canNotSignInReason === 'term_max_capacity_reached' ?
+                        <div>Kapacita tohto termínu je už naplnená</div>
+                        : null
+                      }
+                    </div>
                   </div>
                 )}
               />
@@ -259,7 +280,17 @@ export class SignInDialog extends React.Component {
                 onClick={() => this.handleSignIn(hasAlternatives)}
                 disabled={hasAlternatives && choosedTermId === null}
               >
-                Záväzne sa prihlásiť
+              {this.state.loading === true ? (
+                  <Spinner
+                    name="line-scale-pulse-out"
+                    fadeIn="none"
+                    className={classes.buttonSpinner}
+                    color="#fff"
+                  />
+                ) : (
+                  'Záväzne sa prihlásiť'
+                )
+              }
               </Button>
             : <div>
               <p>Prosím prihlás sa na na jeden  z eventov:</p>
@@ -307,6 +338,7 @@ query FetchEvent ($id: Int, $userId: Int){
       id
       eventStartDateTime
       parentTermId
+      canNotSignInReason (userId: $userId)
       location {
         id
         latitude

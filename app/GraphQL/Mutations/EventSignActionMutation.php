@@ -80,6 +80,11 @@ class EventSignActionMutation extends Mutation
                     return new \Exception($canSignIn['message']);
                 }
 
+                $canSignIn = $attendee->event()->canSignInAttendee($attendee, $termId);
+                if ($canSignIn['canSignIn'] !== true) {
+                    return new \Exception($canSignIn['message']);
+                }
+
                 $dataToSync = [];
                 $dataToSync[$term->id] = [
                     'signedIn' => Carbon::now(),
