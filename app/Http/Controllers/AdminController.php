@@ -768,13 +768,24 @@ class AdminController extends Controller
         $userIds = Student::whereIn('id', $request->get('studentIds'))
                           ->pluck('userId');
 
-        return \Excel::create('Export profilov študentov', function ($excel) use ($userIds) {
+        $type = $request->get('type');
+
+        return \Excel::create('Export profilov študentov', function ($excel) use ($userIds, $type) {
             $data = User::whereIn('id', $userIds)
                         ->get();
 
-            $excel->sheet('Študenti', function ($sheet) use ($data) {
-                $sheet->loadView('exports.student_profiles', ['users' => $data]);
-            });
+            if ($type === 'lectors') {
+                $excel->sheet('Študenti', function ($sheet) use ($data) {
+                    $sheet->loadView('exports.student_profiles', ['users' => $data]);
+                });
+            }
+
+            if ($type === 'full') {
+                $excel->sheet('Študenti', function ($sheet) use ($data) {
+                    $sheet->loadView('exports.student_profiles_full', ['users' => $data]);
+                });
+            }
+
         })->download('xls');
     }
 

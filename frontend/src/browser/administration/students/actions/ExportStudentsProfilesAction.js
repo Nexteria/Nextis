@@ -25,9 +25,18 @@ class ExportStudentsProfilesAction extends Component {
             <button
               className="btn btn-success"
               type="submit"
-              onClick={() => exportStudentsProfiles(selectedStudents)}
+              onClick={() => exportStudentsProfiles(selectedStudents, 'lectors')}
             >
-              Export vybraných študentov
+              Export vybraných študentov pre lektorov
+            </button>
+          </div>
+          <div className="col-md-12 text-center">
+            <button
+              className="btn btn-success"
+              type="submit"
+              onClick={() => exportStudentsProfiles(selectedStudents, 'full')}
+            >
+              Export vybraných študentov celé profily
             </button>
           </div>
           <div className="clearfix"></div>

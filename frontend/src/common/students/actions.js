@@ -234,7 +234,7 @@ export function createBulkStudentsComment(data, studentIds) {
   });
 }
 
-export function exportStudentsProfiles(studentIds) {
+export function exportStudentsProfiles(studentIds, type) {
   return ({ fetch }) => ({
     type: EXPORT_STUDENT_PROFILES,
     payload: {
@@ -244,7 +244,8 @@ export function exportStudentsProfiles(studentIds) {
         method: 'post',
         notifications: 'both',
         body: JSON.stringify({
-          studentIds
+          studentIds,
+          type
         }),
       }).then(response => response.blob())
       .then(blob => download(blob, 'ExportStudentskychProfilov.xls')),
