@@ -153,7 +153,7 @@ class Report
                 'firstName' => $student->firstName,
                 'lastName' => $student->lastName,
                 'email' => $student->user->email,
-                'gainedPointsPercentage' => $points['sumGainedPoints'] / $basePoints * 100,
+                'gainedPointsPercentage' => $basePoints ? $points['sumGainedPoints'] / $basePoints * 100 : null,
                 'basePoints' => $basePoints,
                 'minimumSemesterActivityPoints' => $semester->pivot->minimumSemesterActivityPoints,
                 'gainedPoints' => $points['sumGainedPoints'],
