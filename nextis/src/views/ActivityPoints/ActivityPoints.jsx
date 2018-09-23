@@ -9,11 +9,11 @@ import parse from 'date-fns/parse';
 import isAfter from 'date-fns/is_after';
 
 // material-ui components
-import Select from 'material-ui/Select';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import InputLabel from 'material-ui/Input/InputLabel';
-import withStyles from 'material-ui/styles/withStyles';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // core components
 import GridContainer from 'components/Grid/GridContainer';

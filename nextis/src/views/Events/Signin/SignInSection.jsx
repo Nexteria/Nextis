@@ -9,7 +9,7 @@ import isAfter from 'date-fns/is_after';
 import Spinner from 'react-spinkit';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // material-ui icons
 import Info from '@material-ui/icons/Info';

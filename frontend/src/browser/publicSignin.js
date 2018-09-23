@@ -10,7 +10,7 @@ import { Router, applyRouterMiddleware, browserHistory } from 'react-router';
 import createInitialState from '../common/createInitialState';
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 injectTapEventPlugin();
 

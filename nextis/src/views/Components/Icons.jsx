@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Hidden from "material-ui/Hidden";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Hidden from "@material-ui/core/Hidden";
 
 // core components
 import Heading from "components/Heading/Heading.jsx";

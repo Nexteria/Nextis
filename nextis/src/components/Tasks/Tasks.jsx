@@ -2,14 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Table from "material-ui/Table";
-import TableBody from "material-ui/Table/TableBody";
-import TableCell from "material-ui/Table/TableCell";
-import TableRow from "material-ui/Table/TableRow";
-import IconButton from "material-ui/IconButton";
-import Checkbox from "material-ui/Checkbox";
-import Tooltip from "material-ui/Tooltip";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import IconButton from "@material-ui/core/IconButton";
+import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // @material-ui/icons
 import Edit from "@material-ui/icons/Edit";

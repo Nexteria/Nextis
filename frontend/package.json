@@ -83,7 +83,7 @@
     "jsdom": "^9.0.0",
     "leaflet": "^0.7.7",
     "make-error": "^1.0.4",
-    "material-ui": "0.18.7",
+    "@material-ui/core/": "0.18.7",
     "moment": "^2.18.1",
     "nconf": "^0.8.1",
     "node-sass": "^3.1.2",

@@ -6,8 +6,8 @@ import RecordVoiceOver from "@material-ui/icons/RecordVoiceOver";
 import Email from "@material-ui/icons/Email";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import InputAdornment from "material-ui/Input/InputAdornment";
+import withStyles from "@material-ui/core/styles/withStyles";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";

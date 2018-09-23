@@ -3,7 +3,7 @@ import { Route, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Spinner from 'react-spinkit';
 
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 import LoginPage from 'pages/LoginPage';
 import PasswordRemindPage from 'pages/PasswordRemindPage';

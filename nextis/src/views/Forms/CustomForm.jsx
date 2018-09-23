@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'recompose';
+import { connect } from 'common/store';
 import validator from 'validator';
 import Datetime from 'react-datetime';
 import Spinner from 'react-spinkit';
@@ -6,147 +8,48 @@ import parse from 'date-fns/parse';
 import format from 'date-fns/format';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // core components
 import GridContainer from 'components/Grid/GridContainer';
 import ItemGrid from 'components/Grid/ItemGrid';
-import FormLabel from 'material-ui/Form/FormLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import CustomInput from 'components/CustomInput/CustomInput';
+import Check from '@material-ui/icons/Check';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Button from 'components/CustomButtons/Button';
 import CustomEditor, { stateFromHTML } from 'components/CustomEditor/CustomEditor';
 
-import profileStyle from 'assets/jss/material-dashboard-pro-react/views/profileStyle';
+import customFormStyle from 'assets/jss/material-dashboard-pro-react/views/customFormStyle';
 
-const formItems = [
-  {
-    label: 'Meno *',
-    type: 'text',
-    component: 'input',
-    id: 'firstName',
-    validation: ['required']
-  },
-  {
-    label: 'Priezvisko *',
-    type: 'text',
-    component: 'input',
-    id: 'lastName',
-    validation: ['required']
-  },
-  {
-    label: 'Dátum narodenia *',
-    type: 'date',
-    component: 'date',
-    id: 'dateOfBirth',
-    validation: ['required', 'date']
-  },
-  {
-    label: 'Niečo o Tebe *',
-    type: 'editor',
-    component: 'editor',
-    id: 'personalDescription',
-    validation: ['required', 'medium-text']
-  },
-  {
-    label: 'Hobby',
-    type: 'editor',
-    component: 'editor',
-    id: 'hobby',
-    validation: []
-  },
-  {
-    label: 'Email *',
-    type: 'text',
-    component: 'input',
-    id: 'email',
-    validation: ['required', 'email']
-  },
-  {
-    label: 'Telefón *',
-    type: 'text',
-    component: 'input',
-    id: 'phone',
-    validation: ['required', 'phone']
-  },
-  {
-    label: 'Facebook url',
-    type: 'text',
-    component: 'input',
-    id: 'facebookLink',
-    validation: ['url'],
-    defaultValue: '',
-  },
-  {
-    label: 'LinkedIn url',
-    type: 'text',
-    component: 'input',
-    id: 'linkedinLink',
-    validation: ['url'],
-    defaultValue: '',
-  },
-  {
-    label: 'Škola *',
-    type: 'text',
-    component: 'input',
-    id: 'school',
-    validation: ['required']
-  },
-  {
-    label: 'Fakulta *',
-    type: 'text',
-    component: 'input',
-    id: 'faculty',
-    validation: ['required']
-  },
-  {
-    label: 'Štúdijný program *',
-    type: 'text',
-    component: 'input',
-    id: 'studyProgram',
-    validation: ['required']
-  },
-  {
-    label: 'Rok štúdia *',
-    type: 'text',
-    component: 'input',
-    id: 'studyYear',
-    validation: ['required']
-  },
-  {
-    label: 'Aktuálne zamestnanie *',
-    type: 'text',
-    component: 'input',
-    id: 'actualJobInfo',
-    validation: ['required']
-  },
-  {
-    label: 'Ďalšie moje projekty a dobrovoľníctvo',
-    type: 'editor',
-    component: 'editor',
-    id: 'otherActivities',
-    validation: []
-  },
-];
 
 class CustomForm extends React.Component {
   constructor(props) {
     super(props);
 
-    const stateValues = {};
+    const stateValues = {
+      updating: false,
+    };
 
     props.formItems.forEach((item) => {
       if (item.component === 'date') {
-          stateChange[item.id] = parse(item.value);
+          stateValues[item.id] = parse(item.value);
       } else if (item.component === 'editor') {
-          stateChange[item.id] = stateFromHTML(item.value);
+          stateValues[item.id] = stateFromHTML(item.value || '');
       } else {
-          stateChange[item.id] = item.value;
+          stateValues[item.id] = item.value || '';
       }
       stateValues[`${item.id}Errors`] = null;
     });
 
     this.state = stateValues;
+
+    this.update = this.update.bind(this);
+    this.validate = this.validate.bind(this);
   }
 
   validate(fieldId, component, value, validations) {
@@ -161,7 +64,7 @@ class CustomForm extends React.Component {
     validations.forEach((type) => {
       switch (type) {
         case 'required': {
-          if (!value.trim().length) {
+          if (!value || (value.trim && !value.trim().length)) {
             errors.push('Položka je povinná!');
           }
           break;
@@ -171,6 +74,11 @@ class CustomForm extends React.Component {
           if (value.trim().length < 150) {
             errors.push(
               `Položka musí mať minimálne 150 znakov! (${value.trim().length})`
+            );
+          }
+          if (value.trim().length > 600) {
+            errors.push(
+              `Položka môže mať maximálne 600 znakov! (${value.trim().length})`
             );
           }
           break;
@@ -240,6 +148,7 @@ class CustomForm extends React.Component {
 
   async update() {
     this.setState({ updating: true });
+    const { formItems, actions } = this.props;
 
     let isFormValid = true;
     const values = {};
@@ -271,14 +180,23 @@ class CustomForm extends React.Component {
     });
 
     if (isFormValid) {
+      const data = {};
+      formItems.forEach(formItem => {
+        if (formItem.component === 'editor') {
+          data[formItem.id] = this.state[formItem.id].toString('html');
+        } else {
+          data[formItem.id] = this.state[formItem.id];
+        }
+      })
 
+      await this.props.buttonAction(data)
       this.setState({ updating: false });
     } else {
       actions.setNotification({
         id: 'updateForm',
         place: 'tr',
         color: 'danger',
-        message: 'Prosím najskôr opravte zvýraznené chyby'
+        message: 'Prosím najskôr oprav zvýraznené chyby'
       });
       this.setState({ updating: false });
     }
@@ -289,6 +207,8 @@ class CustomForm extends React.Component {
     const {
       classes,
       formItems,
+      buttonText,
+      buttonColor,
     } = this.props;
 
     return (
@@ -304,7 +224,7 @@ class CustomForm extends React.Component {
                 : '';
               return (
                 <GridContainer key={item.id}>
-                  <ItemGrid xs={12} sm={2}>
+                  <ItemGrid xs={12} sm={2} className={classes.labelRow}>
                     <FormLabel
                       className={
                         classes.labelHorizontal + ' ' + labelAdditionalClass
@@ -313,7 +233,7 @@ class CustomForm extends React.Component {
                       {item.label}
                     </FormLabel>
                   </ItemGrid>
-                  <ItemGrid xs={12} sm={10}>
+                  <ItemGrid xs={12} sm={10} className={classes.inputRow}>
                     {item.component === 'input' ? (
                       <CustomInput
                         success={
@@ -338,6 +258,72 @@ class CustomForm extends React.Component {
                         }}
                       />
                     ) : null}
+
+                    {item.component === 'checkbox' ? (
+                      <Checkbox
+                        tabIndex={-1}
+                        onClick={() => this.change(
+                          !this.state[item.id],
+                          item.id,
+                          item.type,
+                          item.validation
+                        )}
+                        checkedIcon={
+                          <Check className={classes.checkedIcon} />
+                        }
+                        icon={<Check className={classes.uncheckedIcon} />}
+                        classes={{
+                          checked: classes.checked,
+                          root: classes.checkboxRoot,
+                        }}
+                        checked={this.state[item.id]}
+                      />
+                    ) : null}
+
+                    {item.component === 'select' ? (
+                      <Select
+                        MenuProps={{
+                          className: classes.selectMenu
+                        }}
+                        classes={{
+                          select: classes.select
+                        }}
+                        value={this.state[item.id] || item.defaultValue || ''}
+                        onChange={(event) => this.change(
+                          event.target.value,
+                          item.id,
+                          item.type,
+                          item.validation
+                        )}
+                        disabled={item.disabled}
+                        inputProps={{
+                          name: item.id,
+                          id: item.id
+                        }}
+                      >
+                        <MenuItem
+                          disabled
+                          classes={{
+                            root: classes.selectMenuItem
+                          }}
+                        >
+                          Vyber hodnotu
+                        </MenuItem>
+                        {item.options.map(option => (
+                          <MenuItem
+                            classes={{
+                              root: classes.selectMenuItem,
+                              selected: classes.selectMenuItemSelected
+                            }}
+                            key={option.value}
+                            value={option.value}
+                          >
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    ) : null}
+
                     {item.component === 'date' ? (
                       <Datetime
                         timeFormat={false}
@@ -376,20 +362,18 @@ class CustomForm extends React.Component {
               );
               })}
               <GridContainer>
-              <ItemGrid xs={12}>
-                <Button color="nexteriaOrange" onClick={this.update}>
-                {this.state.updating === true ? (
-                  <Spinner
-                    name="line-scale-pulse-out"
-                    fadeIn="none"
-                    className={classes.buttonSpinner}
-                    color="#fff"
-                  />
-                ) : (
-                  'Aktualizovať'
-                  )}
-                </Button>
-              </ItemGrid>
+                <ItemGrid xs={12} className={classes.actionButtonContainer}>
+                  <Button color={buttonColor || "nexteriaOrange"} onClick={this.update} disabled={this.state.updating}>
+                  {this.state.updating === true ? (
+                    <Spinner
+                      name="line-scale-pulse-out"
+                      fadeIn="none"
+                      className={classes.buttonSpinner}
+                      color="#fff"
+                    />
+                  ) : <span>{buttonText}</span>}
+                  </Button>
+                </ItemGrid>
               </GridContainer>
           </form>
         </ItemGrid>
@@ -398,4 +382,7 @@ class CustomForm extends React.Component {
   }
 }
 
-withStyles(profileStyle)(CustomForm)
+export default compose(
+  connect(state => ({})),
+  withStyles(customFormStyle)
+)(CustomForm);

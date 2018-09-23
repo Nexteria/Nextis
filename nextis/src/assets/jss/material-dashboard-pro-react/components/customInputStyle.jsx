@@ -26,13 +26,13 @@ const customInputStyle = {
       height: "1px !important"
     },
     "&:after": {
-      backgroundColor: primaryColor,
+      borderBottom: `2px solid ${primaryColor}`,
       transition: "0.3s ease all"
     }
   },
   underlineError: {
     "&:after": {
-      backgroundColor: dangerColor,
+      borderBottom: `2px solid ${dangerColor}`,
       transition: "0.3s ease all"
     },
     "&:before": {
@@ -42,7 +42,7 @@ const customInputStyle = {
   },
   underlineSuccess: {
     "&:after": {
-      backgroundColor: successColor,
+      borderBottom: `2px solid ${successColor}`,
       transition: "0.3s ease all"
     }
   },

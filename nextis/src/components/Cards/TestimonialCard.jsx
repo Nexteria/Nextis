@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Card from "material-ui/Card";
-import CardContent from "material-ui/Card/CardContent";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
 // @material-ui/icons
 import FormatQuote from "@material-ui/icons/FormatQuote";

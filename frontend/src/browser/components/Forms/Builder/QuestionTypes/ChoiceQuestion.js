@@ -1,14 +1,14 @@
 import React from 'react';
 import toastr from 'toastr';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import TextField from '@material-ui/core/TextField';
+import RaisedButton from '@material-ui/core/RaisedButton';
 import uuidv4 from 'uuid';
 import { Map } from 'immutable';
 import { SortableContainer, SortableHandle, SortableElement } from 'react-sortable-hoc';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import ReorderIcon from 'material-ui/svg-icons/action/reorder';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import SelectField from '@material-ui/core/SelectField';
+import MenuItem from '@material-ui/core/MenuItem';
+import ReorderIcon from '@material-ui/core/icons/action/reorder';
+import CloseIcon from '@material-ui/core/icons/navigation/close';
 
 const styles = {
   newChoiceIcon: {

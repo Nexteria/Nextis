@@ -90,7 +90,6 @@ class EventsQuery extends Query
             ->where($where)
             ->select($fields->getSelect())
             ->selectRaw('(nx_events.signInFormId is not null) as hasSignInQuestionaire')
-            ->has('terms')
             ->get();
 
         return $events;

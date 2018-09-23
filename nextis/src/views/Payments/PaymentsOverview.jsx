@@ -9,7 +9,7 @@ import AttachMoney from "@material-ui/icons/AttachMoney";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 import IconCard from "components/Cards/IconCard.jsx";
-import Typography from "material-ui/Typography";
+import Typography from "@material-ui/core/Typography";
 
 
 export default class PaymentsOverview extends React.Component {

@@ -4,13 +4,13 @@ import PropTypes from "prop-types";
 import { Manager, Target, Popper } from "react-popper";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import MenuItem from "material-ui/Menu/MenuItem";
-import MenuList from "material-ui/Menu/MenuList";
-import ClickAwayListener from "material-ui/utils/ClickAwayListener";
-import Paper from "material-ui/Paper";
-import Grow from "material-ui/transitions/Grow";
-import Divider from "material-ui/Divider";
+import withStyles from "@material-ui/core/styles/withStyles";
+import MenuItem from "@material-ui/core/Menu/MenuItem";
+import MenuList from "@material-ui/core/Menu/MenuList";
+import ClickAwayListener from "@material-ui/core/utils/ClickAwayListener";
+import Paper from "@material-ui/core/Paper";
+import Grow from "@material-ui/core/transitions/Grow";
+import Divider from "@material-ui/core/Divider";
 
 // core components
 import Button from "components/CustomButtons/Button.jsx";

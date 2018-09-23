@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
-import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from '@material-ui/core/Table';
+import RaisedButton from '@material-ui/core/RaisedButton';
+import DeleteIcon from '@material-ui/core/icons/action/delete';
 import Datetime from 'react-datetime';
 import { reduxForm, formValueSelector } from 'redux-form';
 

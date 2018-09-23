@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import FormControl from "material-ui/Form/FormControl";
-import FormHelperText from "material-ui/Form/FormHelperText";
-import Input from "material-ui/Input";
-import InputLabel from "material-ui/Input/InputLabel";
+import withStyles from "@material-ui/core/styles/withStyles";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 
 // @material-ui/icons
 import Clear from "@material-ui/icons/Clear";

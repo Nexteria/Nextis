@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import InputAdornment from "material-ui/Input/InputAdornment";
-import Checkbox from "material-ui/Checkbox";
-import FormControlLabel from "material-ui/Form/FormControlLabel";
+import withStyles from "@material-ui/core/styles/withStyles";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 // @material-ui/icons
 import Timeline from "@material-ui/icons/Timeline";
@@ -13,7 +13,7 @@ import Code from "@material-ui/icons/Code";
 import Group from "@material-ui/icons/Group";
 import Face from "@material-ui/icons/Face";
 import Email from "@material-ui/icons/Email";
-import LockOutline from "@material-ui/icons/LockOutline";
+import LockOpen from "@material-ui/icons/LockOpen";
 import Check from "@material-ui/icons/Check";
 
 // core components
@@ -145,7 +145,7 @@ class RegisterPage extends React.Component {
                               position="start"
                               className={classes.inputAdornment}
                             >
-                              <LockOutline
+                              <LockOpen
                                 className={classes.inputAdornmentIcon}
                               />
                             </InputAdornment>

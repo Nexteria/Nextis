@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'common/store';
 import { compose } from 'recompose';
 import gql from 'graphql-tag';
-import { withStyles } from 'material-ui';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 import Question from 'views/Questionnaire/Question';
 import ItemGrid from 'components/Grid/ItemGrid';

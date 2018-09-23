@@ -1,13 +1,13 @@
 import React from "react";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Slide from "material-ui/transitions/Slide";
-import IconButton from "material-ui/IconButton";
-import Dialog from "material-ui/Dialog";
-import DialogTitle from "material-ui/Dialog/DialogTitle";
-import DialogContent from "material-ui/Dialog/DialogContent";
-import DialogActions from "material-ui/Dialog/DialogActions";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Slide from "@material-ui/core/Slide";
+import IconButton from "@material-ui/core/IconButton";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
 
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";

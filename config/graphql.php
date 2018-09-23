@@ -43,6 +43,7 @@ use App\GraphQL\Mutations\SubmitQuestionaireMutation;
 use App\GraphQL\Mutations\EventSignActionMutation;
 use App\GraphQL\Mutations\LocationMutation;
 use App\GraphQL\Mutations\DeleteLocationMutation;
+use App\GraphQL\Mutations\CreateEventMutation;
 
 
 return [
@@ -75,6 +76,7 @@ return [
                 'EventSignAction' => EventSignActionMutation::class,
                 'UpdateLocation' => LocationMutation::class,
                 'DeleteLocation' => DeleteLocationMutation::class,
+                'CreateEvent' => CreateEventMutation::class,
             ],
             'middleware' => ['auth']
         ],

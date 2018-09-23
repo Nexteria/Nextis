@@ -3,13 +3,13 @@ import cx from "classnames";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Card from "material-ui/Card";
-import CardContent from "material-ui/Card/CardContent";
-import CardHeader from "material-ui/Card/CardHeader";
-import Typography from "material-ui/Typography";
-import Tabs from "material-ui/Tabs";
-import Tab from "material-ui/Tabs/Tab";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
+import Typography from "@material-ui/core/Typography";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 // core components
 import Tasks from "components/Tasks/Tasks.jsx";

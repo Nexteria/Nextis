@@ -10,7 +10,7 @@ import request from 'common/fetch';
 import diacritics from 'diacritics';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // @material-ui/icons
 import Info from '@material-ui/icons/Info';
@@ -25,7 +25,7 @@ import IconCard from 'components/Cards/IconCard';
 import Button from 'components/CustomButtons/Button';
 import UserInfoModal from 'views/Contacts/UserInfoModal';
 import CustomInput from 'components/CustomInput/CustomInput';
-import InputAdornment from 'material-ui/Input/InputAdornment';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import contactsStyle from 'assets/jss/material-dashboard-pro-react/views/contactsStyle';
 

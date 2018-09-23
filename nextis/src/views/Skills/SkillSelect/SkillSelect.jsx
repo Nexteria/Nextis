@@ -1,8 +1,8 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import Downshift from 'downshift';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import SkillView from 'views/Skills/components/SkillView';
 import SuggestionsWrapper from './SuggestionsWrapper';
 

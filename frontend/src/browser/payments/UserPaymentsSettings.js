@@ -5,7 +5,7 @@ import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Modal, { Header, Title, Body, Footer } from 'react-bootstrap/lib/Modal';
 import { browserHistory } from 'react-router';
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from '@material-ui/core/RaisedButton';
 
 
 import * as paymentsActions from '../../common/payments/actions';

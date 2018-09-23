@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { withRouter } from "react-router-dom";
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 import Spinner from 'react-spinkit';
 import avatarImg from 'assets/img/default-avatar.png';

@@ -1,7 +1,7 @@
 import React from "react";
 
 // material-ui components
-import InputLabel from "material-ui/Input/InputLabel";
+import InputLabel from "@material-ui/core/InputLabel";
 
 // @material-ui/icons
 import PermIdentity from "@material-ui/icons/PermIdentity";

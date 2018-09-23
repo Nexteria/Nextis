@@ -3,16 +3,16 @@ import { withRouter } from "react-router-dom";
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import Close from "@material-ui/icons/Close";
 import CallSplit from '@material-ui/icons/CallSplit';
 
-import Slide from "material-ui/transitions/Slide";
+import Slide from "@material-ui/core/Slide";
 
-import Dialog from "material-ui/Dialog";
-import DialogContent from "material-ui/Dialog/DialogContent";
-import DialogTitle from "material-ui/Dialog/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import EventDetails from "views/Events/EventDetails.jsx";
 import IconButton from "components/CustomButtons/IconButton.jsx";
 

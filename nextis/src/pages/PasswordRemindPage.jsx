@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import { Link } from  'react-router-dom'
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import InputAdornment from "material-ui/Input/InputAdornment";
+import withStyles from "@material-ui/core/styles/withStyles";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";

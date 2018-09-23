@@ -11,7 +11,7 @@ import { withRouter } from 'react-router-dom';
 
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // @material-ui/icons
 

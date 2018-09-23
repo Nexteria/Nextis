@@ -14,11 +14,11 @@ import startOfMonth from 'date-fns/start_of_month';
 import Spinner from 'react-spinkit';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // material-ui icons
 import Chat from '@material-ui/icons/Chat';
-import ContentPaste from '@material-ui/icons/ContentPaste';
+import Create from '@material-ui/icons/Create';
 import Info from '@material-ui/icons/Info';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import ExposurePlus2 from '@material-ui/icons/ExposurePlus2';
@@ -165,7 +165,7 @@ class Overview extends React.Component {
     if (event.eventType === 'dbk') {
       card.badgeIcon = Chat;
     } else if (event.eventType === 'ik') {
-      card.badgeIcon = ContentPaste;
+      card.badgeIcon = Create;
     } else {
       card.badgeIcon = HelpOutline;
     }

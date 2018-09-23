@@ -4,14 +4,14 @@ import gql from 'graphql-tag';
 import { compose } from 'recompose';
 import Spinner from 'react-spinkit';
 import { withRouter } from 'react-router-dom';
-import Slide from 'material-ui/transitions/Slide';
-import Dialog from 'material-ui/Dialog';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogActions from 'material-ui/Dialog/DialogActions';
+import Slide from '@material-ui/core/Slide';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // @material-ui/icons
 import School from '@material-ui/icons/School';

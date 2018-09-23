@@ -3,27 +3,26 @@ import { withRouter } from 'react-router-dom';
 import { branch, compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { connect } from 'common/store';
 import request from "common/fetch";
 import Spinner from 'react-spinkit';
 
 import Close from '@material-ui/icons/Close';
-import Check from '@material-ui/icons/Check';
 
-import Slide from 'material-ui/transitions/Slide';
+import Slide from '@material-ui/core/Slide';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 
-import Select from 'material-ui/Select';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import Dialog from 'material-ui/Dialog';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogActions from 'material-ui/Dialog/DialogActions';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from 'components/CustomButtons/IconButton';
 import ItemGrid from 'components/Grid/ItemGrid';
 import GridContainer from 'components/Grid/GridContainer';
-import FormLabel from 'material-ui/Form/FormLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import CustomInput from 'components/CustomInput/CustomInput';
 
 import CustomEditor, { stateFromHTML } from 'components/CustomEditor/CustomEditor';

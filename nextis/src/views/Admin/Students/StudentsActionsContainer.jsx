@@ -1,11 +1,11 @@
 import React from 'react';
 
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { compose } from 'recompose';
 
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import Select from 'material-ui/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import RegularCard from 'components/Cards/RegularCard';
 
 /* import AssignNewSemesterAction from 'views/Admin/Students/actions/AssignNewSemesterAction';

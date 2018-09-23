@@ -3,13 +3,13 @@ import cx from "classnames";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Table from "material-ui/Table";
-import TableBody from "material-ui/Table/TableBody";
-import TableCell from "material-ui/Table/TableCell";
-import TableHead from "material-ui/Table/TableHead";
-import TableRow from "material-ui/Table/TableRow";
-import Hidden from "material-ui/Hidden";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Hidden from "@material-ui/core/Hidden";
 
 import tableStyle from "assets/jss/material-dashboard-pro-react/components/tableStyle";
 

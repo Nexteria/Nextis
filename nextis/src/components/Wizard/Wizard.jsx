@@ -3,8 +3,8 @@ import cx from "classnames";
 import PropTypes from "prop-types";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Card from "material-ui/Card";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Card from "@material-ui/core/Card";
 
 // core components
 import Button from "components/CustomButtons/Button.jsx";

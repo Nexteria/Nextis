@@ -68,9 +68,15 @@ const loginPageStyle = {
       height: "1px !important"
     },
     "&:after": {
-      backgroundColor: '#ff9920',
+      borderBottom: '2px solid #ff9920',
       transition: "0.3s ease all"
     }
+  },
+  labelFocused: {
+    color: '#ff9920 !important',
+  },
+  inputFocused: {
+    color: '#ff9920',
   },
   loginError: {
     textAlign: 'center',

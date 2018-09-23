@@ -4,17 +4,17 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import AppBar from "material-ui/AppBar";
-import Toolbar from "material-ui/Toolbar";
-import IconButton from "material-ui/IconButton";
-import Button from "material-ui/Button";
-import Hidden from "material-ui/Hidden";
-import Drawer from "material-ui/Drawer";
-import List from "material-ui/List";
-import ListItem from "material-ui/List/ListItem";
-import ListItemIcon from "material-ui/List/ListItemIcon";
-import ListItemText from "material-ui/List/ListItemText";
+import withStyles from "@material-ui/core/styles/withStyles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import Hidden from "@material-ui/core/Hidden";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/List/ListItem";
+import ListItemIcon from "@material-ui/core/List/ListItemIcon";
+import ListItemText from "@material-ui/core/List/ListItemText";
 
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";

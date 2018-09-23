@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import request from "common/fetch";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import IconButton from "material-ui/IconButton";
-import Hidden from "material-ui/Hidden";
+import withStyles from "@material-ui/core/styles/withStyles";
+import IconButton from "@material-ui/core/IconButton";
+import Hidden from "@material-ui/core/Hidden";
 
 // @material-ui/icons
 import PowerIcon from '@material-ui/icons/PowerSettingsNew';

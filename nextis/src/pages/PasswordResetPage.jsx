@@ -4,12 +4,12 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import InputAdornment from "material-ui/Input/InputAdornment";
+import withStyles from "@material-ui/core/styles/withStyles";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
-import LockOutline from "@material-ui/icons/LockOutline";
+import LockOpen from "@material-ui/icons/LockOpen";
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
@@ -145,7 +145,7 @@ class PasswordResetPage extends React.Component {
                             autoFocus: true,
                             endAdornment: (
                                 <InputAdornment position="end">
-                                <LockOutline className={classes.inputAdornmentIcon} />
+                                <LockOpen className={classes.inputAdornmentIcon} />
                                 </InputAdornment>
                             )
                             }}
@@ -170,7 +170,7 @@ class PasswordResetPage extends React.Component {
                             autoFocus: true,
                             endAdornment: (
                                 <InputAdornment position="end">
-                                <LockOutline className={classes.inputAdornmentIcon} />
+                                <LockOpen className={classes.inputAdornmentIcon} />
                                 </InputAdornment>
                             )
                             }}

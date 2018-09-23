@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Checkbox from 'material-ui/Checkbox';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import withStyles from 'material-ui/styles/withStyles';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 import Check from '@material-ui/icons/Check';
 

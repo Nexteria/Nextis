@@ -1,8 +1,8 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
-import DownloadIcon from 'material-ui/svg-icons/file/file-download';
+import RaisedButton from '@material-ui/core/RaisedButton';
+import DownloadIcon from '@material-ui/core/icons/file/file-download';
 
 import * as eventActions from '../../../../common/events/actions';
 import Question from './Question';

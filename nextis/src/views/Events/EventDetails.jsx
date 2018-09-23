@@ -1,6 +1,6 @@
 import React from "react";
 
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import { withRouter } from "react-router-dom";
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';

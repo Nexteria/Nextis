@@ -7,7 +7,7 @@ import moment from "moment";
 import SweetAlert from "react-bootstrap-sweetalert";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // core components
 import Heading from "components/Heading/Heading.jsx";

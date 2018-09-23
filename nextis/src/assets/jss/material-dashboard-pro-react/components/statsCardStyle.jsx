@@ -35,7 +35,10 @@ const cardTitle = {
 };
 
 const statsCardStyle = theme => ({
-  card,
+  card: {
+    ...card,
+    overflow: 'visible',
+  },
   cardHeader: {
     ...cardHeader,
     float: "left",

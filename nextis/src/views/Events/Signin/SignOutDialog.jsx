@@ -3,17 +3,17 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { connect } from 'common/store';
 import CustomInput from 'components/CustomInput/CustomInput';
 
 import Close from '@material-ui/icons/Close';
 
-import Slide from 'material-ui/transitions/Slide';
+import Slide from '@material-ui/core/Slide';
 
-import Dialog from 'material-ui/Dialog';
-import DialogContent from 'material-ui/Dialog/DialogContent';
-import DialogTitle from 'material-ui/Dialog/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from 'components/CustomButtons/IconButton';
 import ItemGrid from 'components/Grid/ItemGrid';
 import Button from 'components/CustomButtons/Button';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { compose } from 'recompose';
 import validator from 'validator';
 import { graphql } from 'react-apollo';
@@ -10,14 +10,14 @@ import Spinner from 'react-spinkit';
 import { withRouter } from 'react-router-dom';
 import ItemGrid from 'components/Grid/ItemGrid';
 
-import MenuItem from 'material-ui/Menu/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import Button from 'components/CustomButtons/Button';
-import Select from 'material-ui/Select';
+import Select from '@material-ui/core/Select';
 
 import GridContainer from 'components/Grid/GridContainer';
-import FormLabel from 'material-ui/Form/FormLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import CustomInput from 'components/CustomInput/CustomInput';
-import FormControl from 'material-ui/Form/FormControl';
+import FormControl from '@material-ui/core/FormControl';
 
 import { eventTypes } from 'common/constants';
 

@@ -2,9 +2,9 @@ import React from 'react';
 
 import FiberManualRecord from '@material-ui/icons/FiberManualRecord';
 
-import Radio from 'material-ui/Radio';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import withStyles from 'material-ui/styles/withStyles';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 import regularFormsStyle from 'assets/jss/material-dashboard-pro-react/views/regularFormsStyle';
 

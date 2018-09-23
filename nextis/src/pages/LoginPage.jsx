@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import { Link } from  'react-router-dom'
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import InputAdornment from "material-ui/Input/InputAdornment";
+import withStyles from "@material-ui/core/styles/withStyles";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
-import LockOutline from "@material-ui/icons/LockOutline";
+import LockOpen from "@material-ui/icons/LockOpen";
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
@@ -100,6 +100,11 @@ class LoginPage extends React.Component {
                         formControlProps={{
                           fullWidth: true
                         }}
+                        labelProps={{
+                          FormLabelClasses: {
+                            focused: classes.labelFocused,
+                          }
+                        }}
                         inputProps={{
                           underline: classes.underline,
                           type: 'email',
@@ -124,6 +129,11 @@ class LoginPage extends React.Component {
                         formControlProps={{
                           fullWidth: true
                         }}
+                        labelProps={{
+                          FormLabelClasses: {
+                            focused: classes.labelFocused,
+                          }
+                        }}
                         inputProps={{
                           type: "password",
                           inputRef: input => this.passwordRef = input,
@@ -137,7 +147,7 @@ class LoginPage extends React.Component {
                           },
                           endAdornment: (
                             <InputAdornment position="end">
-                              <LockOutline
+                              <LockOpen
                                 className={classes.inputAdornmentIcon}
                               />
                             </InputAdornment>

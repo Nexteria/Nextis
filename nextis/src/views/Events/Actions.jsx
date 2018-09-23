@@ -10,7 +10,7 @@ import Spinner from 'react-spinkit';
 import differenceInHours from 'date-fns/difference_in_hours';
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // material-ui icons
 import Info from "@material-ui/icons/Info";
@@ -19,7 +19,7 @@ import Info from "@material-ui/icons/Info";
 import Table from "components/Table/Table.jsx";
 import RegularCard from "components/Cards/RegularCard.jsx";
 import Button from "components/CustomButtons/Button.jsx";
-import Tooltip from 'material-ui/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
 import SignInSection from 'views/Events/Signin/SignInSection.jsx';
 import ItemGrid from "components/Grid/ItemGrid.jsx";
 

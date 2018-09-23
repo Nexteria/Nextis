@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import AppBar from "material-ui/AppBar";
-import Toolbar from "material-ui/Toolbar";
-import IconButton from "material-ui/IconButton";
-import Button from "material-ui/Button";
-import Hidden from "material-ui/Hidden";
+import withStyles from "@material-ui/core/styles/withStyles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import Hidden from "@material-ui/core/Hidden";
 
 // material-ui icons
 import Menu from "@material-ui/icons/Menu";

@@ -3,7 +3,7 @@ import React from "react";
 import ChartistGraph from "react-chartist";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
 import Timeline from "@material-ui/icons/Timeline";

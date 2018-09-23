@@ -1,6 +1,6 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardActions, CardHeader, CardText } from '@material-ui/core/Card';
 
 import ShortText from './QuestionTypes/ShortText';
 import LongText from './QuestionTypes/LongText';

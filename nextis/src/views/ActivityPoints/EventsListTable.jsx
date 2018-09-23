@@ -16,7 +16,7 @@ import Clear from "@material-ui/icons/Clear";
 
 // core components
 import Table from "components/Table/Table.jsx";
-import Tooltip from 'material-ui/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class EventsListTable extends React.Component {

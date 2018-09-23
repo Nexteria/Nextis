@@ -1,8 +1,8 @@
 import React from "react";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import Checkbox from "material-ui/Checkbox";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Checkbox from "@material-ui/core/Checkbox";
 
 // material-ui icons
 import Assignment from "@material-ui/icons/Assignment";

@@ -7,13 +7,13 @@ import TagsInput from "react-tagsinput";
 import Nouislider from "react-nouislider";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import FormControl from "material-ui/Form/FormControl";
-import FormControlLabel from "material-ui/Form/FormControlLabel";
-import InputLabel from "material-ui/Input/InputLabel";
-import Switch from "material-ui/Switch";
-import Select from "material-ui/Select";
-import MenuItem from "material-ui/Menu/MenuItem";
+import withStyles from "@material-ui/core/styles/withStyles";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import Switch from "@material-ui/core/Switch";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/Menu/MenuItem";
 
 // @material-ui/icons
 import Today from "@material-ui/icons/Today";
@@ -140,7 +140,6 @@ class ExtendedForms extends React.Component {
                                 checked: classes.switchChecked,
                                 bar: classes.switchBarChecked,
                                 icon: classes.switchIcon,
-                                default: classes.switchUnchecked,
                                 iconChecked: classes.switchIconChecked
                               }}
                             />
@@ -162,7 +161,6 @@ class ExtendedForms extends React.Component {
                                 checked: classes.switchChecked,
                                 bar: classes.switchBarChecked,
                                 icon: classes.switchIcon,
-                                default: classes.switchUnchecked,
                                 iconChecked: classes.switchIconChecked
                               }}
                             />

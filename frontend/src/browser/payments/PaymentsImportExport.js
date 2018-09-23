@@ -4,7 +4,7 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import diacritics from 'diacritics';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 
 import { fields } from '../../common/lib/redux-fields/index';

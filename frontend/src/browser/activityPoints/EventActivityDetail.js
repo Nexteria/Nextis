@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import LinearProgress from 'material-ui/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 import Icon from '../components/Icon';

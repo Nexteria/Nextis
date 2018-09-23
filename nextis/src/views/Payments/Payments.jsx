@@ -8,7 +8,7 @@ import Spinner from 'react-spinkit';
 
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // core components
 

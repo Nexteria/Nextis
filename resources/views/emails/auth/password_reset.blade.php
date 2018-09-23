@@ -287,7 +287,7 @@
                   <tr>
                     <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                       <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:16px;text-align:left;color:#000000;">
-                        <p> Niekto požiadal o zmenu hesla na Tvojom účte. Ak o tom nič nevieš, prosím daj nám vedieť na issevices@nexteria.sk </p>
+                        <p> Niekto požiadal o zmenu hesla na Tvojom účte. Ak o tom nič nevieš, prosím daj nám vedieť na isservices@nexteria.sk </p>
                       </div>
                     </td>
                   </tr>

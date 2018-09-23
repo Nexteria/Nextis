@@ -27,7 +27,11 @@ class SemestersQuery extends Query
         return [
             'id' => [
                 'name' => 'id',
-                'type' => Type::int()
+                'type' => Type::int(),
+            ],
+            'onlyActiveSemester' => [
+                'name' => 'onlyActiveSemester',
+                'type' => Type::boolean(),
             ],
         ];
     }
@@ -37,6 +41,10 @@ class SemestersQuery extends Query
         $where = function ($query) use ($args, $fields) {
             if (isset($args['id'])) {
                 $query->where('id', $args['id']);
+            }
+            if (isset($args['onlyActiveSemester']) && $args['onlyActiveSemester']) {
+                $semesterId = \App\DefaultSystemSettings::get('activeSemesterId');
+                $query->where('id', $semesterId);
             }
         };
 

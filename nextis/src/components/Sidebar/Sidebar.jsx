@@ -6,16 +6,16 @@ import { NavLink, Link } from 'react-router-dom';
 import cx from 'classnames';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
-import Drawer from 'material-ui/Drawer';
-import List from 'material-ui/List';
-import ListItem from 'material-ui/List/ListItem';
-import ListItemIcon from 'material-ui/List/ListItemIcon';
-import ListItemText from 'material-ui/List/ListItemText';
-import Hidden from 'material-ui/Hidden';
-import Collapse from 'material-ui/transitions/Collapse';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import Switch from 'material-ui/Switch';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Hidden from '@material-ui/core/Hidden';
+import Collapse from '@material-ui/core/Collapse';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 // core components
 import HeaderLinks from 'components/Header/HeaderLinks';
@@ -83,7 +83,6 @@ class SidebarWrapper extends React.Component {
                   checked: classes.switchChecked,
                   bar: classes.switchBarChecked,
                   icon: classes.switchIcon,
-                  default: classes.switchUnchecked,
                   iconChecked: classes.switchIconChecked
                 }}
               />

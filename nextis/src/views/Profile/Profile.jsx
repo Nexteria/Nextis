@@ -10,12 +10,12 @@ import parse from 'date-fns/parse';
 import format from 'date-fns/format';
 
 // material-ui components
-import withStyles from 'material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 // core components
 import GridContainer from 'components/Grid/GridContainer';
 import ItemGrid from 'components/Grid/ItemGrid';
-import FormLabel from 'material-ui/Form/FormLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import CustomInput from 'components/CustomInput/CustomInput';
 
 import Button from 'components/CustomButtons/Button';

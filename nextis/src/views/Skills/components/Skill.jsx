@@ -1,8 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import { withStyles } from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
+import { withStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
 
 import CancelIcon from '@material-ui/icons/Cancel';
 

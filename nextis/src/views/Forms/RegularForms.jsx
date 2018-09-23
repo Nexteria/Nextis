@@ -1,11 +1,11 @@
 import React from "react";
 
 // material-ui components
-import withStyles from "material-ui/styles/withStyles";
-import FormLabel from "material-ui/Form/FormLabel";
-import FormControlLabel from "material-ui/Form/FormControlLabel";
-import Radio from "material-ui/Radio";
-import Checkbox from "material-ui/Checkbox";
+import withStyles from "@material-ui/core/styles/withStyles";
+import FormLabel from "@material-ui/core/Form/FormLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import Checkbox from "@material-ui/core/Checkbox";
 
 // @material-ui/icons
 import MailOutline from "@material-ui/icons/MailOutline";
