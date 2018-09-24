@@ -14,7 +14,7 @@ import "assets/scss/material-dashboard-pro-react.css?v=1.1.0";
 
 import { Provider } from './common/store';
 
-import registerServiceWorker from './registerServiceWorker';
+import {unregister} from './registerServiceWorker';
 import * as moment from 'moment';
 import App from './App';
 
@@ -57,4 +57,5 @@ ReactDOM.render(
     </Provider>
   </ApolloProvider>
 , document.getElementById('root'));
-registerServiceWorker();
+
+unregister();
