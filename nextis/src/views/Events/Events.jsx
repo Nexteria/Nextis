@@ -50,7 +50,7 @@ class Events extends React.Component {
     const { user } = data;
 
     // TODO: move filtering to the server as param isOpen
-    const openEventsForSignin = !user.student ? 0 : user.student.eventsWithInvitation.filter((event) => {
+    const openEventsForSignin = user.eventsWithInvitation.filter((event) => {
       const attendee = event.attendees[0];
       const signinOpeningDate = parse(attendee.signInOpenDateTime);
       const signinClosingDate = parse(attendee.signInCloseDateTime);
@@ -64,7 +64,7 @@ class Events extends React.Component {
       return !attendee.signedIn && !attendee.signedOut && !attendee.wontGo;
     }).length;
 
-    const termsForFeedback = user.student ? user.student.termsForFeedback.length : 0;
+    const termsForFeedback = user.termsForFeedback.length;
 
     return (
       <GridContainer justify="center">
@@ -96,7 +96,7 @@ class Events extends React.Component {
                 tabButtonSubtitle: 'stretnutia',
                 tabIcon: TodayIcon,
                 tabContent: (
-                  user.student ? <Meetings /> : null
+                  <Meetings />
                 )
               },
               {
@@ -142,20 +142,17 @@ const userQuery = gql`
 query FetchUser ($id: Int){
   user (id: $id){
     id
-    student {
+    termsForFeedback {
       id
-      termsForFeedback {
+    }
+    eventsWithInvitation {
+      id
+      name
+      attendees (userId: $id) {
         id
-      }
-      eventsWithInvitation {
-        id
-        name
-        attendees (userId: $id) {
-          id
-          signedIn
-          signedOut
-          wontGo
-        }
+        signedIn
+        signedOut
+        wontGo
       }
     }
   }
@@ -164,7 +161,7 @@ query FetchUser ($id: Int){
 
 export default compose(
   withRouter,
-  connect(state => ({ user: state.user, student: state.student })),
+  connect(state => ({ user: state.user })),
   withStyles(styles),
   graphql(userQuery, {
     options: (props) => {

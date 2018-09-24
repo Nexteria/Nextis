@@ -84,17 +84,17 @@ class EventType extends GraphQLType
                 'type' => GraphQL::type('QuestionForm'),
                 'description' => 'Question form for this event',
             ],
-            'canStudentSignIn' => [
+            'canUserSignIn' => [
                 'type' => GraphQL::type('SigninCheck'),
-                'description' => 'Information if the studen is able to signin for this event',
+                'description' => 'Information if the user is able to signin for this event',
                 'args' => [
-                    'studentId' => [
+                    'userId' => [
                         'type' => Type::nonNull(Type::int()),
-                        'name' => 'studentId',
+                        'name' => 'userId',
                     ]
                 ],
                 'resolve' => function ($root, $args) {
-                    return $root->canStudentSignIn($args['studentId']);
+                    return $root->canUserSignIn($args['userId']);
                 },
                 'selectable' => false,
             ],

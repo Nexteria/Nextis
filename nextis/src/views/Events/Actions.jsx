@@ -93,7 +93,7 @@ class Actions extends React.Component {
       return <Spinner name='line-scale-pulse-out' />;
     }
 
-    const termsForFeedback = data.student ? data.student.termsForFeedback : [];
+    const termsForFeedback = data.user.termsForFeedback;
 
     return (
       <div>
@@ -145,13 +145,12 @@ class Actions extends React.Component {
 }
 
 const meetingsQuery = gql`
-query FetchMeetingsOverview ($id: Int!, $userId: Int){
-  student (id: $id){
+query FetchMeetingsOverview ($id: Int!){
+  user (id: $id){
     id
-    userId
     termsForFeedback {
       id
-      attendees (userId: $userId) {
+      attendees (userId: $id) {
         id
         feedbackDeadlineAt
       }
@@ -174,8 +173,7 @@ export default compose(
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {
-        id: props.user.studentId,
-        userId: props.user.id,
+        id: props.user.id,
       },
     })
   }),

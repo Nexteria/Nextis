@@ -51,7 +51,6 @@ export class SignOutDialog extends React.Component {
   async handleSignOut() {
     const {
       signAction,
-      student,
       data,
       history,
       refetchMeetings,
@@ -65,7 +64,7 @@ export class SignOutDialog extends React.Component {
 
     const response = await signAction({
       variables: {
-        studentId: student.id,
+        userId: user.id,
         eventId: data.event.id,
         action: 'SIGN_OUT',
         terms: [match.params.termId],
@@ -75,11 +74,9 @@ export class SignOutDialog extends React.Component {
 
     if (!response.data.error) {
       await refetchMeetings.refetch({
-        id: student.id,
         userId: user.id
       });
       await refetchEventMeetings.refetch({
-        id: student.id,
         userId: user.id
       });
       await data.refetch();
@@ -170,19 +167,18 @@ query FetchEvent ($id: Int){
 `;
 
 export default compose(
-  connect(state => ({ user: state.user, student: state.student })),
+  connect(state => ({ user: state.user })),
   withStyles(eventDetailsStyle),
   graphql(eventSignAction, { name: 'signAction' }),
   graphql(meetingsQuery, {
     name: 'refetchMeetings',
     options: (props) => {
-      const { student, user } = props;
+      const { user } = props;
 
       return {
         notifyOnNetworkStatusChange: true,
         forceFetch: true,
         variables: {
-          id: student.id,
           userId: user.id,
         }
       };
@@ -191,13 +187,12 @@ export default compose(
   graphql(eventMeetingsQuery, {
     name: 'refetchEventMeetings',
     options: (props) => {
-      const { student, user } = props;
+      const { user } = props;
 
       return {
         notifyOnNetworkStatusChange: true,
         forceFetch: true,
         variables: {
-          id: student.id,
           userId: user.id,
         }
       };

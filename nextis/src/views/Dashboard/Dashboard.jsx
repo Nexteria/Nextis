@@ -48,14 +48,14 @@ class Dashboard extends React.Component {
     const activityPointsInfo = user.student.activityPointsInfo;
 
     let eventNextMeetingDate = '-';
-    let terms = [...user.student.meetings];
+    let terms = [...user.meetings];
     if (terms.length) {
       terms = terms.sort((a, b) => a.eventStartDateTime.localeCompare(b.eventStartDateTime));
       const soonestTerm = format(parse(terms[0].eventStartDateTime), 'DD.MM.YYYY o HH:mm');
       eventNextMeetingDate = `${soonestTerm}`;
     }
 
-    const openEventsForSignin = user.student.eventsWithInvitation.filter((event) => {
+    const openEventsForSignin = user.eventsWithInvitation.filter((event) => {
       const attendee = event.attendees[0];
       const signinOpeningDate = parse(attendee.signInOpenDateTime);
       const signinClosingDate = parse(attendee.signInCloseDateTime);
@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
       !event.attendees[0].signedIn && !event.attendees[0].signedOut && !event.attendees[0].wontGo
     ).length;
 
-    const termsForFeedback = user.student.termsForFeedback.length;
+    const termsForFeedback = user.termsForFeedback.length;
 
     return (
       <div>
@@ -132,26 +132,26 @@ query FetchUser ($id: Int){
   user (id: $id){
     id
     balance
+    termsForFeedback {
+      id
+    }
+    eventsWithInvitation {
+      id
+      name
+      attendees (userId: $id) {
+        id
+        signedIn
+        signedOut
+        wontGo
+      }
+    }
+    meetings {
+      id
+      eventStartDateTime
+    }
     student {
       id
       tuitionFee
-      termsForFeedback {
-        id
-      }
-      eventsWithInvitation {
-        id
-        name
-        attendees (userId: $id) {
-          id
-          signedIn
-          signedOut
-          wontGo
-        }
-      }
-      meetings {
-        id
-        eventStartDateTime
-      }
       activityPointsInfo {
         gained
         minimum

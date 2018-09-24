@@ -38,22 +38,22 @@ class SignInSection extends React.Component {
 
   isEventFull(event) {
     return (
-      event.canStudentSignIn.codename === 'group_max_capacity_reached' ||
-      event.canStudentSignIn.codename === 'term_max_capacity_reached'
+      event.canUserSignIn.codename === 'group_max_capacity_reached' ||
+      event.canUserSignIn.codename === 'term_max_capacity_reached'
     );
   }
 
-  async handleStandinAction(studentId, eventId, action) {
-    await this.props.standInSignAction({ variables: {studentId, eventId, action} })
+  async handleStandinAction(userId, eventId, action) {
+    await this.props.standInSignAction({ variables: {userId, eventId, action} })
     this.props.data.refetch();
   }
 
   async handleWontGoAction(event) {
-    const { signAction, student, data } = this.props;
+    const { signAction, data } = this.props;
 
     await signAction({
       variables: {
-        studentId: student.id,
+        userId: data.user.id,
         eventId: event.id,
         action: 'WONT_GO',
         terms: [event.terms[0].id],
@@ -64,7 +64,7 @@ class SignInSection extends React.Component {
     data.refetch();
   }
 
-  transformEvent(event, classes, history, studentId) {
+  transformEvent(event, classes, history, userId) {
     let terms = [...event.terms];
     terms = terms.sort((a, b) => {
       return a.eventStartDateTime.localeCompare(b.eventStartDateTime);
@@ -84,7 +84,7 @@ class SignInSection extends React.Component {
     const signInOpenIsInFuture = isAfter(parse(event.attendees[0].signInOpenDateTime), new Date());
 
     if (!signInOpenIsInFuture) {
-      if (!this.isEventFull(event) && event.canStudentSignIn.canSignIn) {
+      if (!this.isEventFull(event) && event.canUserSignIn.canSignIn) {
         fillButtons.push({
           color: 'success',
           icon: event.form ? Assignment : null,
@@ -100,7 +100,7 @@ class SignInSection extends React.Component {
       }
 
       if (attendee.standIn) {
-        fillButtons.push({ color: 'danger', text: 'Odhlásiť z náhradníkov', action: () => this.handleStandinAction(studentId, event.id, 'SIGN_OUT') })
+        fillButtons.push({ color: 'danger', text: 'Odhlásiť z náhradníkov', action: () => this.handleStandinAction(userId, event.id, 'SIGN_OUT') })
       }
 
       if (!attendee.wontGo && !attendee.signedOut) {
@@ -183,13 +183,13 @@ class SignInSection extends React.Component {
       return <Spinner name="line-scale-pulse-out" />;
     }
 
-    const student = data.student;
+    const user = data.user;
 
-    const eventsForSignin = student ? student.eventsWithInvitation.filter(event =>
-      !event.attendees[0].signedIn && event.canStudentSignIn.codename !== 'already_signed_for_exclusionary_event'
-    ) : [];
+    const eventsForSignin = user.eventsWithInvitation.filter(event =>
+      !event.attendees[0].signedIn && event.canUserSignIn.codename !== 'already_signed_for_exclusionary_event'
+    );
 
-    let events = eventsForSignin.map(event => this.transformEvent(event, classes, history, student.id));
+    let events = eventsForSignin.map(event => this.transformEvent(event, classes, history, user.id));
     events.sort((a, b) => isAfter(a.startDateTime, b.startDateTime) ? -1 : 1);
 
     return (
@@ -255,7 +255,7 @@ class SignInSection extends React.Component {
 
 
 export default compose(
-  connect(state => ({ user: state.user, student: state.student })),
+  connect(state => ({ user: state.user })),
   withStyles(eventActionsStyle),
   graphql(standInSignAction, { name: 'standInSignAction' }),
   graphql(eventSignAction, { name: 'signAction' }),
@@ -263,7 +263,6 @@ export default compose(
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {
-        id: props.student.id,
         userId: props.user.id,
       },
     })

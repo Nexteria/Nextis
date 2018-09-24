@@ -59,7 +59,7 @@ class Meetings extends React.Component {
       return <Spinner name="line-scale-pulse-out" />;
     }
 
-    const meetings = this.props.data.student.meetings.filter(term => term.attendees[0].signedIn !== '' && term.attendees[0].signedIn !== null);
+    const meetings = this.props.data.user.meetings.filter(term => term.attendees[0].signedIn !== '' && term.attendees[0].signedIn !== null);
 
     return (
       <div>
@@ -112,7 +112,6 @@ export default compose(
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {
-        id: props.user.studentId,
         userId: props.user.id,
       },
     })

@@ -8,7 +8,6 @@ use Rebing\GraphQL\Support\Mutation;
 use App\User;
 use App\NxEventAttendee;
 use App\NxEvent;
-use App\Student;
 use Carbon\Carbon;
 
 class EventSignActionMutation extends Mutation
@@ -26,15 +25,14 @@ class EventSignActionMutation extends Mutation
     public function args()
     {
         return [
-            'studentId' => [
-                'name' => 'studentId',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required'],
-            ],
             'eventId' => [
                 'name' => 'eventId',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => ['required'],
+            ],
+            'userId' => [
+                'name' => 'userId',
+                'type' => Type::nonNull(Type::int()),
             ],
             'action' => [
                 'name' => 'action',
@@ -62,10 +60,6 @@ class EventSignActionMutation extends Mutation
             return null;
         }
 
-        $student = Student::where('id', $args['studentId'])
-            ->where('userId', $user->id)
-            ->firstOrFail();
-
         $attendee = NxEventAttendee::where('userId', '=', $user->id)
             ->whereHas('attendeesGroup', function ($query) use ($args) {
                 $query->where('eventId', '=', $args['eventId']);
@@ -74,7 +68,7 @@ class EventSignActionMutation extends Mutation
         if ($args['action'] === 'SIGN_IN') {
             foreach ($args['terms'] as $termId) {
                 $term = \App\NxEventTerm::findOrFail($termId);
-                $canSignIn = $attendee->event()->canStudentSignIn($args['studentId']);
+                $canSignIn = $attendee->event()->canUserSignIn($user->id);
 
                 if ($canSignIn['canSignIn'] !== true) {
                     return new \Exception($canSignIn['message']);

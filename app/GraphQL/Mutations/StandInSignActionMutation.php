@@ -8,7 +8,6 @@ use Rebing\GraphQL\Support\Mutation;
 use App\User;
 use App\NxEventAttendee;
 use App\NxEvent;
-use App\Student;
 use Carbon\Carbon;
 
 class StandInSignActionMutation extends Mutation
@@ -26,8 +25,8 @@ class StandInSignActionMutation extends Mutation
     public function args()
     {
         return [
-            'studentId' => [
-                'name' => 'studentId',
+            'userId' => [
+                'name' => 'userId',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => ['required'],
             ],
@@ -51,10 +50,6 @@ class StandInSignActionMutation extends Mutation
         if (!$user) {
             return null;
         }
-
-        $student = Student::where('id', $args['studentId'])
-            ->where('userId', $user->id)
-            ->firstOrFail();
 
         $event = NxEvent::findOrFail($args['eventId']);
 

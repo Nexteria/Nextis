@@ -1,10 +1,9 @@
 import gql from 'graphql-tag';
 
 const meetingsQuery = gql`
-  query FetchShortMeetings ($id: Int!, $userId: Int!){
-    student (id: $id){
+  query FetchShortMeetings ($userId: Int!){
+    user (id: $userId){
       id
-      userId
       meetings {
         id
         eventStartDateTime

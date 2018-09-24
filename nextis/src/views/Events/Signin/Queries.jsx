@@ -1,10 +1,9 @@
 import gql from 'graphql-tag';
 
 const meetingsQuery = gql`
-query FetchMeetings ($id: Int!, $userId: Int){
-  student (id: $id){
+query FetchMeetings ($userId: Int!){
+  user (id: $userId){
     id
-    userId
     termsForFeedback {
       id
       attendees (userId: $userId) {
@@ -40,7 +39,7 @@ query FetchMeetings ($id: Int!, $userId: Int){
         eventEndDateTime
         parentTermId
       }
-      canStudentSignIn (studentId: $id) {
+      canUserSignIn (userId: $userId) {
         canSignIn
         codename
         message
@@ -61,12 +60,12 @@ query FetchMeetings ($id: Int!, $userId: Int){
 
 const standInSignAction = gql`
     mutation StandInSignAction(
-    $studentId: Int!
+    $userId: Int!
     $eventId: Int!
     $action: String!
   ) {
     StandInSignAction(
-      studentId: $studentId
+      userId: $userId
       eventId: $eventId
       action: $action
     ) {
@@ -77,14 +76,14 @@ const standInSignAction = gql`
 
 const eventSignAction = gql`
     mutation EventSignAction(
-    $studentId: Int!
+    $userId: Int!
     $eventId: Int!
     $action: String!
     $terms: [Int]
     $reason: String!
   ) {
     EventSignAction(
-      studentId: $studentId
+      userId: $userId
       eventId: $eventId
       action: $action
       terms: $terms

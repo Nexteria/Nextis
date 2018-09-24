@@ -58,7 +58,7 @@ class PointsCard extends React.Component {
                   wrapper: classes.tabWrapper,
                   labelIcon: classes.labelIcon,
                   label: classes.label,
-                  textColorInheritSelected: classes.textColorInheritSelected,
+                  selected: classes.textColorInheritSelected,
                 }}
                 icon={<Accessibility className={classes.tabIcon} />}
                 label={'Aktivity body'}
@@ -69,7 +69,7 @@ class PointsCard extends React.Component {
                   wrapper: classes.tabWrapper,
                   labelIcon: classes.labelIcon,
                   label: classes.label,
-                  textColorInheritSelected: classes.textColorInheritSelected,
+                  selected: classes.textColorInheritSelected,
                 }}
                 icon={<CardTravel className={classes.tabIcon} />}
                 label={'Eventy'}

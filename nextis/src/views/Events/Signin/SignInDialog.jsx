@@ -93,7 +93,6 @@ export class SignInDialog extends React.Component {
   async handleSignIn(hasAlternatives) {
     const {
       signAction,
-      student,
       data,
       history,
       refetchMeetings,
@@ -115,7 +114,7 @@ export class SignInDialog extends React.Component {
     try {
       await signAction({
         variables: {
-          studentId: student.id,
+          userId: user.id,
           eventId: data.event.id,
           action: 'SIGN_IN',
           terms,
@@ -124,7 +123,6 @@ export class SignInDialog extends React.Component {
       });
 
       await refetchMeetings.refetch({
-        id: student.id,
         userId: user.id
       });
       await data.refetch();
@@ -355,18 +353,17 @@ query FetchEvent ($id: Int, $userId: Int){
 `;
 
 export default compose(
-  connect(state => ({ user: state.user, student: state.student })),
+  connect(state => ({ user: state.user })),
   withStyles(eventDetailsStyle),
   graphql(eventSignAction, { name: 'signAction' }),
   graphql(meetingsQuery, {
     name: 'refetchMeetings',
     options: (props) => {
-      const { student, user } = props;
+      const { user } = props;
 
       return {
         notifyOnNetworkStatusChange: true,
         variables: {
-          id: student.id,
           userId: user.id,
         }
       };

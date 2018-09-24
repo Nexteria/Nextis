@@ -66,7 +66,7 @@ class ActivityPoints extends React.Component {
     let openEventsForSignin = [];
 
     if (student) {
-      openEventsForSignin = student.eventsWithInvitation.filter((event) => {
+      openEventsForSignin = data.user.eventsWithInvitation.filter((event) => {
         const attendee = event.attendees[0];
         const signinOpeningDate = parse(attendee.signInOpenDateTime);
         const signinClosingDate = parse(attendee.signInCloseDateTime);
@@ -153,22 +153,22 @@ const userQuery = gql`
 query FetchUser ($id: Int!, $semesterId: Int){
   user (id: $id){
     id
+    eventsWithInvitation(signedIn: false, semesterId: $semesterId) {
+      id
+      activityPoints
+      name
+      attendees (userId: $id) {
+        id
+        signInOpenDateTime
+        signInCloseDateTime
+      }
+    }
     student {
       id
       activityPointsInfo (semesterId: $semesterId){
         gained
         minimum
         base
-      }
-      eventsWithInvitation(signedIn: false, semesterId: $semesterId) {
-        id
-        activityPoints
-        name
-        attendees (userId: $id) {
-          id
-          signInOpenDateTime
-          signInCloseDateTime
-        }
       }
       unfinishedEvents (semesterId: $semesterId) {
         id

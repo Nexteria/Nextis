@@ -91,7 +91,7 @@ class TasksCard extends React.Component {
                       wrapper: tabWrapper,
                       labelIcon: labelIcon,
                       label: classes.label,
-                      textColorInheritSelected: classes.textColorInheritSelected,
+                      selected: classes.textColorInheritSelected,
                       labelContainer: labelContainer
                     }}
                     icon={<prop.tabIcon className={tabIcon} />}

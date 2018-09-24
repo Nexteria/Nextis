@@ -69,7 +69,7 @@ export class SignInFormDialog extends React.Component {
 }
 
 export default compose(
-  connect(state => ({ user: state.user, student: state.student })),
+  connect(state => ({ user: state.user })),
   withStyles(eventDetailsStyle),
   withRouter,
 )(SignInFormDialog);

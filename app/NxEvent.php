@@ -369,10 +369,8 @@ class NxEvent extends Model implements AuditableContract
         return $settings;
     }
 
-    public function canStudentSignIn($studentId) {
-        $student = Student::findOrFail($studentId);
-
-        $attendee = $this->attendees()->where('userId', $student->userId)->first();
+    public function canUserSignIn($userId) {
+        $attendee = $this->attendees()->where('userId', $userId)->first();
 
         if (!$attendee) {
             return [

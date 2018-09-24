@@ -161,6 +161,48 @@ class UserType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type('skill')),
                 'description' => 'Skills for this user',
             ],
+            'termsForFeedback' => [
+                'type' => Type::listOf(GraphQL::type('NxEventTerm')),
+                'description' => 'The users`s terms waiting for feedback.',
+                'resolve' => function ($root, $args) {
+                    return $root->getTermsWaitingForFeedback();
+                },
+                'selectable' => false,
+            ],
+            'eventsWithInvitation' => [
+                'type' => Type::listOf(GraphQL::type('event')),
+                'description' => 'The student`s events, where the sign in is open.',
+                'args' => [
+                    'signedIn' => [
+                        'type' => Type::boolean(),
+                        'name' => 'signedIn',
+                    ],
+                    'semesterId' => [
+                        'type' => Type::int(),
+                        'name' => 'semesterId',
+                    ],
+                ],
+                'resolve' => function ($root, $args) {
+                    $filters = [];
+                    if (isset($args['signedIn'])) {
+                        $filters['signedIn'] = $args['signedIn'];
+                    }
+                    if (isset($args['semesterId'])) {
+                        $filters['semesterId'] = $args['semesterId'];
+                    }
+
+                    return $root->getEventsWithInvitation($filters);
+                },
+                'selectable' => false,
+            ],
+            'meetings' => [
+                'type' => Type::listOf(GraphQL::type('NxEventTerm')),
+                'description' => 'The users`s future terms where he is signed in',
+                'resolve' => function ($root, $args) {
+                    return $root->getMeetings();
+                },
+                'selectable' => false,
+            ],
         ];
     }
 
