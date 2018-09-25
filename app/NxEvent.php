@@ -404,6 +404,36 @@ class NxEvent extends Model implements AuditableContract
             ];
         }
 
+        $parentEvent = $this->getParentEvent();
+        if ($parentEvent) {
+            $isSignedForExclusionaryEvent = $parentEvent->exclusionaryEvents()
+                ->whereHas('attendees', function ($query) use ($userId) {
+                    $query->where('userId', $userId)
+                          ->whereNotNull('signedIn');
+                })->exists();
+
+            if ($isSignedForExclusionaryEvent) {
+                return [
+                    'message' => 'Už si sa prihlásil na event ktorí sa vylučuje s týmto!',
+                    'codename' => 'already_signed_for_exclusionary_event',
+                    'canSignIn' => false,
+                ];
+            }
+        }
+
+        $isSignedForExclusionaryEvent = $this->exclusionaryEvents()
+            ->whereHas('attendees', function ($query) use ($userId) {
+                $query->where('userId', $userId)
+                        ->whereNotNull('signedIn');
+            })->exists();
+        if ($isSignedForExclusionaryEvent) {
+            return [
+                'message' => 'Už si sa prihlásil na event ktorí sa vylučuje s týmto!',
+                'codename' => 'already_signed_for_exclusionary_event',
+                'canSignIn' => false,
+            ];
+        }
+
         $group = $attendee->attendeesGroup;
         $signedIn = $group->attendees()
                           ->whereHas('terms', function ($query) {
@@ -437,23 +467,6 @@ class NxEvent extends Model implements AuditableContract
             ];
         }
 
-        $parentEvent = $this->getParentEvent();
-        if ($parentEvent) {
-            $isSignedForExclusionaryEvent = $parentEvent->exclusionaryEvents()
-                ->whereHas('attendees', function ($query) use ($student) {
-                    $query->where('userId', $student->userId)
-                          ->whereNotNull('signedIn');
-                })->exists();
-
-            if ($isSignedForExclusionaryEvent) {
-                return [
-                    'message' => 'Už si sa prihlásil na event ktorí sa vylučuje s týmto!',
-                    'codename' => 'already_signed_for_exclusionary_event',
-                    'canSignIn' => false,
-                ];
-            }
-        }
-
         return [
             'message' => '',
             'codename' => '',
@@ -485,10 +498,10 @@ class NxEvent extends Model implements AuditableContract
         }
 
         $group = $attendee->attendeesGroup;
-        if ($group->signUpDeadlineDateTime->lt(\Carbon\Carbon::now())) {
+        if ($attendee->signInCloseDateTime->lt(\Carbon\Carbon::now())) {
             return [
-                'message' => trans('events.groupSignInExpired', ['eventName' => $this->name]),
-                'codename' => 'group_deadline_reached',
+                'message' => 'Už je po deadline na prihlasovanie!',
+                'codename' => 'signin_deadline_reached',
                 'canSignIn' => false,
             ];
         }
