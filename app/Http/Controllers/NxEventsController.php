@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\NxEvent as NxEvent;
+use App\NxEventTerm;
 use App\UserGroup as UserGroup;
 use App\User as User;
 use Carbon\Carbon;
@@ -317,6 +318,34 @@ class NxEventsController extends Controller
         }
 
         return $emails;
+    }
+
+    public function getHostlist($termId) {
+        $user = \Auth::user();
+
+        $term = NxEventTerm::findOrFail($termId);
+        if ($term->hostId !== $user->id) {
+            return response()->json('', 400);
+        }
+
+        $attendees = $term->attendees()
+            ->wherePivot('signedIn', '!=', null)
+            ->wherePivot('signedIn', '!=', '')
+            ->get();
+
+        $attendees = $attendees->sort(function ($a, $b) {
+            return strcmp(
+                iconv('utf-8', 'ascii//TRANSLIT', $a->user->lastName),
+                iconv('utf-8', 'ascii//TRANSLIT', $b->user->lastName)
+            );
+        })->values()->all();
+
+        $pdf = \PDF::loadView('exports.hostlist', [
+            'attendees' => $attendees,
+            'eventName' => $term->event->name,
+            'date' => $term->eventStartDateTime->format('j. n. Y \o H:i'),
+        ]);
+        return $pdf->download('attendees.pdf');
     }
 
     public function getBeforeEventQuestionnaire($eventId)

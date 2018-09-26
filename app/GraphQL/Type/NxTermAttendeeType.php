@@ -110,6 +110,10 @@ class NxTermAttendeeType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'The id of the user for the attendee'
             ],
+            'user' => [
+                'type' => GraphQL::type('user'),
+                'description' => 'The attendee`s user',
+            ],
             'attendeesGroupId' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'The id of the sign in group for the event and attendee'

@@ -5,6 +5,7 @@ namespace App\GraphQL\Type;
 use App\User;
 use App\NxEvent;
 use App\AttendeesGroup;
+use Carbon\Carbon;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -124,6 +125,33 @@ class UserType extends GraphQLType
                     return $root->hasRole('ADMIN');
                 },
                 'selectable' => false,
+            ],
+            'isActiveHost' => [
+                'type' => Type::boolean(),
+                'description' => 'Returns true if user is host for an active term.',
+                'resolve' => function ($root, $args) {
+                    return $root->isActiveHost();
+                },
+                'selectable' => false,
+            ],
+            'hostedTerms' => [
+                'type' => Type::listOf(GraphQL::type('NxEventTerm')),
+                'description' => 'The users`s terms where he is a host.',
+                'args' => [
+                    'onlyActive' => [
+                        'type' => Type::boolean(),
+                        'name' => 'onlyActive',
+                    ]
+                ],
+                'resolve' => function ($root, $args) {
+                    if (isset($args['onlyActive']) && $args['onlyActive']) {
+                        return $root->hostedTerms()
+                            ->where('eventEndDateTime', '>', Carbon::now()->subWeeks(2))
+                            ->where('eventStartDateTime', '<', Carbon::now()->addWeeks(2))->get();
+                    }
+
+                    return $root->hostedTerms;
+                },
             ],
             'student' => [
                 'type' => GraphQL::type('student'),

@@ -34,6 +34,7 @@ use App\GraphQL\Query\StudentsQuery;
 use App\GraphQL\Query\SkillsQuery;
 use App\GraphQL\Query\SemestersQuery;
 use App\GraphQL\Query\StudentLevelsQuery;
+use App\GraphQL\Query\NxEventTermQuery;
 
 use App\GraphQL\Mutations\CreateSkillMutation;
 use App\GraphQL\Mutations\UserProfileMutation;
@@ -44,6 +45,7 @@ use App\GraphQL\Mutations\EventSignActionMutation;
 use App\GraphQL\Mutations\LocationMutation;
 use App\GraphQL\Mutations\DeleteLocationMutation;
 use App\GraphQL\Mutations\CreateEventMutation;
+use App\GraphQL\Mutations\HostAttendanceActionMutation;
 
 
 return [
@@ -66,6 +68,7 @@ return [
                 'semesters' => SemestersQuery::class,
                 'studentLevels' => StudentLevelsQuery::class,
                 'locations' => LocationsQuery::class,
+                'term' => NxEventTermQuery::class,
             ],
             'mutation' => [
                 'UpdateUserProfile' => UserProfileMutation::class,
@@ -77,6 +80,7 @@ return [
                 'UpdateLocation' => LocationMutation::class,
                 'DeleteLocation' => DeleteLocationMutation::class,
                 'CreateEvent' => CreateEventMutation::class,
+                'HostAttendanceAction' => HostAttendanceActionMutation::class,
             ],
             'middleware' => ['auth']
         ],

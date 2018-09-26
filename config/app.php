@@ -177,6 +177,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Rebing\GraphQL\GraphQLServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
     ],
 
     /*
@@ -206,6 +207,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'File' => Illuminate\Support\Facades\File::class,
         'FeedbackForms' => App\FeedbackForms\Facades\FeedbackForms::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,

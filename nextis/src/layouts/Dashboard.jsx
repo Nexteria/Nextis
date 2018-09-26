@@ -79,7 +79,12 @@ class Dashboard extends React.Component {
   }
 
   updateRoutes(routes) {
-    return routes.map(route => {
+    return routes.filter(route => {
+      if (route.isActiveHost && !this.props.data.user.isActiveHost) {
+        return false;
+      }
+      return true;
+    }).map(route => {
       if (route.baseLink && route.baseLink === '/activity-points' && this.props.student) {
         route.baseLink = `/activity-points/${this.props.student.activeSemesterId}`;
         return route;
@@ -169,6 +174,7 @@ query FetchUser ($id: Int){
     firstName
     lastName
     isAdmin
+    isActiveHost
     profilePicture {
       id
       filePath

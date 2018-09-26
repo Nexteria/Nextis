@@ -85,6 +85,13 @@ class User extends Authenticatable implements AuditableContract
         return $user;
     }
 
+    public function isActiveHost()
+    {
+        return \App\NxEventTerm::where('hostId', $this->id)
+            ->where('eventEndDateTime', '>', Carbon::now()->subWeeks(2))
+            ->where('eventStartDateTime', '<', Carbon::now()->addWeeks(2))->exists();
+    }
+
     public function updateData($attributes = [])
     {
         $this->fill($attributes);
@@ -169,6 +176,11 @@ class User extends Authenticatable implements AuditableContract
             ->where('hostId', $userId)
             ->where('eventEndDateTime', '>', Carbon::now()->subMonth())
             ->whereNull('nx_event_terms.deleted_at');
+    }
+
+    public function hostedTerms()
+    {
+        return $this->hasMany('App\NxEventTerm', 'hostId');
     }
 
     public function eventAttendees()

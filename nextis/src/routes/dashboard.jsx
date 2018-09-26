@@ -5,6 +5,7 @@ import ActivityPoints from 'views/ActivityPoints/ActivityPoints';
 import Payments from 'views/Payments/Payments';
 import Profile from 'views/Profile/Profile';
 import SkillSearch from 'views/Skills/SkillSearch/SkillSearch';
+import Hosts from 'views/Hosts/Hosts';
 
 import AdminEvents from 'views/Admin/Events/EventsContainer';
 import AdminStudents from 'views/Admin/Students/StudentsContainer';
@@ -18,6 +19,7 @@ import Assignment from '@material-ui/icons/Assignment';
 import HomeIcon from '@material-ui/icons/Home';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import SkillSearchIcon from '@material-ui/icons/Search';
+import HostIcon from '@material-ui/icons/Face';
 
 const dashRoutes = [
   {
@@ -72,6 +74,15 @@ const dashRoutes = [
     state: 'openSkills',
     icon: SkillSearchIcon,
     component: SkillSearch,
+    showInMenu: true
+  },
+  {
+    path: '/host',
+    name: 'Hostované eventy',
+    state: 'openHost',
+    icon: HostIcon,
+    component: Hosts,
+    isActiveHost: true,
     showInMenu: true
   },
   {

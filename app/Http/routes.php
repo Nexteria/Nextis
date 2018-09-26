@@ -94,6 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/app/constants', 'HomeController@getConstants');
 
         Route::get('/contacts', 'UsersController@getContacts');
+        Route::get('/terms/{termId}/hostlist', 'NxEventsController@getHostlist');
 
         Route::get('/paymentsSettings', 'PaymentsController@getGlobalPaymentsSettings');
         Route::post('/paymentsSettings', ['middleware' => ['permission:change_payments_settings'], 'uses' => 'PaymentsController@updateGlobalPaymentsSettings']);
