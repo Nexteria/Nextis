@@ -280,19 +280,16 @@
                   <tr>
                     <td align="center" style="font-size:0px;padding:10px 25px;padding-bottom:5px;word-break:break-word;">
                       <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:center;color:#000000;">
-                        <b>Ahoj {{ $hostFirstName }},</b></br> Dakujem, že si sa zhostil/a roly Hosta na evente:<br> <b>{{ $eventType }} {{ $eventName }}, {{ $eventStartTime }}</b>. </div>
+                        <b>Ahoj {{ $hostFirstName }},</b></br> spomedzi Tvojich spolužiakov máš tú česť reprezentovať Nexteriu ako host na evente: <br> <b>{{ $eventType }} {{ $eventName }}, {{ $eventStartTime }}</b>. </div>
                     </td>
                   </tr>
                   <tr>
                     <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                       <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:14px;text-align:left;color:#000000;">
-                        <p> Prosím prečítaj si tento <a href="https://docs.google.com/document/d/1pAq0ebevlBD3bU1QjGPSPyQXwUwpzvaip900N1uaXxE/edit" target="_blank">dokument</a>
-                        </p> V skratke: <p> Je dôležité, aby si <b>prišiel aspoň 30 minút pred začiatkom.</b>
-                        </p>
-                        <p> Prosím, <b>kúp nejaké občerstvenie</b>, aby ste mali počas eventu, čo chrúmať (ovocie, keksíky, niečo slané). Priprav, prosím, aj niečo na pitie. Poháre a taniere nájdeš v kuchynke. </p>
-                        <p> Vytlač si zoznam ľudí zo Space-u a v prípade, že by niekto meškal, zavolaj mu (kontakty aj zoznam ľudí nájdeš v Space), kedy a či príde príde. Tých, ktorí budú meškať mi, prosím, označ a napíš do prezenčky, koľko meškali. Prezenčku mi po skončení odfoť a pošli mailom. Zúčastnených následne do 24 hod. vyznač v Space (bližšie info nájdeš v dokumente hore). Po kurze, prosím, <b>poďakuj lektorovi a odovzdaj mu symbolický dar (dezert/víno).</b>
-                        </p>
-                        <p> Po skončení eventu pomôžte všetci spolu <b>dať miestnosť do pôvodného stavu</b>, aby tam neostal po vás neporiadok. </p>
+                        <p> Prosím, pozorne si prečítaj <a href="https://docs.google.com/document/d/1pAq0ebevlBD3bU1QjGPSPyQXwUwpzvaip900N1uaXxE/edit" target="_blank">dokument</a>
+                        </p> V skratke: <p> Je dôležité, aby si <b>prišiel 30 minút pred začiatkom,</b> postaral sa o <b>prípravu miestnosti a občerstvenia</b>. Nezabudni, prosím, na <b>prezenčku a zaznačiť účasť do Space-u najneskôr do 12 hodín od začiatku eventu</b> (v opačnom prípade Tvojim spolužiakom nepríde feedback a nezískajú body).<br /> Pre podrobnejšie informácie ku technike, set-upu miestnosti, daru pre lektora a občerstveniu sa ozvi Lenke Koczovej, ktorá Ti už povie detaily. </p>
+                        <p>
+                          <b>Dôležité:</b> každého, kto príde <b>po začiatku eventu zapíš pod čiaru a prezenčku pošli ešte v ten večer/na druhý deň ráno</b> Lenke na lenka.koczova@nexteria.sk. </p>
                         <p> Ak by Ti bolo čokoľvek nejasné, tak mi kľudne volaj, píš.<br /> Ďakujem a pekný deň želám, </p>
                       </div>
                     </td>
