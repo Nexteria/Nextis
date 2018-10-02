@@ -1024,8 +1024,8 @@ class AdminController extends Controller
 
         $students = \DB::table('nx_event_attendees')
             ->select('nx_events.name as eventName', 'students.id as studentId', 'eventId', 'activityPoints')
-            ->where('wasPresent', true)
-            ->where('filledFeedback', true)
+            ->whereNotNull('wasPresent')
+            ->whereNotNull('filledFeedback')
             ->join('students', 'nx_event_attendees.userId', '=', 'students.userId')
             ->join('attendees_groups', 'attendees_groups.id', '=', 'nx_event_attendees.attendeesGroupId')
             ->join('nx_events', 'eventId', '=', 'nx_events.id')
