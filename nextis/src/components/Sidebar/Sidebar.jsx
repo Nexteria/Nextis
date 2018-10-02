@@ -245,6 +245,23 @@ class Sidebar extends React.Component {
                     />
                   </NavLink>
                 </ListItem>
+                <ListItem className={classes.collapseItem}>
+                  <NavLink
+                    to="password-change"
+                    className={
+                      classes.itemLink + " " + classes.userCollapseLinks
+                    }
+                  >
+                    <span className={collapseItemMini}>
+                      {"PC"}
+                    </span>
+                    <ListItemText
+                      primary={"Zmena hesla"}
+                      disableTypography={true}
+                      className={collapseItemText}
+                    />
+                  </NavLink>
+                </ListItem>
               </List>
             </Collapse>
           </ListItem>

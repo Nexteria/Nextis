@@ -6,6 +6,7 @@ import Payments from 'views/Payments/Payments';
 import Profile from 'views/Profile/Profile';
 import SkillSearch from 'views/Skills/SkillSearch/SkillSearch';
 import Hosts from 'views/Hosts/Hosts';
+import PasswordChange from 'views/Profile/PasswordChange';
 
 import AdminEvents from 'views/Admin/Events/EventsContainer';
 import AdminStudents from 'views/Admin/Students/StudentsContainer';
@@ -33,6 +34,12 @@ const dashRoutes = [
     path: '/my-profile',
     name: 'Môj profil',
     component: Profile,
+    showInMenu: false
+  },
+  {
+    path: '/password-change',
+    name: 'Zmena hesla',
+    component: PasswordChange,
     showInMenu: false
   },
   {

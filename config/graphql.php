@@ -45,6 +45,7 @@ use App\GraphQL\Mutations\EventSignActionMutation;
 use App\GraphQL\Mutations\LocationMutation;
 use App\GraphQL\Mutations\DeleteLocationMutation;
 use App\GraphQL\Mutations\CreateEventMutation;
+use App\GraphQL\Mutations\PasswordChangeMutation;
 use App\GraphQL\Mutations\HostAttendanceActionMutation;
 
 
@@ -81,6 +82,7 @@ return [
                 'DeleteLocation' => DeleteLocationMutation::class,
                 'CreateEvent' => CreateEventMutation::class,
                 'HostAttendanceAction' => HostAttendanceActionMutation::class,
+                'PasswordChange' => PasswordChangeMutation::class,
             ],
             'middleware' => ['auth']
         ],
