@@ -60,7 +60,8 @@
     "deploy": "REACT_APP_SPACE_VERSION=$(git log --pretty=\"%h\" -n1 HEAD) npm run build && cp -r build/* ../public/ && rm ../public/index.html",
     "test": "react-scripts test --env=jsdom",
     "compile-mjml": "babel-node --presets es2015 scripts/compile-mjml.js",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
