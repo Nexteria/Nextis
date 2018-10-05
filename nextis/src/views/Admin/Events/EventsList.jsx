@@ -63,9 +63,19 @@ class EventsList extends React.Component {
         actions: (
           <div className="actions-right">
             {[
-              { color: 'success', icon: Edit, actionCode: 'edit' }
+              {
+                color: 'success',
+                icon: Edit,
+                actionCode: 'edit',
+                action: () => history.push(`/admin/events/${event.id}`)
+              }
             ].map(prop => (
-              <IconButton color={prop.color} customClass={`${classes.actionButton} ${classes.actionButtonRound}`} key={prop.actionCode}>
+              <IconButton
+                color={prop.color}
+                customClass={`${classes.actionButton} ${classes.actionButtonRound}`}
+                key={prop.actionCode}
+                onClick={prop.action || null}
+              >
                 <prop.icon className={classes.icon} />
               </IconButton>
             ))}

@@ -8,6 +8,7 @@ import GridContainer from 'components/Grid/GridContainer';
 
 import NewEventForm from 'views/Admin/Events/NewEventForm';
 import EventsList from 'views/Admin/Events/EventsList';
+import EventDetails from 'views/Admin/Events/EventDetails';
 
 class EventsContainer extends React.Component {
   render() {
@@ -24,9 +25,9 @@ class EventsContainer extends React.Component {
           component={NewEventForm}
         />
         <Route
-          path="/admin/events/:eventId/edit"
+          path="/admin/events/:eventId"
           exact
-          component={null}
+          component={EventDetails}
         />
       </GridContainer>
     );
