@@ -4,8 +4,6 @@ jobs:
     docker:
       - image: circleci/node:10.9
 
-    working_directory: ~/Nextis/nextis
-
     steps:
       - checkout
 
@@ -15,6 +13,8 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+      
+      - run: pwd
 
       - run: yarn install
 
