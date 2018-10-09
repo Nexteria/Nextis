@@ -42,6 +42,7 @@
     "react-router-dom": "4.3.0-rc.3",
     "react-rte": "^0.16.1",
     "react-scripts": "1.1.4",
+    "react-select": "^2.1.0",
     "react-spinkit": "^3.0.0",
     "react-swipeable-views": "^0.12.13",
     "react-table": "^6.8.2",

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { compose } from 'recompose';
-import { Route, withRouter } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 
 // core components
 import GridContainer from 'components/Grid/GridContainer';
@@ -14,21 +14,23 @@ class EventsContainer extends React.Component {
   render() {
     return (
       <GridContainer>
-        <Route
-          path="/admin/events"
-          exact
-          component={EventsList}
-        />
-        <Route
-          path="/admin/events/new"
-          exact
-          component={NewEventForm}
-        />
-        <Route
-          path="/admin/events/:eventId"
-          exact
-          component={EventDetails}
-        />
+        <Switch>
+          <Route
+            path="/admin/events"
+            exact
+            component={EventsList}
+          />
+          <Route
+            path="/admin/events/new"
+            exact
+            component={NewEventForm}
+          />
+          <Route
+            path="/admin/events/:eventId"
+            exact
+            component={EventDetails}
+          />
+        </Switch>
       </GridContainer>
     );
   }

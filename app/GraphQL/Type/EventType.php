@@ -50,9 +50,17 @@ class EventType extends GraphQLType
                 'type' => Type::int(),
                 'description' => 'The id of the event`s level',
             ],
+            'curriculumLevel' => [
+                'type' => GraphQL::type('studentLevel'),
+                'describe' => 'The event`s level',
+            ],
             'semesterId' => [
                 'type' => Type::int(),
                 'description' => 'The id of the event`s semester',
+            ],
+            'semester' => [
+                'type' => GraphQL::type('semester'),
+                'describe' => 'The event`s semester',
             ],
             'hasSignInQuestionaire' => [
                 'type' => Type::boolean(),

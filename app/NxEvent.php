@@ -727,7 +727,7 @@ class NxEvent extends Model implements AuditableContract
 
     public function curriculumLevel()
     {
-        return $this->hasOne('App\StudentLevel', 'curriculumLevelId');
+        return $this->belongsTo('App\StudentLevel', 'curriculumLevelId');
     }
 
     public function semester()

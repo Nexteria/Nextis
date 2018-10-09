@@ -37,6 +37,7 @@ use App\GraphQL\Query\StudentLevelsQuery;
 use App\GraphQL\Query\NxEventTermQuery;
 
 use App\GraphQL\Mutations\CreateSkillMutation;
+use App\GraphQL\Mutations\AttachLectorMutation;
 use App\GraphQL\Mutations\UserProfileMutation;
 use App\GraphQL\Mutations\UserProfilePhotoMutation;
 use App\GraphQL\Mutations\StandInSignActionMutation;
@@ -72,6 +73,7 @@ return [
                 'term' => NxEventTermQuery::class,
             ],
             'mutation' => [
+                'AttachLector' => AttachLectorMutation::class,
                 'UpdateUserProfile' => UserProfileMutation::class,
                 'StandInSignAction' => StandInSignActionMutation::class,
                 'UpdateUserProfilePhoto' => UserProfilePhotoMutation::class,

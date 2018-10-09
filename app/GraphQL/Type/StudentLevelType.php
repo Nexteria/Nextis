@@ -11,7 +11,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 class StudentLevelType extends GraphQLType
 {
     protected $attributes = [
-        'name' => 'StudentLevel',
+        'name' => 'studentLevel',
         'description' => 'Student level type',
         'model' => StudentLevel::class,
     ];

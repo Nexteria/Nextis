@@ -6,7 +6,6 @@ import { Route, withRouter } from 'react-router-dom';
 // core components
 import GridContainer from 'components/Grid/GridContainer';
 
-//import NewLocationDialog from 'views/Admin/Locations/NewLocationDialog';
 import LocationsList from 'views/Admin/Locations/LocationsList';
 
 class LocationsContainer extends React.Component {
