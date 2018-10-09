@@ -5,6 +5,7 @@ import cx from "classnames";
 // material-ui components
 import withStyles from "@material-ui/core/styles/withStyles";
 import Snack from "@material-ui/core/Snackbar";
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import IconButton from "@material-ui/core/IconButton";
 
 // @material-ui/icons
@@ -55,20 +56,22 @@ function Snackbar({ ...props }) {
             : place.indexOf("c") !== -1 ? "center" : "right"
       }}
       open={open}
-      message={
-        <div>
-          {icon !== undefined ? <props.icon className={iconClasses} /> : null}
-          <span className={messageClasses}>{message}</span>
-        </div>
-      }
-      action={action}
-      SnackbarContentProps={{
-        classes: {
+    >
+      <SnackbarContent
+        classes={{
           root: classes.root + " " + classes[color],
           message: classes.message,
-        }
-      }}
-    />
+        }}
+        aria-describedby="client-snackbar"
+        message={(
+          <div>
+            {icon !== undefined ? <props.icon className={iconClasses} /> : null}
+            <span className={messageClasses}>{message}</span>
+          </div>
+        )}
+        action={action}
+      />
+    </Snack>
   );
 }
 
