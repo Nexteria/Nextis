@@ -48,6 +48,9 @@ class AttendeesGroup extends Model
             $attendee = $this->attendees()->where('userId', '=', $user['id'])->first();
             if (!$attendee) {
                 $attendee = NxEventAttendee::createNew(array_merge($user, ["attendeesGroupId" => $this->id]));
+                $attendee->signInOpenDateTime = $this->signUpOpenDateTime;
+                $attendee->signInCloseDateTime = $this->signUpDeadlineDateTime;
+                $attendee->save();
                 $this->attendees()->save($attendee);
             } else {
                 $attendee->signInOpenDateTime = $this->signUpOpenDateTime;
