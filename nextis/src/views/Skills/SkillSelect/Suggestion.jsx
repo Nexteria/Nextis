@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MenuItem } from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 
 const Suggestion = ({ item, index, itemProps, highlightedIndex }) => {
