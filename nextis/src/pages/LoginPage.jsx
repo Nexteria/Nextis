@@ -1,7 +1,9 @@
-import React from "react";
+import React from 'react';
 import * as Sentry from '@sentry/browser';
-import PropTypes from "prop-types";
-import { Link } from  'react-router-dom'
+import PropTypes from 'prop-types';
+import { Link, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
+import queryString from 'query-string';
 
 // material-ui components
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -44,7 +46,9 @@ class LoginPage extends React.Component {
   }
 
   handleLogin() {
-    const { history, actions } = this.props;
+    const { history, actions, location } = this.props;
+
+    const values = queryString.parse(location.search);
 
     request('/login', {
       credentials: 'same-origin',
@@ -56,7 +60,7 @@ class LoginPage extends React.Component {
     }).then(response => response.json()).then(
       (data) => {
         actions.setUser(data);
-        history.push('/dashboard');
+        history.push(values.redirect || '/dashboard');
         this.setState({ loginFailed: false });
         Sentry.configureScope((scope) => {
           scope.setUser({
@@ -179,4 +183,7 @@ LoginPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(loginPageStyle)(LoginPage);
+export default compose(
+  withStyles(loginPageStyle),
+  withRouter,
+)(LoginPage);

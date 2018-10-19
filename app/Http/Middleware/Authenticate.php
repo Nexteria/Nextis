@@ -29,7 +29,7 @@ class Authenticate
             if ($request->ajax() || $request->wantsJson() || $request->expectsJson()) {
                 return response()->json('Unauthorized.', 401);
             } else {
-                return redirect()->guest('login');
+                return redirect()->guest('login?redirect='.$request->path());
             }
         }
 

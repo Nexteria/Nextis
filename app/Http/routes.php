@@ -188,6 +188,10 @@ Route::group(['middleware' => 'auth'], function () {
             ], 404);
         })->where('slug', '.*');
     });
+
+    Route::get('/events/{eventId}/{action?}', function ($eventId = null) {
+        return view('index');
+    });
 });
 
 Route::any('{slug?}', function ($slug = null) {

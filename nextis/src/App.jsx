@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Spinner from 'react-spinkit';
+import queryString from 'query-string';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -30,16 +31,20 @@ class App extends Component {
 
   componentDidMount() {
     const { history, actions, location } = this.props;
+
     if (isPublicPath(location.pathname)) {
       this.setState({ isLoading: false });
-      return
+      return;
     }
+
+    const values = queryString.parse(location.search);
+    const redirectPath = values.redirect || location.pathname;
 
     request('/api/users/me', {
       credentials: 'same-origin',
       customStatusCheck: (response) => {
         if (response.status === 401) {
-          history.push('/login');
+          history.push(`/login?redirect=${redirectPath}`);
           this.setState({ isLoading: false });
           throw new Error('Unauthorized');
         } else {
@@ -50,7 +55,7 @@ class App extends Component {
       .then(
         (user) => {
           actions.setUser(user);
-          history.push('/dashboard');
+          history.push(redirectPath);
           this.setState({ isLoading: false });
         },
         (err) => {

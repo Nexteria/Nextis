@@ -177,7 +177,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#fcc133;vertical-align:top;" width="100%">
                   <tr>
                     <td align="center" style="font-size:0px;padding:10px 25px;padding-top:10;padding-right:0px;padding-bottom:10px;padding-left:0px;word-break:break-word;">
-                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
                         <tbody>
                           <tr>
                             <td style="width:185px;">
@@ -296,9 +296,9 @@
                   </tr>
                   <tr>
                     <td align="center" vertical-align="middle" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
+                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                         <tr>
-                          <td align="center" bgcolor="#f45e43" role="presentation" style="border:none;border-radius:3px;cursor:auto;padding:10px 25px;" valign="middle">
+                          <td align="center" bgcolor="#f45e43" role="presentation" style="border:none;border-radius:3px;cursor:auto;padding:10px 25px;background:#f45e43;" valign="middle">
                             <a href="{{ $feedbackLink }}" style="background:#f45e43;color:white;font-family:Helvetica;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank"> Vyplniť feedback </a>
                           </td>
                         </tr>

@@ -40,7 +40,7 @@
               Záväzne sa prihlasujem
             </mj-button>
           <mj-raw>@else</mj-raw>
-            <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/nxEvents/{{ $signInToken }}/signIn">
+            <mj-button font-family="Helvetica" background-color="#00a65a" color="white" href="https://space.nexteria.sk/events/{{ $eventId }}/signIn">
               Záväzne sa prihlasujem
             </mj-button>
           <mj-raw>@endif</mj-raw>
