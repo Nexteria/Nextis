@@ -57,14 +57,30 @@ class HostAttendanceActionMutation extends Mutation
         }
 
         $attendee = $term->attendees()->wherePivot('attendeeId', $args['attendeeId'])->firstOrFail();
+
+        $hasFullAttendance = !$attendee->terms()->where(function ($query) use ($term) {
+            $query->where('parentTermId', '=', $term->id);
+            if ($term->parentTermId) {
+                $query->orWhere('parentTermId', '=', $term->parentTermId);
+                $query->orWhere($term->getTable().'.id', '=', $term->parentTermId);
+            }
+        })->where(function ($query) use ($attendee) {
+            $query->where($attendee->terms()->getTable().'.wasPresent', '=', null);
+            $query->orWhere($attendee->terms()->getTable().'.wasPresent', '=', false);
+        })->exists();
         
         if ($args['wasPresent']) {
             $attendee->pivot->wasPresent = Carbon::now();
+            if ($hasFullAttendance) {
+                $attendee->wasPresent = Carbon::now();
+            }
         } else {
             $attendee->pivot->wasPresent = null;
+            $attendee->wasPresent = null;
         }
 
         $attendee->pivot->save();
+        $attendee->save();
 
         return $attendee;
     }

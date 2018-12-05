@@ -65,11 +65,11 @@ class AutogenerateFeedbackStatsMail extends Command
 
                 $attendees = $term->attendees()->where(function ($query) use ($userIds, $term) {
                     $query->whereIn('userId', $userIds);
-                    $query->orWhere($term->attendees()->getTable().'.filledFeedback', '=', true);
+                    $query->orWhereNotNull($term->attendees()->getTable().'.filledFeedback');
                 })->get();
 
                 foreach ($attendees as $attendee) {
-                    $term->attendees()->updateExistingPivot($attendee->id, ['filledFeedback' => true]);
+                    $term->attendees()->updateExistingPivot($attendee->id, ['filledFeedback' => Carbon::now()]);
                     $isLast = !$attendee->terms()->where(function ($query) use ($term) {
                         $query->where('parentTermId', '=', $term->id);
                         if ($term->parentTermId) {
@@ -82,7 +82,7 @@ class AutogenerateFeedbackStatsMail extends Command
                     })->exists();
 
                     if ($isLast) {
-                        $attendee->filledFeedback = true;
+                        $attendee->filledFeedback = Carbon::now();
                         $attendee->save();
 
                         if ($attendee->filledFeedback && $attendee->wasPresent) {
@@ -91,11 +91,11 @@ class AutogenerateFeedbackStatsMail extends Command
                     }
                 }
 
-                $actualFilledCount += $term->attendees()->wherePivot('wasPresent', '=', true)
-                                                        ->wherePivot('filledFeedback', '=', true)
+                $actualFilledCount += $term->attendees()->wherePivot('wasPresent', '!=', null)
+                                                        ->wherePivot('filledFeedback', '!=', null)
                                                         ->count();
 
-                $expectedFilledCount += $term->attendees()->wherePivot('wasPresent', '=', true)->count();
+                $expectedFilledCount += $term->attendees()->wherePivot('wasPresent', '!=', null)->count();
 
                 $manager = \App\User::findOrFail($settings['eventsManagerUserId']);
                 $email = new \App\Mail\Events\EventFeedbackStatsMail($event, $term, $expectedFilledCount, $actualFilledCount, $manager);

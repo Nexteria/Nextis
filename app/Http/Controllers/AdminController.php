@@ -832,7 +832,7 @@ class AdminController extends Controller
                             'email' => $user->email,
                             'firstName' => $user->firstName,
                             'lastName' => $user->lastName,
-                            'level' => $user->student->level->name,
+                            'level' => $user->student ? $user->student->level->name : '',
                         ];
                     }
 
