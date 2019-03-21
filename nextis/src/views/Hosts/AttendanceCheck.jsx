@@ -123,7 +123,9 @@ export class AttendanceCheck extends React.Component {
 
     const { term } = data;
 
-    const attendees = term.attendees.map(attendee => this.transformAttendee(attendee));
+    const attendees = term.attendees
+      .filter(attendee => attendee.signedIn)
+      .map(attendee => this.transformAttendee(attendee));
 
     return (
       <Dialog
@@ -201,6 +203,7 @@ query FetchTermAttendees ($id: Int){
         firstName
         lastName
       }
+      signedIn
       wasPresent
     }
   }
