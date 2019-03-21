@@ -27,6 +27,7 @@ class Meetings extends React.Component {
     const { classes, history } = this.props;
 
     const startDateTimeString = format(parse(term.eventStartDateTime), 'DD.MM.YYYY o HH:mm');
+    const endDateTimeString = format(parse(term.eventEndDateTime), 'DD.MM.YYYY o HH:mm');
     let fillButtons = [
       { color: 'info', icon: Info, action: () => history.push(`/events/${term.event.id}`) },
     ];
@@ -46,7 +47,11 @@ class Meetings extends React.Component {
 
     return [
       term.event.name,
-      startDateTimeString,
+      <div>
+        <div>{startDateTimeString}</div>
+        <div>-</div>
+        <div>{endDateTimeString}</div>
+      </div>,
       `${term.location.name}, ${term.location.addressLine1}${term.location.addressLine2 ? ', ' + term.location.addressLine2 : ''}`,
       fillButtons
     ];
