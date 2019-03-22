@@ -45,7 +45,7 @@ class Overview extends React.Component {
 
   state = {
     from: format(startOfMonth(subMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
-    to: format(lastDayOfMonth(addMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
+    to: format(lastDayOfMonth(addMonths(new Date(), 6)), 'YYYY-MM-DD HH:mm:ss'),
     noPastEventsCounter: 0,
   };
 
@@ -224,7 +224,7 @@ export default compose(
       notifyOnNetworkStatusChange: true,
       variables: {
         from: format(startOfMonth(subMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
-        to: format(lastDayOfMonth(addMonths(new Date(), 1)), 'YYYY-MM-DD HH:mm:ss'),
+        to: format(lastDayOfMonth(addMonths(new Date(), 6)), 'YYYY-MM-DD HH:mm:ss'),
       },
     })
   }),
